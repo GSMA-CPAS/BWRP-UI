@@ -1,0 +1,28 @@
+@import "./partials/extensions";
+@import "./partials/variables";
+
+.unclickable {
+  pointer-events: none;
+}
+.no-data {
+  font: italic bold 18px Arial;
+  padding-left: 18px;
+}
+
+.hide-dot {
+  .v-timeline-item__dot {
+    text-align: center;
+    box-shadow: none;
+  }
+}
+.blur {
+  filter: blur(1px);
+  opacity: 0.4;
+}
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  filter: brightness(175%);
+}

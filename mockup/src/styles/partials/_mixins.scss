@@ -1,0 +1,52 @@
+@mixin grid($template-columns, $template-rows, $justify, $align) {
+  display: grid;
+  grid-template-columns: $template-columns;
+  grid-template-rows: $template-rows;
+  justify-items: $justify;
+  align-items: $align;
+}
+@mixin flex($flex-direction, $justify, $align) {
+  display: flex;
+  flex-direction: $flex-direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+@mixin widthAndHeight($width, $height) {
+  width: $width;
+  height: $height;
+}
+@mixin paddingAndMargin($padding, $margin) {
+  padding: $padding;
+  margin: $margin;
+}
+@mixin widthEqualsHeight($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin text($font, $color) {
+  font: $font;
+  color: $color;
+}
+
+@mixin positioning($top, $right, $bottom, $left, $fixed: true) {
+  @if ($fixed) {
+    position: fixed;
+  } @else {
+    position: absolute;
+  }
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+}
+
+@mixin button($size, $border-color) {
+  @include widthEqualsHeight($size);
+  @include flex(column, center, center);
+  cursor: pointer;
+  font-size: $size;
+  border: 2.5px solid $border-color;
+  border-radius: 50%;
+  color: rgb(0, 0, 0);
+}
