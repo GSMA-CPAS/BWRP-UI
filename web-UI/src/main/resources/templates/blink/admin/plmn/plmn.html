@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: Admin &gt; PLMN Management</title>
+</th:block>
+
+<!-- custom css -->
+<th:block layout:fragment="css">
+    <style th:inline="text">
+  
+    </style>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <!-- jquery dataTables -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';     
+        thisPage['btnRole'] = /*[[${session.btnRole}]]*/''; 
+        
+        //message        
+        thisPage['com.save.req'] = /*[[#{com.save.req}]]*/ '';    //저장하시겠습니까?
+        thisPage['com.tbl.search'] = /*[[#{com.tbl.search}]]*/ '';  //검색된 목록이 없습니다.
+        thisPage['com.tbl.select'] = /*[[#{com.tbl.select}]]*/ '';  //목록에서 변경할 열을 선택해주세요.
+        thisPage['com.del.req'] = /*[[#{com.del.req}]]*/ '';  //삭제하시겠습니까?
+
+        thisPage['plmn.mgs.plmndup'] = /*[[#{plmn.mgs.plmndup}]]*/ '';  //이미 등록된 PLMN이 있습니다.
+        thisPage['com.msg.engc5'] = /*[[#{com.msg.engc5}]]*/ '';  //영문자(대), 숫자 5자리를 입력하세요.
+        thisPage['com.msg.engnumspec'] = /*[[#{com.msg.engnumspec}]]*/ '';  //영문, 숫자, 일부 특수문자만 입력가능합니다.
+        thisPage['com.msg.num3'] = /*[[#{com.msg.num3}]]*/ '';  //숫자 3자리를 입력하세요.
+        thisPage['com.msg.num2'] = /*[[#{com.msg.num2}]]*/ '';  //숫자 2자리를 입력하세요.
+        
+        		
+        
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- Contents div -->
+<div id="contents" layout:fragment="contents">
+<!-- container -->
+        <div class="container">
+            <div class="search-group">
+                <div class="inr">
+                    <p class="title"><i class="ico search"></i><span th:text="#{plmn.title}">PLMN</span></p>
+                    <div class="location">
+                        <span><i class="ico home"><em>home</em></i>- Admin - <em th:text="#{plmn.title}">PLMN</em></span>
+                    </div>
+                    <form>
+                        <legend>PLMN 조회</legend>
+                        <div class="box">
+                            <div class="select-group">
+	                            <div class="select-box fb-quarter">
+	                                <span th:utext="#{plmn.search.plmn}">PLMN</span>
+	                                <div>
+	                                    <input type="text" id="sPlmnId">
+	                                </div>
+	                            </div>
+	                            <div class="select-box fb-quarter">
+	                                <span th:utext="#{plmn.search.mcc}">MCC</span>
+	                                <div>
+	                                    <input type="text" id="sMccId">
+	                                </div>
+	                            </div>
+	                            <div class="select-box fb-quarter">
+	                                <span th:utext="#{plmn.search.mnc}">MNC</span>
+	                                <div>
+	                                    <input type="text" id="sMncId">
+	                                </div>
+	                            </div>
+	                            <div class="select-box fb-quarter">
+	                                <span th:utext="#{plmn.search.cntry}">Country Code</span>
+	                                <div>
+	                                    <input type="text" id="sCntryCd">
+	                                </div>
+	                            </div>
+                            </div>
+                            <button type="button" class="btn search" id="nameSearch1" th:utext="#{btn.search}">Search</button>  
+                        </div>
+                    </form>
+                </div>          
+            </div>
+            
+            <div class="list-group pd0">
+                <div class="inr">
+                    <p class="title"><i class="ico list"></i>List</p>
+                    <div class="table-box">
+                        <table id="plmnList">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th th:utext="#{plmn.list.th.plmn}">PLMN</th>
+                                    <th th:utext="#{plmn.list.th.provider}">Provider Name</th>
+                                    <th th:utext="#{plmn.list.th.mcc}">MCC</th>
+                                    <th th:utext="#{plmn.list.th.mnc}">MNC</th>
+                                    <th th:utext="#{plmn.list.th.cntry}">Country Code</th>
+                                    <th th:utext="#{plmn.list.th.cntryNm}">Country Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="btn-group pagination">
+                        <div class="inr" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                            <button type="button" class="btn apply" data-toggle="modal" id="add" th:utext="#{btn.new}">등록</button>
+                            <button type="button" class="btn edit" data-toggle="modal" id="update" th:utext="#{btn.up}">수정</button>
+                            <button type="button" class="btn cancel" id="delete" th:utext="#{btn.del}">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //container -->
+	
+	<!-- layer -->
+        <div class="layer-group plmn" id="updateRowModal">
+            <div class="layer" style="height: 224px;left: 45%;">
+                <div class="inr">
+                    <form id="plmnForm">
+                         <input type="hidden" id="plmnStat"/>
+                         <input type="hidden" id="expDt"/>
+                         <input type="hidden" id="orgMncId"/>
+                         <input type="hidden" id="orgMccId"/>
+                        <p th:utext="#{plmn.title}" style="margin-bottom:22px;">PLMN</p>
+                        <div class="search-group">
+                            <div class="box">
+                                <!-- <div class="select-group"> -->
+                                    <div class="select-box">
+                                        <span th:utext="#{plmn.list.th.plmn}">PLMN</span>
+                                        <div>
+                                        <input type="text" id="plmnId" maxlength="5" >  <!-- placeholder="uppercase 5 digits" -->
+                                        </div>
+                                    </div>
+                                    <div class="select-box">
+                                        <span th:utext="#{plmn.list.th.provider}">Provider Name</span>
+                                        <div>
+                                        <input type="text" id="plmnNm" maxlength="100">
+                                        </div>
+                                    </div>                                    
+                                    <div class="select-box">
+                                        <span th:utext="#{plmn.list.th.mcc}">MCC</span>
+                                        <div>
+                                        <input type="text" id="mccId" maxlength="3">
+                                        </div>
+                                    </div>
+                                    <div class="select-box">
+                                        <span th:utext="#{plmn.list.th.mnc}">MNC</span>
+                                        <div>
+                                        <input type="text" id="mncId" maxlength="2">
+                                        </div>
+                                    </div>
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn save"  id="plmnSubmit" th:utext="#{btn.save}">저장</button>
+                            <!-- <button type="button" class="btn gray-e9e9e9" data-dismiss="modal" th:utext="#{btn.close}">취소</button> -->
+                        </div>
+                    </form>
+                </div>
+                <button type="button" class="btn close" data-dismiss="modal"><i class="ico layer-close"><em>닫기</em></i></button>
+            </div>
+            <div class="dim"></div>
+        </div>
+        <!-- //layer -->
+        
+
+</div>
+<!-- end Contents div -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/vendor/selector.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/blink/admin/plmn/plmn.js}"></script>
+</th:block>
+
+</html>

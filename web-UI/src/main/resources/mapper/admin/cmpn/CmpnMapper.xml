@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    @SQL File Name : CmpnMapper.xml
+    @Description : cmpn 
+    @Author : stone
+-->
+<mapper namespace="com.kt.blink.biz.admin.cmpn.mapper.CmpnMapper"> 
+
+        
+    <!-- insert cmpn -->
+    <insert id="insertCmpn" parameterType="CmpnDomain" useGeneratedKeys="true" keyProperty="cmpnId" >
+        /*CmpnMapper.insertCmpn*/        
+        INSERT INTO tb_cmpn_info
+        (
+          cmpn_id,
+          cmpn_nm,
+          cmpn_adr,
+          tax_no,
+          my_cmpn_yn,
+          sys_recd_cret_dt,
+          sys_recd_chg_dt,
+          sys_trtr_id,
+          sys_svc_id,
+          email_id,
+          fax_no,
+          tel_no          
+        ) 
+        VALUES 
+        (   
+          #{cmpnId},
+          #{cmpnNm},
+          #{cmpnAdr},
+          #{taxNo},         
+          #{myCmpnYn},
+          NOW(),
+          NOW(),
+          #{sysTrtrId},
+          #{sysSvcId},
+          #{emailId},
+          #{faxNo},
+          #{telNo}
+        )
+    </insert>
+    
+    <insert id="insertBank">
+        /*CmpnMapper.insertBank*/        
+        INSERT INTO tb_bank_info
+        (
+          cmpn_id,
+          bank_type,
+          bank_nm,
+          swift_cd,
+          acc_nm,
+          acc_no,
+          iban_no,
+          corresp_bank_nm,
+          corresp_swift_cd,
+          sys_recd_cret_dt,
+          sys_recd_chg_dt,
+          sys_trtr_id,
+          sys_svc_id          
+        ) 
+        VALUES 
+        (   
+          #{bank.cmpnId},
+          #{bank.bankType},      
+          #{bank.bankNm},
+          #{bank.swiftCd},
+          #{bank.accNm},
+          #{bank.accNo},
+          #{bank.ibanNo},
+          #{bank.correspBankNm},
+          #{bank.correspSwiftCd},
+          NOW(),
+          NOW(),
+          #{bank.sysTrtrId},
+          #{bank.sysSvcId}
+        )
+    </insert>
+    
+    <update id="updateCmpn">
+        /*CmpnMapper.updateCmpn*/
+        UPDATE tb_cmpn_info SET
+          cmpn_nm = #{cmpn.cmpnNm},
+          cmpn_adr = #{cmpn.cmpnAdr},
+          tax_no = #{cmpn.taxNo},
+          sys_recd_chg_dt = NOW(),
+          sys_trtr_id = #{cmpn.sysTrtrId},
+          sys_svc_id = #{cmpn.sysSvcId},
+          email_id = #{cmpn.emailId},
+          fax_no = #{cmpn.faxNo},
+          tel_no = #{cmpn.telNo}
+        WHERE cmpn_id = #{cmpn.cmpnId}
+    </update>
+    
+    <update id="updateBank">
+        /*CmpnMapper.updateBank*/
+        UPDATE tb_bank_info SET
+          bank_nm = #{bank.bankNm},
+          swift_cd = #{bank.swiftCd},
+          acc_nm = #{bank.accNm},
+          acc_no = #{bank.accNo},
+          iban_no = #{bank.ibanNo},
+          corresp_bank_nm = #{bank.correspBankNm},
+          corresp_swift_cd = #{bank.correspSwiftCd},
+          sys_recd_chg_dt = NOW(),
+          sys_trtr_id = #{bank.sysTrtrId},
+          sys_svc_id = #{bank.sysSvcId}
+        WHERE cmpn_id = #{bank.cmpnId}
+          AND bank_type = #{bank.bankType}
+    </update>
+    
+    <delete id="deleteCmpn">
+        /*CmpnMapper.delete*/
+        DELETE FROM tb_cmpn_info
+        WHERE cmpn_id = #{cmpn.cmpnId}
+    </delete>
+    
+    
+    <delete id="deleteBank">
+        /*CmpnMapper.deleteBank*/
+        DELETE FROM tb_bank_info
+        WHERE cmpn_id = #{bank.cmpnId}
+    </delete>
+    
+    <!-- find cmpn -->
+    <select id="findCmpnInfo" resultType="CmpnDomain">
+        /*CmpnMapper.findCmpnInfo*/
+        SELECT
+          cmpn_id,
+          cmpn_nm,
+          cmpn_adr,
+          tax_no,
+          my_cmpn_yn,
+          email_id,
+          fax_no,
+          tel_no    
+        FROM tb_cmpn_info
+        <where>
+            <choose>
+                <when test='cmpn.cmpnId == null or cmpn.cmpnId == "" '>
+                    <!-- my_cmpn_yn = 'Y' -->
+                    cmpn_id = (SELECT cmpn_id FROM tb_user_info
+                               WHERE user_id = #{cmpn.userId} 
+                              )    
+                </when>
+                <otherwise>
+                    cmpn_id = #{cmpn.cmpnId}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    
+    <select id="findBankInfo" resultType="BankDomain">
+        /*CmpnMapper.findBankInfo*/
+        SELECT
+          bank_nm,
+          bank_type,
+          swift_cd,
+          acc_nm,
+          acc_no,
+          iban_no,
+          corresp_bank_nm,
+          corresp_swift_cd
+        FROM tb_bank_info
+        WHERE cmpn_id = #{cmpn.cmpnId}
+    </select>
+    
+    <select id="getCmpnList" resultType="CmpnDomain">
+        /*CmpnMapper.getCmpnList*/
+        SELECT
+          cmpn_id,
+          cmpn_nm
+        FROM tb_cmpn_info
+        <where>
+            <if test="cmpn.cmpnNm != null and cmpn.cmpnNm != ''">
+                 cmpn_nm LIKE '%' || #{cmpn.cmpnNm} || '%'
+            </if>  
+        </where>
+        ORDER BY cmpn_nm ASC
+    </select>
+    
+</mapper>

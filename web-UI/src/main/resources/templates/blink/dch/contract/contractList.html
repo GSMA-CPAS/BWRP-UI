@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: Agreement Management &gt; Agreement List</title>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['credentialReset'] = /*[[${credentialReset}]]*/'';
+        thisPage['btnRole'] = /*[[${session.btnRole}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['appMsg001'] = /*[[#{app.contract.list.m001}]]*/ '';
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- contents container -->
+<div class="container" layout:fragment="contents">
+
+    <!-- Search Panel Box -->
+    <div class="search-group">
+        <div class="inr">
+            <p class="title"><i class="ico search"></i>Agreement List</p>
+            <div class="location">
+                <span><i class="ico home"><em>home</em></i>Agreement Management<em>Agreement List</em></span>
+            </div>
+            <form>
+                <legend>Search Agreement</legend>
+                <div class="box">
+                    <div class="select-group">
+                        <!-- My Network -->
+                        <div class="multi-select2 fb" id="myNetwork" >
+                            <span>My Network</span>
+                        </div>
+                        <!-- //My Network -->
+                        
+                        <!-- Partner Network -->
+                        <div class="multi-select fb" id="partnerNetwork">
+                            <span>Partner Network</span>
+                        </div>
+                        <!-- //Partner Network -->
+                        
+                        
+                        <div class="select-box fb">
+                            <span>Responsible</span>
+                            <div>
+                                <input type="text" id="contrId" name="contrId">
+                            </div>
+                        </div>
+                        
+                        <div class="select-box fb">
+                            <span>Memo</span>
+                            <div>
+                                <input type="text" id="contMemo" name="contMemo">
+                            </div>
+                        </div>
+                        <div class="select-box fb">
+                        </div>
+                        <div class="select-box fb">
+                        </div>
+                    </div>
+                    <!-- Search Button -->
+                    <button type="button" id="searchAgreement" class="btn search">Search</button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- //Search Panel Box -->
+    
+    <!-- Search Result List(Agreement List) -->
+    <div class="list-group pd0">
+        <div class="inr">
+            <p class="title"><i class="ico list"></i>List</p>
+            <div class="table-box detail-type">
+                <table id="contractTable" class="w100">
+                    <colgroup>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>My Network</th>
+                            <th>Partner Network</th>
+                            <th>Create Date</th>
+                            <th>Responsible</th>
+                            <th>Memo</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}" class="btn-group">
+                <a th:href="@{/dch/contract/createContract}" title="New Agreement" class="new">
+                <button type="button" class="btn new-made">New</button></a>
+            </div>
+        </div>
+    </div>
+    <!-- //Search Result List(Agreement List) -->
+    
+</div>
+<!-- //contents container -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/blink/dch/contract/contractList.js}"></script>
+</th:block>
+
+</html>

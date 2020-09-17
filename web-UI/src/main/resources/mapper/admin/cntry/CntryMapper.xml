@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kt.blink.biz.admin.cntry.mapper.CntryMapper">
+
+	<!-- get cntry code list -->
+	<select id="getCntryList" parameterType="CntryDomain" resultType="CntryDomain">
+        /*CntryMapper.retrieveCntryList*/
+        SELECT
+            mcc_id,
+            iso_cntry_dgt2,
+            cntry_cd,
+            cntry_nm
+        FROM
+            tb_cntry_info
+        <where>
+            <if test="cntry.cntryNm != null and cntry.cntryNm != ''">
+                 cntry_nm LIKE '%' || #{cntry.cntryNm} || '%'
+            </if>  
+        </where> 
+        ORDER BY cntry_nm ASC 
+    </select>
+    
+	<!-- retrieve cntry -->
+	<select id="retrieveCntryList" parameterType="DataTablesRequest" resultType="CntryDomain">
+        /*CntryMapper.retrieveCntryList*/
+        SELECT
+            COUNT(1) OVER() AS totalCount,
+            mcc_id,
+            iso_cntry_dgt2,
+            cntry_cd,
+            cntry_nm
+        FROM
+            tb_cntry_info
+        <where>
+            <foreach collection="columns" item="column" index="index" separator="and">
+                <if test="column.search.value != null and column.search.value != ''">
+                    ${column.name} LIKE '%' || #{column.search.value} || '%'
+                </if>
+            </foreach>
+        </where>
+        <if test="orderSequel != null and orderSequel != ''">
+            ORDER BY ${orderSequel}
+        </if>
+        LIMIT #{length} OFFSET #{start}     
+    </select>
+    
+    <!-- dup check -->
+    <select id="dupCheckCntry" parameterType="CntryDomain" resultType="CntryDomain">
+        /*CntryMapper.dupCheckCntry*/
+        SELECT
+            COALESCE(SUM(CASE WHEN UPPER(mcc_id) = UPPER(#{cntry.mccId}) THEN 1 ELSE 0 END),0) AS mcc_id_cnt,
+            COALESCE(SUM(CASE WHEN UPPER(iso_cntry_dgt2) = UPPER(#{cntry.isoCntryDgt2}) THEN 1 ELSE 0 END),0) AS iso_cntry_dgt2_cnt, 
+		    COALESCE(SUM(CASE WHEN UPPER(cntry_cd) = #{cntry.cntryCd} THEN 1 ELSE 0 END),0) AS cntry_cd_cnt,
+		    COALESCE(SUM(CASE WHEN UPPER(cntry_nm) = UPPER(#{cntry.cntryNm}) THEN 1 ELSE 0 END),0) AS cntry_nm_cnt
+        FROM
+            tb_cntry_info       
+        <where>
+            <if test='cntry.cntryStat != null and cntry.cntryStat =="U"'>
+                mcc_id != #{cntry.orgMccId}
+            </if>
+        </where>      
+    </select>
+    
+    <!-- insert cntry -->
+    <insert id="insertCntry" >
+        /*CntryMapper.insertCntry*/
+        INSERT INTO tb_cntry_info
+        (
+            mcc_id,
+            iso_cntry_dgt2,
+            cntry_cd,
+            cntry_nm,
+            sys_recd_cret_dt,
+            sys_recd_chg_dt,
+            sys_trtr_id,
+            sys_svc_id
+        ) 
+        VALUES
+        (   
+            #{cntry.mccId},
+            #{cntry.isoCntryDgt2},
+            #{cntry.cntryCd},
+            #{cntry.cntryNm},
+            NOW(),
+            NOW(),
+            #{cntry.sysTrtrId},
+            #{cntry.sysSvcId}
+        )
+    </insert>
+    
+    <!-- update cntry -->
+    <update id="updateCntry" >
+        /*CntryMapper.updateCntry*/
+        UPDATE tb_cntry_info
+        SET
+            mcc_id = #{cntry.mccId},
+            iso_cntry_dgt2 = #{cntry.isoCntryDgt2},
+            cntry_cd = #{cntry.cntryCd},
+            cntry_nm = #{cntry.cntryNm},
+            sys_recd_chg_dt = NOW(),
+            sys_trtr_id = #{cntry.sysTrtrId},
+            sys_svc_id = #{cntry.sysSvcId}
+        WHERE mcc_id = #{cntry.orgMccId}
+    </update>
+    
+    <!-- Delete  -->
+    <delete id="deleteCntry">
+        /*CntryMapper.deleteCntry*/
+        DELETE FROM tb_cntry_info 
+        WHERE mcc_id = #{cntry.mccId}
+    </delete>
+    
+</mapper>

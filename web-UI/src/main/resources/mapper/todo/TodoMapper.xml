@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kt.blink.biz.todo.mapper.TodoMapper">
+
+    
+    <!-- retrieveTodoList -->
+    <select id="retrieveTodoList" parameterType="TodoDomain" resultType="TodoDomain">
+        /*TodoMapper.retrieveTodoList*/
+        SELECT
+            COUNT(1) OVER() AS totalCount, 
+            todo_id,
+            todo_type_cd,
+            (SELECT
+                  tci.cd_val1
+              FROM tb_cd_info tci 
+              INNER JOIN tb_cd_group_info tcgi
+              ON tcgi.cd_group_id = tci.cd_group_id
+              WHERE tci.cd_group_id = 'Todo'
+              AND tci.cd_id = todo_type_cd
+              AND tci.use_yn = true ) AS todo_type_cd_nm,
+            todo_title_nm,
+            todo_stat,
+            todo_sbst,
+            TO_CHAR(cre_date,'YYYY-MM-DD HH24:MI:SS') AS cre_date,
+            <choose>
+                <when test="dataTablesRequest.orderSequel != null and dataTablesRequest.orderSequel != ''">
+                    ((COUNT(1) OVER()+1) - ROW_NUMBER() OVER(ORDER BY ${dataTablesRequest.orderSequel})) AS rno
+                </when>
+                <otherwise>
+                    ((COUNT(1) OVER()+1) - ROW_NUMBER() OVER(ORDER BY cre_date DESC)) AS rno
+                </otherwise>
+            </choose>
+        FROM (
+            SELECT
+                todo_id,
+                todo_type_cd,
+                todo_title_nm,
+                todo_stat,
+                todo_sbst,
+                cre_date
+            FROM (
+                SELECT
+                    todo_id,
+                    todo_type_cd,
+                    todo_title_nm,
+                    todo_status AS todo_stat,
+                    todo_sbst,
+                    cret_dt AS cre_date
+                FROM tb_todo_info t             
+                UNION ALL           
+                SELECT
+                    null AS todo_id,
+                    'MISS' AS todo_type_cd,
+                    #{miss} AS todo_title_nm,
+                    '0' AS todo_stat,
+                    #{missTrm} || ' : ' || MAX(trm_plmn_id) || 
+                    '&lt;br>' || #{missRcv} || ' : ' || MAX(rcv_plmn_id) || 
+                    '&lt;br>File Name : '  || roam_file_nm || 
+                    '&lt;br>Missing File Sequence : '  || ARRAY_TO_STRING(ARRAY_AGG(file_seq_no),',') AS todo_sbst,
+                    MAX(sys_recd_cret_dt) AS cre_date
+                FROM tb_miss_file_txn
+                WHERE colec_yn = 'N'
+                  AND CASE WHEN (SELECT COUNT(1) FROM tb_user_info 
+                                  WHERE user_id = #{sysTrtrId}
+                                    AND tap_miss_conf_yn = 'Y' ) = 1 THEN 1=1 
+                     ELSE 1=2 END
+                GROUP BY roam_file_nm
+            ) AS j
+        ) AS o
+        
+        LIMIT #{dataTablesRequest.length} OFFSET #{dataTablesRequest.start}     
+    </select>
+    
+    <!-- update todo -->
+    <update id="updateTodo" >
+        /*TodoMapper.updateTodo*/
+        UPDATE tb_todo_info
+        SET
+            todo_status = '2',
+            sys_recd_chg_dt = NOW(),
+            sys_trtr_id = #{todo.sysTrtrId},
+            sys_svc_id = #{todo.sysSvcId}
+        WHERE todo_id = #{todo.todoId}::numeric
+    </update>
+    
+    <!-- find my todo -->
+    <select id="findMyTodo" resultType="Integer">
+        /*TodoMapper.findMyTodo*/
+        SELECT COUNT(1) AS todo 
+        FROM tb_todo_info
+        WHERE todo_status = '1'
+    </select>
+    
+</mapper>

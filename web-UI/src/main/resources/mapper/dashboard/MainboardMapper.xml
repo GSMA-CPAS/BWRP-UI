@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    @SQL File Name : DashboardMapper.xml
+    @Description : dashboard queries
+-->
+<mapper namespace="com.kt.blink.biz.dashboard.mapper.MainboardMapper"> 
+    
+    <!-- retrieve getMainInfo -->
+    <select id="getMainInfo" parameterType="MainDomain" resultType="MainDomain">
+	/*MainboardMapper."getMainInfo"*/
+	SELECT 
+	   seq, 
+	   rcvplmnid, 
+	   revcur, 
+	   ROUND(revamt, #{precision}::integer) AS revamt, 
+	   ROUND(revamt-expamt, #{precision}::integer) AS revtoolamt, 
+	   ROUND(revdataamt, #{precision}::integer) AS revdataamt, 
+	   ROUND(revvoiceamt, #{precision}::integer) AS revvoiceamt, 
+	   ROUND(revsmsamt, #{precision}::integer) AS revsmsamt,
+	   COALESCE(revminday, TO_CHAR(DATE_TRUNC('year', now()), 'YYYY-MM-DD')) AS revminday, 
+	   COALESCE(revmaxday, TO_CHAR(NOW(),'YYYY-MM-DD')) AS revmaxday, 
+	   COALESCE(revminsetlday, TO_CHAR(date_trunc('month', now()),'YYYY-MM-DD')) AS revminsetlday, 
+	   COALESCE(revtaphhmm, TO_CHAR(NOW(),'YYYY-MM-DD HH24:MI')) AS revtaphhmm, 
+	   ROUND(revvoiceqnt,2) AS revvoiceqnt,
+	   ROUND(revdataqnt,2) AS revdataqnt, 
+	   ROUND(revsmsqnt,0) AS revsmsqnt, 
+	   COALESCE(receimaxday,TO_CHAR(NOW()- INTERVAL '2 MONTH','YYYY-MM')) AS receimaxday, 
+	   receicur, 
+	   ROUND(receiamt, #{precision}::integer) AS receiamt, 
+	   ROUND(receiamt-payamt, #{precision}::integer) AS receitoolamt, 
+	   COALESCE(incommitminday, TO_CHAR(DATE_TRUNC('year', now()), 'YYYY-MM-DD')) AS incommitminday,
+       COALESCE(incommitmaxday,TO_CHAR(NOW(),'YYYY-MM-DD')) AS incommitmaxday,
+	   incommitcur, 
+	   incommitpercnt, 
+	   ROUND(incommitamt,0) AS incommitamt, 
+	   ROUND(incommitsumamt,0) AS incommitsumamt,
+	   expcur, 
+	   ROUND(expamt, #{precision}::integer) AS expamt, 
+       ROUND(expamt-revamt, #{precision}::integer) AS exptoolamt, 
+	   ROUND(expdataamt, #{precision}::integer) AS expdataamt,
+	   ROUND(expvoiceamt, #{precision}::integer) AS expvoiceamt, 
+	   ROUND(expsmsamt, #{precision}::integer) AS expsmsamt, 
+	   COALESCE(expminday,TO_CHAR(DATE_TRUNC('year', now()), 'YYYY-MM-DD')) AS expminday, 
+	   COALESCE(expmaxday, TO_CHAR(NOW(),'YYYY-MM-DD')) AS expmaxday, 
+	   COALESCE(expminsetlday,TO_CHAR(date_trunc('month', now()),'YYYY-MM-DD')) AS expminsetlday,
+	   COALESCE(exptaphhmm,TO_CHAR(NOW(),'YYYY-MM-DD HH24:MI')) AS exptaphhmm, 
+	   ROUND(expvoiceqnt,2) AS expvoiceqnt, 
+	   ROUND(expdataqnt,2) AS expdataqnt, 
+	   ROUND(expsmsqnt,0) AS expsmsqnt, 
+	   COALESCE(paymaxday, TO_CHAR(NOW() - INTERVAL '2 MONTH','YYYY-MM')) AS paymaxday, 
+	   paycur,
+	   ROUND(payamt, #{precision}::integer) AS payamt, 
+       ROUND(payamt-receiamt, #{precision}::integer) AS paytoolamt, 
+	   COALESCE(outcommitminday, TO_CHAR(DATE_TRUNC('year', now()), 'YYYY-MM-DD')) AS outcommitminday, 
+       COALESCE(outcommitmaxday,TO_CHAR(NOW(),'YYYY-MM-DD')) AS outcommitmaxday,
+	   outcommitcur, 
+	   outcommitpercnt, 
+	   ROUND(outcommitamt,0) AS outcommitamt,	   
+       ROUND(outcommitsumamt,0) AS outcommitsumamt
+	FROM tb_dec_demo_info
+	WHERE plmnord = #{plmnord}
+	<if test="rcvplmnid != null and rcvplmnid !=''">
+	AND rcvplmnid = #{rcvplmnid}
+	AND seq = #{seq}::integer
+	</if>
+	ORDER BY seq
+    </select>
+    
+    <select id="getSalesInfo" parameterType="MainSalesDomain" resultType="MainSalesDomain">
+	/*MainboardMapper.getSalesInfo*/
+	SELECT 
+	   seq, 
+	   rcvplmnid,
+	   outin, 
+	   years, 
+	   jan, 
+	   feb, 
+	   mar, 
+	   apr, 
+	   may, 
+	   jun, 
+	   jul, 
+	   aug, 
+	   sep,
+	   oct, 
+	   nov, 
+	   dece
+	FROM tb_dec_demo_predic
+	WHERE rcvplmnid = #{rcvplmnid}
+	AND seq = #{seq}::integer
+	ORDER BY years desc
+    </select>
+    
+</mapper>

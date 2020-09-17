@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: DCH &gt; Agreement Details</title>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let thisPage = {};
+        thisPage['pageUrl'] = /*[[${#httpServletRequest.requestURI}]]*/'';
+        thisPage['myNetwork'] = /*[[${myNetwork}]]*/'';
+        thisPage['partnerNetwork'] = /*[[${partnerNetwork}]]*/'';
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['fullname'] = /*[[${session.fullname}]]*/'';
+        thisPage['btnRole'] = /*[[${session.btnRole}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['appMsg001'] = /*[[#{app.contract.details.m001}]]*/ '';
+        thisPage['appMsg002'] = /*[[#{app.contract.details.m002}]]*/ '';
+        thisPage['appMsg003'] = /*[[#{app.contract.details.m003}]]*/ '';
+        thisPage['appMsg004'] = /*[[#{app.contract.details.m004}]]*/ '';
+        thisPage['appMsg005'] = /*[[#{app.contract.details.m005}]]*/ '';
+        thisPage['appMsg006'] = /*[[#{app.contract.details.m006}]]*/ '';
+        thisPage['appMsg007'] = /*[[#{app.contract.details.m007}]]*/ '';
+        thisPage['appMsg008'] = /*[[#{app.contract.details.m008}]]*/ '';
+        thisPage['appMsg009'] = /*[[#{app.contract.details.m009}]]*/ '';
+        thisPage['appMsg010'] = /*[[#{app.contract.details.m010}]]*/ '';
+        thisPage['appMsg011'] = /*[[#{app.contract.details.m011}]]*/ '';
+        thisPage['appMsg012'] = /*[[#{app.contract.details.m012}]]*/ '';
+        thisPage['appMsg013'] = /*[[#{app.contract.details.m013}]]*/ '';
+        thisPage['appMsg014'] = /*[[#{app.contract.details.m014}]]*/ '';
+        thisPage['appMsg015'] = /*[[#{app.contract.details.m015}]]*/ '';
+        thisPage['appMsg016'] = /*[[#{app.contract.details.m016}]]*/ '';
+        thisPage['appMsg017'] = /*[[#{app.contract.details.m017}]]*/ '';
+        thisPage['appMsg018'] = /*[[#{app.contract.details.m018}]]*/ '';
+        thisPage['appMsg019'] = /*[[#{app.contract.details.m019}]]*/ '';
+        thisPage['appMsg020'] = /*[[#{app.contract.details.m020}]]*/ '';
+        thisPage['appMsg021'] = /*[[#{app.contract.details.m021}]]*/ '';
+        thisPage['appMsg022'] = /*[[#{app.contract.details.m022}]]*/ '';
+        thisPage['appMsg023'] = /*[[#{app.contract.details.m023}]]*/ '';
+        thisPage['appMsg024'] = /*[[#{app.contract.details.m024}]]*/ '';
+        thisPage['appMsg025'] = /*[[#{app.contract.details.m025}]]*/ '';
+        thisPage['appMsg026'] = /*[[#{app.contract.details.m026}]]*/ '';
+        thisPage['appMsg027'] = /*[[#{app.contract.details.m027}]]*/ '';
+        thisPage['appMsg028'] = /*[[#{app.contract.details.m028}]]*/ '';
+        thisPage['appMsg029'] = /*[[#{app.contract.details.m029}]]*/ '';
+        thisPage['appMsg030'] = /*[[#{app.contract.details.m030}]]*/ '';
+        thisPage['appMsg031'] = /*[[#{app.contract.details.m031}]]*/ '';
+        thisPage['appMsg032'] = /*[[#{app.contract.details.m032}]]*/ '';
+        thisPage['appMsg033'] = /*[[#{app.contract.details.m033}]]*/ '';
+        thisPage['appMsg034'] = /*[[#{app.contract.details.m034}]]*/ '';
+        thisPage['appMsg035'] = /*[[#{app.contract.details.m035}]]*/ '';
+        thisPage['appMsg036'] = /*[[#{app.contract.details.m036}]]*/ '';
+        thisPage['appMsg037'] = /*[[#{app.contract.details.m037}]]*/ '';
+        thisPage['appMsg038'] = /*[[#{app.contract.details.m038}]]*/ '';
+        thisPage['appMsg039'] = /*[[#{app.contract.details.m039}]]*/ '';
+        thisPage['appMsg040'] = /*[[#{app.contract.details.m040}]]*/ '';
+        thisPage['appMsg041'] = /*[[#{app.contract.details.m041}]]*/ '';
+        thisPage['appMsg042'] = /*[[#{app.contract.details.m042}]]*/ '';
+        thisPage['appMsg043'] = /*[[#{app.contract.details.m043}]]*/ '';
+        thisPage['appMsg044'] = /*[[#{app.contract.details.m044}]]*/ '';
+        thisPage['appMsg045'] = /*[[#{app.contract.details.m045}]]*/ '';
+        thisPage['appMsg046'] = /*[[#{app.contract.details.m046}]]*/ '';
+        thisPage['appMsg047'] = /*[[#{app.contract.details.m047}]]*/ '';
+        thisPage['appMsg055'] = /*[[#{app.contract.details.m055}]]*/ '';
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- container -->
+<div class="container" layout:fragment="contents">
+    <legend>계약 상세</legend>
+    
+    <!-- Agreement & Contract -->
+    <div class="search-group">
+        <div class="inr">
+            <p class="title"><i class="ico search"></i>Agreement Details</p>
+            <div class="location">
+                <span><i class="ico home"><em>home</em></i> Agreement Management <em>Agreement Details</em></span>
+            </div>
+            
+            <!-- Agreement (Top Contract Info) -->
+            <div class="box">
+            
+                <!-- MyNetwork -->
+                <div class="select-box fb">
+                    <span>My Network</span>
+                    <div>
+                        <input type="text" id="trmPlmnId" name="trmPlmnId" readonly>
+                    </div>
+                </div>
+                <!-- //MyNetwork -->
+                
+                <!-- PartnerNetwork -->
+                <div class="select-box fb">
+                    <span>Partner Network</span>
+                    <div>
+                        <input type="text" id="rcvPlmnId" name="rcvPlmnId" readonly>
+                    </div>
+                </div>
+                <!-- //PartnerNetwork -->
+                
+                <!-- ContType -->
+                <div class="select-box fb">
+                    <span>Contract Type</span>
+                    <div>
+                        <input type="text" id="contTypeCd" name="contTypeCd" readonly>
+                    </div>
+                </div>
+                <!-- //ContType -->
+                
+                <!-- Contractor Name -->
+                <div class="select-box fb">
+                    <span>Responsible</span>
+                    <div>
+                        <input type="text" id="contrId" name="contrId" readonly>
+                    </div>
+                </div>
+                <!-- //Contractor Name -->
+                
+                <div class="select-box fb">
+                </div>
+                
+                <div class="select-box fb">
+                </div>
+                
+            </div>
+            <!-- //Agreement (Top Contract Info) -->
+            
+            <!-- Contract List Of Agreement between Carriers -->
+            <div class="table-group mg-t10 agreementDetailListTable">
+                <div class="table-box detail-type">
+                    <table class="w100">
+                        <colgroup>
+                            <col style="width:236px">
+                            <col style="width:236px">
+                            <col style="width:236px">
+                            <col style="width:236px">
+                            <col>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th th:text="#{app.contract.details.m047}">구분</th>
+                                <th>Status</th>
+                                <th th:text="#{app.contract.details.m048}">시작일</th>
+                                <th th:text="#{app.contract.details.m049}">종료일</th>
+                                <th th:text="#{app.contract.details.m050}">Memo(상위)</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="table-box detail-type">
+                    <table class="w100">
+                        <colgroup>
+                            <col style="width:236px">
+                            <col style="width:236px">
+                            <col style="width:236px">
+                            <col style="width:236px">
+                            <col>
+                        </colgroup>
+                        <tbody id="contractList">
+                        <!-- 
+                            <tr>
+                                <td>IB</td>
+                                <td>Draft</td>
+                                <td>2018-01-01</td>
+                                <td>2018-12-31</td>
+                                <td>SIOT 적용</td>
+                            </tr>
+                            <tr>
+                                <td>OB</td>
+                                <td>Working</td>
+                                <td>2018-01-01</td>
+                                <td>2018-12-31</td>
+                                <td>자동연장</td>
+                            </tr>
+                            <tr>
+                                <td>OB</td>
+                                <td>Agreed</td>
+                                <td>2018-01-01</td>
+                                <td>2018-12-31</td>
+                                <td>최초계약</td>
+                            </tr>
+                        -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- //Contract List Of Agreement between Carriers -->
+            
+            
+            <!-- Contract Base Info -->
+            <div id="contractBaseInfo" class="outgoing-invoice-group" style="display:none;">
+                <div class="tab-group">
+                
+                    <!-- ContType(Direction) -->
+                    <div class="tab-btn rect-type">
+                        <button type="button" class="btn on" id="contTypeDirection" style="width:200px">Inbound</button>
+                    </div>
+                    <!-- //ContType(Direction) -->
+                    
+                    <!-- Contract Info -->
+                    <div class="outgoing-invoice tab-box on">
+                        <div class="search-group">
+                            <div class="inr">
+                                <div class="box">
+                                    <div class="select-group">
+                                        <div class="select-box date-type fb-quarter">
+                                            <span th:text="#{app.contract.details.m048}">시작일</span>
+                                            <div>
+                                                <input type="text" id="contStDate" name="contStDate" class="datepicker-here" data-language='en' readonly >
+                                                <i class="ico calendar"></i>
+                                            </div>
+                                        </div>
+                                        <div class="select-box date-type fb-quarter">
+                                            <span th:text="#{app.contract.details.m049}">종료일</span>
+                                            <div>
+                                                <input type="text" id="contExpDate" name="contExpDate" class="datepicker-here" data-language='en' readonly >
+                                                <i class="ico calendar"></i>
+                                            </div>
+                                        </div>
+                                        <div class="select-box fb-quarter" id="contAutoUpdYn">
+                                            <span th:text="#{app.contract.details.m051}">자동갱신</span>
+                                        </div>
+                                        <div class="select-box date-type fb-quarter">
+                                            <span th:text="#{app.contract.details.m052}">종료 전 알림일</span>
+                                            <div>
+                                                <input type="text" id="contExpNotiDate" name="contExpNotiDate" class="datepicker-here" data-language='en' readonly >
+                                                <i class="ico calendar"></i>
+                                            </div>
+                                        </div>
+                                        <div class="select-box fb">
+                                            <span th:text="#{app.contract.details.m053}">Memo(세부)</span>
+                                            <div>
+                                                <input type="text" id="contDtlMemo" style="width:441px" name="contDtlMemo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- //Contract Info -->
+                    
+                </div>
+                
+                <!-- Make New Contract(Reset Contract Form) -->
+                <div th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}" class="btn-group">
+                    <button type="button" id="newContract" th:text="#{app.contract.details.m054}" class="btn new-made">신규계약생성</button>
+                </div>
+                <!-- //Make New Contract(Reset Contract Form) -->
+                
+            </div>
+            <!-- //Contract Base Info -->
+            
+            <!-- Contract IB Info -->
+            <div id="contractIbInfo" style="display:none;">
+            
+                <p class="title" id="calInfo" th:text="#{app.contract.details.m055}"><i class="ico ib"></i>IB 계산정보</p>
+                <div class="box">
+                
+                    <!-- Currency -->
+                    <div class="single-select" id="currency" style="z-index: 9;">
+                        <span>Currency</span>
+                    </div>
+                    <!-- //Currency -->
+                     
+                    <!-- Tax Application -->
+                    <div class="select-box" id="taxAplyType">
+                        <span>Tax application</span>
+                    </div>
+                    <!-- //Tax Application -->
+                    
+                    <!-- Tax Amount -->
+                    <div class="select-box date-type">
+                        <span>Tax Amount</span>
+                        <div>
+                            <input type="text" id="taxAplyPecnt" name="taxAplyPecnt" maxlength="10" class="right decimal" >
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <!-- //Tax Amount -->
+                    
+                    <!-- Exclude calls -->
+                    <div class="multi-select" id="excludeCalls" >
+                        <span>Excluded calls</span>
+                    </div>
+                    <!-- //Exclude calls -->
+                    
+                </div>
+            
+            </div>
+            <!-- //Contract IB Info -->
+            
+        </div>
+    </div>
+    <!-- //Agreement & Contract -->
+    
+    <!-- Contract Base Rate Regist -->
+    <div id="contractBaseTarifInfo" class="list-group" style="display:none;">
+        <div class="inr">
+            <p class="title"><i class="ico rate"></i>Rate Regist</p>
+            <div class="table-box padding5-type add-type add-table">
+                <table class="w100">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col style="width:235px">
+                        <col style="width:80px">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Call Type</th>
+                            <th>IOT</th>
+                            <th>Volume</th>
+                            <th>Unit</th>
+                            <th>Additional Fee Type</th>
+                            <th>Additional Fee</th>
+                            <th th:text="#{app.contract.details.m056}">Tax 적용</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody id="contBasTarifs">
+                    
+                        <tr class="border0">
+                            
+                            <!-- Call Type -->
+                            <td>
+                                <div id="callType" class="select-box">
+                                </div>
+                            </td>
+                            <!-- //Call Type -->
+                            
+                            <!-- IOT (정산요율:stelTarif) -->
+                            <td>
+                                <div class="select-box">
+                                    <div>
+                                        <input type="text" id="stelTarif" name="stelTarif" maxlength="10" class="right decimal">
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- //IOT -->
+                            
+                            <!-- Volume (정산볼륨:stelVolume) -->
+                            <td>
+                                <div class="select-box">
+                                    <div>
+                                        <input type="text" id="stelVolume" name="stelVolume" maxlength="10" class="right numberOnly">
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- //Volume -->
+                            
+                            <!-- Unit (정산단위:stelUnit) -->
+                            <td>
+                                <div id="unit" class="select-box">
+                                </div>
+                            </td>
+                            <!-- //Unit -->
+                            
+                            <!-- Additional Fee type (부가 수수료 금액: adtnFeeTypeCd) -->
+                            <td>
+                                <div id="addFeeType" class="select-box">
+                                </div>
+                            </td>
+                            <!-- //Additional Fee type -->
+                            
+                            <!-- Additional Fee Amount (세금적용: adtnFeeAmt) -->
+                            <td>
+                                <div class="select-box">
+                                    <div>
+                                        <input type="text" id="adtnFeeAmt" name="adtnFeeAmt" maxlength="10" class="right adtnFeeAmt numberOnly" readonly >
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- //Additional Fee Amount -->
+                            
+                            <!-- Tax Aply (세금적용 : taxAply) -->
+                            <td>
+                                <input type="checkbox" id="taxAply" name="taxAply" class="hide">
+                                <label for="taxAply"><i class="ico checkbox"><em>check</em></i></label>
+                                
+                                <!-- Add Buttion -->
+                                <button type="button" id="addContBasDtlTarif" class="add-type-button">
+                                    <i class="ico add"><em>add</em></i>
+                                </button>
+                                <!-- //Add Buttion -->
+                            </td>
+                             <!-- // Tax Aply -->
+                            
+                        </tr>
+                        
+                    </tbody>
+                    
+                </table>
+            </div>
+            
+            <!--  New ContBasTarif Dynamic Adding Area -->
+            <div id="newContBasTarifDiv" class="table-box padding5-type gray-type">
+                <table class="w100">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col style="width:235px">
+                        <col style="width:80px">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Call Type</th>
+                            <th>IOT</th>
+                            <th>Volume</th>
+                            <th>Unit</th>
+                            <th>Additional Fee Type</th>
+                            <th>Additional Fee</th>
+                            <th th:text="#{app.contract.details.m056}">Tax 적용</th>
+                        </tr>
+                    </thead>
+                    <!-- [D] 추가행 삽입되는 부분 -->
+                    <!-- [D] 추가행 삽입되는 부분 -->
+                    <tbody id="newContBasTarifs">
+                    </tbody>
+                    <!-- [D] 추가행 삽입되는 부분 -->
+                    <!-- [D] 추가행 삽입되는 부분 -->
+                </table>
+            </div>
+            <!-- //ContDtlBasTarif Adding Area -->
+            
+        </div>
+    </div>
+    <!-- //Contract Base Rate Regist -->
+    
+    
+    <!-- @Special Condition -->
+    <div id="contractSpecialInfo" class="list-group bg-white" style="display:none;">
+        <div class="inr">
+            <p class="title"><i class="ico star"></i>Special Condition</p>
+            <div class="search-group special-condition pd0">
+                <div class="inr">
+                    <div class="box d-inline w100">
+                        
+                        <!-- special mode -->
+                        <div id="specialModel" class="select-box horizontal selected">
+                             <span>Special Model</span>
+                         </div>
+                        <!-- //special mode -->
+                        
+                        <!-- Add Special Model Panel -->
+                        <button type="button" id="addSpecialModel" class="btn search ml-2">Add</button>
+                        <!-- // Add Special Model Panel -->
+                        
+                        <!-- special mode 
+                        <div id="specialModel" class="select-box horizontal selected">
+                             <span>Special Model</span>
+                         </div>
+                         -->
+                         <!-- Call Type: 추후 삭제가능
+                        <div class="multi-select" id="callType2">
+                            <span>Call Type</span>
+                        </div>
+                         -->
+                        <!-- Add Special Model Panel 
+                        <button type="button" id="addSpecialModel" class="btn search ml-2">Add</button>
+                        -->
+                        
+                    </div>
+                </div>  
+                <hr class="section-line">
+                <div class="btn-group">
+                    <button th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}" th:text="#{app.contract.details.m057}" type="button" id="saveTempContract" style="display:none;" class="btn temp">임시저장</button>
+                    <button th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}" th:text="#{app.contract.details.m058}" type="button" id="requestConsent" style="display:none;" class="btn agree-request">동의요청</button>
+                    <button th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}" th:text="#{app.contract.details.m059}" type="button" id="responseConset" style="display:none;" class="btn add">동의</button>
+                    <button th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}" th:text="#{app.contract.details.m060}" type="button" id="responseRefusal" style="display:none;" class="btn cancel">거부</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //@Special Condition -->
+    
+    
+    <!-- [D] 190726 팝업 추가-->
+    <!-- @@@@@@ Model layer @@@@@@ -->
+    <div id="spclCondEditModal" class="layer-group apply">
+        <div id="spclActiveTab" class="layer">
+            <div class="inr">
+                    
+                    <div class="tab-group">
+                    
+                        <!-- Tap Header -->
+                        <div class="tab-btn">
+                            <button type="button" id="changeRate" class="spclTab btn on">Change Rate</button>
+                            <button type="button" id="fixedCharge" class="spclTab btn">Fixed Charge</button>
+                            <button type="button" id="specialRule" class="spclTab btn">Special Rule</button>
+                        </div>
+                        <!-- //Tap Header -->
+                        
+                        <!-- Rage Change Tap -->
+                        <div id="changeRateTab" class="tab-box on">
+                            <div class="table-box padding5-type gray-type">
+                                <table class="w100">
+                                    <colgroup>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col>
+                                        <col style="width:80px">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>Call Type</th>
+                                            <th>IOT</th>
+                                            <th>Volume</th>
+                                            <th>Unit</th>
+                                            <th>Additional Fee type</th>
+                                            <th>Additional Fee</th>
+                                            <th th:text="#{app.contract.details.m056}">Tax 적용</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="contSpclBasTarif">
+                                    
+                                    <!-- 
+                                        <tr>
+                                            <td>
+                                                <div class="select-box">
+                                                    <select>
+                                                        <option value="">-</option>
+                                                        <option value="">Voice-Local</option>
+                                                        <option value="">Voice-Home</option>
+                                                        <option value="">Voice-Int.</option>
+                                                        <option value="">Voice-MTC.</option>
+                                                        <option value="">SMS-MO</option>
+                                                        <option value="">SMS-MT</option>
+                                                        <option value="">Data</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <div>
+                                                        <input type="text" id="" name="" value="" class="right">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <div>
+                                                        <input type="text" id="" name="" value="" class="right">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <select>
+                                                        <option value="">-</option>
+                                                        <option value="">Sec</option>
+                                                        <option value="">Min</option>
+                                                        <option value="">Occ</option>
+                                                        <option value="">KB</option>
+                                                        <option value="">MB</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <select>
+                                                        <option value="">-</option>
+                                                        <option value="">Call Setup Fee</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <div>
+                                                        <input type="text" id="" name="" value="" class="right">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chk1-1" name="" value="" class="hide">
+                                                <label for="chk1-1"><i class="ico checkbox"><em>선택</em></i></label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="select-box">
+                                                    <select>
+                                                        <option value="">-</option>
+                                                        <option value="">Voice-Local</option>
+                                                        <option value="">Voice-Home</option>
+                                                        <option value="">Voice-Int.</option>
+                                                        <option value="">Voice-MTC.</option>
+                                                        <option value="">SMS-MO</option>
+                                                        <option value="">SMS-MT</option>
+                                                        <option value="">Data</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <div>
+                                                        <input type="text" id="" name="" value="" class="right">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <div>
+                                                        <input type="text" id="" name="" value="" class="right">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <select>
+                                                        <option value="">-</option>
+                                                        <option value="">Sec</option>
+                                                        <option value="">Min</option>
+                                                        <option value="">Occ</option>
+                                                        <option value="">KB</option>
+                                                        <option value="">MB</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <select>
+                                                        <option value="">-</option>
+                                                        <option value="">Call Setup Fee</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="select-box">
+                                                    <div>
+                                                        <input type="text" id="" name="" value="" class="right">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" id="chk1-1" name="" value="" class="hide">
+                                                <label for="chk1-1"><i class="ico checkbox"><em>선택</em></i></label>
+                                            </td>
+                                        </tr>
+                                        
+                                         -->
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- //Rage Change Tab-->
+                        
+                        <!-- Fixed Charge Tab -->
+                        <div id="fixedChargeTab" class="tab-box">
+                            <div class="search-group">
+                                <div class="inr">
+                                    <div class="box">
+                                    
+                                        <!-- fixed rate calendar -->
+                                        <div class="select-box date-type">
+                                            <span th:text="#{app.contract.details.m061}">정산주기</span>
+                                            <div>
+                                                <input type="text" id="fixAmtDate" name="fixAmtDate" class="datepicker-here" data-language='en' readonly >
+                                                <i class="ico calendar endDate"></i>
+                                            </div>
+                                        </div>
+                                        <!-- //fixed rate calendar -->
+                                        
+                                        <div class="select-box" style="width:299px">
+                                            <span th:text="#{app.contract.details.m062}">금액</span>
+                                            <div>
+                                                <input type="text" id="fixAmt" name="fixAmt" maxlength="10" class="right decimal">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Fix Amt Currency -->
+                                        <div class="single-select" id="fixAmtCur">
+                                            <span>Currency</span>
+                                        </div>
+                                        <!-- // Fix Amt Currency -->
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //Fixed Charge Tab -->
+                        
+                        <!-- Special Rule Tab -->
+                        <div id="specialRuleTab" class="tab-box">
+                            <div class="search-group">
+                                <div class="inr">
+                                    <div class="box">
+                                        
+                                        <!-- special rule calendar -->
+                                        <div class="select-box date-type">
+                                            <span th:text="#{app.contract.details.m052}">종료 전 알림일</span>
+                                            <div>
+                                                <input type="text" id="spclNotiDate" name="spclNotiDate" class="datepicker-here" data-language='en' readonly >
+                                                <i class="ico calendar endDate"></i>
+                                            </div>
+                                        </div>
+                                        <!-- //special rule calendar -->
+                                        
+                                        <div class="select-box" style="width:684px">
+                                            <span>Memo</span>
+                                            <div>
+                                                <input type="text" id="spclMemo" name="spclMemo">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- //Special Rule Tab -->
+                    
+                    <!-- Tab Button -->
+                    <div class="btn-group">
+                        <button type="button" id="saveSpclModal" class="btn add">Save</button>
+                        <button type="button" id="closeSpclModal" class="btn cancel">Cancel</button>
+                    </div>
+                    <!-- Tab Button -->
+                    
+            </div>
+        </div>
+        <div class="dim"></div>
+    </div>
+    <!-- //@@@@@@ Model layer @@@@@@ -->
+    
+</div>
+<!-- //container -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/blink/dch/contract/contractCommon.js}"></script>
+    <script type="text/javascript" th:src="@{/js/blink/dch/contract/contractDetail.js}"></script>
+</th:block>
+
+
+</html>

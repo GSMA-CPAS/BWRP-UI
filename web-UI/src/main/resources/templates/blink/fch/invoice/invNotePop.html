@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    
+<!-- layer -->
+<!-- layer -->
+            <div class="layer-group cna-publish" id="notePop">
+                <div class="layer">
+                    <div class="inr">
+                        <div class="pdf-down-group">
+                            <p class="pdf-title">GSM <span th:text="${note.noteKindCdNm}"></span> FOR ROAMING TRAFFIC FROM <span th:text="${note.trmCmpnNm}"></span></p>
+                            <p class="pdf-subtitle">Address</p>
+                            <div class="table-box">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:20.6666%">
+                                        <col>
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th>To. <span th:text="${note.rcvPlmnId}"></span></th>
+                                            <td>
+                                                <span th:text="${note.rcvCmpnNm}"></span><br>
+                                                <span th:text="${note.rcvCmpnAdr}"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>From. <span th:text="${note.trmPlmnId}"></span></th>
+                                            <td>
+                                                <span th:text="${note.trmCmpnNm}"></span><br>
+                                                <span th:text="${note.trmCmpnAdr}"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="pdf-subtitle">Details<span th:if="${note.taxNo !=null and note.taxNo != ''}"><em>*</em>Tax Registration Number : <span th:text="${note.taxNo}"></span></span></p>
+                            <div class="table-box">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:20.6666%">
+                                        <col>
+                                        <col style="width:20.6666%">
+                                        <col>
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th><span th:utext="${note.noteKindCdNm}"></span> Number</th>
+                                            <td th:text="${note.noteRefNum}"></td>
+                                            <th>Issue Date</th>
+                                            <td th:text="${note.creDateVal}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Invoice Number</th>
+                                            <td th:text="${note.invocNm}"></td>
+                                            <th>Traffic Period:</th>
+                                            <td th:text="${note.trafcDay}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-box">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:20.6666%">
+                                        <col>
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <th>Reason for request</th>
+                                            <td th:utext="${#strings.replace(note.reqReason, T(org.apache.commons.lang3.StringUtils).LF, '&lt;br/&gt;')}">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-box horizontal">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:20.6666%">
+                                        <col th:each="item:${amtList}">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>Amount</th>
+                                            <th th:each="item:${amtList}">Value in [[${item.noteCur}]]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Pre-Tax</td>
+                                            <td class="right" th:each="item:${amtList}">[[${item.noteAmt}]]</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tax</td>
+                                            <td class="right"  th:each="item:${amtList}">[[${item.taxAmt}]]</td>
+                                        </tr>
+                                        <tr class="total">
+                                            <td>Total</td>
+                                            <td class="right" th:each="item:${amtList}" >[[${item.totAmt}]]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-box horizontal">
+                                <table>
+                                    <colgroup>
+                                        <col style="width:50%">
+                                        <col>
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>Exchange Rate Infomation</th>
+                                            <th>Contact for Inquiries</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="cna-list">
+                                                    <ul>
+                                                        <li th:each="item:${erateList}">
+                                                            <div style="width:70px;clear: both;float: left;">[[${item.invocBasCur}]] - [[${item.invocChangeCur}]]</div>
+                                                            <div style="float:left;width:72px;">[[${item.erateBaseDay}]]</div> 
+                                                            <div style="float:left;width:72px;text-align:right;">[[${item.erateVal}]]</div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <ul>
+                                                        <li>Contact US : <span th:text="${note.contNm}"></span></li>
+                                                        <li>E-Mail : <span th:text="${note.contEmail}"></span></li>
+                                                        <li>Fax Number : <span th:text="${note.contFaxNo}"></span></li>
+                                                        <li>Tel Number : <span th:text="${note.contTelNo}"></span></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="btn-group default">
+                                <input type="hidden" id="pdfNoteRefNum" th:value="${note.noteRefNum}">
+                                <button type="button" class="btn cancel" data-dismiss="modal" >닫기</button>
+                                <button type="button" class="btn save" id="pdfPopDownId">PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn close" data-dismiss="modal"><i class="ico layer-close"><em>닫기</em></i></button>
+                </div>
+                <div class="dim"></div>
+            </div>
+            <!-- //layer -->
+</html>            

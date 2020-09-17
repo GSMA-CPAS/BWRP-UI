@@ -1,0 +1,1222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kt.blink.biz.fch.finance.mapper.FinanceReportMapper">
+    
+    <!-- find partner plmns from company code -->
+    <select id="findPartnerNetworksFromCompanyCode" resultType="String">
+        /*FinanceReportMapper.findPartnerNetworksFromCompanyCode*/
+        SELECT
+            tci.cd_val1
+        FROM tb_cd_info tci INNER JOIN tb_cd_group_info tcgi
+        ON tcgi.cd_group_id = tci.cd_group_id
+        WHERE tci.cd_group_id = #{companyCode}
+        AND tci.use_yn = true
+    </select>
+    
+    
+    <!-- find Sales Info by amount -->
+    <select id="findSalesInfoByAmount" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findSalesInfoByAmount*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+        FROM 
+            (
+                SELECT
+                    setl_year AS year,
+                    MAX(month_01) AS jan,
+                    MAX(month_02) AS feb,
+                    MAX(month_03) AS mar,
+                    MAX(month_04) AS apr,
+                    MAX(month_05) AS may,
+                    MAX(month_06) AS jun,
+                    MAX(month_07) AS jul,
+                    MAX(month_08) AS aug,
+                    MAX(month_09) AS sep,
+                    MAX(month_10) AS oct,
+                    MAX(month_11) AS nov,
+                    MAX(month_12) AS dec
+                
+                FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        
+                        CASE WHEN setl_mon = '01' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_01,
+                        
+                        CASE WHEN setl_mon = '02' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_02,
+                        
+                        CASE WHEN setl_mon = '03' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_03,
+                        
+                        CASE WHEN setl_mon = '04' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_04,
+                        
+                        CASE WHEN setl_mon = '05' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_05,
+                        
+                        CASE WHEN setl_mon = '06' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_06,
+                        
+                        CASE WHEN setl_mon = '07' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_07,
+                        
+                        CASE WHEN setl_mon = '08' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_08,
+                        
+                        CASE WHEN setl_mon = '09' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_09,
+                        
+                        CASE WHEN setl_mon = '10' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_10,
+                        
+                        CASE WHEN setl_mon = '11' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_11,
+                        
+                        CASE WHEN setl_mon = '12' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_12
+                        
+                    FROM
+                    (
+                        SELECT
+                            SUBSTRING(setl_month, 1, 4) setl_year,
+                            SUBSTRING(setl_month, 5, 6) setl_mon,
+                            (SELECT erate_val FROM tb_erate_info WHERE base_isocu_cd = 'SDR' 
+                                AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM') AND tgt_isocu_cd = cur_cd) AS erate_val,
+                            
+                    <choose>
+                        <!--callType:MOC-Local-->
+                        <when test='callType == "MOC-Local"'>
+                            COALESCE(moc_vo_lo_setl_amt, 0) + COALESCE(moc_vo_lo_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:MOC-Home-->
+                        <when test='callType == "MOC-Home"'>
+                            COALESCE(moc_vo_home_setl_amt, 0) + COALESCE(moc_vo_home_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:MOC-Int-->
+                        <when test='callType == "MOC-Int"'>
+                            COALESCE(moc_vo_intl_setl_amt, 0) + COALESCE(moc_vo_intl_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:MTC-->
+                        <when test='callType == "MTC"'>
+                            COALESCE(mtc_vo_setl_amt, 0) + COALESCE(mtc_vo_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:SMS-MO-->
+                        <when test='callType == "SMS-MO"'>
+                            COALESCE(moc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:SMS-MT-->
+                        <when test='callType == "SMS-MT"'>
+                            COALESCE(mtc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:GPRS-->
+                        <when test='callType == "GPRS"'>
+                            COALESCE(data_setl_amt, 0) + COALESCE(data_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:All Service-->
+                        <otherwise>
+                            COALESCE(moc_vo_lo_setl_amt, 0) + COALESCE(moc_vo_lo_tax_setl_amt, 0) +
+                            COALESCE(moc_vo_home_setl_amt, 0) + COALESCE(moc_vo_home_tax_setl_amt, 0) +
+                            COALESCE(moc_vo_intl_setl_amt, 0) + COALESCE(moc_vo_intl_tax_setl_amt, 0) +
+                            COALESCE(mtc_vo_setl_amt, 0) + COALESCE(mtc_vo_tax_setl_amt, 0) + 
+                            COALESCE(moc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) +
+                            COALESCE(mtc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) +
+                            COALESCE(data_setl_amt, 0) + COALESCE(data_tax_setl_amt, 0) AS total_amt
+                         </otherwise>
+                    </choose>
+                            
+                        FROM
+                            tb_tap_date_sum
+                            
+                        <where>
+                            
+                            <foreach collection="periods" item="period" index="index" separator="OR" open="(" close=")">
+                                setl_month LIKE #{period} || '%'
+                            </foreach>
+                            
+                           <choose>
+                               <!--Direction:IB Roaming-->
+                               <when test='direction == "IBR"'>
+                                    AND rcv_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                               
+                               <!--Direction:OB Roaming-->
+                               <when test='direction == "OBR"'>
+                                    AND trm_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                           </choose>
+                        
+                        </where>
+                    
+                    ) a
+                    
+                    GROUP BY setl_year, setl_mon, erate_val
+                ) b
+                
+                GROUP BY setl_year
+                
+            ) c
+    </select>
+    
+    
+    <!-- find Sales Info by count -->
+    <select id="findSalesInfoByCount" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findSalesInfoByCount*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+        FROM 
+            (
+                SELECT
+                    setl_year AS year,
+                    MAX(month_01) AS jan,
+                    MAX(month_02) AS feb,
+                    MAX(month_03) AS mar,
+                    MAX(month_04) AS apr,
+                    MAX(month_05) AS may,
+                    MAX(month_06) AS jun,
+                    MAX(month_07) AS jul,
+                    MAX(month_08) AS aug,
+                    MAX(month_09) AS sep,
+                    MAX(month_10) AS oct,
+                    MAX(month_11) AS nov,
+                    MAX(month_12) AS dec
+                
+                FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        CASE WHEN setl_mon = '01' THEN SUM(total_cnt) END month_01,
+                        CASE WHEN setl_mon = '02' THEN SUM(total_cnt) END month_02,
+                        CASE WHEN setl_mon = '03' THEN SUM(total_cnt) END month_03,
+                        CASE WHEN setl_mon = '04' THEN SUM(total_cnt) END month_04,
+                        CASE WHEN setl_mon = '05' THEN SUM(total_cnt) END month_05,
+                        CASE WHEN setl_mon = '06' THEN SUM(total_cnt) END month_06,
+                        CASE WHEN setl_mon = '07' THEN SUM(total_cnt) END month_07,
+                        CASE WHEN setl_mon = '08' THEN SUM(total_cnt) END month_08,
+                        CASE WHEN setl_mon = '09' THEN SUM(total_cnt) END month_09,
+                        CASE WHEN setl_mon = '10' THEN SUM(total_cnt) END month_10,
+                        CASE WHEN setl_mon = '11' THEN SUM(total_cnt) END month_11,
+                        CASE WHEN setl_mon = '12' THEN SUM(total_cnt) END month_12
+                    FROM
+                    (
+                        SELECT
+                            SUBSTRING(setl_month, 1, 4) setl_year,
+                            SUBSTRING(setl_month, 5, 6) setl_mon,
+                            
+                    <choose>
+                        <!--callType:MOC-Local-->
+                        <when test='callType == "MOC-Local"'>
+                            COALESCE(moc_vo_lo_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:MOC-Home-->
+                        <when test='callType == "MOC-Home"'>
+                            COALESCE(moc_vo_home_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:MOC-Int-->
+                        <when test='callType == "MOC-Int"'>
+                            COALESCE(moc_vo_intl_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:MTC-->
+                        <when test='callType == "MTC"'>
+                            COALESCE(mtc_vo_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:SMS-MO-->
+                        <when test='callType == "SMS-MO"'>
+                            COALESCE(moc_sms_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:SMS-MT-->
+                        <when test='callType == "SMS-MT"'>
+                            COALESCE(mtc_sms_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:GPRS-->
+                        <when test='callType == "GPRS"'>
+                            COALESCE(data_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:All Service-->
+                        <otherwise>
+                            COALESCE(moc_vo_lo_recd_cnt, 0) + COALESCE(moc_vo_home_recd_cnt, 0) + 
+                            COALESCE(moc_vo_intl_recd_cnt, 0) + COALESCE(mtc_vo_recd_cnt, 0) + 
+                            COALESCE(moc_sms_recd_cnt, 0) + COALESCE(mtc_sms_recd_cnt, 0) + 
+                            COALESCE(data_recd_cnt, 0) AS total_cnt
+                         </otherwise>
+                    </choose>
+                            
+                        FROM
+                            tb_tap_date_sum
+                            
+                        <where>
+                            
+                            <foreach collection="periods" item="period" index="index" separator="OR" open="(" close=")">
+                                setl_month LIKE #{period} || '%'
+                            </foreach>
+                            
+                           <choose>
+                               <!--Direction:IB Roaming-->
+                               <when test='direction == "IBR"'>
+                                    AND rcv_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                               
+                               <!--Direction:OB Roaming-->
+                               <when test='direction == "OBR"'>
+                                    AND trm_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                           </choose>
+                        
+                        </where>
+                            
+                    ) a
+                    
+                    GROUP BY setl_year, setl_mon
+                ) b
+                
+                GROUP BY setl_year
+                
+            ) c
+    </select>
+    
+    
+    <!-- find Sales Info by volume -->
+    <select id="findSalesInfoByVolume" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findSalesInfoByVolume*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+        FROM 
+            (
+                SELECT
+                    setl_year AS year,
+                    MAX(month_01) AS jan,
+                    MAX(month_02) AS feb,
+                    MAX(month_03) AS mar,
+                    MAX(month_04) AS apr,
+                    MAX(month_05) AS may,
+                    MAX(month_06) AS jun,
+                    MAX(month_07) AS jul,
+                    MAX(month_08) AS aug,
+                    MAX(month_09) AS sep,
+                    MAX(month_10) AS oct,
+                    MAX(month_11) AS nov,
+                    MAX(month_12) AS dec
+                
+                FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        CASE WHEN setl_mon = '01' THEN SUM(total_qnt) END month_01,
+                        CASE WHEN setl_mon = '02' THEN SUM(total_qnt) END month_02,
+                        CASE WHEN setl_mon = '03' THEN SUM(total_qnt) END month_03,
+                        CASE WHEN setl_mon = '04' THEN SUM(total_qnt) END month_04,
+                        CASE WHEN setl_mon = '05' THEN SUM(total_qnt) END month_05,
+                        CASE WHEN setl_mon = '06' THEN SUM(total_qnt) END month_06,
+                        CASE WHEN setl_mon = '07' THEN SUM(total_qnt) END month_07,
+                        CASE WHEN setl_mon = '08' THEN SUM(total_qnt) END month_08,
+                        CASE WHEN setl_mon = '09' THEN SUM(total_qnt) END month_09,
+                        CASE WHEN setl_mon = '10' THEN SUM(total_qnt) END month_10,
+                        CASE WHEN setl_mon = '11' THEN SUM(total_qnt) END month_11,
+                        CASE WHEN setl_mon = '12' THEN SUM(total_qnt) END month_12
+                    FROM
+                    (
+                        SELECT
+                            SUBSTRING(setl_month, 1, 4) setl_year,
+                            SUBSTRING(setl_month, 5, 6) setl_mon,
+                            
+                    <choose>
+                        <!--callType:MOC-Local-->
+                        <when test='callType == "MOC-Local"'>
+                            COALESCE(moc_vo_lo_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:MOC-Home-->
+                        <when test='callType == "MOC-Home"'>
+                            COALESCE(moc_vo_home_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:MOC-Int-->
+                        <when test='callType == "MOC-Int"'>
+                            COALESCE(moc_vo_intl_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:MTC-->
+                        <when test='callType == "MTC"'>
+                            COALESCE(mtc_vo_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:SMS-MO-->
+                        <when test='callType == "SMS-MO"'>
+                            COALESCE(moc_sms_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:SMS-MT-->
+                        <when test='callType == "SMS-MT"'>
+                            COALESCE(mtc_sms_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:GPRS-->
+                        <when test='callType == "GPRS"'>
+                            COALESCE(data_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:All Service-->
+                        <otherwise>
+                            COALESCE(moc_vo_lo_use_qnt, 0) + COALESCE(moc_vo_home_use_qnt, 0) + 
+                            COALESCE(moc_vo_intl_use_qnt, 0) + COALESCE(mtc_vo_use_qnt, 0) + 
+                            COALESCE(moc_sms_use_qnt, 0) + COALESCE(mtc_sms_use_qnt, 0) + 
+                            COALESCE(data_use_qnt, 0) AS total_qnt
+                         </otherwise>
+                    </choose>
+                            
+                        FROM
+                            tb_tap_date_sum
+                            
+                        <where>
+                            
+                            <foreach collection="periods" item="period" index="index" separator="OR" open="(" close=")">
+                                setl_month LIKE #{period} || '%'
+                            </foreach>
+                            
+                           <choose>
+                               <!--Direction:IB Roaming-->
+                               <when test='direction == "IBR"'>
+                                    AND rcv_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                               
+                               <!--Direction:OB Roaming-->
+                               <when test='direction == "OBR"'>
+                                    AND trm_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                           </choose>
+                        
+                        </where>
+                            
+                    ) a
+                    
+                    GROUP BY setl_year, setl_mon
+                ) b
+                
+                GROUP BY setl_year
+                
+            ) c
+    </select>
+    
+    
+    <!-- find Sales Info by IMSI -->
+    <select id="findSalesInfoByIMSI" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findSalesInfoByIMSI*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+            
+        FROM    
+         (
+            SELECT
+                setl_year AS year,
+                MAX (month_01) AS jan,
+                MAX (month_02) AS feb,
+                MAX (month_03) AS mar,
+                MAX (month_04) AS apr,
+                MAX (month_05) AS may,
+                MAX (month_06) AS jun,
+                MAX (month_07) AS jul,
+                MAX (month_08) AS aug,
+                MAX (month_09) AS sep,
+                MAX (month_10) AS oct,
+                MAX (month_11) AS nov,
+                MAX (month_12) AS dec
+            FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        CASE WHEN setl_mon = '01' THEN SUM (cnt) END month_01,
+                        CASE WHEN setl_mon = '02' THEN SUM (cnt) END month_02,
+                        CASE WHEN setl_mon = '03' THEN SUM (cnt) END month_03,
+                        CASE WHEN setl_mon = '04' THEN SUM (cnt) END month_04,
+                        CASE WHEN setl_mon = '05' THEN SUM (cnt) END month_05,
+                        CASE WHEN setl_mon = '06' THEN SUM (cnt) END month_06,
+                        CASE WHEN setl_mon = '07' THEN SUM (cnt) END month_07,
+                        CASE WHEN setl_mon = '08' THEN SUM (cnt) END month_08,
+                        CASE WHEN setl_mon = '09' THEN SUM (cnt) END month_09,
+                        CASE WHEN setl_mon = '10' THEN SUM (cnt) END month_10,
+                        CASE WHEN setl_mon = '11' THEN SUM (cnt) END month_11,
+                        CASE WHEN setl_mon = '12' THEN SUM (cnt) END month_12
+            FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        COUNT (*) cnt
+                    FROM
+                        (
+                            SELECT
+                                SUBSTRING (setl_month, 1, 4) setl_year,
+                                SUBSTRING (setl_month, 5, 6) setl_mon
+                            FROM
+                                tb_tap_imsi_sum
+                        <where>
+                            
+                            <foreach collection="periods" item="period" index="index" separator="OR" open="(" close=")">
+                                setl_month LIKE #{period} || '%'
+                            </foreach>
+                            
+                           <choose>
+                               <!--Direction:IB Roaming-->
+                               <when test='direction == "IBR"'>
+                                    AND rcv_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                               
+                               <!--Direction:OB Roaming-->
+                               <when test='direction == "OBR"'>
+                                    AND trm_plmn_id IN
+                                    <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                        #{partnerNetwork}
+                                    </foreach>
+                               </when>
+                           </choose>
+                        
+                        </where>
+                    ) a
+                GROUP BY
+                    setl_year,
+                    setl_mon
+                ) b
+            GROUP BY
+                setl_year,
+                setl_mon
+                ) c
+        GROUP BY
+            setl_year 
+        ) d
+    </select>
+    
+    
+    <!-- find Regression Info by Amount -->
+    <select id="findRegressionInfoByAmount" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findRegressionInfoByAmount*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+        FROM 
+            (
+                SELECT
+                    setl_year AS year,
+                    MAX(month_01) AS jan,
+                    MAX(month_02) AS feb,
+                    MAX(month_03) AS mar,
+                    MAX(month_04) AS apr,
+                    MAX(month_05) AS may,
+                    MAX(month_06) AS jun,
+                    MAX(month_07) AS jul,
+                    MAX(month_08) AS aug,
+                    MAX(month_09) AS sep,
+                    MAX(month_10) AS oct,
+                    MAX(month_11) AS nov,
+                    MAX(month_12) AS dec
+                
+                FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        
+                        CASE WHEN setl_mon = '01' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_01,
+                        
+                        CASE WHEN setl_mon = '02' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_02,
+                        
+                        CASE WHEN setl_mon = '03' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_03,
+                        
+                        CASE WHEN setl_mon = '04' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_04,
+                        
+                        CASE WHEN setl_mon = '05' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_05,
+                        
+                        CASE WHEN setl_mon = '06' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_06,
+                        
+                        CASE WHEN setl_mon = '07' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_07,
+                        
+                        CASE WHEN setl_mon = '08' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_08,
+                        
+                        CASE WHEN setl_mon = '09' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_09,
+                        
+                        CASE WHEN setl_mon = '10' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_10,
+                        
+                        CASE WHEN setl_mon = '11' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_11,
+                        
+                        CASE WHEN setl_mon = '12' THEN 
+                            ROUND(COALESCE((SELECT erate_val FROM tb_erate_info 
+                            WHERE base_isocu_cd = 'SDR' 
+                               AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM')
+                               AND tgt_isocu_cd = #{currency}), CASE WHEN #{currency} = 'SDR' THEN 1 ELSE 0 END) 
+                               * (sum(total_amt) / erate_val), 6)
+                        END month_12
+                        
+                    FROM
+                    (
+                        SELECT
+                            SUBSTRING(setl_month, 1, 4) setl_year,
+                            SUBSTRING(setl_month, 5, 6) setl_mon,
+                            (SELECT erate_val FROM tb_erate_info WHERE base_isocu_cd = 'SDR' 
+                                AND tgt_mon = TO_CHAR(NOW(), 'YYYYMM') AND tgt_isocu_cd = cur_cd) AS erate_val,
+                            
+                    <choose>
+                        <!--callType:MOC-Local-->
+                        <when test='callType == "MOC-Local"'>
+                            COALESCE(moc_vo_lo_setl_amt, 0) + COALESCE(moc_vo_lo_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:MOC-Home-->
+                        <when test='callType == "MOC-Home"'>
+                            COALESCE(moc_vo_home_setl_amt, 0) + COALESCE(moc_vo_home_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:MOC-Int-->
+                        <when test='callType == "MOC-Int"'>
+                            COALESCE(moc_vo_intl_setl_amt, 0) + COALESCE(moc_vo_intl_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:MTC-->
+                        <when test='callType == "MTC"'>
+                            COALESCE(mtc_vo_setl_amt, 0) + COALESCE(mtc_vo_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:SMS-MO-->
+                        <when test='callType == "SMS-MO"'>
+                            COALESCE(moc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:SMS-MT-->
+                        <when test='callType == "SMS-MT"'>
+                            COALESCE(mtc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:GPRS-->
+                        <when test='callType == "GPRS"'>
+                            COALESCE(data_setl_amt, 0) + COALESCE(data_tax_setl_amt, 0) AS total_amt
+                         </when>
+                        <!--callType:All Service-->
+                        <otherwise>
+                            COALESCE(moc_vo_lo_setl_amt, 0) + COALESCE(moc_vo_lo_tax_setl_amt, 0) +
+                            COALESCE(moc_vo_home_setl_amt, 0) + COALESCE(moc_vo_home_tax_setl_amt, 0) +
+                            COALESCE(moc_vo_intl_setl_amt, 0) + COALESCE(moc_vo_intl_tax_setl_amt, 0) +
+                            COALESCE(mtc_vo_setl_amt, 0) + COALESCE(mtc_vo_tax_setl_amt, 0) + 
+                            COALESCE(moc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) +
+                            COALESCE(mtc_sms_setl_amt, 0) + COALESCE(mtc_sms_tax_setl_amt, 0) +
+                            COALESCE(data_setl_amt, 0) + COALESCE(data_tax_setl_amt, 0) AS total_amt
+                         </otherwise>
+                    </choose>
+                            
+                        FROM
+                            tb_tap_date_sum
+                            
+                        WHERE
+                            setl_month NOT LIKE TO_CHAR(NOW(), 'YYYY') || '%'
+                            
+                        <choose>
+                            <!--Direction:IB Roaming-->
+                            <when test='direction == "IBR"'>
+                                 AND rcv_plmn_id IN
+                                 <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                     #{partnerNetwork}
+                                 </foreach>
+                            </when>
+                            
+                            <!--Direction:OB Roaming-->
+                            <when test='direction == "OBR"'>
+                                 AND trm_plmn_id IN
+                                 <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                     #{partnerNetwork}
+                                 </foreach>
+                            </when>
+                        </choose>
+                            
+                    ) a
+                    
+                    GROUP BY setl_year, setl_mon, erate_val
+                ) b
+                
+                GROUP BY setl_year
+                
+            ) c
+    </select>
+    
+    
+     <!-- find Regression Info by Count -->
+    <select id="findRegressionInfoByCount" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findRegressionInfoByCount*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+        FROM 
+            (
+                SELECT
+                    setl_year AS year,
+                    MAX(month_01) AS jan,
+                    MAX(month_02) AS feb,
+                    MAX(month_03) AS mar,
+                    MAX(month_04) AS apr,
+                    MAX(month_05) AS may,
+                    MAX(month_06) AS jun,
+                    MAX(month_07) AS jul,
+                    MAX(month_08) AS aug,
+                    MAX(month_09) AS sep,
+                    MAX(month_10) AS oct,
+                    MAX(month_11) AS nov,
+                    MAX(month_12) AS dec
+                
+                FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        CASE WHEN setl_mon = '01' THEN SUM(total_cnt) END month_01,
+                        CASE WHEN setl_mon = '02' THEN SUM(total_cnt) END month_02,
+                        CASE WHEN setl_mon = '03' THEN SUM(total_cnt) END month_03,
+                        CASE WHEN setl_mon = '04' THEN SUM(total_cnt) END month_04,
+                        CASE WHEN setl_mon = '05' THEN SUM(total_cnt) END month_05,
+                        CASE WHEN setl_mon = '06' THEN SUM(total_cnt) END month_06,
+                        CASE WHEN setl_mon = '07' THEN SUM(total_cnt) END month_07,
+                        CASE WHEN setl_mon = '08' THEN SUM(total_cnt) END month_08,
+                        CASE WHEN setl_mon = '09' THEN SUM(total_cnt) END month_09,
+                        CASE WHEN setl_mon = '10' THEN SUM(total_cnt) END month_10,
+                        CASE WHEN setl_mon = '11' THEN SUM(total_cnt) END month_11,
+                        CASE WHEN setl_mon = '12' THEN SUM(total_cnt) END month_12
+                    FROM
+                    (
+                        SELECT
+                            SUBSTRING(setl_month, 1, 4) setl_year,
+                            SUBSTRING(setl_month, 5, 6) setl_mon,
+                            
+                    <choose>
+                        <!--callType:MOC-Local-->
+                        <when test='callType == "MOC-Local"'>
+                            COALESCE(moc_vo_lo_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:MOC-Home-->
+                        <when test='callType == "MOC-Home"'>
+                            COALESCE(moc_vo_home_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:MOC-Int-->
+                        <when test='callType == "MOC-Int"'>
+                            COALESCE(moc_vo_intl_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:MTC-->
+                        <when test='callType == "MTC"'>
+                            COALESCE(mtc_vo_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:SMS-MO-->
+                        <when test='callType == "SMS-MO"'>
+                            COALESCE(moc_sms_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:SMS-MT-->
+                        <when test='callType == "SMS-MT"'>
+                            COALESCE(mtc_sms_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:GPRS-->
+                        <when test='callType == "GPRS"'>
+                            COALESCE(data_recd_cnt, 0) AS total_cnt
+                         </when>
+                        <!--callType:All Service-->
+                        <otherwise>
+                            COALESCE(moc_vo_lo_recd_cnt, 0) + COALESCE(moc_vo_home_recd_cnt, 0) + 
+                            COALESCE(moc_vo_intl_recd_cnt, 0) + COALESCE(mtc_vo_recd_cnt, 0) + 
+                            COALESCE(moc_sms_recd_cnt, 0) + COALESCE(mtc_sms_recd_cnt, 0) + 
+                            COALESCE(data_recd_cnt, 0) AS total_cnt
+                         </otherwise>
+                    </choose>
+                            
+                        FROM
+                            tb_tap_date_sum
+                            
+                        WHERE
+                            setl_month NOT LIKE TO_CHAR(NOW(), 'YYYY') || '%'
+                            
+                        <choose>
+                            <!--Direction:IB Roaming-->
+                            <when test='direction == "IBR"'>
+                                 AND rcv_plmn_id IN
+                                 <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                     #{partnerNetwork}
+                                 </foreach>
+                            </when>
+                            
+                            <!--Direction:OB Roaming-->
+                            <when test='direction == "OBR"'>
+                                 AND trm_plmn_id IN
+                                 <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                     #{partnerNetwork}
+                                 </foreach>
+                            </when>
+                        </choose>
+                            
+                    ) a
+                    
+                    GROUP BY setl_year, setl_mon
+                ) b
+                
+                GROUP BY setl_year
+                
+            ) c
+    </select>
+    
+    
+    <!-- find Regression Info by Volume -->
+    <select id="findRegressionInfoByVolume" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findRegressionInfoByVolume*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+        FROM 
+            (
+                SELECT
+                    setl_year AS year,
+                    MAX(month_01) AS jan,
+                    MAX(month_02) AS feb,
+                    MAX(month_03) AS mar,
+                    MAX(month_04) AS apr,
+                    MAX(month_05) AS may,
+                    MAX(month_06) AS jun,
+                    MAX(month_07) AS jul,
+                    MAX(month_08) AS aug,
+                    MAX(month_09) AS sep,
+                    MAX(month_10) AS oct,
+                    MAX(month_11) AS nov,
+                    MAX(month_12) AS dec
+                
+                FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        CASE WHEN setl_mon = '01' THEN SUM(total_qnt) END month_01,
+                        CASE WHEN setl_mon = '02' THEN SUM(total_qnt) END month_02,
+                        CASE WHEN setl_mon = '03' THEN SUM(total_qnt) END month_03,
+                        CASE WHEN setl_mon = '04' THEN SUM(total_qnt) END month_04,
+                        CASE WHEN setl_mon = '05' THEN SUM(total_qnt) END month_05,
+                        CASE WHEN setl_mon = '06' THEN SUM(total_qnt) END month_06,
+                        CASE WHEN setl_mon = '07' THEN SUM(total_qnt) END month_07,
+                        CASE WHEN setl_mon = '08' THEN SUM(total_qnt) END month_08,
+                        CASE WHEN setl_mon = '09' THEN SUM(total_qnt) END month_09,
+                        CASE WHEN setl_mon = '10' THEN SUM(total_qnt) END month_10,
+                        CASE WHEN setl_mon = '11' THEN SUM(total_qnt) END month_11,
+                        CASE WHEN setl_mon = '12' THEN SUM(total_qnt) END month_12
+                    FROM
+                    (
+                        SELECT
+                            SUBSTRING(setl_month, 1, 4) setl_year,
+                            SUBSTRING(setl_month, 5, 6) setl_mon,
+                            
+                    <choose>
+                        <!--callType:MOC-Local-->
+                        <when test='callType == "MOC-Local"'>
+                            COALESCE(moc_vo_lo_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:MOC-Home-->
+                        <when test='callType == "MOC-Home"'>
+                            COALESCE(moc_vo_home_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:MOC-Int-->
+                        <when test='callType == "MOC-Int"'>
+                            COALESCE(moc_vo_intl_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:MTC-->
+                        <when test='callType == "MTC"'>
+                            COALESCE(mtc_vo_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:SMS-MO-->
+                        <when test='callType == "SMS-MO"'>
+                            COALESCE(moc_sms_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:SMS-MT-->
+                        <when test='callType == "SMS-MT"'>
+                            COALESCE(mtc_sms_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:GPRS-->
+                        <when test='callType == "GPRS"'>
+                            COALESCE(data_use_qnt, 0) AS total_qnt
+                         </when>
+                        <!--callType:All Service-->
+                        <otherwise>
+                            COALESCE(moc_vo_lo_use_qnt, 0) + COALESCE(moc_vo_home_use_qnt, 0) + 
+                            COALESCE(moc_vo_intl_use_qnt, 0) + COALESCE(mtc_vo_use_qnt, 0) + 
+                            COALESCE(moc_sms_use_qnt, 0) + COALESCE(mtc_sms_use_qnt, 0) + 
+                            COALESCE(data_use_qnt, 0) AS total_qnt
+                         </otherwise>
+                    </choose>
+                            
+                        FROM
+                            tb_tap_date_sum
+                            
+                        WHERE
+                            setl_month NOT LIKE TO_CHAR(NOW(), 'YYYY') || '%'
+                            
+                        <choose>
+                            <!--Direction:IB Roaming-->
+                            <when test='direction == "IBR"'>
+                                 AND rcv_plmn_id IN
+                                 <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                     #{partnerNetwork}
+                                 </foreach>
+                            </when>
+                            
+                            <!--Direction:OB Roaming-->
+                            <when test='direction == "OBR"'>
+                                 AND trm_plmn_id IN
+                                 <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                     #{partnerNetwork}
+                                 </foreach>
+                            </when>
+                        </choose>
+                            
+                    ) a
+                    
+                    GROUP BY setl_year, setl_mon
+                ) b
+                
+                GROUP BY setl_year
+                
+            ) c
+    </select>
+    
+    
+    <!-- find Regression Info by IMSI -->
+    <select id="findRegressionInfoByIMSI" parameterType="FinanceReportDomain" resultType="FinanceReportDomain">
+        /*FinanceReportMapper.findRegressionInfoByIMSI*/
+        SELECT
+            year,
+            COALESCE(jan, 0) AS jan,
+            COALESCE(feb, 0) AS feb,
+            COALESCE(mar, 0) AS mar,
+            COALESCE(apr, 0) AS apr,
+            COALESCE(may, 0) AS may,
+            COALESCE(jun, 0) AS jun,
+            COALESCE(jul, 0) AS jul,
+            COALESCE(aug, 0) AS aug,
+            COALESCE(sep, 0) AS sep,
+            COALESCE(oct, 0) AS oct,
+            COALESCE(nov, 0) AS nov,
+            COALESCE(dec, 0) AS dec,
+            COALESCE(jan, 0) + COALESCE(feb, 0) + COALESCE(mar, 0) + COALESCE(apr, 0) +
+            COALESCE(may, 0) + COALESCE(jun, 0) + COALESCE(jul, 0) + COALESCE(aug, 0) +
+            COALESCE(sep, 0) + COALESCE(oct, 0) + COALESCE(nov, 0) + COALESCE(dec, 0) AS total
+            
+        FROM    
+         (
+            SELECT
+                setl_year AS year,
+                MAX (month_01) AS jan,
+                MAX (month_02) AS feb,
+                MAX (month_03) AS mar,
+                MAX (month_04) AS apr,
+                MAX (month_05) AS may,
+                MAX (month_06) AS jun,
+                MAX (month_07) AS jul,
+                MAX (month_08) AS aug,
+                MAX (month_09) AS sep,
+                MAX (month_10) AS oct,
+                MAX (month_11) AS nov,
+                MAX (month_12) AS dec
+            FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        CASE WHEN setl_mon = '01' THEN SUM (cnt) END month_01,
+                        CASE WHEN setl_mon = '02' THEN SUM (cnt) END month_02,
+                        CASE WHEN setl_mon = '03' THEN SUM (cnt) END month_03,
+                        CASE WHEN setl_mon = '04' THEN SUM (cnt) END month_04,
+                        CASE WHEN setl_mon = '05' THEN SUM (cnt) END month_05,
+                        CASE WHEN setl_mon = '06' THEN SUM (cnt) END month_06,
+                        CASE WHEN setl_mon = '07' THEN SUM (cnt) END month_07,
+                        CASE WHEN setl_mon = '08' THEN SUM (cnt) END month_08,
+                        CASE WHEN setl_mon = '09' THEN SUM (cnt) END month_09,
+                        CASE WHEN setl_mon = '10' THEN SUM (cnt) END month_10,
+                        CASE WHEN setl_mon = '11' THEN SUM (cnt) END month_11,
+                        CASE WHEN setl_mon = '12' THEN SUM (cnt) END month_12
+            FROM
+                (
+                    SELECT
+                        setl_year,
+                        setl_mon,
+                        COUNT (*) cnt
+                    FROM
+                        (
+                            SELECT
+                                SUBSTRING (setl_month, 1, 4) setl_year,
+                                SUBSTRING (setl_month, 5, 6) setl_mon
+                            FROM
+                                tb_tap_imsi_sum
+                                
+                            WHERE
+                                setl_month NOT LIKE TO_CHAR(NOW(), 'YYYY') || '%'
+                                
+                            <choose>
+                                <!--Direction:IB Roaming-->
+                                <when test='direction == "IBR"'>
+                                     AND rcv_plmn_id IN
+                                     <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                         #{partnerNetwork}
+                                     </foreach>
+                                </when>
+                                
+                                <!--Direction:OB Roaming-->
+                                <when test='direction == "OBR"'>
+                                     AND trm_plmn_id IN
+                                     <foreach collection="partnerNetworks" item="partnerNetwork" index="index" separator="," open="(" close=")">
+                                         #{partnerNetwork}
+                                     </foreach>
+                                </when>
+                        </choose>
+                    ) a
+                GROUP BY
+                    setl_year,
+                    setl_mon
+                ) b
+            GROUP BY
+                setl_year,
+                setl_mon
+                ) c
+        GROUP BY
+            setl_year 
+        ) d
+    </select>
+    
+</mapper>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: TAP Processing &gt; TAP List</title>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['note'] = /*[[${note}]]*/;  //note parameter
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['appMsg001'] = /*[[#{app.tap.list.m001}]]*/ '';
+        thisPage['appMsg002'] = /*[[#{app.tap.list.m002}]]*/ '';
+        thisPage['appMsg003'] = /*[[#{app.tap.list.m003}]]*/ '';
+        thisPage['appMsg004'] = /*[[#{app.tap.list.m004}]]*/ '';
+        thisPage['appMsg005'] = /*[[#{app.tap.list.m005}]]*/ '';
+        thisPage['appMsg006'] = /*[[#{app.tap.list.m006}]]*/ '';
+        thisPage['appMsg007'] = /*[[#{app.tap.list.m007}]]*/ '';
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- contents container -->
+<div class="container" layout:fragment="contents">
+    <div class="search-group">
+        <div class="inr">
+            <p class="title"><i class="ico tap"></i>TAP List</p>
+            <div class="location">
+                <span><i class="ico home"><em>home</em></i> TAP Processing <em>TAP List</em></span>
+            </div>
+            <form>
+                <legend>Search TAP List</legend>
+                <div class="box">
+                    <div class="select-group">
+                        <div class="multi-select2" id="myNetwork" style="z-index: 9;">
+                            <span>My Network</span>
+                        </div>
+                        <div class="select-box in-date-type">
+                            <span th:text="#{app.tap.list.m008}">시작일</span>
+                            <div>
+                                <input type="text" id="searchStartDate" name="startDate" class="datepicker-here" data-language='en' readonly >
+                                <i class="ico calendar"></i>
+                            </div>
+                        </div>
+                        <div class="select-box in-date-type">
+                            <span th:text="#{app.tap.list.m009}">종료일</span>
+                            <div>
+                                <input type="text" id="searchEndDate" name="endDate" class="datepicker-here" data-language='en' readonly >
+                                <i class="ico calendar"></i>
+                            </div>
+                        </div>
+                        <div class="multi-select fb" id="partnerNetwork">
+                            <span>Partner Network</span>
+                        </div>
+                        <div class="select-box fb" id="tapDirection">
+                            <span>Direction</span>
+                        </div>
+                        <div class="select-box fb">
+                        </div>
+                    </div>
+                    <button type="button" id="searchTapList" class="btn search">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tap List Grid -->
+    <div class="list-group">
+        <div class="inr">
+            <p class="title"><i class="ico list"></i>List</p>
+            <div class="search">
+
+                <!-- Currency -->
+                <div class="select-box currency-type">
+                    <span>Currency</span>
+                    <div class="single-select" id="curCurrency">
+                    </div>
+                </div>
+                <!-- //Currency -->
+
+                <!-- Excel Download -->
+                <button type="button" id="excelDown" class="btn excel">Excel<i class="ico excel"></i></button>
+                <!-- //Excel Download -->
+
+            </div>
+            <div class="table-box dataColor">
+                <table id="dataTables">
+                    <colgroup>
+                        <col style="width:123px">
+                        <col style="width:103px">
+                        <col style="width:103px">
+                        <col style="width:97px">
+                        <col style="width:113px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th rowspan="2">Date</th>
+                        <th rowspan="2">MY<br>Network</th>
+                        <th rowspan="2">Partner<br>Network</th>
+                        <th rowspan="2">Direction</th>
+                        <th rowspan="2">Sequence</th>
+                        <th colspan="2" class="tdTotal">Total</th>
+                        <th colspan="3" class="tdMOC">MOC</th>
+                        <th colspan="3" class="tdMTC">MTC</th>
+                        <th colspan="3" class="tdData">Data</th>
+                        <th colspan="2">SMS</th>
+                    </tr>
+                    <tr>
+                        <th>Records</th>
+                        <th>Gross</th>
+                        <th>Records</th>
+                        <th>Duration</th>
+                        <th>Gross</th>
+                        <th>Records</th>
+                        <th>Duration</th>
+                        <th>Gross</th>
+                        <th>Records</th>
+                        <th>Volume</th>
+                        <th>Gross</th>
+                        <th>Records</th>
+                        <th>Gross</th>
+                    </tr>
+                    <!--
+                    <tr class="filter">
+                        <td>&nbsp;</td>
+                        <td>
+                            <div class="select-box">
+                                <input type="text" name="" value="">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select-box">
+                                <input type="text" name="" value="">
+                            </div>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                     -->
+                    </thead>
+                    <tbody id="results">
+                    
+                    </tbody>
+                    <tfoot>
+	                    <tr class="total">
+	                        <td colspan="5">Total</td>
+	                        <td id="sumRecdTotal" class="sum">0</td>
+	                        <td id="sumAmtTotal" class="sum">0.00</td>
+	                        <td id="sumRecdMoc" class="sum">0</td>
+	                        <td id="sumUseMoc" class="sum">0</td>
+	                        <td id="sumAmtMoc" class="sum">0.00</td>
+	                        <td id="sumRecdMtc" class="sum">0</td>
+	                        <td id="sumUseMtc" class="sum">0</td>
+	                        <td id="sumAmtMtc" class="sum">0.00</td>
+	                        <td id="sumRecdData" class="sum">0</td>
+	                        <td id="sumUseData" class="sum">0</td>
+	                        <td id="sumAmtData" class="sum">0.00</td>
+	                        <td id="sumRecdSms" class="sum">0</td>
+	                        <td id="sumAmtSms" class="sum">0.00</td>
+	                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!--
+            <div class="total-group table-box scroll">
+                <table class="total">
+                    <colgroup>
+                        <col style="width:123px">
+                        <col style="width:103px">
+                        <col style="width:103px">
+                        <col style="width:97px">
+                        <col style="width:113px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                        <col style="width:92px">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td class="totalTit" colspan="5">Total</td>
+                            <td id="sumRecdTotal" class="sum">0</td>
+                            <td id="sumAmtTotal" class="sum">0.00</td>
+                            <td id="sumRecdMoc" class="sum">0</td>
+                            <td id="sumUseMoc" class="sum">0</td>
+                            <td id="sumAmtMoc" class="sum">0.00</td>
+                            <td id="sumRecdMtc" class="sum">0</td>
+                            <td id="sumUseMtc" class="sum">0</td>
+                            <td id="sumAmtMtc" class="sum">0.00</td>
+                            <td id="sumRecdData" class="sum">0</td>
+                            <td id="sumUseData" class="sum">0</td>
+                            <td id="sumAmtData" class="sum">0.00</td>
+                            <td id="sumRecdSms" class="sum">0</td>
+                            <td id="sumAmtSms" class="sum">0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          -->
+        </div>
+    </div>
+    <!-- Tap List Grid -->
+
+</div>
+<!-- //container -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/blink/dch/tap/tapList.js}"></script>
+</th:block>
+
+</html>

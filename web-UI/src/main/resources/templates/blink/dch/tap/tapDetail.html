@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: TAP Processing &gt; TAP Details</title>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let thisPage = {};
+        thisPage['listLinkInfo'] = /*[[${listLinkInfo}]]*/'';
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['excelDownloadLimit'] = /*[[${excelDownloadLimit}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['appMsg001'] = /*[[#{app.tap.details.m001}]]*/ '';
+        thisPage['appMsg002'] = /*[[#{app.tap.details.m002}]]*/ '';
+        thisPage['appMsg003'] = /*[[#{app.tap.details.m003}]]*/ '';
+        thisPage['appMsg004'] = /*[[#{app.tap.details.m004}]]*/ '';
+        thisPage['appMsg005'] = /*[[#{app.tap.details.m005}]]*/ '';
+        thisPage['appMsg006'] = /*[[#{app.tap.details.m006}]]*/ '';
+        thisPage['appMsg007'] = /*[[#{app.tap.details.m007}]]*/ '';
+        thisPage['appMsg008'] = /*[[#{app.tap.details.m008}]]*/ '';
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- contents container -->
+<div class="container" layout:fragment="contents">
+    <div class="search-group">
+        <div class="inr">
+            <p class="title"><i class="ico tap"></i>TAP Details</p>
+            <div class="location">
+                <span><i class="ico home"><em>home</em></i> TAP Processing <em>TAP Details</em></span>
+            </div>
+            <form>
+                <legend>Search TAP Details</legend>
+                <div class="box">
+                    <div class="select-group">
+
+                        <!-- My Network -->
+                        <div class="multi-select2 fb-quarter" id="myNetwork" style="z-index:9">
+                            <span >My Network</span>
+                        </div>
+                        <!-- //My Network -->
+
+                        <!-- TAP detail search cond -->
+                        <div class="select-box in-date-type fb-quarter" id="tapDtlSrchDateCond">
+                            <span th:text="#{app.tap.details.m011}">검색기준</span>
+                        </div>
+                        <!-- //TAP detail search cond -->
+
+                        <!-- Search Start Day -->
+                        <div class="select-box in-date-type fb-quarter">
+                            <span th:text="#{app.tap.details.m009}">시작일</span>
+                            <div>
+                                <input type="text" id="searchStartDate" name="startDate" class="datepicker-here" data-language='en' readonly >
+                                <i class="ico calendar startDate"></i>
+                            </div>
+                        </div>
+                        <!-- //Search Start Day -->
+
+                        <!-- Search End Day -->
+                        <div class="select-box in-date-type fb-quarter">
+                            <span th:text="#{app.tap.details.m010}">종료일</span>
+                            <div>
+                                <input type="text" id="searchEndDate" name="endDate" class="datepicker-here" data-language='en' readonly >
+                                <i class="ico calendar endDate"></i>
+                            </div>
+                        </div>
+                        <!-- //Search End Day -->
+
+                        <!-- Partner Network -->
+                        <div class="multi-select fb-quarter" id="partnerNetwork">
+                            <span>Partner Network</span>
+                        </div>
+                        <!-- //Partner Network -->
+
+                        <!-- TAP Direction -->
+                        <div class="select-box fb-quarter" id="tapDirection">
+                            <span>Direction</span>
+                        </div>
+                        <!-- //TAP Direction -->
+
+                        <!-- CallType -->
+                        <div class="multi-select fb-quarter" id="callType">
+                            <span>Call Type</span>
+                        </div>
+                        <!-- //CallType -->
+
+                        <!-- IMSI -->
+                        <div class="select-box fb-quarter">
+                            <span>IMSI</span>
+                            <div>
+                                <input type="text" id="imsiId" name="imsiId" maxlength="15" class="numberOnly">
+                            </div>
+                        </div>
+
+                    </div>
+                    <button type="button" id="searchTapDetail" class="btn search">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="list-group">
+        <div class="inr">
+            <p class="title"><i class="ico list"></i>List</p>
+            <div class="search">
+                <!-- FileName -->
+                <div class="select-box currency-type">
+                    <span>File Name</span>
+                    <div>
+                        <input type="text" class="fn" id="roamFileNm" name="roamFileNm">
+                    </div>
+                </div>
+                <div style="width:5px;"></div>
+                <!-- Currency -->
+                <div class="select-box currency-type">
+                    <span>Currency</span>
+                    <div class="single-select" id="curCurrency">
+                    </div>
+                </div>
+                <!-- //Currency -->
+                <!-- <button type="button" id="excelDown" class="btn excel">Excel<i class="ico excel"></i></button> -->
+            </div>
+            <div class="table-box scroll">
+                <table id="dataTables">
+                    <colgroup>
+                        <col style="width:210px">
+                        <col style="width:175px">
+                        <col style="width:99px">
+                        <col style="width:99px">
+                        <col style="width:99px">
+                        <col style="width:105px">
+                        <col style="width:165px">
+                        <col style="width:130px">
+                        <col style="width:110px">
+                        <col style="width:99px">
+                        <col style="width:99px">
+                        <col style="width:99px">
+                        <col style="width:99px">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Start Time</th>
+                            <th>HPMN</th>
+                            <th>VPMN</th>
+                            <th>Direction</th>
+                            <th>Recd No</th>
+                            <th>IMSI</th>
+                            <th>Call Type</th>
+                            <th>Called<br>Number</th>
+                            <th>Volume</th>
+                            <th>Unit</th>
+                            <th>Charge</th>
+                            <th>Setl Charge</th>
+                        </tr>
+                        <!--
+                        <tr class="filter">
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <div class="select-box">
+                                    <input type="text" id="" name="" value="">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select-box">
+                                    <input type="text" id="" name="" value="">
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                         -->
+                    </thead>
+                    <tbody id="results">
+                        
+                    </tbody>
+                    <!--
+                    <tfoot>
+                        <tr class="total">
+                            <td colspan="11">Total</td>
+                            <td class="right sum">0.00</td>
+                            <td class="right sum">0.00</td>
+                        </tr>
+                    </tfoot>
+                     -->
+                </table>
+                </div>
+                <!--
+                <div class="total-group has-profit full">
+                    <div class="total">
+                        <p>Total</p>
+                        <div>
+                            <span>Charge</span>
+                            <span id="sumCharge" class="right sum"></span>
+                        </div>
+                        <div>
+                            <span>Setl Charge</span>
+                            <span id="sumSetlCharge" class="right sum"></span>
+                        </div>
+                    </div>
+                </div>
+                 -->
+        </div>
+    </div>
+</div>
+<!-- //container -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/blink/dch/tap/tapDetail.js}"></script>
+</th:block>
+
+</html>

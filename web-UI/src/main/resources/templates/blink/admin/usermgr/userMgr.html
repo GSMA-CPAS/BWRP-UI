@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: Admin &gt; User Management</title>
+</th:block>
+
+<!-- custom css -->
+<th:block layout:fragment="css">
+    <style th:inline="text">
+    </style>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <!-- jquery dataTables -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['btnRole'] = /*[[${session.btnRole}]]*/''; 
+        
+        //message        
+        thisPage['com.save.req'] = /*[[#{com.save.req}]]*/ '';    //저장하시겠습니까?
+        thisPage['com.tbl.search'] = /*[[#{com.tbl.search}]]*/ '';  //검색된 목록이 없습니다.
+        thisPage['com.tbl.select'] = /*[[#{com.tbl.select}]]*/ '';  //목록에서 변경할 열을 선택해주세요.
+        thisPage['com.del.req'] = /*[[#{com.del.req}]]*/ '';  //삭제하시겠습니까?
+        thisPage['user.msg.email'] = /*[[#{user.msg.email}]]*/ '';  //Email 형식이 틀립니다.
+        thisPage['com.msg.numdash'] = /*[[#{com.msg.numdash}]]*/ '';  //숫자와 -만 입력하세요.
+        thisPage['user.msg.ip'] = /*[[#{user.msg.ip}]]*/ '';  //IP 형식이 틀립니다.
+        thisPage['user.msg.emaildup'] = /*[[#{user.msg.emaildup}]]*/ '';  //이미 등록된 Email이 있습니다.
+        thisPage['com.msg.engnumspec'] = /*[[#{com.msg.engnumspec}]]*/ '';    //영문, 숫자, 일부 특수문자만 입력가능합니다.
+      
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- Contents div -->
+<div id="contents" layout:fragment="contents">
+        <!-- container -->
+        <div class="container">
+            <div class="search-group">
+                <div class="inr">
+                    <p class="title"><i class="ico list"></i><span th:text="#{user.list.title}">사용자 관리</span></p> 
+                    <div class="location">
+		                <span><i class="ico home"><em>home</em></i>- Admin - <em th:text="#{user.list.title}">User Mgmt</em></span>
+		            </div>
+		            
+		            <!-- <form> -->
+		                <legend>사용자 관리</legend>
+		                <div class="box">
+                            <div class="select-group">
+			                    <div class="select-box in-date-type fb-quarter">
+			                        <span th:utext="#{user.tit.userId}">User Id</span> 
+			                        <div>
+			                            <input id="sUserId" type="text" maxlength="30">
+			                        </div>
+			                    </div>
+			                    <div class="select-box fb-quarter"></div>
+                                <div class="select-box fb-quarter"></div>
+                                <div class="select-box fb-quarter"></div>
+			                </div>
+                            
+		                    <button type="button" class="btn search" id="nameSearch1"  th:utext="#{btn.search}">Search</button> 
+		                </div>
+		            <!-- </form> -->
+		        </div>
+		    </div>
+		    
+		    <div class="list-group pd0">
+                <div class="inr">
+            <p class="title"><i class="ico list"></i>List</p> 
+                    <!-- @190802 -->
+                    <div class="table-box">
+                        <table id="userMgrList">
+                            <colgroup>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col style="width:90px">
+                                <col style="width:90px">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th th:utext="#{user.list.th.id}">ID</th>
+                                    <th th:utext="#{user.list.th.auth}">Auth</th>
+                                    <th th:utext="#{user.list.th.fnm}">First Name</th>
+                                    <th th:utext="#{user.list.th.lnm}">Last Name</th>
+                                    <th th:utext="#{user.list.th.fax}">Fax No</th>
+                                    <th th:utext="#{user.list.th.tel}">Tel No</th>
+                                    <th th:utext="#{user.list.th.ip}">IP</th>
+                                    <th th:utext="#{user.list.th.tap}">Tap</th>
+                                    <th th:utext="#{user.list.th.del}">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="btn-group pagination">
+                        <div class="inr" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                            <button type="button" class="btn apply" id="add" th:utext="#{btn.new}">New</button>
+                            <button type="button" class="btn edit" id="update" th:utext="#{btn.up}">수정</button>
+                            <button type="button" class="btn cancel" id="deleteId" th:utext="#{btn.del}">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //container -->
+        
+        <div class="layer-group exchange" id="userMgrPop">
+                <div class="layer">
+                    <div class="inr">
+                        <form id="userMgtForm">
+                        <input type="hidden" id="userStat" name="userStat">
+                        <input type="hidden" id="orgUserId" name="orgUserId">
+                        <p th:text="#{user.pop.tit}" style="margin-bottom:22px;">사용자 관리</p>
+                        <div class="table-box profile-type no-border">
+                            <table>
+                                <colgroup>
+                                    <col style="width:187px">
+                                    <col>
+                                    <col style="width:187px">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <th th:utext="#{user.list.th.id}">ID</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <input type="text" id="userId" name="userId" placeholder="E-Mail" maxlength="100">
+                                            </div>
+                                        </td>
+                                        <th th:utext="#{user.list.th.auth}">권한</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <select id="userRole" name="userRole">
+                                                    <option value="1">FCH</option>
+                                                    <option value="2">DCH</option>                                                       
+                                                    <option value="3">DCH+FCH</option>                                                   
+                                                    <option value="0">VIEW</option>
+                                                    <option value="4">ADMIN</option>     
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th th:utext="#{user.list.th.fnm}">First Name</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <input type="text" id="firstNm" name="firstNm" placeholder="First Name" maxlength="20">
+                                            </div>
+                                        </td>
+                                        <th th:utext="#{user.list.th.lnm}">Last Name</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <input type="text" id="lastNm" name="lastNm" placeholder="Last Name" maxlength="50">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th th:utext="#{user.list.th.tel}">Tel Number</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <input type="text" id="telNo" name="telNo" maxlength="20">
+                                            </div>
+                                        </td>
+                                        <th th:utext="#{user.list.th.fax}">Fax Number</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <input type="text" id="faxNo" name="faxNo" maxlength="20">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th th:utext="#{user.list.th.tap}">Tap</th>
+                                        <td class="left">
+                                            <div class="select-box" style="width:120px;">
+                                                <select id="tapMissConfYn" name="tapMissConfYn">
+                                                    <option value="N">N</option>        
+                                                    <option value="Y">Y</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <th th:utext="#{user.list.th.ip}">IP</th>
+                                        <td>
+                                            <div class="select-box">
+                                                <input type="text" id="userIp" name="userIp" maxlength="20">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="btn-group default">
+                            <button type="button" class="btn save" id="updateSubmit" th:utext="#{btn.save}">저장</button>
+                        </div>
+                        </form>
+                    </div>
+                    <button type="button" class="btn close" data-dismiss="modal"><i class="ico layer-close"><em>닫기</em></i></button>
+                </div>
+                <div class="dim"></div>
+            </div>
+        
+
+</div>
+<!-- end Contents div -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/blink/admin/usermgr/userMgr.js}"></script>
+</th:block>
+
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: TAP Processing &gt; TAP Processing Result</title>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['appMsg001'] = /*[[#{app.tap.file.m001}]]*/ '';
+        thisPage['appMsg002'] = /*[[#{app.tap.file.m002}]]*/ '';
+        thisPage['appMsg003'] = /*[[#{app.tap.file.m003}]]*/ '';
+        thisPage['appMsg004'] = /*[[#{app.tap.file.m004}]]*/ '';
+        thisPage['appMsg005'] = /*[[#{app.tap.file.m005}]]*/ '';
+        thisPage['appMsg006'] = /*[[#{app.tap.file.m006}]]*/ '';
+        thisPage['appMsg007'] = /*[[#{app.tap.file.m007}]]*/ '';
+        thisPage['appMsg008'] = /*[[#{app.tap.file.m008}]]*/ '';
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- contents container -->
+<div class="container" layout:fragment="contents">
+    <div class="search-group">
+        <div class="inr">
+            <p class="title"><i class="ico tap"></i>TAP Processing Result</p>
+            <div class="location">
+                <span><i class="ico home"><em>home</em></i> TAP Processing <em>TAP Processing Result</em></span>
+            </div>
+            <form>
+                <legend>Search TAP Processing Result</legend>
+                <div class="box">
+                    <div class="select-group">
+                        <!-- 정산 대상 월 -->
+                        <div class="select-box in-date-type fb-quarter">
+                            <span th:text="#{app.tap.file.m009}">정산 대상월</span>
+                            <div>
+                                <input type="text" id="searchSettleMonth" name="setlMonth" class="datepicker-here" data-min-view="months" data-view="months" data-language="en">
+                                <i class="ico calendar setlMonth"></i>
+                            </div>
+                        </div>
+
+                        <!-- File create basis date -->
+                        <div class="select-box in-date-type fb-quarter" id="tapFileSrchDateCond">
+                            <span th:text="#{app.tap.file.m010}">검색기준</span>
+                        </div>
+                        <!-- //File create basis date -->
+
+                        <!-- Search Start Day -->
+                        <div class="select-box in-date-type fb-quarter">
+                            <span th:text="#{app.tap.file.m011}">시작일</span>
+                            <div>
+                                <input type="text" id="searchStartDate" name="startDate" class="datepicker-here" data-language='en' readonly >
+                                <i class="ico calendar startDate"></i>
+                            </div>
+                        </div>
+                        <!-- //Search Start Day -->
+
+                        <!-- Search End Day -->
+                        <div class="select-box in-date-type fb-quarter">
+                            <span class="sm" th:text="#{app.tap.file.m012}">종료일</span>
+                            <div>
+                                <input type="text" id="searchEndDate" name="endDate" class="datepicker-here" data-language='en' readonly >
+                                <i class="ico calendar endDate"></i>
+                            </div>
+                        </div>
+                        <!-- //Search End Day -->
+
+                        <!-- My Network -->
+                        <div class="multi-select2 fb-quarter" id="myNetwork">
+                            <span>My Network</span>
+                        </div>
+                        <!-- //My Network -->
+
+                        <!-- Partner Network -->
+                        <div class="multi-select fb-quarter" id="partnerNetwork">
+                            <span>Partner Network</span>
+                        </div>
+                        <!-- //Partner Network -->
+
+                        <!-- File Process Status -->
+                        <div class="select-box selected fb-quarter" id="tapFileTrtSttus">
+                            <span th:text="#{app.tap.file.m013}">파일처리상태</span>
+                        </div>
+                        <!-- //File Process Status -->
+
+                        <!-- TAP Direction -->
+                        <div class="select-box fb-quarter" id="tapDirection">
+                            <span class="sm">Direction</span>
+                        </div>
+                        <!-- //TAP Direction -->
+
+                    </div>
+
+                    <button type="button" id="searchTapFile" class="btn search">Search</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="list-group">
+        <div class="inr">
+            <p class="title"><i class="ico list"></i>List</p>
+            <div class="search">
+                <!-- //Currency -->
+                <button type="button" id="excelDown" class="btn excel">Excel<i class="ico excel"></i></button>
+            </div>
+            <div class="table-box">
+                <table id="dataTables">
+                    <colgroup>
+                        <col style="width:170px">
+                        <col style="width:170px">
+                        <col style="width:150px">
+                        <col style="width:180px">
+                        <col style="width:180px">
+                        <col style="width:100px">
+                        <col style="width:170px">
+                        <col style="width:180px">
+                        <col style="width:180px">
+                        <col style="width:190px">
+                        <col style="width:170px">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>My Network</th>
+                            <th>Partner Network</th>
+                            <th>File Create Date</th>
+                            <th>File Process Date</th>
+                            <th>Direction</th>
+                            <th>File Process Status</th>
+                            <th>Settle Month</th>
+                            <th>Total Records</th>
+                            <th>Success Records</th>
+                            <th>Error Records</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results">
+                        
+                    </tbody>
+                    <!--
+                    <tfoot>
+                        <tr class="total">
+                            <td colspan="8">Total</td>
+                            <td id="sumTotCdrCnt" class="right sum"></td>
+                            <td id="sumCdrCnt" class="right sum"></td>
+                            <td id="sumErrCnt" class="right sum"></td>
+                        </tr>
+                    </tfoot>
+                     -->
+                </table>
+            </div>
+            <div class="total-group has-profit three">
+                <div class="total">
+                    <p>Total</p>
+                    <div class="first">
+                        <span th:text="#{app.tap.file.m014}">총 레코드 건수</span>
+                        <span id="sumTotCdrCnt" class="right sum"></span>
+                    </div>
+                    <div>
+                        <span th:text="#{app.tap.file.m015}">정상 처리 레코드 건수</span>
+                        <span id="sumCdrCnt" class="right sum"></span>
+                    </div>
+                    <div>
+                        <span th:text="#{app.tap.file.m016}">오류 레코드 건수</span>
+                        <span id="sumErrCnt" class="right sum"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //container -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/blink/dch/tap/tapFile.js}"></script>
+</th:block>
+
+</html>

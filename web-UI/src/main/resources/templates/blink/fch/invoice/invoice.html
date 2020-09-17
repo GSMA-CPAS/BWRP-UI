@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: Finances Overview &gt; Invoice List</title>
+</th:block>
+
+<!-- custom css -->
+<th:block layout:fragment="css">
+    <style th:inline="text">
+    </style>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <!-- jquery dataTables -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['btnRole'] = /*[[${session.btnRole}]]*/'';
+        //message        
+        thisPage['inv.msg.001'] = /*[[#{inv.msg.001}]]*/ '';    //Incoming Invoice에 상태가 Open, Overdue인건만 선택해주세요.
+        thisPage['inv.msg.002'] = /*[[#{inv.msg.002}]]*/ '';    //Outgoing Invoice에 상태가 입금확인필요인건만 선택해주세요.
+        thisPage['inv.msg.003'] = /*[[#{inv.msg.003}]]*/ '';    //목록에서 선택해주세요.
+        thisPage['inv.msg.004'] = /*[[#{inv.msg.004}]]*/ '';    //지급처리를 하시겠습니까?
+        thisPage['inv.msg.005'] = /*[[#{inv.msg.005}]]*/ '';    //입금확인처리를 하시겠습니까?
+        thisPage['com.tbl.search'] = /*[[#{com.tbl.search}]]*/ '';  //검색된 목록이 없습니다.
+        thisPage['inv.msg.009'] = /*[[#{inv.msg.009}]]*/ '';    //CNA를 발행 하시겠습니까?
+        thisPage['inv.msg.010'] = /*[[#{inv.msg.010}]]*/ '';    //CN을 발행 하시겠습니까?
+        thisPage['inv.msg.011'] = /*[[#{inv.msg.011}]]*/ '';    //DN을 발행 하시겠습니까?
+        thisPage['inv.msg.012'] = /*[[#{inv.msg.012}]]*/ '';    // 입력 글자를 1000자 이하로 입력하세요.
+        thisPage['inv.btn.issue'] = /*[[#{inv.btn.issue}]]*/ '';    // 발행
+        
+
+        thisPage['com.msg.engnumspec'] = /*[[#{com.msg.engnumspec}]]*/ '';    //영문, 숫자, 일부 특수문자만 입력가능합니다.
+        thisPage['com.msg.decimal'] = /*[[#{com.msg.decimal}]]*/ '';    //금액은 decimal number로 입력하세요.
+        thisPage['com.msg.num1100'] = /*[[#{com.msg.num1100}]]*/ '';    //1~100사이를 입력해주세요.
+        thisPage['com.msg.num'] = /*[[#{com.msg.num}]]*/ '';    //숫자를 입력하세요.
+        
+
+        thisPage['com.msg.endmoncal'] = /*[[#{com.msg.endmoncal}]]*/ '';    //검색 종료월은 검색 시작월보다 뒤에 있어야 합니다.
+        thisPage['com.msg.stmoncal'] = /*[[#{com.msg.stmoncal}]]*/ '';    //검색 시작월은 검색 종료월보다 앞에 있어야 합니다.
+        thisPage['com.msg.moncal'] = /*[[#{com.msg.moncal}]]*/ '';    //조회월을 입력해주세요.
+        
+        
+        //financial -> invoice
+        thisPage['paramInv'] = /*[[${paramInv}]]*/'';
+      
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- Contents div -->
+<div id="contents" layout:fragment="contents">
+        <!-- container -->
+        <div class="container">
+            <div class="search-group">
+                <div class="inr">
+                    <p class="title"><i class="ico tap"></i><span th:text="#{inv.list.title}">Invoice 목록 조회</span></p>
+                    <div class="location">
+                        <span><i class="ico home"><em>home</em></i>- Finances Overview - <em th:text="#{inv.list.title}">Invoice 목록조회</em></span>
+                    </div>
+                    <form>
+                        <input type="hidden" id="sPartnersSel">
+                        <input type="hidden" id="sMyNetworkSel">
+                        
+                        <legend>Invoice 목록조회</legend>
+                        <div class="box">
+                            <div class="select-group" style="height: 72px;">
+                                <div class="multi-select fb-quarter" style="z-index:8;" id="sMyNetworkMulti"> <!-- width:185px; -->
+                                    <span th:utext="#{search.tit.mynet}">My Network</span>
+                                </div>
+                                <div class="select-box in-date-type fb-quarter">  <!--  style="width:115px" -->
+                                    <span th:text="#{app.tap.file.m010}">Criteria of searching</span>
+                                    <div>
+                                        <select id="sDateGbn" style="width: 100%;">
+                                            <option th:utext="#{invd.th.usemon}" value="sett"></option>
+                                            <option th:text="#{invd.th.issuemon}" value="issue"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="select-box in-date-type fb-quarter">  <!--  style="width:115px" -->
+                                    <span th:utext="#{search.tit.stmon}">조회시작 월</span>
+                                    <div>
+                                        <i class="ico calendar calBtnCla"></i>
+                                        <input type="text" id="stPeriodMon" data-min-view="months" data-view="months" data-language="en" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="select-box in-date-type fb-quarter"> <!-- style="width:115px"> -->
+                                    <span th:utext="#{search.tit.endmon}">조회종료 월</span>
+                                    <div>
+                                        <i class="ico calendar calBtnCla"></i>
+                                        <input type="text" id="endPeriodMon" data-min-view="months" data-view="months" data-language="en" readonly="readonly">
+                                    </div>
+                                </div>
+                                
+                                <div class="multi-select fb-quarter" style="z-index:5;" id="sPartnersMulti">  <!-- width:185px; -->
+                                    <span th:utext="#{search.tit.partnet}">Partner Network</span>
+                                </div>
+                                <div class="select-box fb-quarter"> <!--  style="width:165px"> -->
+                                    <span th:utext="#{search.tit.kind}">종류</span>
+                                    <select id="sInvKind">
+                                    </select>
+                                </div>
+                                <div class="select-box fb-quarter"><!--  style="width:125px"> -->
+                                    <span th:utext="#{search.tit.direc}">방향</span>
+                                    <select id="sInvDirect">
+                                    </select>
+                                </div>
+                                <div class="select-box fb-quarter"><!--  style="width:185px"> -->
+                                    <span th:utext="#{search.tit.status}">Status</span>
+                                    <select id="sInvStat">
+                                    </select>
+                                </div>
+                                <div class="select-box fb-quarter"></div>
+                            </div>
+                            <button type="button" class="btn search" th:utext="#{btn.search}" id="nameSearch1">Search</button>
+                        </div>
+                    </form>
+                </div>          
+            </div>
+            <div class="list-group">
+                <div class="inr">
+                    <p class="title"><i class="ico list"></i>List</p>
+                    <div class="search">
+                        <div class="select-box currency-type">
+                            <span>Currency</span>
+                            <div class="single-select" id="sCurrencyMulti" style="z-index:1">
+                            </div>
+                        </div>
+                                <input type="hidden" id="sCurrencySel">
+                        <button type="button" class="btn excel" id="excelDown">Excel<i class="ico excel"></i></button>
+                    </div>
+                    <div class="table-box">
+                        <table id="invoiceList">
+                            <colgroup>
+                                <col style="width:44px">
+                                <col style="width:78px">
+                                <col style="width:95px">
+                                <col style="width:90px">
+                                <col style="width:100px">
+                                <col style="width:97px">
+                                <col style="width:90px">
+                                <col style="width:201px;">
+                                <col style="width:78px">
+                                <col style="width:108px">
+                                <col style="width:108px">
+                                <col style="width:71px">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="chkAll" class="hide">
+                                        <label for="chkAll"><i class="ico checkbox"><em>선택</em></i></label>
+                                    </th>
+                                    <th th:utext="#{inv.list.th.usemon}">사용월</th>
+                                    <th th:utext="#{inv.list.th.issuemon}">Date</th>
+                                    <th th:utext="#{inv.list.th.mynet}" id='myNet'>My Network</th>
+                                    <th th:utext="#{inv.list.th.partnet}" id='partNet'>Partner Network</th>
+                                    <th th:utext="#{inv.list.th.kind}">종류</th>
+                                    <th th:utext="#{inv.list.th.direc}">Inv 방향</th>
+                                    <th th:utext="#{inv.list.th.doc}">Document</th>
+                                    <th th:utext="#{inv.list.th.stat}">Status</th>
+                                    <th th:utext="#{inv.list.th.reve}">Revenue</th>
+                                    <th th:utext="#{inv.list.th.exp}">Expense</th>
+                                    <th th:utext="#{inv.list.th.issuenote}">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="total-group has-profit">
+                        <div class="total" style="width:74%;float: left;">
+                            <p>Total</p>
+                            <div>
+                                <span>Revenue</span>
+                                <span id="revenueSum">0</span>
+                            </div>
+                            <div>
+                                <span>Expense</span>
+                                <span id="expenseSum">0</span>
+                            </div>
+                        </div>
+                        <div class="profit" style="width: 24%;">
+                            <p>Profit</p>
+                            <div>
+                                <span id="profitSum">0</span>
+                            </div>
+                        </div>
+                        <div class="btn-group default">
+                            <button type="button" class="btn  pay" id="payouId" th:utext="#{inv.btn.pay}" th:if="${btnRole == 1 or btnRole == 3 or btnRole == 4}">지급</button>
+                            <button type="button" class="btn deposit-confirm" id="confId" th:utext="#{inv.btn.confpay}" th:if="${btnRole == 1 or btnRole == 3 or btnRole == 4}">입금확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //container -->
+	<!-- layer -->
+        <div id="invoicePopDiv"></div>
+        <div id="invNoteRegPopDiv"></div>
+        <div id="notePopDiv"></div>
+        <!-- //layer -->
+
+</div>
+<!-- end Contents div -->
+
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/dataTables/dataTables.scroller.js}"></script>
+    <script type="text/javascript" th:src="@{/js/vendor/pdfmake.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/vendor/vfs_fonts.js}"></script>
+    <script type="text/javascript" th:src="@{/js/vendor/currency.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/blink/fch/invoice/invoice.js}"></script>
+    <script type="text/javascript" th:src="@{/js/blink/fch/invoice/invoicePop.js}"></script>
+    <script type="text/javascript" th:src="@{/js/blink/fch/invoice/invNotePop.js}"></script>
+</th:block>
+
+</html>

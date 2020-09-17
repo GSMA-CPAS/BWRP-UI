@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kt.blink.biz.admin.usermgr.mapper.UserMgrMapper">
+    
+	<!-- retrieve user -->
+	<select id="retrieveUserMgrList" parameterType="DataTablesRequest" resultType="UserMgrDomain">
+        /*UserMgrMapper.retrieveUserMgrList*/
+        SELECT
+            COUNT(1) OVER() AS totalCount,
+            fax_no,
+            tel_no,
+            user_id,
+            user_id AS org_user_id,
+            first_nm,
+            last_nm,
+            cmpn_id,
+            user_role,
+            (SELECT
+                  tci.cd_val1
+              FROM tb_cd_info tci 
+              INNER JOIN tb_cd_group_info tcgi
+              ON tcgi.cd_group_id = tci.cd_group_id
+              WHERE tci.cd_group_id = 'AUTH'
+              AND tci.cd_id = CAST(user_role AS TEXT)
+              AND tci.use_yn = true ) AS user_role_nm,
+             tap_miss_conf_yn,
+             user_ip
+        FROM tb_user_info
+        <where>
+            <foreach collection="columns" item="column" index="index" separator="and">
+                <if test="column.search.value != null and column.search.value != ''">
+                    ${column.name} LIKE '%' || #{column.search.value} || '%'
+                </if>
+            </foreach>
+        </where>
+        <if test="orderSequel != null and orderSequel != ''">
+            ORDER BY ${orderSequel}
+        </if>
+        LIMIT #{length} OFFSET #{start}     
+    </select>
+    
+    <!-- dup check -->
+    <select id="dupCheckUserMgr" parameterType="UserMgrDomain" resultType="UserMgrDomain">
+        /*UserMgrMapper.dupCheckUserMgr*/
+        SELECT
+            COALESCE(SUM(CASE WHEN UPPER(user_id) = UPPER(#{user.userId}) THEN 1 ELSE 0 END),0) AS user_id_cnt
+        FROM tb_user_info       
+        <where>
+            <if test='user.userStat != null and user.userStat =="U"'>
+                user_id != #{user.orgUserId}
+            </if>
+        </where>      
+    </select>
+    
+    <!-- find user -->
+    <select id="findUserMgrInfo" resultType="UserMgrDomain">
+        /*UserMgrMapper.findUserMgrInfo*/
+        SELECT
+           fax_no,
+           tel_no,
+           user_id,
+           first_nm,
+           last_nm,
+           cmpn_id,
+           user_role,
+           tap_miss_conf_yn,
+           user_ip
+        FROM tb_user_info
+        WHERE user_id = #{user.userId}
+    </select>
+    
+    <!-- insert user -->
+    <insert id="insertUserMgr" >
+        /*UserMgrMapper.insertUserMgr*/
+        INSERT INTO tb_user_info
+        (
+            user_id,
+            first_nm,
+            last_nm,
+            user_role,
+            cmpn_id,
+            temp_pwd_iss_yn,
+            login_fail_tmscnt,
+            user_pwd,
+            sys_recd_cret_dt,
+            sys_recd_chg_dt,
+            sys_trtr_id,
+            sys_svc_id,
+            fax_no,
+            tel_no,
+            tap_miss_conf_yn,
+            user_ip
+        ) 
+        VALUES
+        (   
+            #{user.userId},
+            #{user.firstNm},
+            #{user.lastNm},
+            #{user.userRole}::integer,
+            #{user.cmpnId},
+            't',
+            0,
+            '-',
+            NOW(),
+            NOW(),
+            #{user.sysTrtrId},
+            #{user.sysSvcId},
+            #{user.faxNo},
+            #{user.telNo},
+            #{user.tapMissConfYn},            
+            #{user.userIp}
+        )
+    </insert>
+    
+    <!-- update user -->
+    <update id="updateUserMgr" >
+        /*UserMgrMapper.updateUserMgr*/
+        UPDATE tb_user_info
+        SET
+            user_id = #{user.userId},
+            fax_no = #{user.faxNo},
+            tel_no = #{user.telNo},
+            first_nm = #{user.firstNm},
+            last_nm = #{user.lastNm},
+            user_role = #{user.userRole}::integer,            
+            tap_miss_conf_yn = #{user.tapMissConfYn},
+            user_ip = #{user.userIp},
+            sys_recd_chg_dt = NOW(),
+            sys_trtr_id = #{user.sysTrtrId},
+            sys_svc_id = #{user.sysSvcId}
+        WHERE user_id = #{user.orgUserId}
+    </update>
+    
+    <!-- Delete  -->
+    <delete id="deleteUserMgr">
+        /*UserMgrMapper.deleteUserMgr*/
+        DELETE FROM tb_user_info 
+        WHERE user_id IN (SELECT UNNEST(STRING_TO_ARRAY(#{user.userId}, ',')))  
+    </delete>
+    
+</mapper>

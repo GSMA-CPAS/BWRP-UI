@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<!-- page title -->
+<th:block layout:fragment="title">
+    <title>B.Link :: Finances Overview &gt; Finances Report</title>
+</th:block>
+
+
+<!-- css -->
+<th:block layout:fragment="css">
+    <style th:inline="text">
+    </style>
+</th:block>
+
+<!-- custom top js -->
+<th:block layout:fragment="topScript">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        let thisPage = {};
+        thisPage['username'] = /*[[${session.username}]]*/'';
+        thisPage['fullname'] = /*[[${session.fullname}]]*/'';
+        thisPage['credentialReset'] = /*[[${credentialReset}]]*/'';
+        thisPage['rtnMsg'] = /*[[${rtnMsg}]]*/'';
+        thisPage['ctx'] = /*[[@{/}]]*/'/';
+        thisPage['appMsg001'] = /*[[#{app.finance.report.m01}]]*/ '';
+        thisPage['appMsg002'] = /*[[#{app.finance.report.m02}]]*/ '';
+        thisPage['appMsg003'] = /*[[#{app.finance.report.m03}]]*/ '';
+        thisPage['appMsg004'] = /*[[#{app.finance.report.m04}]]*/ '';
+        /*]]>*/
+    </script>
+</th:block>
+
+<!-- contents container -->
+<div class="container" layout:fragment="contents">
+    <div class="search-group">
+        <div class="inr">
+            <p class="title"><i class="ico search"></i>Finances Report</p>
+            <div class="location">
+                <span><i class="ico home"><em>home</em></i> Finances Overview <em>Finances Report</em></span>
+            </div>
+            <form>
+                <legend>Search Finance Report</legend>
+                <div class="box">
+                    <div class="select-group">
+                        <div class="multi-select3 fb" id="period">
+                            <span>Period</span>
+                        </div>
+                        <div class="multi-select fb" id="partnerNetwork">
+                            <span>Partner Network</span>
+                        </div>
+                        <div class="multi-select fb" id="callType">
+                            <span>Call Type</span>
+                        </div>
+                        <div class="select-box fb" id="unit">
+                            <span>Unit</span>
+                        </div>
+                        <div class="select-box fb" id="contType">
+                            <span>Direction</span>
+                        </div>
+                        <div class="select-box fb">
+                        </div>
+                    </div>
+                    <button type="button" id="searchSalesInfo" class="btn search">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="list-group">
+        <div class="inr">
+            <p class="title"><i class="ico list"></i>List</p>
+            <div class="search type2">
+                <!-- Currency -->
+                <div class="select-box currency-type">
+                    <span>Currency</span>
+                    <div class="single-select" id="curCurrency">
+                    </div>
+                </div>
+            </div>
+            <!-- <p class="title"><i class="ico list"></i>List</p> -->
+            <div class="line-graph">
+                <div class="inr">
+                   <!-- <div id="salesChart" style="height: 250px;"></div> -->
+                    <div id="salesChart">
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    <!-- Chart Area -->
+                    </div>
+                </div>
+            </div>
+            <div class="table-box detail-type">
+                <table class="w100">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col style="width:93px">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Jan</th>
+                            <th>Feb</th>
+                            <th>Mar</th>
+                            <th>Apr</th>
+                            <th>May</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Aug</th>
+                            <th>Sep</th>
+                            <th>Oct</th>
+                            <th>Nov</th>
+                            <th>Dec</th>
+                            <th>Total</th>
+                        </tr>
+                    <tbody id="sales">
+                        <!-- 
+                        <tr>
+                            <td>2019</td>
+                            <td class="right">100</td>
+                            <td class="right">110</td>
+                            <td class="right">100</td>
+                            <td class="right">90</td>
+                            <td class="right">80</td>
+                            <td class="right">95</td>
+                            <td class="right">105</td>
+                            <td class="right">110</td>
+                            <td class="right">100</td>
+                            <td class="right">120</td>
+                            <td class="right">110</td>
+                            <td class="right">100</td>
+                            <td class="right">1,220</td>
+                        </tr>
+                        <tr>
+                            <td>2018</td>
+                            <td class="right">100</td>
+                            <td class="right">110</td>
+                            <td class="right">100</td>
+                            <td class="right">90</td>
+                            <td class="right">80</td>
+                            <td class="right">95</td>
+                            <td class="right">105</td>
+                            <td class="right">110</td>
+                            <td class="right">100</td>
+                            <td class="right">120</td>
+                            <td class="right">110</td>
+                            <td class="right">100</td>
+                            <td class="right">1,220</td>
+                        </tr>
+                         -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- // contents container -->
+<th:block layout:fragment="bottomScript">
+    <script type="text/javascript" th:src="@{/js/vendor/tui-code-snippet.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/vendor/raphael.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/vendor/tui-chart.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/blink/fch/finance/financeReport.js}"></script>
+</th:block>
+
+</html>

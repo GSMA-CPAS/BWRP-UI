@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    @SQL File Name : BoardMapper.xml
+    @Description : board queries
+-->
+<mapper namespace="com.kt.blink.biz.board.mapper.BoardMapper"> 
+    
+    <!-- inquiry board/notice -->
+    <select id="findBoard" resultType="BoardDomain">
+        /*BoardMapper.findBoard*/
+        SELECT
+            COUNT(1) OVER() AS totalCount,
+            board.bbs_id,
+            board.bbs_type_cd,
+            board.bbs_author,
+            board.bbs_title,
+            board.bbs_content,
+            board.bbs_hit,
+            board.sys_trtr_id,
+            board.sys_recd_cret_dt,
+            file.origin_file_nm,
+            file.store_file_nm
+        FROM tb_bbs AS board LEFT JOIN tb_bbs_atc_file AS file
+          ON file.bbs_id = board.bbs_id
+        <where>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(bbsTypeCd)">
+                bbs_type_cd = #{bbsTypeCd}
+            </if>
+            <choose>
+                <!--Search ALL-->
+                <when test="searchType == 'All' and @org.apache.commons.lang3.StringUtils@isNotEmpty(searchKeyword)">
+                    AND ( board.bbs_title LIKE '%' || #{searchKeyword} || '%' OR board.bbs_content LIKE '%' || #{searchKeyword} || '%' )
+                 </when>
+                <!--Search Title-->
+                <when test="searchType == 'Title' and @org.apache.commons.lang3.StringUtils@isNotEmpty(searchKeyword)">
+                    AND board.bbs_title LIKE '%' || #{searchKeyword} || '%'
+                 </when>
+                <!--Search Content-->
+                <when test="searchType == 'Content' and @org.apache.commons.lang3.StringUtils@isNotEmpty(searchKeyword)">
+                    AND board.bbs_content LIKE '%' || #{searchKeyword} || '%'
+                 </when>
+            </choose>
+        </where>
+        
+        <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(dataTablesRequest.orderSequel)">
+            ORDER BY ${dataTablesRequest.orderSequel}
+        </if>
+        
+        LIMIT #{dataTablesRequest.length} OFFSET #{dataTablesRequest.start}
+    </select>
+    
+    
+    <!-- inquiry board/notice details -->
+    <select id="findBoardDetail" resultType="BoardDomain">
+        /*BoardMapper.findBoardDetail*/
+        SELECT
+            board.bbs_id,
+            board.bbs_type_cd,
+            board.bbs_author,
+            board.bbs_title,
+            board.bbs_content,
+            board.bbs_hit,
+            board.sys_trtr_id,
+            board.sys_recd_cret_dt,
+            file.origin_file_nm,
+            file.store_file_nm
+        FROM tb_bbs AS board LEFT JOIN tb_bbs_atc_file AS file
+          ON file.bbs_id = board.bbs_id
+        WHERE
+            board.bbs_id = #{bbsId}
+            AND board.bbs_type_cd = #{bbsTypeCd}
+            AND board.bbs_author = #{bbsAuthor}
+    </select>
+    
+    
+    <!-- inquiry board/notice attachment file name -->
+    <select id="findBoardAtcFileNameById" resultType="String">
+        /*BoardMapper.findBoardAtcFileNameById*/
+        SELECT
+            store_file_nm
+        FROM tb_bbs_atc_file
+        WHERE
+            bbs_id = #{bbsId}
+    </select>
+    
+    
+    <!-- posting on board/notice -->
+    <insert id="saveBoard" parameterType="BoardDomain" useGeneratedKeys="true" keyProperty="bbsId">
+        /*BoardMapper.saveBoard*/
+        INSERT into tb_bbs
+        (
+            bbs_type_cd,
+            bbs_author,
+            bbs_title,
+            bbs_content,
+            sys_trtr_id,
+            sys_svc_id,
+            sys_recd_cret_dt
+        ) 
+        VALUES 
+        (   
+            #{bbsTypeCd},
+            #{bbsAuthor},
+            #{bbsTitle},
+            #{bbsContent},
+            #{sysTrtrId},
+            #{sysSvcId},
+            NOW()
+        )
+    </insert>
+    
+    <!-- Register attachment information on board/notice -->
+    <insert id="saveBoardAtcFile" parameterType="BoardDomain" useGeneratedKeys="true" keyProperty="atcId">
+        /*BoardMapper.saveBoardAtcFile*/
+        INSERT into tb_bbs_atc_file
+        (
+            origin_file_nm,
+            store_file_nm,
+            bbs_id,
+            sys_trtr_id,
+            sys_svc_id,
+            sys_recd_cret_dt
+        ) 
+        VALUES 
+        (   
+            #{originFileNm},
+            #{storeFileNm},
+            #{bbsId},
+            #{sysTrtrId},
+            #{sysSvcId},
+            NOW()
+        )
+    </insert>
+    
+    
+    <!-- update board/notice -->
+    <update id="updateBoard" parameterType="BoardDomain">
+        /*BoardMapper.updateBoard*/
+        UPDATE
+            tb_bbs
+        SET
+            bbs_title = #{bbsTitle},
+            bbs_author = #{bbsAuthor},
+            bbs_content = #{bbsContent},
+            sys_trtr_id = #{sysTrtrId},
+            sys_svc_id = #{sysSvcId},
+            sys_recd_chg_dt = NOW()
+        WHERE
+            bbs_id = #{bbsId}
+    </update>
+    
+    
+    <!-- update attachment file information on board/notice -->
+    <update id="updateBoardAtcFile" parameterType="BoardDomain">
+        /*BoardMapper.updateBoardAtcFile*/
+        UPDATE
+            tb_bbs_atc_file
+        SET
+            origin_file_nm = #{originFileNm},
+            store_file_nm = #{storeFileNm},
+            sys_trtr_id = #{sysTrtrId},
+            sys_svc_id = #{sysSvcId},
+            sys_recd_chg_dt = NOW()
+        WHERE
+            bbs_id = #{bbsId}
+    </update>
+    
+    
+    <!-- delete board/notice -->
+    <delete id="deleteBoardById">
+        /*BoardMapper.deleteBoardById*/
+        DELETE
+        FROM
+            tb_bbs
+        WHERE
+            bbs_id = #{bbsId}
+    </delete>
+    
+    
+    <!-- delete attachment file information on board/notice -->
+    <delete id="deleteBoardAtcFileById">
+        /*BoardMapper.deleteBoardAtcFileById*/
+        DELETE
+        FROM
+            tb_bbs_atc_file
+        WHERE
+            bbs_id = #{bbsId}
+    </delete>
+    
+    
+    <!-- increase view count on board/notice -->
+    <update id="increaseHitCountById">
+        /*BoardMapper.increaseHitCountById*/
+        UPDATE
+            tb_bbs
+        SET
+            bbs_hit = bbs_hit + 1
+        WHERE
+            bbs_id = #{bbsId}
+    </update>
+    
+</mapper>

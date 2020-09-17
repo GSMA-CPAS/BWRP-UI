@@ -1,0 +1,101 @@
+/* Font */
+@font-face {
+	font-family: 'NotoSans-Bold';
+	src: url('./font/NotoSans-Bold.ttf')  format('truetype');
+}
+@font-face {
+	font-family: 'NotoSans-Medium';
+	src: url('./font/NotoSans-Medium.ttf')  format('truetype');
+}
+@font-face {
+	font-family: 'NotoSans-Light';
+	src: url('./font/NotoSans-Light.ttf')  format('truetype');
+}
+@font-face {
+	font-family: 'NotoSans-Regular';
+	src: url('./font/NotoSans-Regular.ttf')  format('truetype');
+}
+
+/* Common */
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+table,
+th,
+td,
+form,
+fieldset,
+legend,
+input,
+textarea,
+button,
+select{
+	margin: 0;
+	padding: 0;
+}
+body,
+input,
+textarea,
+select,
+button,
+table{
+	font-family: 'NotoSans-Light';
+	font-size: 13px;
+}
+img,fieldset{
+	border: 0;
+}
+ul,ol{
+	list-style: none;
+}
+em,address{
+	font-style: normal;
+}
+a{
+	/*color: #1f1f1f;*/
+	text-decoration: none;
+}
+:focus{
+outline: 0;
+}
+html,
+body{
+	height: 100%;
+}
+table{
+	border-collapse: collapse;
+}
+.hide,
+caption,
+legend,
+.ico em{
+	overflow: hidden;
+	position: absolute;
+	clip: rect(1px, 1px, 1px, 1px);
+	text-indent: -9999px;
+	white-space: nowrap;
+}
+.ellipsis{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;word-break:break-all}
+button{
+	position: relative;
+	background: none;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+button span{
+	position: relative;
+}

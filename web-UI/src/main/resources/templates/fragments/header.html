@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    
+    <!-- 
+    <div id="header" th:fragment="headerFragment">
+        <nav class="navbar navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" th:href="@{/}">Spring Security Test</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a th:href="@{/}">Home</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li class="active" sec:authorize="isAuthenticated()"><a href="#" th:text="#{app.message.welcomeLogin(${session.fullname})}"></a></li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a sec:authorize="isAuthenticated()" th:href="@{/logout}">Log Out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    -->
+     
+    <div class="header" th:fragment="headerFragment">
+        <div class="inr">
+            <!-- Logo Link -->
+            <h1><a th:href="@{/dashboard}" title="B.Link (Dashboard)"><i class="ico logo"><em>B.Link</em></i></a></h1>
+            
+            <!-- userinfo -->
+            <div class="user-info">
+                
+                <!-- My Todo Badge -->
+                <a class="badge" th:href="@{/todo}"></a>
+                <!-- user link -->
+                <!-- <a sec:authorize="hasAuthority('ROLE_USER')" class="badge" th:href="@{/todo}"></a> -->
+                <!-- admin link -->
+                <!-- <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="badge" th:href="@{/usermgr}"></a> -->
+                
+                <!-- username -->
+                <span sec:authorize="isAuthenticated()" class="user-name">
+                    <a href="javascript:;" th:if="${#strings.contains(session.username, '@')}">
+                        <em th:text="${#strings.abbreviate(#strings.substringBefore(session.username, '@'), 10)}"></em>
+                    </a>
+                    <a href="javascript:;" th:unless="${#strings.contains(session.username, '@')}">
+                        <em th:text="${#strings.abbreviate(session.username, 10)}"></em>
+                    </a>
+                </span>
+                
+                <!-- my info smart modal -->
+                <div id="myInfoModal" class="my-info" style="display:block">
+                    
+                </div>
+                <!-- my info smart pop -->
+                
+                <!-- logout btn -->
+                <button sec:authorize="isAuthenticated()" type="button" id="logout" class="btn login">Logout</button>
+            </div>
+            <!-- //userinfo -->
+            
+            
+            <!-- gnb -->
+            <div class="menu">
+                <ul>
+                    <!-- Agreement Management -->
+                    <li>
+                        <span>Agreement Management</span>
+                        <div>
+                            <ul>
+                                <li><a th:href="@{/dch/contract/contractList}" title="Agreement List">Agreement List</a></li>
+                                <!-- Only 1(Admin), 2(DCH), 4(DCH+FCH) can access this menu -->
+                                <li th:if="${session.btnRole == 1 or session.btnRole == 2 or session.btnRole == 4}">
+                                    <a th:href="@{/dch/contract/createContract}" title="New Agreement">New Agreement</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <!-- Finances Overview -->
+                    <li>
+                        <span>Finances Overview</span>
+                        <div>
+                            <ul>
+                                <li><a th:href="@{/fch/finance}" title="Finances">Finances</a></li>
+                                <li><a th:href="@{/fch/invoice}" title="Invoice List">Invoice List</a></li>
+                                <li><a th:href="@{/fch/financeReport}" title="Finances Report">Finances Report</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <!-- TAP Processing -->
+                    <li>
+                        <span>TAP Processing</span>
+                        <div>
+                            <ul>
+                                <li><a th:href="@{/dch/tap/tapList}" title="TAP List">TAP List</a></li>
+                                <li><a th:href="@{/dch/tap/tapDetail}" title="TAP Details">TAP Details</a></li>
+                                <li><a th:href="@{/dch/tap/tapFile}" title="TAP Processing Result">TAP Processing Result</a></li>
+                                <li><a th:href="@{/dch/tap/rapList}" title="RAP Details">RAP Details</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <!-- Board -->
+                    <li>
+                        <span>Board</span>
+                        <div class="blue-line">
+                            <ul>
+                                <li><a th:href="@{/board}" title="Bulletin Board">General Board</a></li>
+                                <li><a th:href="@{/board/notice}" title="Notice">Notice</a></li>
+                                <li><a th:href="@{/todo}" title="My todo">My todo</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <span>Base Info.</span>
+                        <div class="blue-line">
+                            <ul>
+                                <li><a th:href="@{/cmpn}" title="Company Mgmt">Company</a></li>
+                                <li><a th:href="@{/cntry}" title="Country Mgmt">Country</a></li>
+                                <li><a th:href="@{/plmn}" title="PLMN Mgmt">PLMN</a></li>
+                                <li><a th:href="@{/erate}" title="Exchange Mgmt">Exchange</a></li>
+                                <li><a th:href="@{/usermgr}" title="User Mgmt">User</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- //gnb -->
+        </div>
+    </div>
+
+</html>

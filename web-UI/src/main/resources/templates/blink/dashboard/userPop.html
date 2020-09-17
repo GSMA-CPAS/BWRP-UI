@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    
+<!-- layer -->
+<div id="myInfoPop">
+    <div class="list-group pop">
+        <p class="title">My Info</p>
+        <div class="table-box center">
+            <form id="usrPopForm">
+            <input type="hidden" id="orgUserId" name="orgUserId" th:value="${user.userId}">
+            <input type="hidden" id="userRole" name="userRole" th:value="${user.userRole}">
+            <table>
+                <colgroup>
+                    <col style="width:120px">
+                    <col style="width:320px">
+                </colgroup>
+                <tbody>
+                    <!-- <tr class="first">
+                        <th>User Name</th>
+                        <td>camu0110</td>
+                    </tr> -->
+                    <tr>
+                        <th class="first">Email</th>
+                        <td><span th:text="${user.userId}"></span>
+                            <input type="hidden" name="userId" id="puserId" th:value="${user.userId}" maxlength="100" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{user.list.th.fnm}">First Name</th>
+                        <td><input type="text" name="firstNm" id="pfirstNm" th:value="${user.firstNm}" maxlength="20" readonly></td>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{user.list.th.lnm}">Last Name</th>
+                        <td><input type="text" name="lastNm" id="plastNm" th:value="${user.lastNm}" maxlength="50" readonly></td>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{user.list.th.tel}">Mobile Number</th>
+                        <td><input type="tel" name="telNo" id="ptelNo" th:value="${user.telNo}" maxlength="20" readonly></td>
+                    </tr>
+                    <tr>
+                        <th th:text="#{user.list.th.fax}">Fax Number</th>
+                        <td><input type="tel" name="faxNo" id="pfaxNo" th:value="${user.faxNo}" maxlength="20" readonly></td>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{user.list.th.tap}">Tap Missing</th>
+                        <td>
+	                            <select id="tapMissConfYn" name="tapMissConfYn" class="disabled" disabled="disabled">
+	                                <option value="N">N</option>        
+	                                <option value="Y" th:selected="${user.tapMissConfYn == 'Y' ? true : false}">Y</option>
+	                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th th:utext="#{user.list.th.ip}">Tap Missing</th>
+                        <td><input type="tel" name="userIp" id="puserIp" th:value="${user.userIp}" maxlength="20" readonly></td>
+                    </tr>
+                </tbody>
+            </table>
+            </form>
+            <div class="btn-group--two">
+                <a class="btn edit" id="myInfoEdit"  th:text="#{btn.up}">수정</a>
+                <a class="btn save" id="myInfoSave"  th:text="#{btn.save}">저장</a>
+            </div>
+        </div>
+    </div>
+    
+    <button type="button" class="btn close" data-dismiss="modal" id="myInfoClose"><i class="ico layer-close"><em>닫기</em></i></button>
+</div>
+            <!-- //layer -->
+</html>            
