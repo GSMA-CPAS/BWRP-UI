@@ -42,7 +42,7 @@ export default {
       var valid = false;
       var data = {};
       for (const key in this.$refs) {
-        const { $v, _data } = this.$refs[key];
+        const { /* $v,  */ _data } = this.$refs[key];
         data[key] = _data;
         // const { $touch, $invalid } = $v;
         // $touch();
