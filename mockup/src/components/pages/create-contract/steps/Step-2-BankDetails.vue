@@ -3,9 +3,15 @@
     <form-container>
       <parties label="bank details" />
       <v-row>
-        <bank-form :ref="partyMspids.user" :data="bankDetails[partyMspids.user]" />
+        <bank-form
+          :ref="partyMspids.user"
+          :data="bankDetails[partyMspids.user]"
+        />
         <v-divider vertical />
-        <bank-form :ref="partyMspids.partner" :data="bankDetails[partyMspids.partner]" />
+        <bank-form
+          :ref="partyMspids.partner"
+          :data="bankDetails[partyMspids.partner]"
+        />
       </v-row>
     </form-container>
     <div class="float-right mt-3">
@@ -38,15 +44,15 @@ export default {
       for (const key in this.$refs) {
         const { $v, _data } = this.$refs[key];
         data[key] = _data;
-        const { $touch, $invalid } = $v;
-        $touch();
-        valid = !$invalid;
+        // const { $touch, $invalid } = $v;
+        // $touch();
+        // valid = !$invalid;
       }
-      valid &&
-        this.nextStep({
-          key: "bankDetails",
-          data,
-        });
+      // valid &&
+      this.nextStep({
+        key: "bankDetails",
+        data,
+      });
     },
   },
 };

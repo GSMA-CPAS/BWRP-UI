@@ -5,10 +5,10 @@ const partnersModule = {
       mspid: "TMUS",
       name: "T-Mobile US",
     },
-    {
+    /* {
       mspid: "GSMA",
       name: "GSM Association",
-    },
+    }, */
   ],
   mutations: {},
   actions: {},

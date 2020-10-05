@@ -3,9 +3,15 @@
     <form-container>
       <parties label="signatures" />
       <v-row>
-        <signature-form :ref="partyMspids.user" :data="signatures[partyMspids.user]" />
+        <signature-form
+          :ref="partyMspids.user"
+          :data="signatures[partyMspids.user]"
+        />
         <v-divider vertical />
-        <signature-form :ref="partyMspids.partner" :data="signatures[partyMspids.partner]" />
+        <signature-form
+          :ref="partyMspids.partner"
+          :data="signatures[partyMspids.partner]"
+        />
       </v-row>
     </form-container>
     <div class="float-right mt-3">
@@ -28,20 +34,20 @@ export default {
   },
   methods: {
     validate() {
-      var valid = false;
+      // var valid = false;
       var data = {};
       for (const key in this.$refs) {
         const { $v, _data } = this.$refs[key];
         data[key] = _data.signatures;
-        const { $touch, $invalid } = $v;
-        $touch();
-        valid = !$invalid;
+        // const { $touch, $invalid } = $v;
+        // $touch();
+        // valid = !$invalid;
       }
-      valid &&
-        this.nextStep({
-          key: "signatures",
-          data,
-        });
+      // valid &&
+      this.nextStep({
+        key: "signatures",
+        data,
+      });
     },
   },
   computed: {

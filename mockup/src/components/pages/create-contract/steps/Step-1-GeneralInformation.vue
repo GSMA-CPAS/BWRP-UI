@@ -38,7 +38,11 @@
               :disabled="true"
               :value="agreementPeriod"
             />
-            <help-tooltip padding="pa-2 pb-8" x-small text="Computes automatically" />
+            <help-tooltip
+              padding="pa-2 pb-8"
+              x-small
+              text="Computes automatically"
+            />
           </v-row>
         </v-col>
         <v-col>
@@ -49,9 +53,15 @@
               :value="prolongationLength"
               suffix="months"
             />
-            <tooltip tooltip-text="default prolongation length is 12 months, when active">
-              <template #activator="{on}">
-                <v-checkbox class="ml-2 pa-2" v-on="on" v-model="active"></v-checkbox>
+            <tooltip
+              tooltip-text="default prolongation length is 12 months, when active"
+            >
+              <template #activator="{ on }">
+                <v-checkbox
+                  class="ml-2 pa-2"
+                  v-on="on"
+                  v-model="active"
+                ></v-checkbox>
               </template>
             </tooltip>
           </v-row>
@@ -105,11 +115,11 @@ export default {
   components: { HelpTooltip },
   methods: {
     validate() {
-      const { $touch, $invalid } = this.$v;
-      $touch();
-      const valid = !$invalid;
-      valid &&
-        delete this._data.active &&
+      // const { $touch, $invalid } = this.$v;
+      // $touch();
+      // const valid = !$invalid;
+      // valid &&
+      delete this._data.active &&
         this.nextStep({
           key: "generalInformation",
           data: this._data,
