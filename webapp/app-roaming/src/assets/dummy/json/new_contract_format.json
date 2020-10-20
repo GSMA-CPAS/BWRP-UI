@@ -1,0 +1,54 @@
+{
+  "step": 1,
+  "partner": {
+    "mspid": "TMUS",
+    "name": "T-Mobile US"
+  },
+  "generalInformation": {
+    "name": "Test",
+    "type": "Normal",
+    "startDate": "2044-02-01T00:00:00.000Z",
+    "endDate": "2044-03-01T00:00:00.000Z",
+    "prolongationLength": 12
+  },
+  "bankDetails": {
+    "DTAG": {
+      "currency": "USD",
+      "contactNameAccounting": "Max Mustermann",
+      "contactPhoneAccounting": "123456789",
+      "contactEmailAccounting": "maxmustermann@mm.de",
+      "contactNameContract": "Max Mustermann Jr.",
+      "contactPhoneContract": "123456789",
+      "contactEmailContract": "maxmustermann@mm.de",
+      "iban": "123456789",
+      "swiftBic": "123456789",
+      "bankName": "MaxBank",
+      "bankAddress": "Musterstr. 0",
+      "bankAccountName": "MaxKonto"
+    },
+    "TMUS": {
+      "currency": "GBP",
+      "contactNameAccounting": "Erika Mustermann",
+      "contactPhoneAccounting": "123456789",
+      "contactEmailAccounting": "erikamustermann@mm.de",
+      "contactNameContract": "Erika Mustermann Jr.",
+      "contactPhoneContract": "123456789",
+      "contactEmailContract": "erikamustermann@mm.de",
+      "iban": "123456789",
+      "swiftBic": "123456789",
+      "bankName": "ErikaBank",
+      "bankAddress": "Musterstr. 1",
+      "bankAccountName": "ErikaKonto"
+    }
+  },
+  "signatures": {
+    "DTAG": [{ "id": "signature-0", "name": "Max Mustermann", "role": "CEO" }],
+    "TMUS": [
+      {
+        "id": "signature-0",
+        "name": "Erika Mustermann",
+        "role": "CEO"
+      }
+    ]
+  }
+}

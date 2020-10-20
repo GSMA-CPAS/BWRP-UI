@@ -1,0 +1,13 @@
+@import "./mixins";
+
+$font-sizes: 300, 400, 500, 700, 900;
+
+@each $font-size in $font-sizes {
+  @include font(
+    "Roboto",
+    "~@/assets/fonts/roboto/roboto-#{$font-size}.woff",
+    "woff",
+    normal,
+    $font-size
+  );
+}
