@@ -16,7 +16,7 @@ const defaultNewContractState = () => {
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({ document: null, signatures: [] }),
+  state: () => ({ document: null, signatures: null }),
   mutations: {
     UPDATE_DOCUMENT: (state, document) => {
       log(document);
@@ -70,7 +70,6 @@ const documentModule = {
         })
         .then((data) => {
           commit("UPDATE_SIGNATURES", data);
-          log(data);
         })
         .catch((err) => {
           console.log(err);
@@ -87,8 +86,7 @@ const documentModule = {
         const signature = state.signatures[key].signature;
         signatures.push(signature);
       }
-      log(signatures);
-      return signatures.length > 0 ? signatures : null;
+      return signatures;
     },
     parties: (state) => {
       const { fromMSP, toMSP } = state.document;

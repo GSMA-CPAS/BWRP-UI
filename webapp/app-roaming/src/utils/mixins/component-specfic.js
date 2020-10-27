@@ -71,9 +71,7 @@ const timelineMixin = {
     }),
     ...mapGetters("document", ["signatures", "parties"]),
   },
-  mounted() {
-    console.log(this.fromMSP);
-  },
+  mounted() {},
 };
 export { timelineMixin };
 
