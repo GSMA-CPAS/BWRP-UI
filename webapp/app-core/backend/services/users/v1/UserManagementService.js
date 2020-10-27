@@ -6,6 +6,7 @@ const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewa
 const ensureAuthenticatedWithPassword = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticatedWithPassword;
 const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
 const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
+const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 
 class UserManagementService extends AbstractService {
 
@@ -38,9 +39,12 @@ class UserManagementService extends AbstractService {
         this.getRouter().get('/:userId', ensureAdminAuthenticated, async(req, res) => {
             try {
                 let result = await this.getBackendAdapter('userManagement').getUserById(req.params.userId);
-                const enrollmentId = result.username; // TODO
-                const identity = await this.getBackendAdapter('wallet').getIdentity(enrollmentId);
-                result['certificate'] = identity.credentials.certificate;
+                const identity = await this.getBackendAdapter('wallet').getIdentity(result.enrollmentId);
+                if (identity) {
+                    const certificate = identity.credentials.certificate;
+                    result['certificate'] = certificate;
+                    result['certificateData'] = cryptoUtils.parseCert(certificate);
+                }
                 res.json(result);
             } catch (error) {
                 errorHandler(res, error);
@@ -52,13 +56,16 @@ class UserManagementService extends AbstractService {
          */
         this.getRouter().post('/', ensureAdminAuthenticated, async(req, res) => {
             try {
-                const enrollmentId = req.body.username; // TODO
-                req.body['enrollmentId'] = enrollmentId; // TODO
-                const registrar = await this.getBackendAdapter('wallet').getUserContext('admin');
-                const userIdentity = await this.getBackendAdapter('certAuth').registerAndEnrollUser(enrollmentId, registrar);
-                await this.getBackendAdapter('wallet').putIdentity(enrollmentId, userIdentity);
-                await this.getBackendAdapter('userManagement').createUser(req.user, req.body);
-                res.json({success: true});
+                const enrollmentId = req.body.username;
+                req.body['enrollmentId'] = enrollmentId;
+                if(await this.getBackendAdapter('userManagement').createUser(req.user, req.body)) {
+                    const canSignDocument = req.body.canSignDocument;
+                    const registrar = await this.getBackendAdapter('wallet').getUserContext('admin');
+                    await this.getBackendAdapter('certAuth').registerUser(enrollmentId, registrar, canSignDocument);
+                    const userIdentity = await this.getBackendAdapter('certAuth').enrollUser(enrollmentId);
+                    await this.getBackendAdapter('wallet').putIdentity(enrollmentId, userIdentity);
+                    res.json({success: true});
+                }
             } catch (error) {
                 errorHandler(res, error);
             }
@@ -77,28 +84,18 @@ class UserManagementService extends AbstractService {
         });
 
         /**
-         * ENROLL USER (CERT IS EXPIRED)
+         * ENROLL USER - ADMIN ONLY
          */
-        /*this.getRouter().post('/enroll', ensureAuthenticated, async(req, res) => {
+        this.getRouter().post('/enroll', ensureAuthenticated, async(req, res) => {
             try {
-                await this.getBackendAdapter('userManagement').enrollUser(req.user);
+                const enrollmentId = req.body.enrollmentId;
+                const userIdentity = await this.getBackendAdapter('certAuth').enrollUser(enrollmentId);
+                await this.getBackendAdapter('wallet').putIdentity(enrollmentId, userIdentity);
                 res.json({success: true});
             } catch (error) {
                 errorHandler(res, error);
             }
-        });*/
-
-        /**
-         * RE-ENROLL USER (CERT IS NOT EXPIRED)
-         */
-        /*this.getRouter().post('/reenroll', ensureAuthenticated, async(req, res) => {
-            try {
-                await this.getBackendAdapter('userManagement').reEnrollUser(req.user);
-                res.json({success: true});
-            } catch (error) {
-                errorHandler(res, error);
-            }
-        });*/
+        });
 
         /**
          * CHANGE PASSWORD

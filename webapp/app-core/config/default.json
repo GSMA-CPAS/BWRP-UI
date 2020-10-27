@@ -133,9 +133,9 @@
         "caName": "",
         "adminEnrollmentId": "admin",
         "adminEnrollmentSecret": "",
+        "userEnrollmentSecret": "",
         "userEnrollmentRole": "client",
         "userEnrollmentAffiliation": "",
-        "userEnrollmentSecret": "",
         "userEnrollmentMax": -1,
         "tlsOptions": {
           "trustedRoots": [],

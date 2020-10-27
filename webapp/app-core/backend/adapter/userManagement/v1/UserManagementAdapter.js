@@ -21,7 +21,7 @@ class UserManagementAdapter extends AbstractAdapter {
      */
     async getUsers() {
         try {
-            return await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active FROM users');
+            return await this.getDatabase().query('SELECT id, username, enrollmentId, forename, surname, email, canSignDocument, active FROM users');
         } catch (error) {
             this.getLogger().error('[UserManagementAdapter::getUsers] failed to query users - %s', error.message);
             throw error;
@@ -133,13 +133,12 @@ class UserManagementAdapter extends AbstractAdapter {
      *
      * @param adminUser
      * @param newUser
-     * @returns {Promise<void>}
+     * @returns {Promise<boolean>}
      */
     async createUser(adminUser, newUser) {
 
         const username = newUser.username;
         const password = newUser.password;
-        //const canSignDocument = newUser.canSignDocument;
 
         if (!username) {
             throw new Error(JSON.stringify({
@@ -192,7 +191,7 @@ class UserManagementAdapter extends AbstractAdapter {
         }
 
         try {
-            const pwdKeys = await this.createPasswordHashAndEncKeys(password/*, privateKey*/);
+            const pwdKeys = await this.createPasswordHashAndEncKeys(password);
             newUser['password'] = pwdKeys.passwordHash;
             newUser['encKey'] = pwdKeys.encKey;
             newUser['mustChangePassword'] = true;
@@ -204,6 +203,7 @@ class UserManagementAdapter extends AbstractAdapter {
         try {
             await this.getDatabase().query('INSERT INTO users SET ?', newUser);
             this.getLogger().info('[UserManagementAdapter::createUser] user %s has been created successfully!', username);
+            return true;
         } catch (error) {
             this.getLogger().error('[UserManagementAdapter::createUser] failed to insert new user %s - %s', username, error.message);
             throw error;
@@ -330,6 +330,22 @@ class UserManagementAdapter extends AbstractAdapter {
             ]);
         } catch (error) {
             this.getLogger().error('[UserManagementAdapter::updatePassword] failed to update password for user %s - %s', user.username, error.message);
+            throw error;
+        }
+    }
+
+    /**
+     *
+     * @param username
+     * @returns {Promise<void>}
+     */
+    async deleteUser(username) {
+        try {
+            await this.getDatabase().query('Delete from users WHERE username=?', [
+               username
+            ]);
+        } catch (error) {
+            this.getLogger().error('[UserManagementAdapter::deleteUser] failed to delete user %s - %s', username, error.message);
             throw error;
         }
     }
@@ -564,7 +580,7 @@ class UserManagementAdapter extends AbstractAdapter {
         }
     }
 
-    async createPasswordHashAndEncKeys(password/*, privateKey*/) {
+    async createPasswordHashAndEncKeys(password) {
         const obj = {};
         try {
             // create user login password hash

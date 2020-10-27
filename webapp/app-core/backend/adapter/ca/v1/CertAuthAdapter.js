@@ -13,52 +13,52 @@ class CertAuthAdapter extends AbstractAdapter {
         this.url = this.getAdapterConfig().get('url');
         this.caName = this.getAdapterConfig().get('caName');
         this.adminEnrollmentSecret = this.getAdapterConfig().get('adminEnrollmentSecret');
-        this.userEnrollmentSecret = this.getAdapterConfig().get('userEnrollmentSecret')
+        this.userEnrollmentSecret = this.getAdapterConfig().get('userEnrollmentSecret');
+        this.userEnrollmentRole = this.getAdapterConfig().get('userEnrollmentRole');
+        this.userEnrollmentAffiliation = this.getAdapterConfig().get('userEnrollmentAffiliation');
+        this.userEnrollmentMax = this.getAdapterConfig().get('userEnrollmentMax');
         this.ca = new FabricCAServices(this.url, { trustedRoots: [], verify: false }, this.caName);
     }
 
-    async registerAndEnrollUser(enrollmentId, registrar) {
-        let enrollment;
-        if (await this.existsIdentity(enrollmentId, registrar)) {
-            try {
-                enrollment = await this.ca.enroll({ enrollmentID: enrollmentId, enrollmentSecret:  this.userEnrollmentSecret});
-            } catch (error) {
-                this.getLogger().error('[CertAuthAdapter::registerAndEnrollUser] failed to enroll identity %s - %', enrollmentId, error.message);
-                throw new Error(JSON.stringify({
-                    code: ErrorCodes.ERR_CA_USER_ENROLLMENT,
-                    message: 'failed to enroll identity ' + enrollmentId
-                }));
+    async registerUser(enrollmentId, registrar, canSignDocument = false) {
+        try {
+            const registerRequest = {
+                enrollmentID: enrollmentId,
+                enrollmentSecret: this.userEnrollmentSecret,
+                affiliation: this.userEnrollmentAffiliation,
+                maxEnrollments: this.userEnrollmentMax,
+                role: this.userEnrollmentRole
             }
-        } else {
-            let secret;
-            try {
-                secret = await this.ca.register({
-                    enrollmentID: enrollmentId,
-                    enrollmentSecret: this.userEnrollmentSecret,
-                    maxEnrollments: -1,
-                    role: 'client'}, registrar);
-            } catch (error) {
-                this.getLogger().error('[CertAuthAdapter::registerAndEnrollUser] failed to register identity %s - %s', enrollmentId, error.message);
-                throw new Error(JSON.stringify({
-                    code: ErrorCodes.ERR_CA_USER_REGISTRATION,
-                    message: 'failed to register identity ' + enrollmentId
-                }));
+            if(canSignDocument === true) {
+                registerRequest['attrs'] = [
+                    {name: 'CanSignDocument', value: "yes", ecert: true}
+                ]
             }
-            try {
-                enrollment = await this.ca.enroll({ enrollmentID: enrollmentId, enrollmentSecret: secret });
-            } catch (error) {
-                this.getLogger().error('[CertAuthAdapter::registerAndEnrollUser] failed to enroll identity %s - %s', enrollmentId, error.message);
-                throw new Error(JSON.stringify({
-                    code: ErrorCodes.ERR_CA_USER_ENROLLMENT,
-                    message: 'failed to enroll identity ' + enrollmentId
-                }));
-            }
+            return await this.ca.register(registerRequest, registrar);
+        } catch (error) {
+            this.getLogger().error('[CertAuthAdapter::registerUser] failed to register identity %s - %s', enrollmentId, error.message);
+            throw new Error(JSON.stringify({
+                code: ErrorCodes.ERR_CA_USER_REGISTRATION,
+                message: 'failed to register identity ' + enrollmentId + ' - ' + error.message
+            }));
         }
-        return {
-            credentials: { certificate: enrollment.certificate, privateKey: enrollment.key.toBytes() },
-            mspId: this.mspid,
-            type: 'X.509'
-        };
+    }
+
+    async enrollUser(enrollmentId) {
+        try {
+            const enrollment = await this.ca.enroll({ enrollmentID: enrollmentId, enrollmentSecret: this.userEnrollmentSecret });
+            return {
+                credentials: { certificate: enrollment.certificate, privateKey: enrollment.key.toBytes() },
+                mspId: this.mspid,
+                type: 'X.509'
+            };
+        } catch (error) {
+            this.getLogger().error('[CertAuthAdapter::enrollUser] failed to enroll identity %s - %s', enrollmentId, error.message);
+            throw new Error(JSON.stringify({
+                code: ErrorCodes.ERR_CA_USER_ENROLLMENT,
+                message: 'failed to enroll identity ' + enrollmentId + ' - ' + error.message
+            }));
+        }
     }
 
     async existsIdentity(enrollmentId, registrar) {
