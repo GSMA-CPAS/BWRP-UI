@@ -52,7 +52,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("document/new", ["document"]),
+    ...mapGetters("document/new", ["contract"]),
     ...mapState("document/new", ["step"]),
     path() {
       return PATHS.contracts;

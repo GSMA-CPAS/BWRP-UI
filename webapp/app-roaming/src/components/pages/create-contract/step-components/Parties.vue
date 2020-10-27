@@ -4,11 +4,11 @@
     <v-divider />
     <v-row>
       <v-col>
-        <primary-row :label="partyNames.user" />
+        <primary-row :label="msps.user" />
       </v-col>
       <v-divider vertical></v-divider>
       <v-col>
-        <primary-row :label="partyNames.partner" />
+        <primary-row :label="msps.partner" />
       </v-col>
     </v-row>
   </fragment>
@@ -20,7 +20,7 @@ export default {
   description: "description",
   props: { label: String },
   computed: {
-    ...mapGetters("document/new", ["partyNames"]),
+    ...mapGetters("document/new", ["msps"]),
   },
 };
 </script>

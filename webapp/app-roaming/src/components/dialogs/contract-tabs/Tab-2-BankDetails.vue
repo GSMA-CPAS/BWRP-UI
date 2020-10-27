@@ -2,28 +2,32 @@
   <fragment>
     <parties />
     <row v-for="{ key, label } in fields" :label="label" :key="key">
-      <fragment v-for="(mspid, index) in partyMspids" :key="mspid">
-        <v-col>{{ bankDetails[mspid][key] }}</v-col>
+      <fragment v-for="(msp, index) in parties" :key="msp">
+        <v-col>{{ bankDetails[msp][key] | isNil }}</v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </row>
   </fragment>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import Parties from "./Parties.vue";
-import { bankFieldsMixin } from "../../../utils/mixins/component-specfic";
+import {
+  bankFieldsMixin,
+  timelineMixin,
+} from "../../../utils/mixins/component-specfic";
 export default {
   name: "tab-2",
   label: "Bank details",
   description: "description",
-  mixins: [bankFieldsMixin],
+  mixins: [bankFieldsMixin, timelineMixin],
   components: {
     Parties,
   },
   computed: {
-    ...mapState("document", ["bankDetails"]),
-    ...mapGetters("document", ["partyMspids"]),
+    ...mapState("document", {
+      bankDetails: (state) => state.document.data.bankDetails,
+    }),
   },
 };
 </script>

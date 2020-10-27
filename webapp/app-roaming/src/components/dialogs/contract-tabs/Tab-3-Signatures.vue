@@ -2,28 +2,27 @@
   <fragment>
     <parties />
     <row
-      v-for="signatureIndex in longestArray(signatures)"
-      :key="signatureIndex"
-      :label="`Signature ${signatureIndex}`"
+      v-for="(signature, msp, i) in signatures"
+      :label="`Signature ${i}`"
+      :key="msp"
     >
-      <fragment v-for="(signatureArr, arrIndex) in signatures" :key="arrIndex">
-        <v-col>{{
-          parseSignature(signatureArr[signatureIndex - 1]) | isNil
-        }}</v-col>
-        <v-divider v-if="arrIndex === 0" vertical></v-divider>
+      <fragment v-for="(msp, index) in parties" :key="msp">
+        <v-col>{{ parseSignature(signatures[msp][i]) | isNil }}</v-col>
+        <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </row>
   </fragment>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import Parties from "./Parties";
 import { utilsMixin } from "../../../utils/mixins/handle-data";
+import { timelineMixin } from "../../../utils/mixins/component-specfic";
 export default {
   name: "tab-3",
   label: "Signatures",
   description: "description",
-  mixins: [utilsMixin],
+  mixins: [utilsMixin, timelineMixin],
   data() {
     return {};
   },
@@ -34,11 +33,14 @@ export default {
   watch: {},
   methods: {
     parseSignature(signature) {
-      return `${signature?.name}, ${signature?.role}`;
+      return signature && `${signature?.name}, ${signature?.role}`;
     },
   },
   computed: {
-    ...mapGetters("document", ["signatures"]),
+    ...mapState("document", {
+      signatures: (state) => state.document.data.signatures,
+    }) /* 
+    ...mapGetters("document", ["signatures"]), */,
   },
   mounted() {},
 };

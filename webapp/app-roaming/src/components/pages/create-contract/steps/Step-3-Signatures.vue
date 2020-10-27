@@ -3,15 +3,9 @@
     <form-container>
       <parties label="signatures" />
       <v-row>
-        <signature-form
-          :ref="partyMspids.user"
-          :data="signatures[partyMspids.user]"
-        />
+        <signature-form :ref="msps.user" :data="signatures[msps.user]" />
         <v-divider vertical />
-        <signature-form
-          :ref="partyMspids.partner"
-          :data="signatures[partyMspids.partner]"
-        />
+        <signature-form :ref="msps.partner" :data="signatures[msps.partner]" />
       </v-row>
     </form-container>
     <div class="float-right mt-3">

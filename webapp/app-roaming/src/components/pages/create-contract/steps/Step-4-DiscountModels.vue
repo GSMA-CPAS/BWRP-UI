@@ -3,9 +3,9 @@
     <form-container>
       <parties label="Discount Models" />
       <v-row>
-        <discount-form :ref="partyMspids.user" />
+        <discount-form :ref="msps.user" />
         <v-divider vertical />
-        <discount-form :ref="partyMspids.partner" />
+        <discount-form :ref="msps.partner" />
       </v-row>
     </form-container>
     <div class="float-right mt-3">

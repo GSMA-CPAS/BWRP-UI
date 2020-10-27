@@ -1,9 +1,9 @@
 // TODO: Move to steps folder if needed in the future
 <template>
   <fragment>
-    <primary-row :label="partyNames.user" />
+    <primary-row :label="msps.user" />
     <tap-form />
-    <primary-row :label="partyNames.partner" />
+    <primary-row :label="msps.partner" />
     <tap-form />
     <div class="float-right mt-3">
       <app-button label="previous" text @button-pressed="previousStep" />
@@ -35,7 +35,7 @@ export default {
       });
     },
   },
-  computed: { ...mapGetters("document/new", ["partyNames"]) },
+  computed: { ...mapGetters("document/new", ["msps"]) },
   mounted() {},
 };
 </script>

@@ -2,10 +2,10 @@
   <fragment class="text-center">
     <v-row>
       <v-col>
-        <row no-divider label="Name">{{ name }}</row>
+        <row no-divider label="Name">{{ name | isNil }}</row>
       </v-col>
       <v-col>
-        <row no-divider label="Type">{{ type }}</row>
+        <row no-divider label="Type">{{ type | isNil }}</row>
       </v-col>
     </v-row>
     <v-row>
@@ -44,7 +44,9 @@ export default {
     HelpTooltip,
   },
   computed: {
-    ...mapState("document", ["generalInformation"]),
+    ...mapState("document", {
+      generalInformation: (state) => state.document.data.generalInformation,
+    }),
   },
   beforeMount() {
     for (const key in this.generalInformation) {

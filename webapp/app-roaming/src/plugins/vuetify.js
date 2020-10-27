@@ -5,9 +5,6 @@ import "@mdi/font/css/materialdesignicons.css";
 
 Vue.use(Vuetify);
 const {
-  VUE_APP_PRIMARY_COLOR: primary,
-  VUE_APP_SECONDARY_COLOR: secondary,
-  VUE_APP_BACKGROUND_COLOR: background,
   VUE_APP_DARK_COLOR: dark,
   VUE_APP_LIGHT_COLOR: light,
   VUE_APP_PROGRESS_COLOR: progress,
@@ -19,9 +16,9 @@ export default new Vuetify({
   theme: {
     themes: {
       light: {
-        primary,
-        secondary,
-        background,
+        primary: process.env.VUE_APP_PRIMARY_COLOR || "#000000",
+        secondary: process.env.VUE_APP_SECONDARY_COLOR || "#000000",
+        background: process.env.VUE_APP_BACKGROUND_COLOR || "#f9f9f9",
         dark,
         light,
         progress,

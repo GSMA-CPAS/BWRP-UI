@@ -5,7 +5,7 @@
       <v-divider vertical></v-divider>
       <v-col>
         <v-row class="primary--text text-uppercase">
-          <v-col>{{ partyNames[currentParty] }}</v-col>
+          <v-col>{{ parties[currentParty] }}</v-col>
           <v-col class="text-center" cols="2">
             <app-button
               label="Switch Party"
@@ -29,7 +29,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "parties-header",
   description: "description",
-  computed: { ...mapGetters("document", ["partyNames", "partyMspids"]) },
+  computed: { ...mapGetters("document", ["parties"]) },
   mixins: [],
   data() {
     return { currentParty: 0 };

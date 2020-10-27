@@ -1,10 +1,11 @@
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { utilsMixin } from "./handle-data";
 const bankFieldsMixin = {
   mixins: [utilsMixin],
   computed: {
     fields() {
       const bankLabels = [
+        "Currency",
         "Contact Name (Accounting)",
         "Contact Phone (Accounting)",
         "Contact Email (Accounting)",
@@ -22,6 +23,21 @@ const bankFieldsMixin = {
   },
 };
 export { bankFieldsMixin };
+
+const discountModelsMixin = {
+  mixins: [],
+  data() {
+    return {};
+  },
+  components: {},
+  props: { data: Object },
+  methods: {},
+  watch: {},
+  computed: {},
+  mounted() {},
+};
+export { discountModelsMixin };
+
 const duplicateMixin = {
   computed: {
     icons() {
@@ -34,6 +50,32 @@ const duplicateMixin = {
   },
 };
 export { duplicateMixin };
+
+const timelineMixin = {
+  mixins: [],
+  data() {
+    return {};
+  },
+  components: {},
+  props: {},
+  methods: {
+    parseSignature(signature) {
+      return `${signature?.name}, ${signature?.role}`;
+    },
+  },
+  watch: {},
+  computed: {
+    ...mapState("document", {
+      fromMSP: (state) => state.document.fromMSP,
+      toMSP: (state) => state.document.toMSP,
+    }),
+    ...mapGetters("document", ["signatures", "parties"]),
+  },
+  mounted() {
+    console.log(this.fromMSP);
+  },
+};
+export { timelineMixin };
 
 const validationMixin = {
   mixins: [],
@@ -76,21 +118,8 @@ const validationMixin = {
   },
   watch: {},
   computed: {
-    ...mapGetters("document/new", ["state", "partyMspids"]),
+    ...mapGetters("document/new", ["state", "msps"]),
   },
   mounted() {},
 };
 export { validationMixin };
-const discountModelsMixin = {
-  mixins: [],
-  data() {
-    return {};
-  },
-  components: {},
-  props: { data: Object },
-  methods: {},
-  watch: {},
-  computed: {},
-  mounted() {},
-};
-export { discountModelsMixin };

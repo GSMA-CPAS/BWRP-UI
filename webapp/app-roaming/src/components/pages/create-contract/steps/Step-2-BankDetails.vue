@@ -3,15 +3,9 @@
     <form-container>
       <parties label="bank details" />
       <v-row>
-        <bank-form
-          :ref="partyMspids.user"
-          :data="bankDetails[partyMspids.user]"
-        />
+        <bank-form :ref="msps.user" :data="bankDetails[msps.user]" />
         <v-divider vertical />
-        <bank-form
-          :ref="partyMspids.partner"
-          :data="bankDetails[partyMspids.partner]"
-        />
+        <bank-form :ref="msps.partner" :data="bankDetails[msps.partner]" />
       </v-row>
     </form-container>
     <div class="float-right mt-3">

@@ -1,7 +1,9 @@
 <template>
   <v-btn v-on="$listeners" v-bind="$props" @click="handleClick">
     {{ label }}
-    <v-icon v-if="svg" :color="color" :right="!_.isNil(label)">{{ "mdi-" + svg }}</v-icon>
+    <v-icon v-if="svg" :color="color" :right="!_.isNil(label)">{{
+      "mdi-" + svg
+    }}</v-icon>
   </v-btn>
 </template>
 
@@ -14,62 +16,62 @@ export default {
     label: String,
     icon: {
       type: Boolean,
-      default: false
+      default: false,
     },
     loading: {
       type: Boolean,
-      default: false
+      default: false,
     },
     svg: String,
     block: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     fab: {
       type: Boolean,
-      default: false
+      default: false,
     },
     depressed: {
       type: Boolean,
-      default: false
+      default: false,
     },
     rounded: {
       type: Boolean,
-      default: false
+      default: false,
     },
     text: {
       type: Boolean,
-      default: false
+      default: false,
     },
     outlined: {
       type: Boolean,
-      default: false
+      default: false,
     },
     tile: {
       type: Boolean,
-      default: false
+      default: true,
     },
     color: {
       type: String,
-      default: "primary"
+      default: "primary",
     },
     small: {
       type: Boolean,
-      default: false
+      default: false,
     },
     xSmall: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     handleClick(e) {
       this.$emit("button-pressed", e);
-    }
-  }
+    },
+  },
 };
 </script>

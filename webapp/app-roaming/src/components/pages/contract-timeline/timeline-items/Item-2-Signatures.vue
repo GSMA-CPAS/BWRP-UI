@@ -3,18 +3,7 @@
     <template #content>
       <v-card class="ml-4" color="#fafafa">
         <v-card-text>
-          <div
-            v-for="({ requiredNumberOfSignaturesLeft, state }, key) in states"
-            :key="key"
-          >
-            {{
-              requiredNumberOfSignaturesLeft === 0
-                ? `Signed by all parties`
-                : `Require ${requiredNumberOfSignaturesLeft} more signatures`
-            }}
-            {{ ` from ${key}` }}
-            <progress-icon :state="state" />
-          </div>
+          {{ `Signed ${signatures.length} times.` }}
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -29,23 +18,17 @@
 </template>
 <script>
 import SignButton from "./buttons/Sign.vue";
-import ProgressIcon from "../../../other/icons/ProgressIcon.vue";
+// import ProgressIcon from "../../../other/icons/ProgressIcon.vue";
 import Signatures from "../../../dialogs/Signatures.vue";
+import { timelineMixin } from "../../../../utils/mixins/component-specfic";
 export default {
   name: "item-3",
   description: "description",
-  data() {
-    return {
-      states: {
-        DTAG: { requiredNumberOfSignaturesLeft: 0, state: "success" },
-        TMUS: { requiredNumberOfSignaturesLeft: 1, state: "progress" },
-      },
-    };
-  },
+  mixins: [timelineMixin],
   components: {
     Signatures,
     SignButton,
-    ProgressIcon,
+    // ProgressIcon,
   },
 };
 </script>

@@ -1,13 +1,16 @@
 <template>
-  <app-dialog v-if="signatures" title="Signatures" label="View Signatures">
-    <template #content>
+  <app-dialog
+    :title="signatures ? 'Signatures' : 'No existing signatures'"
+    label="View Signatures"
+  >
+    <template v-if="signatures" #content>
       <!-- <parties /> -->
       <row
         v-for="(signature, signatureIndex) in signatures"
         :key="signatureIndex"
         :label="`Signature ${signatureIndex}`"
       >
-        <v-col> {{ signature }}</v-col>
+        <v-col cols="8"> {{ signature }}</v-col>
         <!-- <fragment
           v-for="(signatureArr, arrIndex) in allSignatures"
           :key="arrIndex"
@@ -30,10 +33,9 @@
   </app-dialog>
 </template>
 <script>
+import { timelineMixin } from "../../utils/mixins/component-specfic";
 // import Parties from "./contract-tabs/Parties.vue";
-import { utilsMixin } from "../../utils/mixins/handle-data";
 // import ProgressIcon from "../other/icons/ProgressIcon.vue";
-import { mapGetters } from "vuex";
 export default {
   components: {
     // ProgressIcon,
@@ -41,14 +43,6 @@ export default {
   },
   name: "signatures",
   description: "This is the dialog to view the signatures.",
-  mixins: [utilsMixin],
-  methods: {
-    parseSignature(signature) {
-      return `${signature?.name}, ${signature?.role}`;
-    },
-  },
-  computed: {
-    ...mapGetters("document", ["signatures"]),
-  },
+  mixins: [timelineMixin],
 };
 </script>

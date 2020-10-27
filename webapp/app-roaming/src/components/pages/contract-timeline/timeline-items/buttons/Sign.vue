@@ -1,7 +1,6 @@
 <template>
   <fragment>
     <app-dialog
-      v-if="!signatures"
       outlined
       hide-icon
       title="Are you sure you want to sign this contract?"
@@ -18,7 +17,7 @@
         />
       </template>
     </app-dialog>
-    <v-icon v-else color="success" x-large>mdi-check-circle-outline</v-icon>
+    <!-- <v-icon color="success" x-large>mdi-check-circle-outline</v-icon> -->
   </fragment>
 </template>
 <script>

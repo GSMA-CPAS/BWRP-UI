@@ -1,5 +1,5 @@
 <template>
-  <v-icon :color="color">{{`mdi-${icon}-circle-outline`}}</v-icon>
+  <v-icon :color="color">{{ `mdi-${icon}-circle-outline` }}</v-icon>
 </template>
 <script>
 export default {

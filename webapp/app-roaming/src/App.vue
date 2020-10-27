@@ -2,7 +2,7 @@
   <v-app>
     <error-overlay />
     <breadcrumb />
-    <v-main>
+    <v-main class="background">
       <v-overlay :value="isLoading">
         Loading, please wait...
         <v-progress-circular indeterminate></v-progress-circular>

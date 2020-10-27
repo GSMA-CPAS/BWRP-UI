@@ -16,9 +16,10 @@ const defaultNewContractState = () => {
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({ document: null, signatures: null }),
+  state: () => ({ document: null, signatures: [] }),
   mutations: {
     UPDATE_DOCUMENT: (state, document) => {
+      log(document);
       state.document = document;
     },
     UPDATE_SIGNATURES: (state, signatures) => {
@@ -27,8 +28,6 @@ const documentModule = {
   },
   actions: {
     signDocument({ commit, dispatch, rootGetters, getters, rootState, state }) {
-      // console.log(rootState.user);
-      console.log(state);
       Vue.axios
         .put(
           `/signatures/` + state.document.documentId,
@@ -51,12 +50,15 @@ const documentModule = {
       //TODO: Connection to API & get real data
       Vue.axios
         .get(`/documents/${dID}`, { withCredentials: true })
-        .then((data) => {
-          const documentData = JSON.parse(data.data);
+        .then((document) => {
+          const { id, documentId, data, fromMSP, toMSP } = document;
+          const documentData = JSON.parse(data);
           commit("UPDATE_DOCUMENT", {
-            id: data.id,
-            documentId: data.documentId,
-            data: documentData.body.data
+            id,
+            documentId,
+            data: documentData.body.data,
+            fromMSP,
+            toMSP,
           });
         })
         .catch((err) => {
@@ -85,7 +87,8 @@ const documentModule = {
         const signature = state.signatures[key].signature;
         signatures.push(signature);
       }
-      return signatures.length > 1 ? signatures : null;
+      log(signatures);
+      return signatures.length > 0 ? signatures : null;
     },
     parties: (state) => {
       const { fromMSP, toMSP } = state.document;
@@ -171,13 +174,12 @@ const documentModule = {
             signatures,
             discountModels,
             taps,
-            parties: [partner, rootState.user],
           };
 
           Vue.axios
             .post(
               "/documents",
-              { type: 'contract', toMSP: partner, data: contract },
+              { type: "contract", toMSP: partner, data: contract },
               { withCredentials: true }
             )
             .then((res) => {
@@ -199,10 +201,7 @@ const documentModule = {
         state: (state) => (key) => {
           return state[key];
         },
-        partyMspids: (state, getters, rootState) => {
-          return { user: rootState.user.mspid, partner: state.partner.mspid };
-        },
-        partyNames: (state, getters, rootState) => {
+        msps: (state, getters, rootState) => {
           return {
             user: rootState.user.organization.mspid,
             partner: state.partner,
