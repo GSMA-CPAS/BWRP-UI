@@ -19,7 +19,7 @@ class LoginService extends AbstractService {
             async (username, password, done) => {
                 let user;
                 try {
-                    user = await this.getBackendAdapter('userManagement').getUserByName(username, false);
+                    user = await this.getBackendAdapter('userManagement').getUserByName(username);
                 } catch (error) {
                     this.getLogger().error('[LoginService] failed to get user %s - %s', username, error.message);
                     return done(error);
@@ -135,41 +135,61 @@ class LoginService extends AbstractService {
             });
         }
 
-        this.getRouter().post('/login', loginLimiter, passport.authenticate('local', { failWithError: true }),
-            // handle success
-            async(req, res) => {
-                if (req.user.active || req.user.isAdmin) {
-                    if (req.user.twoFactorSecret) {
-                        req.session.twoFactorRequired = true;
-                        return res.json({
-                            "success": true,
-                            "twoFactor": true
-                        });
-                    } else {
-                        req.session.twoFactorRequired = false;
-                        if (req.user.mustChangePassword) {
+        this.getRouter().post('/login', loginLimiter, (req, res, next) => {
+            passport.authenticate('local', { failWithError: true }, (error, user/*, info*/) => {
+                if (error) {
+                    this.getLogger().error('[LoginService::/login] login error - %s', error.message);
+                    return errorHandler(res, new Error(JSON.stringify({
+                        code: ErrorCodes.ERR_FORBIDDEN,
+                        message: 'Forbidden'
+                    })));
+                }
+
+                if (!user) {
+                    return errorHandler(res, new Error(JSON.stringify({
+                        code: ErrorCodes.ERR_FORBIDDEN,
+                        message: 'Forbidden'
+                    })));
+                }
+
+                if (user.active || user.isAdmin) {
+                    req.login(user, loginError => {
+                        if (loginError) {
+                            this.getLogger().error('[LoginService::/login] login error - %s', loginError.message);
+                            return next(loginError);
+                        }
+                        if (user.twoFactorSecret) {
+                            req.session.twoFactorRequired = true;
                             return res.json({
                                 "success": true,
-                                "mustChangePassword": true
+                                "twoFactor": true
                             });
                         } else {
-                            return res.json({
-                                "success": true,
-                                "appContext": {
-                                    "user": {
-                                        "username": req.user.username,
-                                        "isAdmin": req.user.isAdmin
-                                    },
-                                    "organization": {
-                                        "mspid": config.get('organization').mspid,
-                                        "title": config.get('organization').title
+                            req.session.twoFactorRequired = false;
+                            if (user.mustChangePassword) {
+                                return res.json({
+                                    "success": true,
+                                    "mustChangePassword": true
+                                });
+                            } else {
+                                return res.json({
+                                    "success": true,
+                                    "appContext": {
+                                        "user": {
+                                            "username": user.username,
+                                            "isAdmin": user.isAdmin
+                                        },
+                                        "organization": {
+                                            "mspid": config.get('organization').mspid,
+                                            "title": config.get('organization').title
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
+                    });
                 } else {
-                    this.getLogger().warn('[LoginService::/login] login attempt by suspended user %s', req.user.username);
+                    this.getLogger().warn('[LoginService::/login] login attempt by suspended user %s', user.username);
                     req.logout();
                     req.session.destroy(() => {
                         res.clearCookie(this.sessionName);
@@ -179,16 +199,8 @@ class LoginService extends AbstractService {
                         })));
                     });
                 }
-            },
-            // handle error
-            async(error, req, res) => {
-                this.getLogger().error('[LoginService::/login] %s', error.message);
-                return errorHandler(res, new Error(JSON.stringify({
-                    code: ErrorCodes.ERR_FORBIDDEN,
-                    message: 'Forbidden'
-                })));
-            }
-        );
+            })(req, res, next);
+        });
 
         this.getRouter().post('/logout', (req, res) => {
             req.logout();

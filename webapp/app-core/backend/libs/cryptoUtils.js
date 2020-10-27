@@ -2,6 +2,17 @@
 
 const jsrsa = require('jsrsasign');
 
+const parseCert = (certificate) => {
+    const x509 = new jsrsa.X509();
+    x509.readCertPEM(certificate);
+    return {
+        issuer: x509.getIssuer(),
+        subject: x509.getSubject(),
+        notBefore: x509.getNotBefore(),
+        notAfter: x509.getNotAfter()
+    }
+}
+
 const verifyCertAgainstRootCert = (certificate, rootCertificate) => {
     const x509 = new jsrsa.X509();
     try {
@@ -45,6 +56,7 @@ const verifySignature = (certificate, plainText, signature) => {
     }
 };
 
+module.exports.parseCert = parseCert;
 module.exports.verifyCertAgainstRootCert = verifyCertAgainstRootCert;
 module.exports.createSignature = createSignature;
 module.exports.verifySignature = verifySignature;

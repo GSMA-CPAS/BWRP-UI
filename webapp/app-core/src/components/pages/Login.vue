@@ -59,8 +59,8 @@
                                 this.$router.push('/');
                             }
                         }
-                    }).catch(error => {
-                        this.$modal.error(error);
+                    }).catch(() => {
+                        this.$modal.error({message: 'Username or password is incorrect!'});
                     });
                 }
             }

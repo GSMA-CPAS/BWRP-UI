@@ -53,20 +53,27 @@
                     text: 'Name',
                     align: 'left',
                     sortable: true,
-                    value: 'username',
+                    value: 'username'
                 },
                 {
                     text: 'Forename',
                     align: 'left',
                     sortable: true,
-                    value: 'forename',
+                    value: 'forename'
                 },
                 {
                     text: 'Surname',
                     align: 'left',
                     sortable: true,
-                    value: 'surname',
+                    value: 'surname'
                 },
+                {
+                    text: 'Active',
+                    align: 'left',
+                    sortable: true,
+                    value: 'active',
+                    width: '1%'
+                }
             ]
         }),
 

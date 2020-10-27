@@ -16,6 +16,7 @@
                                 <v-text-field v-model="newUser.forename" label="First name"></v-text-field>
                                 <v-text-field v-model="newUser.surname" label="Last name"></v-text-field>
                                 <v-text-field v-model="newUser.email" label="E-Mail" :rules="[rules.email]"></v-text-field>
+                                <v-checkbox v-model="newUser.canSignDocument" label="Can sign documents"></v-checkbox>
                             </v-card-text>
                             <v-card-actions class="pa-4">
                                 <v-btn type="submit" color="primary" tile>Create User</v-btn>

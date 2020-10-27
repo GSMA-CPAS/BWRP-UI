@@ -18,6 +18,7 @@
                                 <v-text-field v-model="user.forename" label="First name" color="secondary"></v-text-field>
                                 <v-text-field v-model="user.surname" label="Last name" color="secondary"></v-text-field>
                                 <v-text-field v-model="user.email" label="E-Mail" color="secondary" :rules="[rules.email]"></v-text-field>
+                                <v-checkbox v-if="user.username !== 'admin'" v-model="user.active" label="Active"></v-checkbox>
                             </v-card-text>
                             <v-card-actions class="pa-4">
                                 <v-btn type="submit" color="primary" tile>Update User</v-btn>
@@ -35,6 +36,22 @@
                         </v-card-title>
                         <v-card-actions class="pa-4">
                             <v-btn color="primary" tile @click="showCertificateDialog = true">Show certificate</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </v-row>
+            <v-spacer></v-spacer>
+            <v-row>
+                <v-col cols="12" lg="6">
+                    <v-card>
+                        <v-card-title>
+                            Enroll User
+                        </v-card-title>
+                        <v-card-text>
+                            Enroll registered user to create new signed certificate
+                        </v-card-text>
+                        <v-card-actions class="pa-4">
+                            <v-btn color="primary" tile @click="enroll">Enroll user</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -130,13 +147,13 @@
                 this.$http({method:'get', url: '/api/v1/users/' + this.userId, withCredentials: true}).then((response) => {
                     this.loading = false;
                     this.user = response.data;
-                    this.certificateHtml = this.user.certificate.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-                    if (this.user.certificateData) {
-                        this.certificateData.validFrom = this.user.certificateData.validFrom;
-                        this.certificateData.validTo = this.user.certificateData.validTo;
-                        this.certificateData.issuer = this.user.certificateData.issuer.attributes;
-                        this.certificateData.subject = this.user.certificateData.subject.attributes;
-                        this.certificateData.attributes = this.user.certificateData.extensions.attributes;
+                    if (this.user.certificate) {
+                        this.certificateHtml = this.user.certificate.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+                        if (this.user.certificateData) {
+                            console.log(this.user.certificateData);
+                        }
+                    } else {
+                        this.$modal.error({message: 'Failed to load user certificate'});
                     }
                 }).catch((error) => {
                     this.loading = false;
@@ -204,6 +221,30 @@
                         }
                     });
                 }
+            },
+
+            enroll() {
+                this.$modal.confirm({
+                    title: "Enroll user", message: "Are you sure?",
+                    callbackOk: () => {
+                        this.loading = true;
+                        this.$http({
+                            method: 'post',
+                            url: '/api/v1/users/enroll',
+                            withCredentials: true,
+                            data: {enrollmentId: this.user.username}
+                        }).then((/*response*/) => {
+                            this.fetchUser();
+                            this.$modal.info({
+                                title: "Success",
+                                message: "User has been enrolled successfully!"
+                            });
+                        }).catch(error => {
+                            this.loading = false;
+                            this.$modal.error(error);
+                        });
+                    }
+                });
             }
         },
 
