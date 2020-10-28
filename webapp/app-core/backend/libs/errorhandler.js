@@ -1,8 +1,10 @@
 'use strict';
 
+const config = require('config');
+const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 
-const errorHandler = (res, error) => {
+const errorHandler = (res, error, errorMessagePrefix = '') => {
 
     let status = 500;
     let code = 'ERR_INTERNAL_SERVER_ERROR';
@@ -55,6 +57,7 @@ const errorHandler = (res, error) => {
         }*/
     }
 
+    logger.error('[' + errorMessagePrefix + '] ' + error.message);
     res.status(status).json({status: status, code: code, message: message});
 
 };

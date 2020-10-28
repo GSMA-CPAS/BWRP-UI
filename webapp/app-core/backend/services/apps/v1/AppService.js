@@ -1,12 +1,9 @@
 'use strict';
 
-//const csrf = require('csurf');
 const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
-//const csrfProtection = csrf({ cookie: true });
 
 class AppService extends AbstractService {
 
@@ -47,11 +44,10 @@ class AppService extends AbstractService {
                     app: appConfig
                 })
             } else {
-                this.getLogger().error('[AppService::GET/:name] app name ' + appName + ' not found');
-                return errorHandler(res, new Error(JSON.stringify({
+                this.handleError(res, new Error(JSON.stringify({
                     code: ErrorCodes.ERR_NOT_FOUND,
                     message: 'App ' + appName + ' not found'
-                })));
+                })), 'GET /:name');
             }
         });
     }

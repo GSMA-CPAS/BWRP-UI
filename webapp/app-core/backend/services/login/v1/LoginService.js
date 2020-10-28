@@ -3,7 +3,6 @@
 const config = require('config');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
 const pbkdfUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/pbkdfUtils');
@@ -138,18 +137,17 @@ class LoginService extends AbstractService {
         this.getRouter().post('/login', loginLimiter, (req, res, next) => {
             passport.authenticate('local', { failWithError: true }, (error, user/*, info*/) => {
                 if (error) {
-                    this.getLogger().error('[LoginService::/login] login error - %s', error.message);
-                    return errorHandler(res, new Error(JSON.stringify({
+                    return this.handleError(res, new Error(JSON.stringify({
                         code: ErrorCodes.ERR_FORBIDDEN,
                         message: 'Forbidden'
-                    })));
+                    })), 'POST /login');
                 }
 
                 if (!user) {
-                    return errorHandler(res, new Error(JSON.stringify({
+                    return this.handleError(res, new Error(JSON.stringify({
                         code: ErrorCodes.ERR_FORBIDDEN,
                         message: 'Forbidden'
-                    })));
+                    })), 'POST /login');
                 }
 
                 if (user.active || user.isAdmin) {
@@ -193,10 +191,10 @@ class LoginService extends AbstractService {
                     req.logout();
                     req.session.destroy(() => {
                         res.clearCookie(this.sessionName);
-                        return errorHandler(res, new Error(JSON.stringify({
+                        return this.handleError(res, new Error(JSON.stringify({
                             code: ErrorCodes.ERR_FORBIDDEN,
                             message: 'Forbidden'
-                        })));
+                        })), 'POST /login');
                     });
                 }
             })(req, res, next);

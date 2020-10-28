@@ -1,7 +1,6 @@
 'use strict';
 
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
@@ -28,10 +27,10 @@ class SignatureService extends AbstractService {
                 const response = await this.getBackendAdapter('blockchain').getSignatures(documentId, msp);
                 return res.json(response);
             } catch (error) {
-                return errorHandler(res, new Error(JSON.stringify({
+                this.handleError(res, new Error(JSON.stringify({
                     code: ErrorCodes.ERR_SIGNATURE,
                     message: 'Failed to get signatures'
-                })));
+                })), 'GET /:documentId/:msp');
             }
         });
 
@@ -50,10 +49,10 @@ class SignatureService extends AbstractService {
                 const response = await this.getBackendAdapter('blockchain').uploadSignature(documentId, certificate, 'ecdsa-with-SHA256_secp256r1', signature);
                 return res.json(response);
             } catch (error) {
-                return errorHandler(res, new Error(JSON.stringify({
+                this.handleError(res, new Error(JSON.stringify({
                     code: ErrorCodes.ERR_SIGNATURE,
                     message: 'Failed to store signature'
-                })));
+                })), 'PUT /:documentId');
             }
         });
 

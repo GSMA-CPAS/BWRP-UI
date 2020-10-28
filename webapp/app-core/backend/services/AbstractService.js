@@ -1,10 +1,12 @@
 'use strict';
 
+const fs = require('fs');
+const cors = require('cors');
 const express = require('express');
 const config = require('config');
+
 const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
-const cors = require('cors');
-const fs = require('fs');
+const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 
 class AbstractService {
 
@@ -93,6 +95,14 @@ class AbstractService {
 
     getClassName() {
         return this.constructor.name;
+    }
+
+    handleError(res, error, errorMessagePrefix = '') {
+        if (errorMessagePrefix) {
+            errorHandler(res, error, this.getClassName() + ' ' +  errorMessagePrefix);
+        } else {
+            errorHandler(res, error, this.getClassName());
+        }
     }
 
     requiredAdapterType(type) {

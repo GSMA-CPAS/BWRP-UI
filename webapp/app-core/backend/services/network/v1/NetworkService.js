@@ -1,7 +1,6 @@
 'use strict';
 
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 
@@ -23,10 +22,10 @@ class NetworkService extends AbstractService {
                 const response = await this.getBackendAdapter('blockchain').discovery();
                 return res.json(response);
             } catch (error) {
-                return errorHandler(res, new Error(JSON.stringify({
+                this.handleError(res, new Error(JSON.stringify({
                     code: ErrorCodes.ERR_NETWORK_DISCOVERY,
                     message: 'Failed to discover msps'
-                })));
+                })), 'GET /discovery/msps');
             }
         });
 
@@ -39,10 +38,10 @@ class NetworkService extends AbstractService {
                 const response = await this.getBackendAdapter('blockchain').discovery(msp);
                 return res.json(response);
             } catch (error) {
-                return errorHandler(res, new Error(JSON.stringify({
+                this.handleError(res, new Error(JSON.stringify({
                     code: ErrorCodes.ERR_NETWORK_DISCOVERY,
                     message: 'Failed to discover msp'
-                })));
+                })), 'GET /discovery/msps/:msp');
             }
         });
     }

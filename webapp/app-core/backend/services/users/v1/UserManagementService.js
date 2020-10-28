@@ -5,7 +5,6 @@ const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/Abstract
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 const ensureAuthenticatedWithPassword = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticatedWithPassword;
 const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 
 class UserManagementService extends AbstractService {
@@ -29,7 +28,7 @@ class UserManagementService extends AbstractService {
                 let result = await this.getBackendAdapter('userManagement').getUsers();
                 res.json(result);
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'GET /');
             }
         });
 
@@ -47,7 +46,7 @@ class UserManagementService extends AbstractService {
                 }
                 res.json(result);
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'GET /:userId');
             }
         });
 
@@ -67,7 +66,7 @@ class UserManagementService extends AbstractService {
                     res.json({success: true});
                 }
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /');
             }
         });
 
@@ -79,7 +78,7 @@ class UserManagementService extends AbstractService {
                 await this.getBackendAdapter('userManagement').updateUser(req.params.userId, req.body);
                 res.json({success: true});
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'PUT /:userId');
             }
         });
 
@@ -93,7 +92,7 @@ class UserManagementService extends AbstractService {
                 await this.getBackendAdapter('wallet').putIdentity(enrollmentId, userIdentity);
                 res.json({success: true});
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /enroll');
             }
         });
 
@@ -109,7 +108,7 @@ class UserManagementService extends AbstractService {
                     res.json({success: true});
                 });
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /password/change');
             }
         });
 
@@ -121,7 +120,7 @@ class UserManagementService extends AbstractService {
                 await this.getBackendAdapter('userManagement').resetPassword(req.user, req.body);
                 res.json({success: true});
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /password/reset');
             }
         });
 
@@ -133,7 +132,7 @@ class UserManagementService extends AbstractService {
                 const secret = await this.getBackendAdapter('userManagement').generateTwoFactorSecret(req.user);
                 res.json(secret);
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'GET /2fa/generate');
             }
         });
 
@@ -145,7 +144,7 @@ class UserManagementService extends AbstractService {
                 const success = await this.getBackendAdapter('userManagement').enableTwoFactor(req.user, req.body);
                 res.json({success: success});
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /2fa/enable');
             }
         });
 
@@ -157,7 +156,7 @@ class UserManagementService extends AbstractService {
                 await this.getBackendAdapter('userManagement').disableTwoFactor(req.user);
                 res.json({success: true});
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /2fa/disable');
             }
         });
 
@@ -169,7 +168,7 @@ class UserManagementService extends AbstractService {
                 const status = await this.getBackendAdapter('userManagement').statusTwoFactor(req.user);
                 res.json({success: true, isEnabled: status.isEnabled});
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'GET /2fa/status');
             }
         });
 
@@ -199,7 +198,7 @@ class UserManagementService extends AbstractService {
                     res.json({"success": false});
                 }
             } catch (error) {
-                errorHandler(res, error);
+                this.handleError(res, error, 'POST /2fa/verify');
             }
         });
     }
