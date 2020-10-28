@@ -30,7 +30,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-import { PATHS } from "../../../utils/Enums";
+import { PATHS } from "@/utils/Enums";
 export default {
   name: "stepper",
   description: "Stepper used for contract-creation.",

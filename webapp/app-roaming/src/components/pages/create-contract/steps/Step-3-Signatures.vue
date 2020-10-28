@@ -10,14 +10,17 @@
     </form-container>
     <div class="float-right mt-3">
       <app-button label="previous" text @button-pressed="previousStep" />
-      <app-button label="next" @button-pressed="validate" />
+      <app-button
+        label="next"
+        @button-pressed="twoFormsValidate('signatures')"
+      />
     </div>
   </fragment>
 </template>
 <script>
 import Parties from "../step-components/Parties.vue";
 import SignatureForm from "../step-components/SignatureForm.vue";
-import { validationMixin } from "../../../../utils/mixins/component-specfic";
+import { validationMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "step-3",
   description: "In this step, the signatures of the contract are drafted.",
@@ -26,31 +29,10 @@ export default {
     SignatureForm,
     Parties,
   },
-  methods: {
-    validate() {
-      // var valid = false;
-      var data = {};
-      for (const key in this.$refs) {
-        const { /* $v, */ _data } = this.$refs[key];
-        data[key] = _data.signatures;
-        // const { $touch, $invalid } = $v;
-        // $touch();
-        // valid = !$invalid;
-      }
-      // valid &&
-      this.nextStep({
-        key: "signatures",
-        data,
-      });
-    },
-  },
   computed: {
     signatures() {
       return this.state("signatures") || { signatures: null };
     },
-  },
-  beforeMount() {
-    //  const generalInformation = this.state("signatures");
   },
 };
 </script>

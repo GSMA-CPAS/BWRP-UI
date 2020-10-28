@@ -10,7 +10,7 @@
 <script>
 export default {
   name: "app-button",
-  description: "Custom Vuetify Button. View Mixin for more details",
+  description: "Custom vuetify button to add more flexibility",
   props: {
     to: String,
     label: String,

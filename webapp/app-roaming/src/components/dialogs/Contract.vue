@@ -12,7 +12,7 @@ export default {
     Tabs,
   },
   name: "contract",
-  description: "This is the dialog view the contract.",
+  description: "This is the dialog view for the contract information.",
   computed: {
     tabs() {
       const components = require.context(

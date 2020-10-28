@@ -18,17 +18,11 @@
   </v-overlay>
 </template>
 <script>
-import { mapActions, mapState } from "vuex";
+import { appStateMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "error-overlay",
-  description: "-",
-  methods: {
-    ...mapActions("app-state", ["setErrorVisibility"]),
-  },
-  computed: {
-    ...mapState("app-state", ["showError"]),
-    ...mapState("app-state", ["errorResponse", "showErrorMessage"]),
-  },
-  mounted() {},
+  description:
+    "This is the overlay which appears when an api call returns an error.",
+  mixins: [appStateMixin],
 };
 </script>

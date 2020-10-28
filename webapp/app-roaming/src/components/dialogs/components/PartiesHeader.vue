@@ -30,20 +30,16 @@ export default {
   name: "parties-header",
   description: "description",
   computed: { ...mapGetters("document", ["parties"]) },
-  mixins: [],
   data() {
     return { currentParty: 0 };
   },
-  components: {},
   // TODO: combine both versions of headers
   props: { single: Boolean, subRowLabels: Array },
-  watch: {},
   methods: {
     switchPartner() {
       this.currentParty = this.currentParty === 0 ? 1 : 0;
       this.$emit("party-switch", this.currentParty);
     },
   },
-  mounted() {},
 };
 </script>

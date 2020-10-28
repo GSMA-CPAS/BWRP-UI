@@ -70,7 +70,10 @@
     </form-container>
     <div class="float-right mt-3">
       <app-button label="previous" :disabled="true" text />
-      <app-button label="next" @button-pressed="validate" />
+      <app-button
+        label="next"
+        @button-pressed="validate('generalInformation')"
+      />
     </div>
   </fragment>
 </template>
@@ -78,12 +81,9 @@
 <script>
 import { required, minValue, maxValue } from "vuelidate/lib/validators";
 import moment from "moment";
-import { validationMixin } from "../../../../utils/mixins/component-specfic";
-import HelpTooltip from "../../../other/HelpTooltip.vue";
-import {
-  computeDateDifference,
-  // , compareDates
-} from "../../../../utils/Utils";
+import { validationMixin } from "@/utils/mixins/component-specfic";
+import HelpTooltip from "@/components/other/HelpTooltip.vue";
+import { computeDateDifference } from "@/utils/Utils";
 
 export default {
   name: "step-1",
@@ -113,19 +113,6 @@ export default {
     },
   },
   components: { HelpTooltip },
-  methods: {
-    validate() {
-      // const { $touch, $invalid } = this.$v;
-      // $touch();
-      // const valid = !$invalid;
-      // valid &&
-      delete this._data.active &&
-        this.nextStep({
-          key: "generalInformation",
-          data: this._data,
-        });
-    },
-  },
   watch: {
     active(isActive) {
       isActive
@@ -146,8 +133,8 @@ export default {
     },
   },
   beforeMount() {
+    // TODO: check if imported data is correct
     const generalInformation = this.state("generalInformation");
-    // var errors = [];
     if (generalInformation) {
       const {
         name,
@@ -160,22 +147,8 @@ export default {
       this.prolongationLength = prolongationLength;
       this.active = this.prolongationLength > 0;
       this.type = type;
-      // check if uploaded data is correct
       this.startDate = new Date(startDate);
       this.endDate = new Date(endDate);
-      // const startDate = new Date(importedStartDate);
-      // const endDate = new Date(importedEndDate);
-      // this.contractTypes.includes(type)
-      //   ? (this.type = type)
-      //   : errors.push("Type");
-      // compareDates(startDate, new Date()) && startDate.getDate() === 1
-      //   ? (this.startDate = startDate) &&
-      //     (compareDates(endDate, startDate) &&
-      //     endDate.getMonth() > startDate.getMonth()
-      //       ? (this.endDate = endDate)
-      //       : errors.push("End date"))
-      //   : errors.push("Start date");
-      // errors.length > 0 && this.loadError(`Invalid ${errors.join(" and ")}`);
     }
   },
 };

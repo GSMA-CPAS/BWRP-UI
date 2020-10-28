@@ -62,11 +62,11 @@
       <v-col>
         <v-row class="font-weight-medium pa-2">50/50 Split Approval</v-row>
         <v-row>
-          <v-col>{{ partyNames[0] }}</v-col>
+          <v-col>{{ parties[0] }}</v-col>
           <v-col class="font-weight-medium text-uppercase">Awaiting</v-col>
         </v-row>
         <v-row>
-          <v-col>{{ partyNames[1] }}</v-col>
+          <v-col>{{ parties[1] }}</v-col>
           <v-col class="font-weight-medium text-uppercase">Awaiting</v-col>
         </v-row>
       </v-col>
@@ -75,16 +75,15 @@
 </template>
 <script>
 import Parties from "../contract-tabs/Parties";
-import { mapGetters } from "vuex";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "tab-1",
   label: "General Information",
-  description: "description",
+  description:
+    "In this tab the general information of a settlement is displayed. The tab is found in the contract timeline when clicking on 'View Settlement'",
+  mixins: [timelineMixin],
   components: {
     Parties,
-  },
-  computed: {
-    ...mapGetters("document", ["partyNames"]),
   },
 };
 </script>

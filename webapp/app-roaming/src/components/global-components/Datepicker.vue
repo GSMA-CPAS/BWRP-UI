@@ -31,10 +31,10 @@
 </template>
 <script>
 import moment from "moment";
-import { validationMixin } from "../../utils/mixins/component-specfic";
+import { validationMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "date-picker",
-  description: "This is custom date picker.",
+  description: "This is a custom date picker.",
   inject: ["$v"],
   data() {
     return { menu: false };

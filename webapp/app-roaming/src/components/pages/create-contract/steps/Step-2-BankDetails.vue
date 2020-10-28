@@ -10,12 +10,15 @@
     </form-container>
     <div class="float-right mt-3">
       <app-button label="previous" text @button-pressed="previousStep" />
-      <app-button label="next" @button-pressed="validate" />
+      <app-button
+        label="next"
+        @button-pressed="twoFormsValidate('bankDetails')"
+      />
     </div>
   </fragment>
 </template>
 <script>
-import { validationMixin } from "../../../../utils/mixins/component-specfic";
+import { validationMixin } from "@/utils/mixins/component-specfic";
 import BankForm from "../step-components/BankForm.vue";
 import Parties from "../step-components/Parties.vue";
 export default {
@@ -29,24 +32,6 @@ export default {
   computed: {
     bankDetails() {
       return this.state("bankDetails") || { bankDetails: null };
-    },
-  },
-  methods: {
-    validate() {
-      // var valid = false;
-      var data = {};
-      for (const key in this.$refs) {
-        const { /* $v, */ _data } = this.$refs[key];
-        data[key] = _data;
-        // const { $touch, $invalid } = $v;
-        // $touch();
-        // valid = !$invalid;
-      }
-      // valid &&
-      this.nextStep({
-        key: "bankDetails",
-        data,
-      });
     },
   },
 };

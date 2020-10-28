@@ -29,8 +29,9 @@
   </fragment>
 </template>
 <script>
-// import { mapActions } from "vuex";
-// import XLSX from "xlsx";
+/*  
+  INFO: SUBJECT to changes
+ */
 export default {
   name: "upload-settlement",
   description: "description",
@@ -40,20 +41,8 @@ export default {
   components: {},
   props: { actionButtonProps: Object },
   methods: {
-    // ...mapActions("document/edit", ["uploadFile"]),
     loadFile(file) {
       this.file = file;
-    },
-    convertFile() {
-      //   var reader = new FileReader();
-      //   reader.readAsArrayBuffer(this.file);
-      //   reader.onload = (e) => {
-      //     var data = new Uint8Array(e.target.result);
-      //     var workbook = XLSX.read(data, { type: "array" });
-      //     let sheetName = workbook.SheetNames[0];
-      //     let worksheet = workbook.Sheets[sheetName];
-      //     this.uploadFile(XLSX.utils.sheet_to_json(worksheet));
-      //   };
     },
   },
 };

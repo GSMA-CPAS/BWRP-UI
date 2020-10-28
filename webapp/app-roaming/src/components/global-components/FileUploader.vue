@@ -1,19 +1,19 @@
 <template>
   <VueFileAgent
     v-model="fileRecords"
-    style="width:100%;"
+    style="width: 100%"
     v-bind="$props"
     :accept="fileTypes"
     :errorText="{
       type: 'Invalid file type. Only ' + fileTypes + ' Allowed',
-      size: 'Files should not exceed ' + maxSize + ' in size'
+      size: 'Files should not exceed ' + maxSize + ' in size',
     }"
   />
 </template>
 <script>
 export default {
   name: "file-uploader",
-  description: "This is custom file uploader.",
+  description: "This is a custom file uploader.",
   data() {
     return {
       fileRecords: [],

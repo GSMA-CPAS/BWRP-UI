@@ -17,11 +17,5 @@ export default {
   data() {
     return { amount: null, currency: null };
   },
-  components: {},
-  props: {},
-  watch: {},
-  methods: {},
-  computed: {},
-  mounted() {},
 };
 </script>

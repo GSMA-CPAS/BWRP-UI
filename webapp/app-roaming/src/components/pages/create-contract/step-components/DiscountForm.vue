@@ -5,7 +5,10 @@
       <discount-picker :service="service"></discount-picker>
     </div>
     <secondary-row label="Non Exceptional Traffic" />
-    <div v-for="service in exceptionalTrafficServices" :key="`${service} non-exceptional`">
+    <div
+      v-for="service in exceptionalTrafficServices"
+      :key="`${service} non-exceptional`"
+    >
       <discount-picker :service="service"></discount-picker>
     </div>
     <secondary-row label="Overall Revenue Commitment" />
@@ -28,7 +31,6 @@ import AdditionalComments from "./discount-form-components/AdditionalComments.vu
 export default {
   name: "discount-form",
   description: "description",
-  mixins: [],
   components: {
     AdditionalComments,
     TadigCodes,
@@ -36,15 +38,11 @@ export default {
     OverallRevenueCommitment,
     DiscountPicker,
   },
-  props: {},
-  watch: {},
-  methods: {},
   computed: {
     ...mapState(["services"]),
     exceptionalTrafficServices() {
       return ["MOC", "MTC", "SMS", "Data"];
     },
   },
-  mounted() {},
 };
 </script>

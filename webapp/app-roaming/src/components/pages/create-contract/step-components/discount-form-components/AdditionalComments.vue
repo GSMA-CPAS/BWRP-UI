@@ -13,11 +13,5 @@ export default {
   data() {
     return { comments: null };
   },
-  components: {},
-  props: {},
-  watch: {},
-  methods: {},
-  computed: {},
-  mounted() {},
 };
 </script>

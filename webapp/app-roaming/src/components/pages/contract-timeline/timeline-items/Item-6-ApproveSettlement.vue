@@ -27,10 +27,5 @@ export default {
   name: "item-1",
   description: "description",
   components: { ApproveButton },
-  computed: {
-    approved() {
-      return false;
-    },
-  },
 };
 </script>

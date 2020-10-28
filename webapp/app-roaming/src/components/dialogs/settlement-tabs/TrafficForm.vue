@@ -7,7 +7,7 @@
       :key="service"
     >
       <v-col class="font-weight-medium" cols="2">{{ service }}</v-col>
-      <v-divider vertical></v-divider>
+      <v-divider vertical />
       <v-col>
         <v-row>
           <v-col v-for="{ key } in labels" :key="key">{{ data[key] }}</v-col>
@@ -17,18 +17,18 @@
     <v-divider />
     <v-row>
       <v-col class="primary--text" cols="2">Totals</v-col>
-      <v-divider vertical></v-divider>
+      <v-divider vertical />
       <v-col v-for="{ key } in labels" :key="key">{{ totals[key] }}</v-col>
     </v-row>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import { utilsMixin } from "../../../utils/mixins/handle-data";
+import { utilsMixin } from "@/utils/mixins/handle-data";
 import PartiesHeader from "../components/PartiesHeader.vue";
 export default {
   name: "traffic-form",
-  description: "description",
+  description:
+    "This is the traffic form, which displays either the out- or inbound details.",
   mixins: [utilsMixin],
   data() {
     return {
@@ -82,8 +82,6 @@ export default {
   components: {
     PartiesHeader,
   },
-  props: {},
-  watch: {},
   methods: {
     setParty(party) {
       this.currentParty = party;
@@ -109,7 +107,6 @@ export default {
         }
       );
     },
-    ...mapGetters("document", ["partyNames"]),
     labels() {
       const trafficLabels = [
         "Traffic",
@@ -123,7 +120,6 @@ export default {
       return this.labelsToCamelCase(trafficLabels);
     },
   },
-  mounted() {},
 };
 </script>
 <style scoped>

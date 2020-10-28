@@ -51,6 +51,16 @@ const duplicateMixin = {
 };
 export { duplicateMixin };
 
+const appStateMixin = {
+  methods: {
+    ...mapActions("app-state", ["setErrorVisibility"]),
+  },
+  computed: {
+    ...mapState("app-state", ["errorResponse", "showError", "isLoading"]),
+  },
+};
+export { appStateMixin };
+
 const timelineMixin = {
   mixins: [],
   data() {
@@ -62,34 +72,79 @@ const timelineMixin = {
     parseSignature(signature) {
       return `${signature?.name}, ${signature?.role}`;
     },
+    ...mapActions("document/new", ["startContract"]),
+    ...mapActions("partners", ["loadPartners"]),
+    ...mapActions("document", ["loadData"]),
+    ...mapGetters("document", ["exists"]),
   },
   watch: {},
   computed: {
     ...mapState("document", {
       fromMSP: (state) => state.document.fromMSP,
       toMSP: (state) => state.document.toMSP,
+      bankDetails: (state) => state.document.data.bankDetails,
+      generalInformation: (state) => state.document.data.generalInformation,
+      signatures: (state) => state.document.data.signatures,
     }),
-    ...mapGetters("document", ["signatures", "parties"]),
+    ...mapGetters("document", ["signatures", "parties", "name"]),
+    ...mapGetters("partners", ["list"]),
   },
   mounted() {},
 };
 export { timelineMixin };
 
 const validationMixin = {
-  mixins: [],
   data() {
-    return {};
+    return { activeValidation: false };
   },
-  components: {},
-  props: {},
   methods: {
-    // validate() {
-    // this.valid &&
-    // this.nextStep({
-    //   key: this.$options.key,
-    //   data: this.data
-    // });
-    // },
+    twoFormsValidate() {
+      if (this.activeValidation) {
+        var valid = false;
+        const data = {};
+        for (const key in this.$refs) {
+          const { $v, _data } = this.$refs[key];
+          data[key] = _data;
+          const { $touch, $invalid } = $v;
+          $touch();
+          valid = !$invalid;
+        }
+        valid &&
+          this.nextStep({
+            key: "bankDetails",
+            data,
+          });
+      } else {
+        const data = {};
+        for (const key in this.$refs) {
+          const { _data } = this.$refs[key];
+          data[key] = _data;
+        }
+        this.nextStep({
+          key: "bankDetails",
+          data,
+        });
+      }
+    },
+    validate(key) {
+      if (this.activeValidation) {
+        const { $touch, $invalid } = this.$v;
+        $touch();
+        const valid = !$invalid;
+        valid &&
+          delete this._data.active &&
+          this.nextStep({
+            key,
+            data: this._data,
+          });
+      } else {
+        delete this._data.active &&
+          this.nextStep({
+            key,
+            data: this._data,
+          });
+      }
+    },
 
     ...mapActions("app-state", ["loadError"]),
     ...mapActions("document/new", ["nextStep", "previousStep"]),

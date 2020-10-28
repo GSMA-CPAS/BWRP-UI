@@ -34,20 +34,17 @@
   </fragment>
 </template>
 <script>
-import { mapState } from "vuex";
-import HelpTooltip from "../../other/HelpTooltip.vue";
+import HelpTooltip from "@/components/other/HelpTooltip.vue";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "tab-1",
   label: "General Information",
-  description: "description",
+  description:
+    "In this tab the general information of a contract is displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
   components: {
     HelpTooltip,
   },
-  computed: {
-    ...mapState("document", {
-      generalInformation: (state) => state.document.data.generalInformation,
-    }),
-  },
+  mixins: [timelineMixin],
   beforeMount() {
     for (const key in this.generalInformation) {
       this[key] = this.generalInformation[key];
