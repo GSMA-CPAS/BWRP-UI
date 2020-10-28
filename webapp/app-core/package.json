@@ -32,6 +32,7 @@
     "passport-local": "1.0.0",
     "path": "0.12.7",
     "qrcode": "1.4.4",
+    "swagger-ui-express": "4.1.4",
     "uuid": "8.3.0",
     "vue": "2.6.12",
     "vue-axios": "2.1.5",

@@ -98,6 +98,11 @@
         {"type": "localStorage", "name": "LocalStorageAdapter"},
         {"type": "wallet", "name": "WalletAdapter"}
       ]
+    },
+    "SwaggerService": {
+      "enabled": false,
+      "classPath": "/swagger/v1/SwaggerService",
+      "route": "/api/docs"
     }
   },
 
