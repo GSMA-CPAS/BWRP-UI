@@ -56,7 +56,12 @@ const appStateMixin = {
     ...mapActions("app-state", ["setErrorVisibility"]),
   },
   computed: {
-    ...mapState("app-state", ["errorResponse", "showError", "isLoading"]),
+    ...mapState("app-state", [
+      "errorResponse",
+      "showError",
+      "isLoading",
+      "hideOverlay",
+    ]),
   },
 };
 export { appStateMixin };
@@ -89,7 +94,6 @@ const timelineMixin = {
     ...mapGetters("document", ["signatures", "parties", "name"]),
     ...mapGetters("partners", ["list"]),
   },
-  mounted() {},
 };
 export { timelineMixin };
 

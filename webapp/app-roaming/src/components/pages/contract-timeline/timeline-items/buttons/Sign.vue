@@ -6,6 +6,7 @@
       title="Are you sure you want to sign this contract?"
       label="Sign"
     >
+      <!-- :loading="true" -->
       <template #actions="{ cancel }">
         <app-button @button-pressed="cancel" outlined label="Cancel" />
         <app-button
@@ -35,6 +36,8 @@ export default {
       this.signDocument();
     },
   },
-  computed: { ...mapGetters("document", ["signatures"]) },
+  computed: {
+    ...mapGetters("document", ["signatures"]),
+  },
 };
 </script>

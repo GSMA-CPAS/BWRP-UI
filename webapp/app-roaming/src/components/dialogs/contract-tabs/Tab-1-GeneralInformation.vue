@@ -2,25 +2,29 @@
   <fragment class="text-center">
     <v-row>
       <v-col>
-        <row no-divider label="Name">{{ name | isNil }}</row>
+        <row no-divider label="Name">{{ generalInformation.name | isNil }}</row>
       </v-col>
       <v-col>
-        <row no-divider label="Type">{{ type | isNil }}</row>
+        <row no-divider label="Type">{{ generalInformation.type | isNil }}</row>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <row no-divider label="Start Date">{{ startDate | parseDate }}</row>
+        <row no-divider label="Start Date">{{
+          generalInformation.startDate | parseDate
+        }}</row>
       </v-col>
       <v-col>
-        <row no-divider label="End Date">{{ endDate | parseDate }}</row>
+        <row no-divider label="End Date">{{
+          generalInformation.endDate | parseDate
+        }}</row>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <row no-divider label="Prolongation Length">
-          <div v-if="prolongationLength > 0">
-            {{ `${prolongationLength} months` }}
+          <div v-if="generalInformation.prolongationLength > 0">
+            {{ `${generalInformation.prolongationLength} months` }}
             <help-tooltip
               icon="message-alert-outline"
               text="This contract will renew automatically"
@@ -45,10 +49,5 @@ export default {
     HelpTooltip,
   },
   mixins: [timelineMixin],
-  beforeMount() {
-    for (const key in this.generalInformation) {
-      this[key] = this.generalInformation[key];
-    }
-  },
 };
 </script>

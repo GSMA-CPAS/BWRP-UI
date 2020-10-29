@@ -1,7 +1,12 @@
 <template>
   <v-dialog :width="width" v-model="component">
     <template v-slot:activator="{ on }">
-      <app-button :outlined="outlined" v-on="on" :label="label" />
+      <app-button
+        :loading="loading"
+        :outlined="outlined"
+        v-on="on"
+        :label="label"
+      />
     </template>
     <v-card class="pa-1">
       <v-card-title class="headline text-uppercase">
@@ -36,6 +41,7 @@ export default {
     title: { type: String, default: "Missing Title" },
     width: { type: String, default: "60vw" },
     hideIcon: { type: Boolean, default: false },
+    loading: { type: Boolean, default: false },
   },
 };
 </script>

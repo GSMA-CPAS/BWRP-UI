@@ -1,3 +1,5 @@
+import router from "@/router";
+import { PATHS } from "@/utils/Enums";
 /* eslint-disable no-unused-vars */
 import Vue from "vue";
 const { log } = console;
@@ -37,26 +39,29 @@ const documentModule = {
           }
         )
         .then((res) => {
-          log(res);
+          dispatch("getSignatures");
         })
         .catch((err) => {
           log(err);
         });
     },
-    loadData(
-      { commit, dispatch, rootGetters, getters, rootState, state },
-      dID
-    ) {
-      //TODO: Connection to API & get real data
-      Vue.axios
-        .get(`/documents/${dID}`, { withCredentials: true })
+    async getDocument({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
+      await Vue.axios
+        .get(`/documents/${getters.documentID}`, { withCredentials: true })
         .then((document) => {
           const { id, documentId, data, fromMSP, toMSP } = document;
           const documentData = JSON.parse(data);
           commit("UPDATE_DOCUMENT", {
             id,
             documentId,
-            data: documentData.body.data,
+            data: documentData.body,
             fromMSP,
             toMSP,
           });
@@ -64,29 +69,64 @@ const documentModule = {
         .catch((err) => {
           // dispatch(["app-state/loadError"], err);
         });
+    },
+    getSignatures({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
+      const { fromMSP, toMSP } = state.document;
+      const url = "" + `/signatures/${getters.documentID}/`;
+      const fromMSPRequest = Vue.axios.get(url + fromMSP);
+      const toMSPRequest = Vue.axios.get(url + toMSP);
       Vue.axios
-        .get(`/signatures/${dID}/${rootState.user.organization.mspid}`, {
+        .all([fromMSPRequest, toMSPRequest], {
           withCredentials: true,
         })
         .then((data) => {
           commit("UPDATE_SIGNATURES", data);
+          dispatch("app-state/setOverlay", false, { root: true });
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    async loadData({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
+      await dispatch("getDocument");
+      dispatch("getSignatures");
+    },
   },
   getters: {
+    documentID() {
+      return router.currentRoute.params.cid;
+    },
     exists: (state) => (key) => {
       return state.document[key] ? true : false;
     },
     signatures: (state) => {
-      const signatures = [];
-      for (const key in state.signatures) {
-        const signature = state.signatures[key].signature;
-        signatures.push(signature);
-      }
-      return signatures;
+      const combinedSignatures = state.signatures?.map((signatures, index) => {
+        const response = [];
+        for (const key in signatures) {
+          response.push(
+            `${signatures[key].signature} from ${
+              index === 0 ? state.document.fromMSP : state.document.toMSP
+            }`
+          );
+        }
+        return response;
+      });
+
+      return Vue.lodash.flatten(combinedSignatures);
     },
     parties: (state) => {
       const { fromMSP, toMSP } = state.document;
@@ -149,7 +189,7 @@ const documentModule = {
         }) {
           commit("DECREMENT_STEP");
         },
-        addContract({
+        async addContract({
           commit,
           dispatch,
           rootGetters,
@@ -174,17 +214,22 @@ const documentModule = {
             taps,
           };
 
-          Vue.axios
+          await Vue.axios
             .post(
               "/documents",
               { type: "contract", toMSP: partner, data: contract },
               { withCredentials: true }
             )
             .then((res) => {
-              console.log(res);
+              console.log(
+                `%c Successfully added new contract!`,
+                "color:#5cb85c; font-weight:800"
+              );
+              router.push(PATHS.contracts);
             })
             .catch((err) => {
               console.log(err);
+              router.push(PATHS.contracts);
             });
           dispatch("resetState");
         },

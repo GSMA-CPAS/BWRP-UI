@@ -30,7 +30,6 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
-import { PATHS } from "@/utils/Enums";
 export default {
   name: "stepper",
   description: "Stepper used for contract-creation.",
@@ -38,7 +37,6 @@ export default {
     ...mapActions("document/new", ["addContract", "resetState"]),
     saveContract() {
       this.addContract();
-      this.$router.push(this.path);
     },
     downloadDocument() {
       const data =
@@ -54,9 +52,6 @@ export default {
   computed: {
     ...mapGetters("document/new", ["contract"]),
     ...mapState("document/new", ["step"]),
-    path() {
-      return PATHS.contracts;
-    },
     steps() {
       const components = require.context(
         "./steps/",
