@@ -19,13 +19,13 @@ class DocumentService extends AbstractService {
         /**
          * curl -X GET http://{host}:{port}/api/v1/documents
          * curl -X GET http://{host}:{port}/api/v1/documents?type=contract
-         * curl -X GET http://{host}:{port}/api/v1/documents?type=contract&status=sent
+         * curl -X GET http://{host}:{port}/api/v1/documents?type=contract&state=sent
          */
         this.getRouter().get("/", ensureAuthenticated, async (req, res) => {
             const type = req.query.type;
-            const status = req.query.status;
+            const state = req.query.state;
             try {
-                const response = await this.getBackendAdapter("localStorage").getDocuments(type, status);
+                const response = await this.getBackendAdapter("localStorage").getDocuments(type, state);
                 return res.json(response);
             } catch (error) {
                 this.handleError(res, new Error(JSON.stringify({
@@ -77,7 +77,7 @@ class DocumentService extends AbstractService {
                     "fromMSP": this.mspid,
                     "toMSP": toMSP,
                     "data": documentData,
-                    "status": Enums.documentStatus.PENDING
+                    "state": Enums.documentState.PENDING
                 }
                 await this.getBackendAdapter("localStorage").storeDocument(documentId, documentData);
                 return res.json(response);
@@ -104,13 +104,13 @@ class DocumentService extends AbstractService {
                     if (documentData) {
                         if (await this.getBackendAdapter("localStorage").existsDocument(documentId)) {
                             const data = {
-                                status: Enums.documentStatus.SENT
+                                state: Enums.documentState.SENT
                             }
                             await this.getBackendAdapter("localStorage").updateDocument(documentId, data);
                         } else {
                             // TODO !!!
                             const data = {
-                                status: Enums.documentStatus.SENT
+                                state: Enums.documentState.SENT
                             }
                             await this.getBackendAdapter("localStorage").storeDocument(documentId, data);
                         }

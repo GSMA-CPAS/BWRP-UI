@@ -17,7 +17,7 @@ class LocalStorageAdapter extends AbstractAdapter {
                 "fromMSP": data.fromMSP,
                 "toMSP": data.toMSP,
                 "data": data.data,
-                "status": data.status
+                "state": data.state
             };
             await this.getDatabase().query('INSERT INTO documents SET ?', documentData);
         } catch (error) {
@@ -52,16 +52,16 @@ class LocalStorageAdapter extends AbstractAdapter {
         return rows[0];
     }
 
-    async getDocuments(type, status) {
+    async getDocuments(type, state) {
         try {
-            if (type && status) {
-                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents WHERE `type` = ? AND status = ?', [type, status]);
+            if (type && state) {
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents WHERE `type` = ? AND state = ?', [type, state]);
             } else if (type) {
-                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents WHERE `type` = ?', [type]);
-            } else if (status) {
-                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents WHERE status = ?', [status]);
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents WHERE `type` = ?', [type]);
+            } else if (state) {
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents WHERE `state` = ?', [state]);
             } else {
-                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents');
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents');
             }
         } catch (error) {
             this.getLogger().error('[LocalStorageAdapter::getDocuments] failed to get documents - %s', error.message);
@@ -102,7 +102,7 @@ class LocalStorageAdapter extends AbstractAdapter {
                         '`fromMSP` VARCHAR(64) NOT NULL, ' +
                         '`toMSP` VARCHAR(64) NOT NULL, ' +
                         '`data` json NOT NULL, ' +
-                        '`status` VARCHAR(64) NOT NULL, ' +
+                        '`state` VARCHAR(64) NOT NULL, ' +
                         'PRIMARY KEY (id), ' +
                         'UNIQUE INDEX documentId (documentId))');
                     this.getLogger().info('[LocalStorageAdapter::createTableDocuments] table documents has been created successfully!');

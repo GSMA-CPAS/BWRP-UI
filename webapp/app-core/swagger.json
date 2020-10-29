@@ -403,8 +403,8 @@
           },
           {
             "in": "query",
-            "name": "status",
-            "description": "Document status",
+            "name": "state",
+            "description": "Document state",
             "required": false,
             "type": "string"
           }

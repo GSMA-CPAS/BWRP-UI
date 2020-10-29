@@ -1,10 +1,10 @@
 'use strict';
 
-const documentStatus = {
+const documentState = {
     DRAFT: 'draft',
     PENDING: 'pending',
     SENT: 'sent',
     APPROVED: 'approved'
 }
 
-module.exports.documentStatus = documentStatus;
+module.exports.documentState = documentState;
