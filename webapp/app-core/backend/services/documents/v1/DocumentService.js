@@ -1,6 +1,7 @@
 "use strict";
 
 const config = require("config");
+const Enums = require(global.GLOBAL_BACKEND_ROOT + "/Enums");
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + "/ErrorCodes");
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + "/services/AbstractService");
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + "/libs/middlewares").ensureAuthenticated;
@@ -17,10 +18,14 @@ class DocumentService extends AbstractService {
     registerRequestHandler() {
         /**
          * curl -X GET http://{host}:{port}/api/v1/documents
+         * curl -X GET http://{host}:{port}/api/v1/documents?type=contract
+         * curl -X GET http://{host}:{port}/api/v1/documents?type=contract&status=sent
          */
         this.getRouter().get("/", ensureAuthenticated, async (req, res) => {
+            const type = req.query.type;
+            const status = req.query.status;
             try {
-                const response = await this.getBackendAdapter("localStorage").getDocuments();
+                const response = await this.getBackendAdapter("localStorage").getDocuments(type, status);
                 return res.json(response);
             } catch (error) {
                 this.handleError(res, new Error(JSON.stringify({
@@ -48,7 +53,7 @@ class DocumentService extends AbstractService {
         );
 
         /**
-         *  curl -X POST http://{host}:{port}/api/v1/documents -d '{"toMSP":"TMUS","data":{...}}' -H "Content-Type: application/json"
+         *  curl -X POST http://{host}:{port}/api/v1/documents -d '{"type":"contract", "toMSP":"TMUS","data":{...}}' -H "Content-Type: application/json"
          */
         this.getRouter().post("/", ensureAuthenticated, async (req, res) => {
             try {
@@ -57,14 +62,24 @@ class DocumentService extends AbstractService {
                 const data = req.body.data;
                 let documentData = {
                     header: { version: "1.0", type: type, msps: {} },
-                    body: { data },
+                    body: data,
                 };
                 documentData.header.msps[this.mspid] = { minSignatures: 2 };
                 documentData.header.msps[toMSP] = { minSignatures: 2 };
                 documentData = JSON.stringify(documentData);
                 documentData = documentData.replace(/\s/g, "");
+
                 const documentDataBase64 = new Buffer.from(documentData).toString("base64");
                 const response = await this.getBackendAdapter("blockchain").uploadPrivateDocument(toMSP, documentDataBase64);
+                const documentId = response.documentID;
+                documentData = {
+                    "type": type,
+                    "fromMSP": this.mspid,
+                    "toMSP": toMSP,
+                    "data": documentData,
+                    "status": Enums.documentStatus.PENDING
+                }
+                await this.getBackendAdapter("localStorage").storeDocument(documentId, documentData);
                 return res.json(response);
             } catch (error) {
                 this.getLogger().error("[DocumentService::/] Failed to store document - %s", error.message);
@@ -87,7 +102,18 @@ class DocumentService extends AbstractService {
                     const documentData = await this.getBackendAdapter("blockchain").getPrivateDocument(documentId);
                     // fromMSP, toMSP, data, dataHash, timeStamp
                     if (documentData) {
-                        await this.getBackendAdapter("localStorage").storeDocument(documentData);
+                        if (await this.getBackendAdapter("localStorage").existsDocument(documentId)) {
+                            const data = {
+                                status: Enums.documentStatus.SENT
+                            }
+                            await this.getBackendAdapter("localStorage").updateDocument(documentId, data);
+                        } else {
+                            // TODO !!!
+                            const data = {
+                                status: Enums.documentStatus.SENT
+                            }
+                            await this.getBackendAdapter("localStorage").storeDocument(documentId, data);
+                        }
                         this.getLogger().info("[DocumentService::/event] Stored document with id %s successfully", documentId);
                     } else {
                         this.getLogger().error("[DocumentService::/event] Failed to get document with id - %s", documentId);

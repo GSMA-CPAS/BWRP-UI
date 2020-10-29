@@ -9,19 +9,28 @@ class LocalStorageAdapter extends AbstractAdapter {
         super(adapterName, adapterConfig, database);
     }
 
-    async storeDocument(data) {
+    async storeDocument(documentId, data) {
         try {
             const documentData = {
-                "documentId": data.id,
+                "documentId": documentId,
+                "type": data.type,
                 "fromMSP": data.fromMSP,
                 "toMSP": data.toMSP,
-                "data": Buffer.from(data.data, 'base64').toString(),
-                "dataHash": data.dataHash
+                "data": data.data,
+                "status": data.status
             };
             await this.getDatabase().query('INSERT INTO documents SET ?', documentData);
-            this.getLogger().info('[LocalStorageAdapter::storeDocument] document with id %s has been stored successfully!', data.id);
         } catch (error) {
-            this.getLogger().error('[LocalStorageAdapter::storeDocument] failed to store document with id %s - %s', data.id, error.message);
+            this.getLogger().error('[LocalStorageAdapter::storeDocument] failed to store document - %s', error.message);
+            throw error;
+        }
+    }
+
+    async updateDocument(documentId, data) {
+        try {
+            await this.getDatabase().query('UPDATE documents SET ? WHERE documentId=?', [data, documentId]);
+        } catch (error) {
+            this.getLogger().error('[LocalStorageAdapter::updateDocument] failed to update document with documentId %s - %s', documentId, error.message);
             throw error;
         }
     }
@@ -43,17 +52,42 @@ class LocalStorageAdapter extends AbstractAdapter {
         return rows[0];
     }
 
-    async getDocuments(/*type*/) {
+    async getDocuments(type, status) {
         try {
-            // TODO: use filter like WHERE type=contract etc.
-            return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP FROM documents');
+            if (type && status) {
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents WHERE `type` = ? AND status = ?', [type, status]);
+            } else if (type) {
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents WHERE `type` = ?', [type]);
+            } else if (status) {
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents WHERE status = ?', [status]);
+            } else {
+                return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, status, `type` FROM documents');
+            }
         } catch (error) {
             this.getLogger().error('[LocalStorageAdapter::getDocuments] failed to get documents - %s', error.message);
             throw error;
         }
     }
 
+    async existsDocument(documentId) {
+        try {
+            const rows = await this.getDatabase().query('SELECT id FROM documents WHERE documentId = ?', documentId);
+            if (rows.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            this.getLogger().error('[LocalStorageAdapter::existsDocument] failed to get document id - %s', error.message);
+            throw error;
+        }
+    }
+
     async initialize() {
+        await this.createTableDocuments();
+    }
+
+    async createTableDocuments() {
         try {
             await this.database.query('describe documents');
             return false;
@@ -62,23 +96,24 @@ class LocalStorageAdapter extends AbstractAdapter {
                 try {
                     await this.database.query(
                         'CREATE TABLE IF NOT EXISTS documents (' +
-                        'id INT AUTO_INCREMENT, ' +
-                        'documentId VARCHAR(128) NOT NULL, ' +
-                        'fromMSP VARCHAR(64) NOT NULL, ' +
-                        'toMSP VARCHAR(64) NOT NULL, ' +
-                        'data json NOT NULL, ' +
-                        'dataHash VARCHAR(128) NOT NULL, ' +
+                        '`id` INT AUTO_INCREMENT, ' +
+                        '`documentId` VARCHAR(128) NOT NULL, ' +
+                        '`type` VARCHAR(64) NOT NULL, ' +
+                        '`fromMSP` VARCHAR(64) NOT NULL, ' +
+                        '`toMSP` VARCHAR(64) NOT NULL, ' +
+                        '`data` json NOT NULL, ' +
+                        '`status` VARCHAR(64) NOT NULL, ' +
                         'PRIMARY KEY (id), ' +
-                        'CONSTRAINT uc_document UNIQUE (documentId))');
-                    this.getLogger().info('[LocalStorageAdapter::initialize] table documents has been created successfully!');
+                        'UNIQUE INDEX documentId (documentId))');
+                    this.getLogger().info('[LocalStorageAdapter::createTableDocuments] table documents has been created successfully!');
                     return true;
 
                 } catch (error) {
-                    this.getLogger().error('[LocalStorageAdapter::initialize] failed to create documents table - %s ', JSON.stringify(error));
+                    this.getLogger().error('[LocalStorageAdapter::createTableDocuments] failed to create documents table - %s ', JSON.stringify(error));
                     throw error;
                 }
             } else {
-                this.getLogger().error('[LocalStorageAdapter::initialize] Error checking database - %s ', JSON.stringify(error));
+                this.getLogger().error('[LocalStorageAdapter::createTableDocuments] Error checking database - %s ', JSON.stringify(error));
                 throw error;
             }
         }
