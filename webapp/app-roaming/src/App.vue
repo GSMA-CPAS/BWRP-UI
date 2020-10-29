@@ -16,6 +16,7 @@
 import { mapState, mapActions } from "vuex";
 import Breadcrumb from "./components/navigation/Breadcrumb.vue";
 import ErrorOverlay from "./components/other/ErrorOverlay.vue";
+import { appStateMixin } from "@/utils/mixins/component-specfic";
 
 export default {
   components: {
@@ -23,12 +24,12 @@ export default {
     Breadcrumb,
   },
   name: "app",
+  mixins: [appStateMixin],
   methods: {
     ...mapActions(["setup", "loadDocuments"]),
   },
   computed: {
     ...mapState(["user"]),
-    ...mapState("app-state", ["isLoading"]),
   },
   watch: {
     async $route(to, from) {

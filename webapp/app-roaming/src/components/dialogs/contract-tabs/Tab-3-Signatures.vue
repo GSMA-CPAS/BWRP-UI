@@ -14,34 +14,24 @@
   </fragment>
 </template>
 <script>
-import { mapState } from "vuex";
 import Parties from "./Parties";
-import { utilsMixin } from "../../../utils/mixins/handle-data";
-import { timelineMixin } from "../../../utils/mixins/component-specfic";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "tab-3",
   label: "Signatures",
-  description: "description",
-  mixins: [utilsMixin, timelineMixin],
+  description:
+    "In this tab the signatures of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
+  mixins: [timelineMixin],
   data() {
     return {};
   },
   components: {
     Parties,
   },
-  props: {},
-  watch: {},
   methods: {
     parseSignature(signature) {
       return signature && `${signature?.name}, ${signature?.role}`;
     },
   },
-  computed: {
-    ...mapState("document", {
-      signatures: (state) => state.document.data.signatures,
-    }) /* 
-    ...mapGetters("document", ["signatures"]), */,
-  },
-  mounted() {},
 };
 </script>

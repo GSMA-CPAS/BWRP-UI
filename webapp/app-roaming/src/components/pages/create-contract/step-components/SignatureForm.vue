@@ -1,12 +1,20 @@
 <template>
   <fragment>
     <v-col>
-      <v-row v-for="(signature,index) in signatures" :key="signature.id">
+      <v-row v-for="(signature, index) in signatures" :key="signature.id">
         <v-col>
-          <v-text-field :error-messages="nameErrors(index)" v-model="signature.name" label="Name"></v-text-field>
+          <v-text-field
+            :error-messages="nameErrors(index)"
+            v-model="signature.name"
+            label="Name"
+          ></v-text-field>
         </v-col>
         <v-col>
-          <v-text-field :error-messages="roleErrors(index)" v-model="signature.role" label="Role"></v-text-field>
+          <v-text-field
+            :error-messages="roleErrors(index)"
+            v-model="signature.role"
+            label="Role"
+          ></v-text-field>
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
           <app-button
@@ -26,7 +34,7 @@ import { required, minLength } from "vuelidate/lib/validators";
 import {
   duplicateMixin,
   validationMixin,
-} from "../../../../utils/mixins/component-specfic";
+} from "@/utils/mixins/component-specfic";
 export default {
   name: "signature-form",
   description: "description",

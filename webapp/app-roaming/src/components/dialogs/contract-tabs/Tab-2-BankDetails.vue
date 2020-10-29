@@ -10,24 +10,19 @@
   </fragment>
 </template>
 <script>
-import { mapState } from "vuex";
 import Parties from "./Parties.vue";
 import {
   bankFieldsMixin,
   timelineMixin,
-} from "../../../utils/mixins/component-specfic";
+} from "@/utils/mixins/component-specfic";
 export default {
   name: "tab-2",
   label: "Bank details",
-  description: "description",
+  description:
+    "In this tab the bank details of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
   mixins: [bankFieldsMixin, timelineMixin],
   components: {
     Parties,
-  },
-  computed: {
-    ...mapState("document", {
-      bankDetails: (state) => state.document.data.bankDetails,
-    }),
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <v-col>
     <currency-selector v-model="_data.currency" />
     <v-text-field
-      v-for="({key,label}) in  fields"
+      v-for="{ key, label } in fields"
       :key="key"
       v-model="_data[key]"
       validate-on-blur
@@ -17,7 +17,7 @@ import { required, email } from "vuelidate/lib/validators";
 import {
   validationMixin,
   bankFieldsMixin,
-} from "../../../../utils/mixins/component-specfic";
+} from "@/utils/mixins/component-specfic";
 export default {
   name: "bank-form",
   description: "This is the bank form",

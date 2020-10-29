@@ -16,7 +16,7 @@
   </v-container>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 import Item1ContractView from "./timeline-items/Item-1-ContractView.vue";
 import Item2Signatures from "./timeline-items/Item-2-Signatures.vue";
 import Item3ContractState from "./timeline-items/Item-3-ContractState.vue";
@@ -34,28 +34,7 @@ export default {
   },
   name: "timeline",
   description: "Component: Timeline",
-  methods: {
-    ...mapActions("document", ["loadData"]),
-    ...mapGetters("document", ["exists"]),
-  },
-  computed: {
-    ...mapGetters("document", ["name"]),
-    timelineItemProps() {
-      return {
-        color: "transparent",
-        class: `hide-dot`,
-        large: true,
-      };
-    },
-    timelineItems() {
-      const timelineItems = require.context(
-        "./timeline-items/",
-        true,
-        /(Item-)\d-*.*.(vue|js)$/
-      );
-      return timelineItems.keys().map((x) => timelineItems(x).default);
-    },
-  },
+  mixins: [timelineMixin],
   beforeMount() {
     const dID = this.$route.params.cid;
     this.loadData(dID);

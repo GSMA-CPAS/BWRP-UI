@@ -2,8 +2,8 @@
   <stepper />
 </template>
 <script>
-import { PATHS } from "../../utils/Enums";
-import Stepper from "../../components/pages/create-contract/Stepper.vue";
+import { PATHS } from "@/utils/Enums";
+import Stepper from "@/components/pages/create-contract/Stepper.vue";
 export default {
   name: "create-page",
   text: "New",

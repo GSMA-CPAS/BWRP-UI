@@ -1,6 +1,10 @@
 <template>
   <fragment>
-    <v-row align="baseline" v-for="(baseline, index) in baselines" v-bind:key="baseline.key">
+    <v-row
+      align="baseline"
+      v-for="(baseline, index) in baselines"
+      v-bind:key="baseline.key"
+    >
       <disabled-condition :placeholder="'Baseline ' + (index + 1)" />
       <v-col>
         <v-text-field
@@ -33,7 +37,7 @@
 
 <script>
 import RevenueCommitmentCheckbox from "../model-components/RevenueCommitmentCheckbox";
-import { duplicateMixin } from "../../../../../../utils/mixins/component-specfic";
+import { duplicateMixin } from "@/utils/mixins/component-specfic";
 import { required, numeric } from "vuelidate/lib/validators";
 import DisabledCondition from "../model-components/DisabledCondition.vue";
 export default {

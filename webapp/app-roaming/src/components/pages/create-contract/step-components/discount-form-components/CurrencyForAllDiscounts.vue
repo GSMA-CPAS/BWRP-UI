@@ -8,11 +8,5 @@ export default {
   data() {
     return { currency: null };
   },
-  components: {},
-  props: {},
-  watch: {},
-  methods: {},
-  computed: {},
-  mounted() {},
 };
 </script>

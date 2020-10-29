@@ -25,8 +25,7 @@
   </v-dialog>
 </template>
 <script>
-import { mapState } from "vuex";
-import { handleComponentVisibilityMixin } from "../../utils/mixins/handle-states";
+import { handleComponentVisibilityMixin } from "@/utils/mixins/handle-states";
 export default {
   name: "app-dialog",
   description: "This is a custom dialog.",
@@ -37,10 +36,6 @@ export default {
     title: { type: String, default: "Missing Title" },
     width: { type: String, default: "60vw" },
     hideIcon: { type: Boolean, default: false },
-  },
-  computed: { ...mapState("app-state", ["isLoading"]) },
-  mounted() {
-    // this.show();
   },
 };
 </script>

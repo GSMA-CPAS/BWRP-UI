@@ -4,13 +4,13 @@
       <v-data-table :headers="headers" :items="filteredDiscrepancies">
         <template v-slot:top>
           <filters :on-clear="clearFilters">
-            <template #body="{distinct}">
-              <v-col v-for="({label},key) in filters" :key="label">
+            <template #body="{ distinct }">
+              <v-col v-for="({ label }, key) in filters" :key="label">
                 <v-select
                   clearable
                   v-model="filters[key].value"
                   multiple
-                  :items="distinct(filteredDiscrepancies,label)"
+                  :items="distinct(filteredDiscrepancies, label)"
                   :label="label"
                 />
               </v-col>
@@ -32,8 +32,8 @@ export default {
     Range,
     Filters,
   },
-  name: "create-contract",
-  description: "This is the dialog to view the discrepancies.",
+  name: "discrepancies",
+  description: "This is the dialog view for the discrepancies.",
   props: {},
   data: () => ({
     range: { from: null, to: null },
@@ -123,7 +123,6 @@ export default {
       });
     },
   },
-  mixins: [],
   methods: {
     clearFilters() {
       this.filters.forEach((filter) => (filter.value = []));

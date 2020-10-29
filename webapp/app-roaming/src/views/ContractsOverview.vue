@@ -11,7 +11,7 @@
   </v-card>
 </template>
 <script>
-import { PATHS } from "../utils/Enums";
+import { PATHS } from "@/utils/Enums";
 import NewContractVue from "../components/dialogs/NewContract.vue";
 import ContractsTable from "../components/pages/contracts-overview/ContractsTable.vue";
 export default {

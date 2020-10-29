@@ -14,12 +14,10 @@
   </fragment>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "parties",
   description: "description",
-  computed: {
-    ...mapGetters("document", ["parties"]),
-  },
+  mixins: [timelineMixin],
 };
 </script>

@@ -6,18 +6,10 @@ import TrafficForm from "./TrafficForm.vue";
 export default {
   name: "tab-3",
   label: "Inbound Details",
-  description: "description",
-  mixins: [],
-  data() {
-    return {};
-  },
+  description:
+    "In this tab the inbound details of a settlement are displayed. The tab is found in the contract timeline when clicking on 'View Settlement'",
   components: {
     TrafficForm,
   },
-  props: {},
-  methods: {},
-  watch: {},
-  computed: {},
-  mounted() {},
 };
 </script>

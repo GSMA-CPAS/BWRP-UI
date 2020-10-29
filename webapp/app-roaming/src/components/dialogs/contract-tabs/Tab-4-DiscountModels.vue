@@ -48,22 +48,18 @@
   </fragment>
 </template>
 <script>
-import { mapState } from "vuex";
 import PartiesHeader from "../components/PartiesHeader.vue";
-import { utilsMixin } from "../../../utils/mixins/handle-data";
+import { utilsMixin } from "@/utils/mixins/handle-data";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "tab-4",
   label: "Discount Models",
-  description: "description",
-  mixins: [utilsMixin],
-  data() {
-    return {};
-  },
+  description:
+    "In this tab the discount models of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
+  mixins: [utilsMixin, timelineMixin],
   components: {
     PartiesHeader,
   },
-  props: {},
-  watch: {},
   methods: {
     renderModel(model) {
       var path = null;
@@ -102,7 +98,6 @@ export default {
       ];
       return this.labelsToCamelCase(discountModelsLabels);
     },
-    ...mapState("document", ["discountModels"]),
     overallRevenueCommitment() {
       return { amount: 10000, currency: "EUR" };
     },
@@ -156,24 +151,6 @@ export default {
         },
       ];
     },
-    testData2() {
-      return [
-        {
-          service: "MOC",
-          model: "Flat IOT",
-          increment: "60 sec",
-          rate: 0,
-          revenueCommitment: true,
-        },
-        {
-          service: "Data",
-          model: "Unlimited Commit",
-          increment: "60 sec",
-          revenueCommitment: false,
-        },
-      ];
-    },
   },
-  mounted() {},
 };
 </script>

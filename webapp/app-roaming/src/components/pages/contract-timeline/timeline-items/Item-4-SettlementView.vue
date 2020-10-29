@@ -26,8 +26,8 @@
   </timeline-item>
 </template>
 <script>
-import Settlement from "../../../dialogs/Settlement.vue";
-import UploadSettlement from "../../../dialogs/UploadSettlement.vue";
+import Settlement from "@/components/dialogs/Settlement.vue";
+import UploadSettlement from "@/components/dialogs/UploadSettlement.vue";
 export default {
   name: "item-4",
   description: "description",

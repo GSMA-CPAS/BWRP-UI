@@ -18,9 +18,8 @@
 </template>
 <script>
 import SignButton from "./buttons/Sign.vue";
-// import ProgressIcon from "../../../other/icons/ProgressIcon.vue";
-import Signatures from "../../../dialogs/Signatures.vue";
-import { timelineMixin } from "../../../../utils/mixins/component-specfic";
+import Signatures from "@/components/dialogs/Signatures.vue";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "item-3",
   description: "description",
@@ -28,7 +27,6 @@ export default {
   components: {
     Signatures,
     SignButton,
-    // ProgressIcon,
   },
 };
 </script>

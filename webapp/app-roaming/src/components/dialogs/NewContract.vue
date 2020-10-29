@@ -31,17 +31,15 @@
   </app-dialog>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { dataMixin } from "../../utils/mixins/handle-data";
-import { PATHS } from "../../utils/Enums";
+import { dataMixin } from "@/utils/mixins/handle-data";
+import { PATHS } from "@/utils/Enums";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 
 export default {
   name: "create-contract",
-  description: "This is the dialog to create a contract.",
-  props: {},
+  description: "This is the dialog view when creating a new contract.",
   data: () => ({ partner: null, fileAsJSON: null }),
   computed: {
-    ...mapGetters("partners", ["list"]),
     partnerSelected() {
       return this.partner === null;
     },
@@ -49,10 +47,8 @@ export default {
       return PATHS.createContract;
     },
   },
-  mixins: [dataMixin],
+  mixins: [dataMixin, timelineMixin],
   methods: {
-    ...mapActions("document/new", ["startContract"]),
-    ...mapActions("partners", ["loadPartners"]),
     confirm() {
       this.startContract({
         partner: this.partner,

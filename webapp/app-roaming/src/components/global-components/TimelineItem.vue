@@ -1,5 +1,5 @@
 <template>
-  <v-timeline-item v-bind="timelineItemProps">
+  <v-timeline-item color="background" fill-dot v-bind="timelineItemProps">
     <template #icon>
       <slot name="icon">
         <v-icon color="primary" x-large> mdi-check-circle-outline </v-icon>
@@ -16,14 +16,6 @@
 export default {
   name: "timeline-item",
   description: "description",
-  mixins: [],
-  data() {
-    return {};
-  },
-  components: {},
-  props: {},
-  watch: {},
-  methods: {},
   computed: {
     timelineItemProps() {
       return {
@@ -33,6 +25,5 @@ export default {
       };
     },
   },
-  mounted() {},
 };
 </script>
