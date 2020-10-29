@@ -18,7 +18,10 @@
     "saveUninitialized": false,
     "rolling": true,
     "timeout": 1800000,
-    "checkExpirationInterval": 3600000
+    "checkExpirationInterval": 3600000,
+    "cookie": {
+      "secure": true
+    }
   },
 
   "database": {

@@ -42,7 +42,10 @@ Create config file ``production-org1.json`` in folder ``webapp/app-core/config``
     },
     
     "session": {
-        "secret": "secret123"
+        "secret": "secret123",
+        "cookie": {
+            "secure": false
+        }
     },
 
     "database": {

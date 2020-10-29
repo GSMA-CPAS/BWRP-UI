@@ -12,6 +12,8 @@ const fs = require('fs');
 
 const Database = require('mysqlw');
 const config = require('config');
+const sessionConfig = config.get('session');
+const databaseConnection = config.get('database').connection;
 
 global.GLOBAL_ROOT = path.resolve(__dirname);
 global.GLOBAL_BACKEND_ROOT = path.resolve(__dirname + '/backend');
@@ -61,12 +63,7 @@ app.use(express.static(path.join(__dirname, '/dist')));
 const csrfProtection = csrf({ cookie: true });
 app.use(cookieParser());
 
-let cookieOpt = {};
-
-if (app.get('env') === 'production') {
-    app.set('trust proxy', 1); // trust first proxy
-    cookieOpt.secure = true; // serve secure cookies only - https needed for this to work
-} else {
+if (app.get('env') !== 'production') {
     app.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", req.headers.origin);
         res.header("Access-Control-Allow-Credentials", true);
@@ -75,9 +72,6 @@ if (app.get('env') === 'production') {
         next();
     });
 }
-
-const sessionConfig = config.get('session');
-const databaseConnection = config.get('database').connection;
 
 const sessionStore = new MySQLSessionStore({
     host: databaseConnection.host,
@@ -96,8 +90,18 @@ app.use(expressSession({
     resave: sessionConfig.resave,
     saveUninitialized: sessionConfig.saveUninitialized,
     rolling: sessionConfig.rolling,
-    cookie: cookieOpt
+    cookie: sessionConfig.cookie
 }));
+
+if (sessionConfig.cookie.secure === true) {
+    app.set('trust proxy', 1); // trust first proxy
+} else {
+    if (app.get('env') === 'production' && sessionConfig.cookie.secure === false) {
+        logger.warn('*******************************************************');
+        logger.warn('* WARNING - using insecure cookies in production mode *');
+        logger.warn('*******************************************************');
+    }
+}
 
 (async function() {
 
