@@ -1,23 +1,23 @@
 <template>
   <v-col>
-    <secondary-row label="Regular Human Traffic / Exceptional Traffic" />
+    <row type="secondary" label="Regular Human Traffic / Exceptional Traffic" />
     <div v-for="service in services" :key="`${service} exceptional`">
       <discount-picker :service="service"></discount-picker>
     </div>
-    <secondary-row label="Non Exceptional Traffic" />
+    <row type="secondary" label="Non Exceptional Traffic" />
     <div
       v-for="service in exceptionalTrafficServices"
       :key="`${service} non-exceptional`"
     >
       <discount-picker :service="service"></discount-picker>
     </div>
-    <secondary-row label="Overall Revenue Commitment" />
+    <row type="secondary" label="Overall Revenue Commitment" />
     <overall-revenue-commitment />
-    <secondary-row label="Currency for all Discounts" />
+    <row type="secondary" label="Currency for all Discounts" />
     <currency-for-all-discounts />
-    <secondary-row label="TADIG Codes" />
+    <row type="secondary" label="TADIG Codes" />
     <tadig-codes />
-    <secondary-row label="Additional Comments" />
+    <row type="secondary" label="Additional Comments" />
     <additional-comments />
   </v-col>
 </template>

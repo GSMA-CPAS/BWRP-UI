@@ -26,7 +26,7 @@
       <v-divider vertical></v-divider>
       <fragment v-for="(name, index) in parties" :key="name">
         <v-col>
-          <primary-row :label="name" />
+          <row type="primary" :label="name" />
         </v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>

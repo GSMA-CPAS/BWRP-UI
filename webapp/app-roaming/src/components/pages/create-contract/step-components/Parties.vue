@@ -1,14 +1,14 @@
 <template>
   <fragment>
-    <primary-row :label="label" />
+    <row type="primary" :label="label" />
     <v-divider />
     <v-row>
       <v-col>
-        <primary-row :label="msps.user" />
+        <row type="primary" :label="msps.user" />
       </v-col>
       <v-divider vertical></v-divider>
       <v-col>
-        <primary-row :label="msps.partner" />
+        <row type="primary" :label="msps.partner" />
       </v-col>
     </v-row>
   </fragment>

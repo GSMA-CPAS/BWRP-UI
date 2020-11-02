@@ -1,7 +1,8 @@
 <template>
   <fragment>
     <parties-header single :sub-row-labels="labels" />
-    <secondary-row
+    <row
+      type="secondary"
       class="pa-4"
       label="Regular Human Traffic / Exceptional Traffic"
     />
@@ -15,9 +16,9 @@
       <component :is="renderModel(data.model)" :data="data" />
     </row>
     <v-divider />
-    <secondary-row class="pa-4" label="Non Exceptional Traffic" />
+    <row type="secondary" class="pa-4" label="Non Exceptional Traffic" />
     <v-divider />
-    <secondary-row class="pa-4" label="Other information" />
+    <row type="secondary" class="pa-4" label="Other information" />
     <v-divider />
     <v-row align="baseline" class="text-center">
       <v-col cols="2" />
