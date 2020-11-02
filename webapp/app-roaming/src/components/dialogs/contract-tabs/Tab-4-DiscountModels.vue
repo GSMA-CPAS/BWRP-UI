@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <parties-header :sub-row-labels="labels" />
+    <parties-header single :sub-row-labels="labels" />
     <secondary-row
       class="pa-4"
       label="Regular Human Traffic / Exceptional Traffic"
@@ -16,15 +16,6 @@
     </row>
     <v-divider />
     <secondary-row class="pa-4" label="Non Exceptional Traffic" />
-    <v-divider />
-    <row
-      cols="2"
-      v-for="(data, index) in testData2"
-      :key="index"
-      :label="data.service"
-    >
-      <component :is="renderModel(data.model)" :data="data" />
-    </row>
     <v-divider />
     <secondary-row class="pa-4" label="Other information" />
     <v-divider />

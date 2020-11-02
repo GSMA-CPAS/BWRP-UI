@@ -35,10 +35,12 @@ const documentModule = {
           `/signatures/` + state.document.documentId,
           {},
           {
+            signing: true,
             withCredentials: true,
           }
         )
         .then((res) => {
+          dispatch("app-state/signing", false, { root: true });
           dispatch("getSignatures");
         })
         .catch((err) => {
@@ -141,6 +143,15 @@ const documentModule = {
       namespaced,
       state: defaultNewContractState(),
       mutations: {
+        DECREMENT_STEP(state) {
+          state.step--;
+        },
+        INCREMENT_STEP(state) {
+          state.step++;
+        },
+        SET_STEP(state, step) {
+          state.step = step;
+        },
         SET_PARTNER: (state, partner) => {
           state.partner = partner;
         },
@@ -148,12 +159,6 @@ const documentModule = {
           for (const key in json) {
             state[key] = json[key];
           }
-        },
-        INCREMENT_STEP(state) {
-          state.step++;
-        },
-        DECREMENT_STEP(state) {
-          state.step--;
         },
         SAVE_DATA(state, payload) {
           const { key, data } = payload;
@@ -168,7 +173,29 @@ const documentModule = {
           { commit, dispatch, rootGetters, getters, rootState, state },
           payload
         ) {
+          const user = rootGetters["user/organizationMSPID"];
           const { partner, fileAsJSON } = payload;
+          for (let key in fileAsJSON) {
+            if (key === "generalInformation") {
+              continue;
+            } else {
+              Object.entries(fileAsJSON[key]).forEach(
+                ([key2, value], index) => {
+                  Object.defineProperty(
+                    fileAsJSON[key],
+                    index === 0 ? user : partner,
+                    Object.getOwnPropertyDescriptor(fileAsJSON[key], key2)
+                  );
+                  if (index === 0) {
+                    !(key2 === user) && delete fileAsJSON[key][key2];
+                  } else if (index === 1) {
+                    !(key2 === partner) && delete fileAsJSON[key][key2];
+                  }
+                }
+              );
+            }
+          }
+          log(fileAsJSON);
           commit("READ_JSON", fileAsJSON);
           commit("SET_PARTNER", partner);
         },
@@ -189,7 +216,13 @@ const documentModule = {
         }) {
           commit("DECREMENT_STEP");
         },
-        async addContract({
+        setStep(
+          { commit, dispatch, rootGetters, getters, rootState, state },
+          step
+        ) {
+          commit("SET_STEP", step);
+        },
+        async saveContract({
           commit,
           dispatch,
           rootGetters,

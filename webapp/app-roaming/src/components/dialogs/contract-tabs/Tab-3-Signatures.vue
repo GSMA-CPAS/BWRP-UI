@@ -1,21 +1,21 @@
 <template>
   <fragment>
-    <parties />
+    <parties-header />
     <row
-      v-for="(signature, msp, i) in signatures"
+      v-for="(signature, msp, i) in contractSignatures"
       :label="`Signature ${i}`"
       :key="msp"
     >
       <fragment v-for="(msp, index) in parties" :key="msp">
-        <v-col>{{ parseSignature(signatures[msp][i]) | isNil }}</v-col>
+        <v-col>{{ parseSignature(contractSignatures[msp][i]) | isNil }}</v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </row>
   </fragment>
 </template>
 <script>
-import Parties from "./Parties";
 import { timelineMixin } from "@/utils/mixins/component-specfic";
+import PartiesHeader from "../components/PartiesHeader.vue";
 export default {
   name: "tab-3",
   label: "Signatures",
@@ -26,7 +26,7 @@ export default {
     return {};
   },
   components: {
-    Parties,
+    PartiesHeader,
   },
   methods: {
     parseSignature(signature) {

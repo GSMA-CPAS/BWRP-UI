@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <parties />
+    <parties-header />
     <row v-for="{ key, label } in fields" :label="label" :key="key">
       <fragment v-for="(msp, index) in parties" :key="msp">
         <v-col>{{ bankDetails[msp][key] | isNil }}</v-col>
@@ -10,7 +10,7 @@
   </fragment>
 </template>
 <script>
-import Parties from "./Parties.vue";
+import PartiesHeader from "../components/PartiesHeader.vue";
 import {
   bankFieldsMixin,
   timelineMixin,
@@ -22,7 +22,7 @@ export default {
     "In this tab the bank details of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
   mixins: [bankFieldsMixin, timelineMixin],
   components: {
-    Parties,
+    PartiesHeader,
   },
 };
 </script>

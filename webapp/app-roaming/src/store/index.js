@@ -31,12 +31,14 @@ export default new Vuex.Store({
       const { request, response } = Vue.axios.interceptors;
       request.use(
         (config) => {
-          const { method, baseURL, url } = config;
+          const { method, baseURL, url, signing } = config;
           console.log(
             `%c Made ${method} request to ${baseURL + url}`,
             "color:green; font-weight:800"
           );
-          dispatch("app-state/loading", true);
+          signing
+            ? dispatch("app-state/signing", true)
+            : dispatch("app-state/loading", true);
           return config;
         },
         (error) => {

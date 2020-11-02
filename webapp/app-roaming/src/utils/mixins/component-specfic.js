@@ -25,16 +25,7 @@ const bankFieldsMixin = {
 export { bankFieldsMixin };
 
 const discountModelsMixin = {
-  mixins: [],
-  data() {
-    return {};
-  },
-  components: {},
   props: { data: Object },
-  methods: {},
-  watch: {},
-  computed: {},
-  mounted() {},
 };
 export { discountModelsMixin };
 
@@ -67,12 +58,6 @@ const appStateMixin = {
 export { appStateMixin };
 
 const timelineMixin = {
-  mixins: [],
-  data() {
-    return {};
-  },
-  components: {},
-  props: {},
   methods: {
     parseSignature(signature) {
       return `${signature?.name}, ${signature?.role}`;
@@ -82,14 +67,13 @@ const timelineMixin = {
     ...mapActions("document", ["loadData"]),
     ...mapGetters("document", ["exists"]),
   },
-  watch: {},
   computed: {
     ...mapState("document", {
       fromMSP: (state) => state.document.fromMSP,
       toMSP: (state) => state.document.toMSP,
       bankDetails: (state) => state.document.data.bankDetails,
       generalInformation: (state) => state.document.data.generalInformation,
-      signatures: (state) => state.document.data.signatures,
+      contractSignatures: (state) => state.document.data.signatures,
     }),
     ...mapGetters("document", ["signatures", "parties", "name"]),
     ...mapGetters("partners", ["list"]),
@@ -98,34 +82,31 @@ const timelineMixin = {
 export { timelineMixin };
 
 const validationMixin = {
-  data() {
-    return { activeValidation: false };
-  },
   methods: {
-    twoFormsValidate() {
+    twoFormsValidate(key) {
       if (this.activeValidation) {
         var valid = false;
         const data = {};
         for (const key in this.$refs) {
           const { $v, _data } = this.$refs[key];
-          data[key] = _data;
+          data[key] = key === "signatures" ? _data.signatures : _data;
           const { $touch, $invalid } = $v;
           $touch();
           valid = !$invalid;
         }
         valid &&
           this.nextStep({
-            key: "bankDetails",
+            key,
             data,
           });
       } else {
         const data = {};
-        for (const key in this.$refs) {
-          const { _data } = this.$refs[key];
-          data[key] = _data;
+        for (const party in this.$refs) {
+          const { _data } = this.$refs[party];
+          data[party] = key === "signatures" ? _data.signatures : _data;
         }
         this.nextStep({
-          key: "bankDetails",
+          key,
           data,
         });
       }
@@ -173,10 +154,9 @@ const validationMixin = {
       };
     },
   },
-  watch: {},
   computed: {
+    activeValidation: () => false,
     ...mapGetters("document/new", ["state", "msps"]),
   },
-  mounted() {},
 };
 export { validationMixin };

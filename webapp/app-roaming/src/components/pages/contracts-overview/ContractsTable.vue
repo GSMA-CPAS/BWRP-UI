@@ -30,6 +30,7 @@
         </td>
         <td>{{ item.fromMSP }}</td>
         <td>{{ item.toMSP }}</td>
+        <td>{{ item.state }}</td>
       </tr>
     </template>
   </v-data-table>
@@ -45,8 +46,9 @@ export default {
       search: "",
       headers: [
         { text: "Document ID", value: "documentId", align: "start" },
-        { text: "fromMSP", value: "fromMSP" },
-        { text: "toMSP", value: "toMSP" },
+        { text: "From MSP", value: "fromMSP" },
+        { text: "To MSP", value: "toMSP" },
+        { text: "State", value: "state" },
       ],
     };
   },

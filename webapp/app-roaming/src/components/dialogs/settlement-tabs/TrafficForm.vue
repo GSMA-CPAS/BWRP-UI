@@ -1,6 +1,6 @@
 <template>
   <div>
-    <parties-header @party-switch="setParty" :sub-row-labels="labels" />
+    <parties-header single @party-switch="setParty" :sub-row-labels="labels" />
     <v-row
       align="baseline"
       v-for="(data, service) in settlementDetails[currentParty]"

@@ -1,9 +1,4 @@
 {
-  "step": 1,
-  "partner": {
-    "mspid": "TMUS",
-    "name": "T-Mobile US"
-  },
   "generalInformation": {
     "name": "Test",
     "type": "Normal",
@@ -12,7 +7,7 @@
     "prolongationLength": 12
   },
   "bankDetails": {
-    "DTAG": {
+    "FSADFSHOI": {
       "currency": "USD",
       "contactNameAccounting": "Max Mustermann",
       "contactPhoneAccounting": "123456789",
@@ -26,7 +21,7 @@
       "bankAddress": "Musterstr. 0",
       "bankAccountName": "MaxKonto"
     },
-    "TMUS": {
+    "ORANGE": {
       "currency": "GBP",
       "contactNameAccounting": "Erika Mustermann",
       "contactPhoneAccounting": "123456789",
@@ -43,7 +38,7 @@
   },
   "signatures": {
     "DTAG": [{ "id": "signature-0", "name": "Max Mustermann", "role": "CEO" }],
-    "TMUS": [
+    "TMUSDFAFDAF": [
       {
         "id": "signature-0",
         "name": "Erika Mustermann",

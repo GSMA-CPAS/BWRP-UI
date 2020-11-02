@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <parties />
+    <parties-header />
     <v-row align="baseline" class="font-weight-medium">
       <v-col cols="3" class="primary--text text-uppercase">Breakdown</v-col>
       <v-divider vertical></v-divider>
@@ -74,8 +74,8 @@
   </fragment>
 </template>
 <script>
-import Parties from "../contract-tabs/Parties";
 import { timelineMixin } from "@/utils/mixins/component-specfic";
+import PartiesHeader from "../components/PartiesHeader.vue";
 export default {
   name: "tab-1",
   label: "General Information",
@@ -83,7 +83,7 @@ export default {
     "In this tab the general information of a settlement is displayed. The tab is found in the contract timeline when clicking on 'View Settlement'",
   mixins: [timelineMixin],
   components: {
-    Parties,
+    PartiesHeader,
   },
 };
 </script>

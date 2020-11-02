@@ -5,8 +5,8 @@
       hide-icon
       title="Are you sure you want to sign this contract?"
       label="Sign"
+      :loading="signing"
     >
-      <!-- :loading="true" -->
       <template #actions="{ cancel }">
         <app-button @button-pressed="cancel" outlined label="Cancel" />
         <app-button
@@ -18,26 +18,22 @@
         />
       </template>
     </app-dialog>
-    <!-- <v-icon color="success" x-large>mdi-check-circle-outline</v-icon> -->
   </fragment>
 </template>
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   name: "sign-button",
   description: "description",
-  mixins: [],
-  components: {},
-  props: {},
-  watch: {},
   methods: {
     ...mapActions("document", ["signDocument"]),
-    onSign() {
-      this.signDocument();
+    async onSign() {
+      await this.signDocument();
     },
   },
   computed: {
     ...mapGetters("document", ["signatures"]),
+    ...mapState("app-state", ["signing"]),
   },
 };
 </script>

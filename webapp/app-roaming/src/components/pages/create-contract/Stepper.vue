@@ -2,9 +2,13 @@
   <fragment>
     <v-stepper vertical v-model="step">
       <fragment v-for="{ content, index } in steps" :key="index">
-        <v-stepper-step :complete="step > index" :step="index">{{
-          content.description
-        }}</v-stepper-step>
+        <v-stepper-step
+          editable
+          @click="setStep(index)"
+          :complete="step > index"
+          :step="index"
+          >{{ content.description }}</v-stepper-step
+        >
         <v-stepper-items>
           <v-stepper-content :step="index">
             <component :is="content" />
@@ -34,11 +38,9 @@ export default {
   name: "stepper",
   description: "Stepper used for contract-creation.",
   methods: {
-    ...mapActions("document/new", ["addContract", "resetState"]),
-    saveContract() {
-      this.addContract();
-    },
+    ...mapActions("document/new", ["saveContract", "resetState", "setStep"]),
     downloadDocument() {
+      delete this.contract.step;
       const data =
         "data:text/json;charset=utf-8," +
         encodeURIComponent(JSON.stringify(this.contract));
@@ -47,6 +49,9 @@ export default {
       link.setAttribute("download", "contract.json");
       document.body.appendChild(link);
       link.click();
+    },
+    test(e) {
+      console.log(e);
     },
   },
   computed: {
