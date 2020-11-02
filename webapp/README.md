@@ -68,6 +68,13 @@ Create config file ``production-org1.json`` in folder ``webapp/app-core/config``
             }
         }
     },
+    
+    "services": {
+        "SwaggerService": {
+            "enabled": true
+        }
+    },
+    
     "backendAdapters": {
         "CertAuthAdapter": {
             "config": {
@@ -108,5 +115,6 @@ $ NODE_ENV=production-org1 node setup.js
 
 <pre>
 $ cd webapp/app-core
-$ NODE_ENV=production-org1 PORT=3040 node server.js
+$ NODE_ENV=production-org1 node server.js
+-> http://localhost:3000
 </pre>
