@@ -69,7 +69,7 @@ class DocumentService extends AbstractService {
                 documentData = JSON.stringify(documentData);
                 documentData = documentData.replace(/\s/g, "");
 
-                const documentDataBase64 = new Buffer.from(documentData).toString("base64");
+                const documentDataBase64 = Buffer.from(documentData).toString("base64");
                 const response = await this.getBackendAdapter("blockchain").uploadPrivateDocument(toMSP, documentDataBase64);
                 const documentId = response.documentID;
                 documentData = {
@@ -99,24 +99,30 @@ class DocumentService extends AbstractService {
             if (body && body.data && body.data.documentID) {
                 const documentId = body.data.documentID;
                 try {
-                    const documentData = await this.getBackendAdapter("blockchain").getPrivateDocument(documentId);
+                    const privateDocument = await this.getBackendAdapter("blockchain").getPrivateDocument(documentId);
                     // fromMSP, toMSP, data, dataHash, timeStamp
-                    if (documentData) {
+                    if (privateDocument) {
                         if (await this.getBackendAdapter("localStorage").existsDocument(documentId)) {
                             const data = {
                                 state: Enums.documentState.SENT
                             }
                             await this.getBackendAdapter("localStorage").updateDocument(documentId, data);
                         } else {
-                            // TODO !!!
+                            const documentData = Buffer.from(privateDocument.data, 'base64').toString();
+                            const documentDataJson = JSON.parse(documentData);
                             const data = {
-                                state: Enums.documentState.SENT
+                                "documentId": documentId,
+                                "type": documentDataJson.header.type,
+                                "fromMSP": privateDocument.fromMSP,
+                                "toMSP": privateDocument.toMSP,
+                                "data": documentData,
+                                "state": Enums.documentState.SENT
                             }
                             await this.getBackendAdapter("localStorage").storeDocument(documentId, data);
                         }
                         this.getLogger().info("[DocumentService::/event] Stored document with id %s successfully", documentId);
                     } else {
-                        this.getLogger().error("[DocumentService::/event] Failed to get document with id - %s", documentId);
+                        this.getLogger().error("[DocumentService::/event] Failed to get private document with id - %s", documentId);
                     }
                 } catch (error) {
                     this.getLogger().error("[DocumentService::/event] Failed to store document - %s", error.message);
