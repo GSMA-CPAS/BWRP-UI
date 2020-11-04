@@ -129,8 +129,8 @@ const documentModule = {
           { [getters.fromMSP]: 0, [toMSP]: 0 }
         );
       const isSigned =
-        minSignaturesFromMSP === totalSignatures[fromMSP] &&
-        minSignaturesToMSP === totalSignatures[toMSP];
+        minSignaturesFromMSP <= totalSignatures[fromMSP] &&
+        minSignaturesToMSP <= totalSignatures[toMSP];
       return isSigned;
     },
     fromMSP: (state) => {
