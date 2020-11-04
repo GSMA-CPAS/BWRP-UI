@@ -43,7 +43,6 @@ export default {
   data() {
     return { currentParty: 0 };
   },
-  // TODO: combine both versions of headers
   props: { single: Boolean, subRowLabels: Array },
   methods: {
     switchPartner() {
