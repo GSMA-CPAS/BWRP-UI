@@ -21,7 +21,7 @@ class UserManagementAdapter extends AbstractAdapter {
      */
     async getUsers() {
         try {
-            return await this.getDatabase().query('SELECT id, username, enrollmentId, forename, surname, email, canSignDocument, active FROM users');
+            return await this.getDatabase().query('SELECT id, username, enrollmentId, forename, surname, email, canSignDocument, active, isAdmin FROM users');
         } catch (error) {
             this.getLogger().error('[UserManagementAdapter::getUsers] failed to query users - %s', error.message);
             throw error;
@@ -425,7 +425,8 @@ class UserManagementAdapter extends AbstractAdapter {
                 enrollmentId: 'admin',
                 username: 'admin',
                 password: pwdKeys.passwordHash,
-                encKey: pwdKeys.encKey
+                encKey: pwdKeys.encKey,
+                isAdmin: true
             };
             await this.getDatabase().query('INSERT INTO users SET ?', adminUser);
             this.getLogger().info('[UserManagementAdapter::createAdmin] admin user has been created successfully');
@@ -563,6 +564,7 @@ class UserManagementAdapter extends AbstractAdapter {
                         'active TINYINT NULL DEFAULT 1, ' +
                         'loginAttempts TINYINT NULL DEFAULT 0, ' +
                         'mustChangePassword TINYINT NULL DEFAULT 0, ' +
+                        'isAdmin TINYINT NULL DEFAULT 0, ' +
                         'twoFactorSecret VARCHAR(255) NULL, ' +
                         'PRIMARY KEY (id), ' +
                         'CONSTRAINT uc_user UNIQUE (enrollmentId, username))');

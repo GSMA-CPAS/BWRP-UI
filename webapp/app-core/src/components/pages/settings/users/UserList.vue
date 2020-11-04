@@ -73,6 +73,13 @@
                     sortable: true,
                     value: 'active',
                     width: '1%'
+                },
+                {
+                    text: 'Admin',
+                    align: 'left',
+                    sortable: true,
+                    value: 'isAdmin',
+                    width: '1%'
                 }
             ]
         }),

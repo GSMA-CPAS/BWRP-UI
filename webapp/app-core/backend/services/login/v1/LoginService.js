@@ -50,7 +50,7 @@ class LoginService extends AbstractService {
                     return done(null, {
                         id: user.id,
                         username: user.username,
-                        isAdmin: (user.username === 'admin'),
+                        isAdmin: user.isAdmin,
                         active: user.active,
                         loginAttempts: user.loginAttempts,
                         mustChangePassword: user.mustChangePassword,
@@ -59,7 +59,7 @@ class LoginService extends AbstractService {
                     });
                 } else {
                     this.getLogger().warn('[LoginService] user %s has entered wrong password', user.username);
-                    if (user.active && username !== 'admin') {
+                    if (user.active && !user.isAdmin) {
                         let loginAttempts = user.loginAttempts + 1;
                         if (loginAttempts >= this.maxLoginAttempts) {
                             const data = { active: false, loginAttempts: 0 };
@@ -93,7 +93,6 @@ class LoginService extends AbstractService {
             const kek = user.kek;
             try {
                 user = await this.getBackendAdapter('userManagement').getUserById(userId, false);
-                user['isAdmin'] = (user.username === 'admin');
             } catch (error) {
                 this.getLogger().error('[LoginService::deserializeUser] failed to get user with id %s - %s', userId, error.message);
                 return done(null, false);

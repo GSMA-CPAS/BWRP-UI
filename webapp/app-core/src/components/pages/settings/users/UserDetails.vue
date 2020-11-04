@@ -18,7 +18,8 @@
                                 <v-text-field v-model="user.forename" label="First name" color="secondary"></v-text-field>
                                 <v-text-field v-model="user.surname" label="Last name" color="secondary"></v-text-field>
                                 <v-text-field v-model="user.email" label="E-Mail" color="secondary" :rules="[rules.email]"></v-text-field>
-                                <v-checkbox v-if="user.username !== 'admin'" v-model="user.active" label="Active"></v-checkbox>
+                                <v-checkbox v-model="user.active" label="Active"></v-checkbox>
+                                <v-checkbox v-model="user.isAdmin" label="Administrator"></v-checkbox>
                             </v-card-text>
                             <v-card-actions class="pa-4">
                                 <v-btn type="submit" color="primary" tile>Update User</v-btn>
@@ -57,7 +58,7 @@
                 </v-col>
             </v-row>
             <v-spacer></v-spacer>
-            <v-row v-if="user.username !== 'admin'">
+            <v-row>
                 <v-col cols="12" lg="6">
                     <v-card>
                         <v-card-title>
@@ -118,7 +119,8 @@
                 forename: "",
                 surname: "",
                 email: "",
-                active: true
+                active: false,
+                isAdmin: false
             },
             certificateData: {
                 notBefore: "",
@@ -168,6 +170,7 @@
                         surname: this.user.surname,
                         email: this.user.email,
                         active: this.user.active,
+                        isAdmin: this.user.isAdmin
                     };
                     this.loading = true;
                     this.$http({
