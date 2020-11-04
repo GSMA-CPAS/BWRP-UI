@@ -64,6 +64,7 @@ const documentModule = {
             id,
             documentId,
             data: documentData.body,
+            header: documentData.header,
             fromMSP,
             toMSP,
           });
@@ -112,6 +113,32 @@ const documentModule = {
     documentID() {
       return router.currentRoute.params.cid;
     },
+    isSigned: (state, getters) => {
+      const { fromMSP, toMSP } = getters;
+      const minSignaturesFromMSP =
+        state.document?.header.msps[fromMSP].minSignatures;
+      const minSignaturesToMSP =
+        state.document?.header.msps[toMSP].minSignatures;
+      const totalSignatures =
+        getters.signatures.length > 0 &&
+        getters.signatures.reduce(
+          (acc, curVal) => {
+            acc[curVal.from]++;
+            return acc;
+          },
+          { [getters.fromMSP]: 0, [toMSP]: 0 }
+        );
+      const isSigned =
+        minSignaturesFromMSP === totalSignatures[fromMSP] &&
+        minSignaturesToMSP === totalSignatures[toMSP];
+      return isSigned;
+    },
+    fromMSP: (state) => {
+      return state.document?.fromMSP;
+    },
+    toMSP: (state) => {
+      return state.document?.toMSP;
+    },
     exists: (state) => (key) => {
       return state.document[key] ? true : false;
     },
@@ -120,9 +147,13 @@ const documentModule = {
         const response = [];
         for (const key in signatures) {
           response.push(
-            `${signatures[key].signature} from ${
-              index === 0 ? state.document.fromMSP : state.document.toMSP
-            }`
+            {
+              signature: signatures[key].signature,
+              from: index === 0 ? state.document.fromMSP : state.document.toMSP,
+            }
+            //   `${signatures[key].signature} from ${
+            //   index === 0 ? state.document.fromMSP : state.document.toMSP
+            // }`
           );
         }
         return response;

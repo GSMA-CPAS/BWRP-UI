@@ -1,6 +1,10 @@
 <template>
   <fragment>
+    <v-icon v-if="isSigned" color="success" x-large>
+      mdi-check-circle-outline
+    </v-icon>
     <app-dialog
+      v-else
       outlined
       hide-icon
       title="Are you sure you want to sign this contract?"
@@ -21,19 +25,15 @@
   </fragment>
 </template>
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { timelineMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "sign-button",
   description: "description",
+  mixins: [timelineMixin],
   methods: {
-    ...mapActions("document", ["signDocument"]),
     async onSign() {
       await this.signDocument();
     },
-  },
-  computed: {
-    ...mapGetters("document", ["signatures"]),
-    ...mapState("app-state", ["signing"]),
   },
 };
 </script>

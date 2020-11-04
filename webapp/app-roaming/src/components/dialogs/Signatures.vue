@@ -5,11 +5,11 @@
   >
     <template v-if="signatures" #content>
       <row
-        v-for="(signature, signatureIndex) in signatures"
+        v-for="({ signature, from }, signatureIndex) in signatures"
         :key="signatureIndex"
         :label="`Signature ${signatureIndex}`"
       >
-        <v-col cols="8"> {{ signature }}</v-col>
+        <v-col cols="8"> {{ `${signature} from ${from}` }}</v-col>
       </row>
     </template>
   </app-dialog>

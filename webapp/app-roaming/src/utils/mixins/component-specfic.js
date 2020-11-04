@@ -64,18 +64,24 @@ const timelineMixin = {
     },
     ...mapActions("document/new", ["startContract"]),
     ...mapActions("partners", ["loadPartners"]),
-    ...mapActions("document", ["loadData"]),
+    ...mapActions("document", ["loadData", "signDocument"]),
     ...mapGetters("document", ["exists"]),
   },
   computed: {
+    ...mapState("app-state", ["signing"]),
     ...mapState("document", {
-      fromMSP: (state) => state.document.fromMSP,
-      toMSP: (state) => state.document.toMSP,
       bankDetails: (state) => state.document.data.bankDetails,
       generalInformation: (state) => state.document.data.generalInformation,
       contractSignatures: (state) => state.document.data.signatures,
     }),
-    ...mapGetters("document", ["signatures", "parties", "name"]),
+    ...mapGetters("document", [
+      "signatures",
+      "parties",
+      "name",
+      "isSigned",
+      "fromMSP",
+      "toMSP",
+    ]),
     ...mapGetters("partners", ["list"]),
   },
 };
