@@ -60,23 +60,21 @@ class DocumentService extends AbstractService {
                 const type = req.body.type;
                 const toMSP = req.body.toMSP;
                 const data = req.body.data;
-                let documentData = {
+                const dataJson = {
                     header: { version: "1.0", type: type, msps: {} },
                     body: data,
                 };
-                documentData.header.msps[this.mspid] = { minSignatures: 2 };
-                documentData.header.msps[toMSP] = { minSignatures: 2 };
-                documentData = JSON.stringify(documentData);
-                documentData = documentData.replace(/\s/g, "");
+                dataJson.header.msps[this.mspid] = { minSignatures: 2 };
+                dataJson.header.msps[toMSP] = { minSignatures: 2 };
 
-                const documentDataBase64 = Buffer.from(documentData).toString("base64");
+                const documentDataBase64 = Buffer.from(JSON.stringify(dataJson)).toString("base64");
                 const response = await this.getBackendAdapter("blockchain").uploadPrivateDocument(toMSP, documentDataBase64);
                 const documentId = response.documentID;
-                documentData = {
+                const documentData = {
                     "type": type,
                     "fromMSP": this.mspid,
                     "toMSP": toMSP,
-                    "data": documentData,
+                    "data": JSON.stringify(dataJson),
                     "state": Enums.documentState.PENDING
                 }
                 await this.getBackendAdapter("localStorage").storeDocument(documentId, documentData);

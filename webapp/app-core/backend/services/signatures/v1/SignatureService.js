@@ -44,10 +44,14 @@ class SignatureService extends AbstractService {
                 const privateKey = identity.credentials.privateKey;
                 const certificate = identity.credentials.certificate;
                 const document = await this.getBackendAdapter('localStorage').getDocument(documentId);
-                const documentData = document.data.replace(/\s/g, "");
-                const signature = cryptoUtils.createSignature(privateKey, documentData);
-                const response = await this.getBackendAdapter('blockchain').uploadSignature(documentId, certificate, 'ecdsa-with-SHA256_secp256r1', signature);
-                return res.json(response);
+                const signature = cryptoUtils.createSignature(privateKey, document.data);
+                const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
+                await this.getBackendAdapter('blockchain').uploadSignature(documentId, certificate, signatureAlgo, signature);
+                return res.json({
+                    signature: signature,
+                    algorithm: signatureAlgo,
+                    certificate: certificate
+                });
             } catch (error) {
                 this.handleError(res, new Error(JSON.stringify({
                     code: ErrorCodes.ERR_SIGNATURE,
