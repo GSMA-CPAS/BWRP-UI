@@ -52,6 +52,23 @@ class LocalStorageAdapter extends AbstractAdapter {
         return rows[0];
     }
 
+    async getDocumentIDFromStorageKey(storageKey) {
+        let rows;
+        try {
+            rows = await this.getDatabase().query('SELECT documentId FROM documents WHERE fromStorageKey=? or toStorageKey=?', [storageKey, storageKey]);
+        } catch (error) {
+            this.getLogger().error('[LocalStorageAdapter::getDocumentIDFromStorageKey] failed to get documentId from storageKey %s - %s', storageKey, error.message);
+            throw error;
+        }
+        if (rows.length <= 0) {
+            throw new Error(JSON.stringify({
+                code: ErrorCodes.ERR_NOT_FOUND,
+                message: 'Document not found'
+            }));
+        }
+        return rows[0].documentId;
+    }
+
     async getDocuments(type, state) {
         try {
             if (type && state) {
@@ -103,6 +120,8 @@ class LocalStorageAdapter extends AbstractAdapter {
                         '`toMSP` VARCHAR(64) NOT NULL, ' +
                         '`data` json NOT NULL, ' +
                         '`state` VARCHAR(64) NOT NULL, ' +
+                        '`fromStorageKey` VARCHAR(64) AS (SHA2(CONCAT(fromMSP, documentId), 256)) STORED NOT NULL, ' +
+                        '`toStorageKey` VARCHAR(64) AS (SHA2(CONCAT(toMSP, documentId), 256)) STORED NOT NULL, ' +
                         'PRIMARY KEY (id), ' +
                         'UNIQUE INDEX documentId (documentId))');
                     this.getLogger().info('[LocalStorageAdapter::createTableDocuments] table documents has been created successfully!');
