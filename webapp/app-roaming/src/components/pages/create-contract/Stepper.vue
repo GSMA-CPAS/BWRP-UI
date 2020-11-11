@@ -63,9 +63,6 @@ export default {
       return steps;
     },
   },
-  beforeMount() {
-    this.$store.dispatch("document/new/startContract", { partner: "test" });
-  },
   beforeDestroy() {
     this.resetState();
   },

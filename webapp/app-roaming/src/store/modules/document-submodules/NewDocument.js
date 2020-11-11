@@ -2,7 +2,6 @@
 import router from "@/router";
 import { PATHS } from "@/utils/Enums";
 import Vue from "vue";
-import fileAsJSON from "../../../assets/dummy/json/new_contract_format";
 
 const { log } = console;
 const namespaced = true;
@@ -93,7 +92,7 @@ const newDocumentModule = {
       payload
     ) {
       const user = rootGetters["user/organizationMSPID"];
-      const { partner /*  fileAsJSON  */ } = payload;
+      const { partner, fileAsJSON } = payload;
       var index = 0;
 
       for (let key in fileAsJSON) {
@@ -113,6 +112,7 @@ const newDocumentModule = {
         }
         index++;
       }
+      log(partner);
       commit("READ_JSON", fileAsJSON);
       commit("SET_PARTNER", partner);
     },
