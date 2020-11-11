@@ -24,7 +24,7 @@ import SignatureForm from "../step-components/SignatureForm.vue";
 import { validationMixin } from "@/utils/mixins/component-specfic";
 export default {
   name: "step-3",
-  description: "In this step, the signatures of the contract are drafted.",
+  description: "Signatures",
   mixins: [validationMixin],
   components: {
     SignatureForm,

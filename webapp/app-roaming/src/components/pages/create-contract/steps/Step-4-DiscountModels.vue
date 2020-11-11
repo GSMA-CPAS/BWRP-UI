@@ -10,11 +10,6 @@
     </form-container>
     <div class="float-right mt-3">
       <app-button label="previous" text @button-pressed="previousStep" />
-      <app-button
-        label="next"
-        @button-pressed="nextStep({ key: 'discountModels', data: 'someData' })"
-        @keydown.tab="nextStep({ key: 'discountModels', data: 'someData' })"
-      />
     </div>
   </fragment>
 </template>
@@ -24,7 +19,7 @@ import { validationMixin } from "@/utils/mixins/component-specfic";
 import DiscountForm from "../step-components/DiscountForm.vue";
 export default {
   name: "step-4",
-  description: "In this step, the discount models of the contract are set.",
+  description: "Discount Models",
   mixins: [validationMixin],
   components: {
     Parties,

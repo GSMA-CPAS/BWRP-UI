@@ -88,7 +88,7 @@ import { computeDateDifference } from "@/utils/Utils";
 
 export default {
   name: "step-1",
-  description: "In this step, the general information of the contract is set.",
+  description: "General Information",
   data: () => ({
     active: false,
   }),

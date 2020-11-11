@@ -24,7 +24,7 @@ import BankForm from "../step-components/BankForm.vue";
 import Parties from "../step-components/Parties.vue";
 export default {
   name: "step-1",
-  description: "In this step, the bank details of the contract are drafted.",
+  description: "Bank Details",
   mixins: [validationMixin],
   components: {
     BankForm,

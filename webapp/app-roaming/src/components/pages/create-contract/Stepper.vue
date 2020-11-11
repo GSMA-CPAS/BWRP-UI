@@ -22,12 +22,7 @@
           @button-pressed="downloadDocument"
         />
         <v-spacer />
-        <app-button
-          :disabled="step <= steps.length"
-          @click="saveContract"
-          class="mr-5"
-          label="Confirm"
-        />
+        <app-button @click="saveContract" class="mr-5" label="Confirm" />
       </v-row>
     </v-stepper>
   </fragment>
