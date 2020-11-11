@@ -13,6 +13,7 @@
       <app-button
         label="next"
         @button-pressed="nextStep({ key: 'discountModels', data: 'someData' })"
+        @keydown.tab="nextStep({ key: 'discountModels', data: 'someData' })"
       />
     </div>
   </fragment>

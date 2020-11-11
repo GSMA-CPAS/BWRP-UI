@@ -33,12 +33,13 @@
   </fragment>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "stepper",
   description: "Stepper used for contract-creation.",
   methods: {
-    ...mapActions("document/new", ["saveContract", "resetState", "setStep"]),
+    ...mapActions("document/new", ["saveContract", "setStep"]),
+    ...mapMutations("document/new", ["resetState"]),
     downloadDocument() {
       delete this.contract.step;
       const data =
@@ -49,9 +50,6 @@ export default {
       link.setAttribute("download", "contract.json");
       document.body.appendChild(link);
       link.click();
-    },
-    test(e) {
-      console.log(e);
     },
   },
   computed: {
@@ -69,6 +67,9 @@ export default {
         .map((x) => ({ content: components(x).default, index: i++ }));
       return steps;
     },
+  },
+  beforeMount() {
+    this.$store.dispatch("document/new/startContract", { partner: "test" });
   },
   beforeDestroy() {
     this.resetState();

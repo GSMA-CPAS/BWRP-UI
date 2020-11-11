@@ -1,10 +1,10 @@
 <template>
   <v-col>
-    <currency-selector v-model="_data.currency" />
+    <currency-selector v-model="value.currency" />
     <v-text-field
       v-for="{ key, label } in fields"
       :key="key"
-      v-model="_data[key]"
+      v-model="value[key]"
       validate-on-blur
       v-on="inputListeners(key)"
       :error-messages="[...requiredError(key), ...emailError(key)]"
@@ -13,7 +13,7 @@
   </v-col>
 </template>
 <script>
-import { required, email } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import {
   validationMixin,
   bankFieldsMixin,
@@ -22,45 +22,30 @@ export default {
   name: "bank-form",
   description: "This is the bank form",
   mixins: [validationMixin, bankFieldsMixin],
-  props: { data: { type: Object, default: null } },
-  data() {
-    return {
-      currency: null,
-      contactNameAccounting: null,
-      contactPhoneAccounting: null,
-      contactEmailAccounting: null,
-      contactNameContract: null,
-      contactPhoneContract: null,
-      contactEmailContract: null,
-      iban: null,
-      swiftBic: null,
-      bankName: null,
-      bankAddress: null,
-      bankAccountName: null,
-    };
-  },
+  props: { value: { type: Object, default: null } },
   provide() {
     return {
       currencyValidator: this.$v.currency,
     };
   },
+  watch: {
+    value: {
+      handler(val) {
+        this.$emit("input", val);
+      },
+      deep: true,
+    },
+  },
   validations() {
     const validations = {};
-    for (const key in this._data) {
+    for (const key in this.value) {
       validations[key] = {
         required,
       };
     }
-    validations.contactEmailAccounting.email = email;
-    validations.contactEmailContract.email = email;
+    // validations.contactEmailAccounting.email = email;
+    // validations.contactEmailContract.email = email;
     return validations;
-  },
-  mounted() {
-    if (this.data) {
-      for (const key in this._data) {
-        this._data[key] = this.data[key];
-      }
-    }
   },
 };
 </script>
