@@ -15,7 +15,7 @@ const utilsMixin = {
     longestArray(arrays) {
       return arrays.reduce(
         (curLength, arr) => (arr.length > curLength ? arr.length : curLength),
-        length
+        0
       );
     },
   },

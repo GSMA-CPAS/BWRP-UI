@@ -60,8 +60,15 @@ export default {
     },
   },
   components: {},
-  props: { data: Array },
-  watch: {},
+  props: { value: Array },
+  watch: {
+    signatures: {
+      handler(val) {
+        this.$emit("input", val);
+      },
+      deep: true,
+    },
+  },
   methods: {
     addSignature() {
       this.signatures.push({
@@ -97,7 +104,7 @@ export default {
     },
   },
   beforeMount() {
-    this.data && (this.signatures = this.data);
+    this.signatures = this.value;
   },
 };
 </script>

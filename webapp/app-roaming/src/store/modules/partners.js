@@ -24,7 +24,7 @@ const partnersModule = {
           commit("INIT", partners);
         })
         .catch(function(error) {
-          // handle error
+          //TODO: handle error
           console.log(error);
         });
     },

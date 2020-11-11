@@ -3,9 +3,9 @@
     <form-container>
       <parties label="bank details" />
       <v-row>
-        <bank-form :ref="msps.user" :data="bankDetails[msps.user]" />
+        <bank-form :ref="msps.user" v-model="userBankDetails" />
         <v-divider vertical />
-        <bank-form :ref="msps.partner" :data="bankDetails[msps.partner]" />
+        <bank-form :ref="msps.partner" v-model="partnerBankDetails" />
       </v-row>
     </form-container>
     <div class="float-right mt-3">
@@ -30,8 +30,27 @@ export default {
     Parties,
   },
   computed: {
-    bankDetails() {
-      return this.state("bankDetails") || { bankDetails: null };
+    userBankDetails: {
+      get() {
+        return this.$store.state.document.new.userData.bankDetails;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateBankDetails", {
+          key: "userData",
+          value,
+        });
+      },
+    },
+    partnerBankDetails: {
+      get() {
+        return this.$store.state.document.new.partnerData.bankDetails;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateBankDetails", {
+          key: "partnerData",
+          value,
+        });
+      },
     },
   },
 };
