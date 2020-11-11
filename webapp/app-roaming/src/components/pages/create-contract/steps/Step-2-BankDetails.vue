@@ -13,6 +13,7 @@
       <app-button
         label="next"
         @button-pressed="twoFormsValidate('bankDetails')"
+        @keydown.tab="twoFormsValidate('bankDetails')"
       />
     </div>
   </fragment>

@@ -13,6 +13,7 @@
       <app-button
         label="next"
         @button-pressed="twoFormsValidate('signatures')"
+        @keydown="twoFormsValidate('signatures')"
       />
     </div>
   </fragment>

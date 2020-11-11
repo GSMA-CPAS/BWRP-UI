@@ -73,6 +73,7 @@
       <app-button
         label="next"
         @button-pressed="validate('generalInformation')"
+        @keydown.tab="validate('generalInformation')"
       />
     </div>
   </fragment>

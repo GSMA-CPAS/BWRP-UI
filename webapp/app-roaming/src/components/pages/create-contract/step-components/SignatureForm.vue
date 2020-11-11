@@ -24,8 +24,10 @@
             icon
           />
         </v-col>
+        <v-col align-self="center" class="mr-3" cols="1">
+          <app-button @button-pressed="addSignature" :svg="icons.add" icon />
+        </v-col>        
       </v-row>
-      <app-button @button-pressed="addSignature" :svg="icons.add" icon />
     </v-col>
   </fragment>
 </template>
