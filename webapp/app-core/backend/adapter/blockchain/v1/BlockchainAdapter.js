@@ -33,12 +33,13 @@ class BlockchainAdapter extends AbstractAdapter {
      *
      * @returns {Promise<string>}
      */
-    async getPrivateDocuments() {
+    async getPrivateDocumentIDs() {
         try {
-            const response = await got(this.adapterConfig.url + '/private-documents');
-            return response.body;
+            const ids = await got(this.adapterConfig.url + '/private-documents').json();
+            this.getLogger().debug('[BlockchainAdapter::getPrivateDocumentIDs] all ids: - %s', JSON.stringify(ids));
+            return ids; 
         } catch (error) {
-            this.getLogger().error('[BlockchainAdapter::getPrivateDocuments] failed to get documents - %s', error.message);
+            this.getLogger().error('[BlockchainAdapter::getPrivateDocumentIDs] failed to get documents - %s', error.message);
             throw error;
         }
     }
@@ -53,6 +54,20 @@ class BlockchainAdapter extends AbstractAdapter {
             return await got(this.adapterConfig.url + '/private-documents/' + documentId).json();
         } catch (error) {
             this.getLogger().error('[BlockchainAdapter::getPrivateDocument] failed to get document - %s', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     *
+     * @param documentId
+     * @returns {Promise<string>}
+     */
+    async deletePrivateDocument(documentId) {
+        try {
+            return await got.delete(this.adapterConfig.url + '/private-documents/' + documentId).json();
+        } catch (error) {
+            this.getLogger().error('[BlockchainAdapter::deletePrivateDocument] failed to get document - %s', error.message);
             throw error;
         }
     }
