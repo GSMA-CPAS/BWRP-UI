@@ -18,12 +18,12 @@
       />
     </template>
     <v-date-picker
+      :min="minDate"
       type="month"
       ref="picker"
       color="secondary"
       v-model="date"
       :max="maxDate"
-      :min="minDate"
       :show-current="false"
       scrollable
     />
@@ -75,9 +75,9 @@ export default {
       return this.ISOStringDate(this.max || moment().add(10, "years")._d);
     },
     minDate() {
-      return this.ISOStringDate(
-        this.min && moment(this.min).add(1, "months")._d
-      );
+      return this.min
+        ? this.ISOStringDate(moment(this.min).add(1, "months")._d)
+        : null;
     },
   },
 };

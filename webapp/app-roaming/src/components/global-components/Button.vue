@@ -1,9 +1,9 @@
 <template>
   <v-btn v-on="$listeners" v-bind="$props" @click="handleClick">
     {{ label }}
-    <v-icon v-if="svg" :color="color" :right="!_.isNil(label)">{{
-      "mdi-" + svg
-    }}</v-icon>
+    <v-icon :size="iconSize" v-if="svg" :color="color" :right="!_.isNil(label)">
+      {{ "mdi-" + svg }}
+    </v-icon>
   </v-btn>
 </template>
 
@@ -18,6 +18,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    height: String,
+    width: String,
+    iconSize: String,
     loading: {
       type: Boolean,
       default: false,

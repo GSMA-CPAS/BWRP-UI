@@ -1,5 +1,22 @@
 <template>
-  <v-breadcrumbs large :items="items"></v-breadcrumbs>
+  <v-row class="flex-grow-0 ma-0 pa-0">
+    <v-col>
+      <v-breadcrumbs large :items="items"></v-breadcrumbs>
+    </v-col>
+    <v-col
+      v-if="refreshActive"
+      align-self="center"
+      class="text-center"
+      cols="1"
+    >
+      <app-button
+        icon-size="35"
+        icon
+        svg="refresh"
+        @button-pressed="refreshPage"
+      />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -14,6 +31,9 @@ export default {
     ],
   }),
   methods: {
+    refreshPage() {
+      this.$router.go();
+    },
     addBreadcrumb(text, to) {
       this.items.push({ text, to });
     },
@@ -22,6 +42,9 @@ export default {
     },
   },
   computed: {
+    refreshActive() {
+      return this.$route.name === "timeline-page";
+    },
     isHome() {
       return this.items.length > 1;
     },

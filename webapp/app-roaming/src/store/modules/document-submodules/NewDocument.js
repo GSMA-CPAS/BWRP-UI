@@ -15,6 +15,8 @@ const defaultState = () => ({
     startDate: null,
     endDate: null,
     prolongationLength: null,
+    taxesIncluded: false,
+    authors: null,
   },
 });
 
@@ -80,9 +82,9 @@ const newDocumentModule = {
     },
     resetState(state) {
       Object.assign(state, defaultState());
-      Object.assign(state.userData.bankDetails, defaultBankDetailsState());
+      // Object.assign(state.userData.bankDetails, defaultBankDetailsState());
       Object.assign(state.userData.signatures, defaultSignaturesState());
-      Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
+      // Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
       Object.assign(state.partnerData.signatures, defaultSignaturesState());
     },
   },
@@ -112,7 +114,6 @@ const newDocumentModule = {
         }
         index++;
       }
-      log(partner);
       commit("READ_JSON", fileAsJSON);
       commit("SET_PARTNER", partner);
     },
@@ -184,7 +185,7 @@ const newDocumentModule = {
     partnerData: {
       namespaced,
       state: () => ({
-        bankDetails: defaultBankDetailsState(),
+        // bankDetails: defaultBankDetailsState(),
         signatures: defaultSignaturesState(),
         discountModels: null,
       }),
@@ -192,7 +193,7 @@ const newDocumentModule = {
     userData: {
       namespaced,
       state: () => ({
-        bankDetails: defaultBankDetailsState(),
+        // bankDetails: defaultBankDetailsState(),
         signatures: defaultSignaturesState(),
         discountModels: null,
       }),

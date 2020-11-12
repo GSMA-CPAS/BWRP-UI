@@ -2,7 +2,7 @@
   <fragment>
     <v-row
       v-if="type === 'primary'"
-      class="primary--text text-uppercase font-weight-medium pa-3"
+      class="primary--text text-uppercase font-weight-medium"
     >
       {{ label }}
     </v-row>
@@ -14,7 +14,7 @@
     </div>
     <v-row v-else align="baseline">
       <v-col :cols="cols" class="font-weight-medium">{{ label }}</v-col>
-      <v-divider v-if="!noDivider" vertical></v-divider>
+      <v-divider class="mr-2" v-if="!noDivider" vertical></v-divider>
       <slot />
     </v-row>
   </fragment>
