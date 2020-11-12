@@ -78,6 +78,8 @@
           <v-text-field label="Authors" v-model="authors" />
         </v-col>
       </row>
+      <v-divider />
+      <parties label="Additional Information" />
     </form-container>
     <div class="float-right mt-3">
       <app-button
@@ -95,6 +97,7 @@ import moment from "moment";
 import { validationMixin } from "@/utils/mixins/component-specfic";
 import HelpTooltip from "@/components/other/HelpTooltip.vue";
 import { computeDateDifference } from "@/utils/Utils";
+import Parties from "../step-components/Parties.vue";
 
 export default {
   name: "step-1",
@@ -118,7 +121,10 @@ export default {
       maxValue: maxValue(moment().add(25, "years")._d),
     },
   },
-  components: { HelpTooltip },
+  components: {
+    Parties,
+    HelpTooltip,
+  },
   watch: {
     active(isActive) {
       isActive

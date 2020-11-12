@@ -10,14 +10,14 @@
     </v-row>
     <v-row>
       <v-col>
-        <row no-divider label="Start Date">{{
-          generalInformation.startDate | parseDate
-        }}</row>
+        <row no-divider label="Start Date">
+          {{ generalInformation.startDate | parseDate }}
+        </row>
       </v-col>
       <v-col>
-        <row no-divider label="End Date">{{
-          generalInformation.endDate | parseDate
-        }}</row>
+        <row no-divider label="End Date">
+          {{ generalInformation.endDate | parseDate }}
+        </row>
       </v-col>
     </v-row>
     <v-row>
@@ -33,7 +33,19 @@
           <div v-else>N/A</div>
         </row>
       </v-col>
-      <v-col></v-col>
+      <v-col>
+        <row no-divider label="Taxes">
+          <div v-if="generalInformation.taxesIncluded">Included</div>
+          <div v-else>Excluded</div>
+        </row>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="9">
+        <row label="Authors" no-divider>
+          <v-col class="text-center">{{ generalInformation.authors }}</v-col>
+        </row>
+      </v-col>
     </v-row>
   </fragment>
 </template>

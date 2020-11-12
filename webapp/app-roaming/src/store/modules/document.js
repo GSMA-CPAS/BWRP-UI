@@ -61,7 +61,6 @@ const documentModule = {
       documentID
     ) {
       const { fromMSP, toMSP } = state.document;
-      log(fromMSP, toMSP);
       const url = "" + `/signatures/${documentID}/`;
       const fromMSPRequest = Vue.axios.get(url + fromMSP);
       const toMSPRequest = Vue.axios.get(url + toMSP);
