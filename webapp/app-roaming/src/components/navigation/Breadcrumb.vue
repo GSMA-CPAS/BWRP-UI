@@ -32,7 +32,7 @@ export default {
   }),
   methods: {
     refreshPage() {
-      this.$router.go();
+      this.$store.dispatch("document/loadData", this.$route.params.cid);
     },
     addBreadcrumb(text, to) {
       this.items.push({ text, to });
@@ -51,15 +51,23 @@ export default {
   },
   watch: {
     $route(to, from) {
-      const { name, meta, path } = to;
+      const { name, meta, params, path } = to;
       name === "contracts-overview" && this.removeLastBreacrumb();
-
-      from.name === "contracts-overview" && this.addBreadcrumb(meta.text, path);
+      console.log(from);
+      if (from.name === "contracts-overview") {
+        to.name === "timeline-page"
+          ? this.addBreadcrumb(params.cid, path)
+          : this.addBreadcrumb(meta.name, path);
+      }
     },
   },
   beforeMount() {
-    const { name, meta, path } = this.$route;
-    name !== "contracts-overview" && this.addBreadcrumb(meta.text, path);
+    const { name, meta, path, params } = this.$route;
+    if (name === "timeline-page") {
+      this.addBreadcrumb(params.cid, path);
+    } else {
+      name !== "contracts-overview" && this.addBreadcrumb(meta.text, path);
+    }
   },
 };
 </script>
