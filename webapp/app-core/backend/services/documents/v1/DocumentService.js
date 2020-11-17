@@ -15,6 +15,44 @@ class DocumentService extends AbstractService {
         this.mspid = config.organization.mspid;
     }
 
+    /**
+     * convert a document(offchain) to a privateDocument(local)
+     */
+    converToPrivateDocument(document) {
+        const documentData = Buffer.from(document.data, 'base64').toString();
+        this.getLogger().debug("[DocumentService::processDocument] documentData %s ", documentData);
+
+        const documentDataJson = JSON.parse(documentData);
+        this.getLogger().debug("[DocumentService::processDocument] documentDataJson %s ", JSON.stringify(documentDataJson));
+
+        const privateDocument = {
+            "documentId": document.id,
+            "type": documentDataJson.header.type,
+            "fromMSP": document.fromMSP,
+            "toMSP": document.toMSP,
+            "data": documentData,
+            "state": Enums.documentState.SENT
+        }
+        return privateDocument;
+    }
+
+    /**
+     * process a private document and store/update it
+     */
+    async processPrivateDocument(privateDocument) {
+        this.getLogger().debug("[DocumentService::processDocument] processing documentId %s ", privateDocument.documentId);
+
+        if (await this.getBackendAdapter("localStorage").existsDocument(privateDocument.documentId)) {
+            const data = {
+                state: Enums.documentState.SENT
+            }
+            await this.getBackendAdapter("localStorage").updateDocument(privateDocument.documentId, data);
+        } else {  
+            await this.getBackendAdapter("localStorage").storeDocument(privateDocument.documentId, privateDocument);
+            this.getLogger().info("[DocumentService::privateDocument] Stored document with id %s successfully", privateDocument.documentId);
+        }
+    }
+
     registerRequestHandler() {
         /**
          * curl -X GET http://{host}:{port}/api/v1/documents
@@ -92,32 +130,36 @@ class DocumentService extends AbstractService {
          * curl -X POST http://{host}:{port}/api/v1/documents/event -d '{...}'
          */
         this.getRouter().post("/event", async (req /*, res*/) => {
-            this.getLogger().debug("[DocumentService::/event] %s", JSON.stringify(req.body));
+            this.getLogger().debug("[DocumentService::/event] req.body: %s", JSON.stringify(req.body));
             const body = req.body;
-            if (body && body.data && body.data.documentID) {
-                const documentId = body.data.documentID;
+            if (body && body.data && body.data.storageKey) {
+                const storageKey = body.data.storageKey;
                 try {
-                    const privateDocument = await this.getBackendAdapter("blockchain").getPrivateDocument(documentId);
-                    // fromMSP, toMSP, data, dataHash, timeStamp
-                    if (privateDocument) {
-                        if (await this.getBackendAdapter("localStorage").existsDocument(documentId)) {
-                            const data = {
-                                state: Enums.documentState.SENT
+
+                    //process all documents and delete in transient db after successful storage in local db
+                    const availableDocumendIDs = await this.getBackendAdapter("blockchain").getPrivateDocumentIDs();
+                    this.getLogger().debug("[DocumentService::/event] availableDocumendIDs: %s", JSON.stringify(availableDocumendIDs));
+                    for (var i in availableDocumendIDs) {
+                        this.getLogger().debug("[DocumentService::/event] i: %d , availableDocumendIDs[i]: %s ", i, availableDocumendIDs[i]);
+
+                        const document = await this.getBackendAdapter("blockchain").getPrivateDocument(availableDocumendIDs[i]);
+                        if (document) {
+                            const privateDocument = this.converToPrivateDocument(document);
+                            await this.processPrivateDocument(privateDocument);
+                            const documentIsStored = await this.getBackendAdapter("localStorage").existsDocument(privateDocument.documentId);
+                            if(documentIsStored) {
+                                await this.getBackendAdapter("blockchain").deletePrivateDocument(privateDocument.documentId);
+                                this.getLogger().info("[DocumentService::/event] Deleted document with id %s successfully", privateDocument.documentId);
                             }
-                            await this.getBackendAdapter("localStorage").updateDocument(documentId, data);
-                        } else {
-                            const documentData = Buffer.from(privateDocument.data, 'base64').toString();
-                            const documentDataJson = JSON.parse(documentData);
-                            const data = {
-                                "documentId": documentId,
-                                "type": documentDataJson.header.type,
-                                "fromMSP": privateDocument.fromMSP,
-                                "toMSP": privateDocument.toMSP,
-                                "data": documentData,
-                                "state": Enums.documentState.SENT
-                            }
-                            await this.getBackendAdapter("localStorage").storeDocument(documentId, data);
                         }
+                    }
+
+                    const documentId = await this.getBackendAdapter("localStorage").getDocumentIDFromStorageKey(storageKey);
+                    this.getLogger().debug("[DocumentService::/event] documentId: %s", documentId);
+                    const privateDocument = await this.getBackendAdapter("localStorage").getDocument(documentId);
+
+                    if (privateDocument) {
+                        await this.processPrivateDocument(privateDocument);
                         this.getLogger().info("[DocumentService::/event] Stored document with id %s successfully", documentId);
                     } else {
                         this.getLogger().error("[DocumentService::/event] Failed to get private document with id - %s", documentId);
