@@ -80,6 +80,11 @@
       </row>
       <v-divider />
       <parties label="Additional Information" />
+      <v-row>
+        <v-col><general-information-party-form v-model="userData" /></v-col>
+        <v-divider vertical></v-divider>
+        <v-col><general-information-party-form v-model="partnerData" /></v-col>
+      </v-row>
     </form-container>
     <div class="float-right mt-3">
       <app-button
@@ -98,6 +103,7 @@ import { validationMixin } from "@/utils/mixins/component-specfic";
 import HelpTooltip from "@/components/other/HelpTooltip.vue";
 import { computeDateDifference } from "@/utils/Utils";
 import Parties from "../step-components/Parties.vue";
+import GeneralInformationPartyForm from "../step-components/discount-form-components/GeneralInformationPartyForm.vue";
 
 export default {
   name: "step-1",
@@ -124,6 +130,7 @@ export default {
   components: {
     Parties,
     HelpTooltip,
+    GeneralInformationPartyForm,
   },
   watch: {
     active(isActive) {
@@ -207,6 +214,28 @@ export default {
       set(value) {
         this.$store.commit("document/new/updateGeneralInformation", {
           key: "authors",
+          value,
+        });
+      },
+    },
+    userData: {
+      get() {
+        return this.$store.state.document.new.generalInformation.userData;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "userData",
+          value,
+        });
+      },
+    },
+    partnerData: {
+      get() {
+        return this.$store.state.document.new.generalInformation.partnerData;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "partnerData",
           value,
         });
       },

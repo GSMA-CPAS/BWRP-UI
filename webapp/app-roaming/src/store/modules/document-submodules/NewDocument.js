@@ -17,6 +17,14 @@ const defaultState = () => ({
     prolongationLength: null,
     taxesIncluded: false,
     authors: null,
+    userData: {
+      currencyForAllDiscounts: null,
+      tadigCodes: { codes: null, includeContractParty: false },
+    },
+    partnerData: {
+      currencyForAllDiscounts: null,
+      tadigCodes: { codes: null, includeContractParty: false },
+    },
   },
 });
 
@@ -163,17 +171,25 @@ const newDocumentModule = {
     contract: (state, getters, rootState) => {
       const user = getters.msps.user;
       const { generalInformation, partner, partnerData, userData } = state;
+      const {
+        userData: gUserData,
+        partnerData: gPartnerData,
+      } = generalInformation;
+
+      delete generalInformation.partnerData;
+      delete generalInformation.userData;
 
       const contract = {
-        generalInformation,
+        generalInformation: {
+          ...generalInformation,
+          [partner]: gPartnerData,
+          [user]: gUserData,
+        },
         [partner]: partnerData,
         [user]: userData,
       };
       return contract;
     },
-    // state: (state) => (key) => {
-    //   return state[key];
-    // },
     msps: (state, getters, rootState) => {
       return {
         user: rootState.user.organization.mspid,

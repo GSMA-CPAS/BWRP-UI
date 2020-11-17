@@ -1,24 +1,23 @@
 {
-  "FRANCE": {
-    "signatures": [{ "id": "signature-0", "name": "test", "role": "person" }],
-    "bankDetails": {
-      "iban": null,
-      "bankName": "fsdfs",
-      "currency": "EUR",
-      "swiftBic": null,
-      "bankAddress": null,
-      "bankAccountName": null,
-      "contactNameContract": null,
-      "contactEmailContract": null,
-      "contactPhoneContract": null,
-      "contactNameAccounting": null,
-      "contactEmailAccounting": null,
-      "contactPhoneAccounting": null
+  "generalInformation": {
+    "name": "Nae",
+    "type": "Special",
+    "startDate": "2020-05-01T00:00:00.000Z",
+    "endDate": "2020-12-01T00:00:00.000Z",
+    "prolongationLength": null,
+    "taxesIncluded": true,
+    "authors": "fd",
+    "TMUS": {
+      "currencyForAllDiscounts": "JPY",
+      "tadigCodes": { "codes": "dfd", "includeContractParty": true }
     },
-    "discountModels": null
+    "DTAG": {
+      "currencyForAllDiscounts": "EUR",
+      "tadigCodes": { "codes": "fds", "includeContractParty": false }
+    }
   },
   "TMUS": {
-    "signatures": [{ "id": "signature-0", "name": null, "role": null }],
+    "signatures": [{ "id": "signature-0", "name": "x", "role": "c" }],
     "bankDetails": {
       "iban": null,
       "bankName": null,
@@ -35,11 +34,22 @@
     },
     "discountModels": null
   },
-  "generalInformation": {
-    "name": "Hi",
-    "type": "Special",
-    "endDate": null,
-    "startDate": null,
-    "prolongationLength": null
+  "DTAG": {
+    "signatures": [{ "id": "signature-0", "name": "c", "role": "x" }],
+    "bankDetails": {
+      "iban": null,
+      "bankName": "fsdfs",
+      "currency": "EUR",
+      "swiftBic": null,
+      "bankAddress": null,
+      "bankAccountName": null,
+      "contactNameContract": null,
+      "contactEmailContract": null,
+      "contactPhoneContract": null,
+      "contactNameAccounting": null,
+      "contactEmailAccounting": null,
+      "contactPhoneAccounting": null
+    },
+    "discountModels": null
   }
 }

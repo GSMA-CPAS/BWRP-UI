@@ -1,7 +1,9 @@
 <template>
   <tooltip pos="right" :tooltip-text="text">
     <template #activator="{ on }">
-      <v-icon :class="padding" v-bind="$props" v-on="on">{{`mdi-${icon}`}}</v-icon>
+      <v-icon :class="padding" v-bind="$props" v-on="on">{{
+        `mdi-${icon}`
+      }}</v-icon>
     </template>
   </tooltip>
 </template>

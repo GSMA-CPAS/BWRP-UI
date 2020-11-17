@@ -14,7 +14,7 @@
     </div>
     <v-row v-else align="baseline">
       <v-col :cols="cols" class="font-weight-medium">{{ label }}</v-col>
-      <v-divider class="mr-2" v-if="!noDivider" vertical></v-divider>
+      <v-divider v-if="!noDivider" vertical></v-divider>
       <slot />
     </v-row>
   </fragment>
@@ -28,6 +28,7 @@ export default {
     type: String,
     cols: { type: String, default: "3" },
     noDivider: Boolean,
+    fillerCol: Boolean,
   },
 };
 </script>
