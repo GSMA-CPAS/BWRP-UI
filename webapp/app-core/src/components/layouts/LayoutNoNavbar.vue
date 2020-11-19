@@ -1,36 +1,33 @@
 <template>
-    <v-main>
-        <v-container fill-height fluid>
-            <slot/>
-        </v-container>
-    </v-main>
+  <v-main>
+    <v-container fill-height fluid>
+      <slot/>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
 
-    export default {
+export default {
 
-        name: 'Layout',
+  name: 'Layout',
 
-        data () {
-            return {
-            }
-        },
+  data() {
+    return {};
+  },
 
-        props: {
-            navbar: {
-                type: Boolean,
-                default: true
-            },
-            loading: {
-                type: Boolean,
-                default: true
-            }
-        },
+  props: {
+    navbar: {
+      type: Boolean,
+      default: true,
+    },
+    loading: {
+      type: Boolean,
+      default: true,
+    },
+  },
 
-        components: {
-
-        }
-    };
+  components: {},
+};
 
 </script>

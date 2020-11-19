@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use strict';
 
 /*
@@ -34,32 +35,33 @@
  * @constructor
  */
 function PwValidator(minLength, maxLength, noOfCharsets) {
-    // https://unicode-table.com/en/#basic-latin
-    // add some umlauts to the regexes too
-    this.reUpper = new RegExp('[A-Z]');
-    this.reLower = new RegExp('[a-z]');
-    this.reDigit = new RegExp('\\d');
-    // points'n'bars'n'stuff from basic latin-1 range of unicode table
-    // <space>!"#$%&'()*+,-./
-    // :;<=>?@
-    // [\]^_`
-    // {|}~
-    // §
-    this.reSpecial = new RegExp('[\u0020-\u002f\u003a-\u0040\u005b-\u0060\u007b-\u007e\u00A7]');
-    this.policy = [this._checkNotEmpty];
+  // https://unicode-table.com/en/#basic-latin
+  // add some umlauts to the regexes too
+  this.reUpper = new RegExp('[A-Z]');
+  this.reLower = new RegExp('[a-z]');
+  this.reDigit = new RegExp('\\d');
+  // points'n'bars'n'stuff from basic latin-1 range of unicode table
+  // <space>!"#$%&'()*+,-./
+  // :;<=>?@
+  // [\]^_`
+  // {|}~
+  // §
+  this.reSpecial = new RegExp(
+      '[\u0020-\u002f\u003a-\u0040\u005b-\u0060\u007b-\u007e\u00A7]');
+  this.policy = [this._checkNotEmpty];
 
-    if (this._isPositiveNumber(minLength)) {
-        this.minLen = minLength;
-        this.policy.push(this._checkMin);
-    }
-    if (this._isPositiveNumber(maxLength)) {
-        this.maxLen = maxLength;
-        this.policy.push(this._checkMax);
-    }
-    if (this._isPositiveNumber(noOfCharsets)) {
-        this.noOfCharSets = noOfCharsets;
-        this.policy.push(this._checkXOf4CharacterSets);
-    }
+  if (this._isPositiveNumber(minLength)) {
+    this.minLen = minLength;
+    this.policy.push(this._checkMin);
+  }
+  if (this._isPositiveNumber(maxLength)) {
+    this.maxLen = maxLength;
+    this.policy.push(this._checkMax);
+  }
+  if (this._isPositiveNumber(noOfCharsets)) {
+    this.noOfCharSets = noOfCharsets;
+    this.policy.push(this._checkXOf4CharacterSets);
+  }
 }
 
 /**
@@ -69,11 +71,11 @@ function PwValidator(minLength, maxLength, noOfCharsets) {
  * @return {PwValidator}
  */
 PwValidator.prototype.min = function(min) {
-    if (this._isPositiveNumber(min)) {
-        this.minLen = min;
-        this.policy.push(this._checkMin);
-    }
-    return this;
+  if (this._isPositiveNumber(min)) {
+    this.minLen = min;
+    this.policy.push(this._checkMin);
+  }
+  return this;
 };
 
 /**
@@ -83,11 +85,11 @@ PwValidator.prototype.min = function(min) {
  * @return {PwValidator}
  */
 PwValidator.prototype.max = function(max) {
-    if (this._isPositiveNumber(max)) {
-        this.maxLen = max;
-        this.policy.push(this._checkMax);
-    }
-    return this;
+  if (this._isPositiveNumber(max)) {
+    this.maxLen = max;
+    this.policy.push(this._checkMax);
+  }
+  return this;
 };
 
 /**
@@ -98,11 +100,11 @@ PwValidator.prototype.max = function(max) {
  * @return {PwValidator}
  */
 PwValidator.prototype.noOfCharsets = function(noOfCharsets) {
-    if (this._isPositiveNumber(noOfCharsets)) {
-        this.noOfCharSets = noOfCharsets;
-        this.policy.push(this._checkXOf4CharacterSets);
-    }
-    return this;
+  if (this._isPositiveNumber(noOfCharsets)) {
+    this.noOfCharSets = noOfCharsets;
+    this.policy.push(this._checkXOf4CharacterSets);
+  }
+  return this;
 };
 
 /**
@@ -111,8 +113,8 @@ PwValidator.prototype.noOfCharsets = function(noOfCharsets) {
  * @return {PwValidator}
  */
 PwValidator.prototype.digits = function() {
-    this.policy.push(this._checkDigit);
-    return this;
+  this.policy.push(this._checkDigit);
+  return this;
 };
 
 /**
@@ -122,8 +124,8 @@ PwValidator.prototype.digits = function() {
  * @return {PwValidator}
  */
 PwValidator.prototype.letters = function() {
-    this.policy.push(this._checkLetters);
-    return this;
+  this.policy.push(this._checkLetters);
+  return this;
 };
 
 /**
@@ -133,8 +135,8 @@ PwValidator.prototype.letters = function() {
  * @return {PwValidator}
  */
 PwValidator.prototype.uppercase = function() {
-    this.policy.push(this._checkUppercase);
-    return this;
+  this.policy.push(this._checkUppercase);
+  return this;
 };
 
 /**
@@ -144,10 +146,9 @@ PwValidator.prototype.uppercase = function() {
  * @return {PwValidator}
  */
 PwValidator.prototype.lowercase = function() {
-    this.policy.push(this._checkLowercase);
-    return this;
+  this.policy.push(this._checkLowercase);
+  return this;
 };
-
 
 /**
  * function to validate an password against the policy defined before (min(), max(), digit(),...).
@@ -163,32 +164,30 @@ PwValidator.prototype.lowercase = function() {
  * @return {boolean|Array} boolean or Array with error codes
  */
 PwValidator.prototype.validate = function validate(password, options) {
-    // dont do anything if no string provided
-    if (typeof password !== 'string') {
-        return ['INVALID_TYPE'];
-    }
+  // dont do anything if no string provided
+  if (typeof password !== 'string') {
+    return ['INVALID_TYPE'];
+  }
 
-    let retList = [];
+  const retList = [];
 
-    for (let i in this.policy) {
-        if (this.policy.hasOwnProperty(i)) {
-            Array.prototype.push.apply(retList, this.policy[i](this, password));
-        }
-        // fast exit on first error if requested, no more checks done
-        if (options && options.exitFirstFailure && retList.length > 0) {
-            break;
-        }
+  for (const i in this.policy) {
+    if (this.policy.hasOwnProperty(i)) {
+      Array.prototype.push.apply(retList, this.policy[i](this, password));
     }
+    // fast exit on first error if requested, no more checks done
+    if (options && options.exitFirstFailure && retList.length > 0) {
+      break;
+    }
+  }
 
-    // either simple boolean return or list with all error codes found
-    if (options && options.asList) {
-        return retList.length > 0 ? retList : null;
-    }
-    else {
-        return retList.length === 0;
-    }
+  // either simple boolean return or list with all error codes found
+  if (options && options.asList) {
+    return retList.length > 0 ? retList : null;
+  } else {
+    return retList.length === 0;
+  }
 };
-
 
 /**
  * internal function to check if an given number is positive and
@@ -199,9 +198,8 @@ PwValidator.prototype.validate = function validate(password, options) {
  * @private
  */
 PwValidator.prototype._isPositiveNumber = function(num) {
-    return (typeof num === 'number' && num >= 0);
+  return (typeof num === 'number' && num >= 0);
 };
-
 
 //  ----
 // internal check function
@@ -216,19 +214,19 @@ PwValidator.prototype._isPositiveNumber = function(num) {
  * @return {Array} Array, empty if ok, otherwise string constant for failure AT_LEAST_X_OF_4_CHARACTER_SETS
  * @private
  */
-PwValidator.prototype._checkXOf4CharacterSets = function _hasXOf4CharacterSets(obj, password) {
-    if (!obj._isPositiveNumber(obj.noOfCharSets)) obj.noOfCharSets = 3;
+PwValidator.prototype._checkXOf4CharacterSets = function _hasXOf4CharacterSets(
+    obj, password) {
+  if (!obj._isPositiveNumber(obj.noOfCharSets)) obj.noOfCharSets = 3;
 
-    let count = 0;
-    if (obj.reLower.test(password)) count++;
-    if (count < obj.noOfCharSets && obj.reUpper.test(password)) count++;
-    if (count < obj.noOfCharSets && obj.reDigit.test(password)) count++;
-    if (count < obj.noOfCharSets && obj.reSpecial.test(password)) count++;
+  let count = 0;
+  if (obj.reLower.test(password)) count++;
+  if (count < obj.noOfCharSets && obj.reUpper.test(password)) count++;
+  if (count < obj.noOfCharSets && obj.reDigit.test(password)) count++;
+  if (count < obj.noOfCharSets && obj.reSpecial.test(password)) count++;
 
-    if (count < obj.noOfCharSets) return ['AT_LEAST_X_OF_4_CHARACTER_SETS'];
-    else return [];
+  if (count < obj.noOfCharSets) return ['AT_LEAST_X_OF_4_CHARACTER_SETS'];
+  else return [];
 };
-
 
 /**
  * check if given password is an string object and not empty
@@ -239,12 +237,11 @@ PwValidator.prototype._checkXOf4CharacterSets = function _hasXOf4CharacterSets(o
  * @private
  */
 PwValidator.prototype._checkNotEmpty = function(obj, password) {
-    if (!password || typeof password !== 'string') {
-        return ['NOT_EMPTY'];
-    }
-    return [];
+  if (!password || typeof password !== 'string') {
+    return ['NOT_EMPTY'];
+  }
+  return [];
 };
-
 
 /**
  * check if given passowrd has at lease the min length specfied
@@ -255,10 +252,9 @@ PwValidator.prototype._checkNotEmpty = function(obj, password) {
  * @private
  */
 PwValidator.prototype._checkMin = function(obj, password) {
-    if (password.length && password.length < obj.minLen) return ['TO_SHORT'];
-    return [];
+  if (password.length && password.length < obj.minLen) return ['TO_SHORT'];
+  return [];
 };
-
 
 /**
  * check if given passowrd is not longer than specified
@@ -269,10 +265,9 @@ PwValidator.prototype._checkMin = function(obj, password) {
  * @private
  */
 PwValidator.prototype._checkMax = function(obj, password) {
-    if (password.length && password.length > obj.maxLen) return ['TO_LONG'];
-    return [];
+  if (password.length && password.length > obj.maxLen) return ['TO_LONG'];
+  return [];
 };
-
 
 /**
  * check if given password contains at least one digit
@@ -283,10 +278,9 @@ PwValidator.prototype._checkMax = function(obj, password) {
  * @private
  */
 PwValidator.prototype._checkDigit = function(obj, password) {
-    if (!obj.reDigit.test(password)) return ['NEEDS_DIGITS'];
-    return [];
+  if (!obj.reDigit.test(password)) return ['NEEDS_DIGITS'];
+  return [];
 };
-
 
 /**
  * check if given password contains at least one upper case letter
@@ -297,10 +291,9 @@ PwValidator.prototype._checkDigit = function(obj, password) {
  * @private
  */
 PwValidator.prototype._checkUppercase = function(obj, password) {
-    if (!obj.reUpper.test(password)) return ['NEEDS_UPPERCASE'];
-    return [];
+  if (!obj.reUpper.test(password)) return ['NEEDS_UPPERCASE'];
+  return [];
 };
-
 
 /**
  * check if given password contains at least one lower case letter
@@ -311,10 +304,9 @@ PwValidator.prototype._checkUppercase = function(obj, password) {
  * @private
  */
 PwValidator.prototype._checkLowercase = function(obj, password) {
-    if (!obj.reLower.test(password)) return ['NEEDS_LOWERCASE'];
-    return [];
+  if (!obj.reLower.test(password)) return ['NEEDS_LOWERCASE'];
+  return [];
 };
-
 
 /**
  * check if given password contains at least one letter (either lower or upper case)
@@ -325,9 +317,9 @@ PwValidator.prototype._checkLowercase = function(obj, password) {
  * @private
  */
 PwValidator.prototype._checkLetters = function(obj, password) {
-    if (!(obj.reUpper.test(password) || obj.reLower.test(password))) return ['NEEDS_LETTERS'];
-    return [];
+  if (!(obj.reUpper.test(password) ||
+      obj.reLower.test(password))) return ['NEEDS_LETTERS'];
+  return [];
 };
-
 
 module.exports = PwValidator;
