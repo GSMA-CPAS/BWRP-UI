@@ -20,10 +20,6 @@
     </form-container>
     <div class="float-right mt-3">
       <app-button label="previous" text @button-pressed="previousStep" />
-      <app-button
-        label="next"
-        @button-pressed="nextStep({ key: 'discountModels', data: 'someData' })"
-      />
     </div>
   </fragment>
 </template>
@@ -34,7 +30,7 @@ import DiscountForm from "../step-components/DiscountForm.vue";
 import ConditionForm from "../step-components/ConditionForm";
 export default {
   name: "step-4",
-  description: "In this step, the discount models of the contract are set.",
+  description: "Discount Models",
   mixins: [validationMixin],
   components: {
     Parties,

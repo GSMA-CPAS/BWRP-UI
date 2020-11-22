@@ -5,7 +5,6 @@ const bankFieldsMixin = {
   computed: {
     fields() {
       const bankLabels = [
-        "Currency",
         "Contact Name (Accounting)",
         "Contact Phone (Accounting)",
         "Contact Email (Accounting)",
@@ -58,6 +57,7 @@ const appStateMixin = {
 export { appStateMixin };
 
 const timelineMixin = {
+  mixins: [utilsMixin],
   methods: {
     parseSignature(signature) {
       return `${signature?.name}, ${signature?.role}`;
@@ -70,11 +70,11 @@ const timelineMixin = {
   computed: {
     ...mapState("app-state", ["signing"]),
     ...mapState("document", {
-      bankDetails: (state) => state.document.data.bankDetails,
       generalInformation: (state) => state.document.data.generalInformation,
-      contractSignatures: (state) => state.document.data.signatures,
+      documentData: (state) => state.document.data,
     }),
     ...mapGetters("document", [
+      "bankDetails",
       "signatures",
       "parties",
       "name",
@@ -105,17 +105,8 @@ const validationMixin = {
             key,
             data,
           });
-      } else {
-        const data = {};
-        for (const party in this.$refs) {
-          const { _data } = this.$refs[party];
-          data[party] = key === "signatures" ? _data.signatures : _data;
-        }
-        this.nextStep({
-          key,
-          data,
-        });
       }
+      this.nextStep();
     },
     validate(key) {
       if (this.activeValidation) {
@@ -128,13 +119,8 @@ const validationMixin = {
             key,
             data: this._data,
           });
-      } else {
-        delete this._data.active &&
-          this.nextStep({
-            key,
-            data: this._data,
-          });
       }
+      this.nextStep();
     },
 
     ...mapActions("app-state", ["loadError"]),

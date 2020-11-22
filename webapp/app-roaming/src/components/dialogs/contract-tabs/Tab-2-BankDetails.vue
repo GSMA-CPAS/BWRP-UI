@@ -3,7 +3,7 @@
     <parties-header />
     <row v-for="{ key, label } in fields" :label="label" :key="key">
       <fragment v-for="(msp, index) in parties" :key="msp">
-        <v-col>{{ bankDetails[msp][key] | isNil }}</v-col>
+        <v-col>{{ documentData[msp].bankDetails[key] | isNil }}</v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </row>

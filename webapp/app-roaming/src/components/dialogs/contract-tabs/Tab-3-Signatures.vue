@@ -2,12 +2,17 @@
   <fragment>
     <parties-header />
     <row
-      v-for="(signature, msp, i) in contractSignatures"
+      v-for="i in longestArray([
+        documentData[fromMSP].signatures,
+        documentData[toMSP].signatures,
+      ])"
       :label="`Signature ${i}`"
-      :key="msp"
+      :key="i"
     >
       <fragment v-for="(msp, index) in parties" :key="msp">
-        <v-col>{{ parseSignature(contractSignatures[msp][i]) | isNil }}</v-col>
+        <v-col>{{
+          parseSignature(documentData[msp].signatures[i - 1]) | isNil
+        }}</v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </row>
@@ -30,7 +35,9 @@ export default {
   },
   methods: {
     parseSignature(signature) {
-      return signature && `${signature?.name}, ${signature?.role}`;
+      return `${this.$options.filters.isNil(
+        signature?.name
+      )}, ${this.$options.filters.isNil(signature?.role)}`;
     },
   },
 };

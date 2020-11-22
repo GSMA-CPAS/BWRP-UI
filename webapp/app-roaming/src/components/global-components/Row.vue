@@ -3,8 +3,9 @@
     <v-row
       v-if="type === 'primary'"
       class="primary--text text-uppercase font-weight-medium pa-3"
-      >{{ label }}</v-row
     >
+      {{ label }}
+    </v-row>
     <div
       v-else-if="type === 'secondary'"
       class="secondary--text font-weight-medium h1"

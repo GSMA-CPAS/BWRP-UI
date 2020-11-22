@@ -22,23 +22,19 @@
           @button-pressed="downloadDocument"
         />
         <v-spacer />
-        <app-button
-          :disabled="step <= steps.length"
-          @click="saveContract"
-          class="mr-5"
-          label="Confirm"
-        />
+        <app-button @click="saveContract" class="mr-5" label="Confirm" />
       </v-row>
     </v-stepper>
   </fragment>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "stepper",
   description: "Stepper used for contract-creation.",
   methods: {
-    ...mapActions("document/new", ["saveContract", "resetState", "setStep"]),
+    ...mapActions("document/new", ["saveContract", "setStep"]),
+    ...mapMutations("document/new", ["resetState"]),
     downloadDocument() {
       delete this.contract.step;
       const data =
@@ -49,9 +45,6 @@ export default {
       link.setAttribute("download", "contract.json");
       document.body.appendChild(link);
       link.click();
-    },
-    test(e) {
-      console.log(e);
     },
   },
   computed: {

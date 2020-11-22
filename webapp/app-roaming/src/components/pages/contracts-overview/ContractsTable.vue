@@ -19,7 +19,7 @@
       </v-row>
     </template>
     <template #item="{ item }">
-      <tr @click="to(item.documentId)">
+      <tr @click="to(item.documentId)" @keypress.enter="to(item.documentId)" tabindex="0">
         <td class="pa-6">
           {{
             `${item.documentId.substring(0, 5)}...${item.documentId.substring(

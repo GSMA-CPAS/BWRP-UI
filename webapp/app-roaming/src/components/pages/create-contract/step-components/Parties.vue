@@ -8,7 +8,7 @@
       </v-col>
       <v-divider vertical></v-divider>
       <v-col>
-        <row type="primary" :label="msps.partner" />
+        <row type="primary" label="partner" />
       </v-col>
     </v-row>
   </fragment>

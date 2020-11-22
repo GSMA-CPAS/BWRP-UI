@@ -50,7 +50,7 @@
             <v-text-field
               label="Prolongation Length"
               :disabled="!active"
-              :value="prolongationLength"
+              v-model="prolongationLength"
               suffix="months"
             />
             <tooltip
@@ -73,6 +73,7 @@
       <app-button
         label="next"
         @button-pressed="validate('generalInformation')"
+        @keydown.tab="validate('generalInformation')"
       />
     </div>
   </fragment>
@@ -87,13 +88,8 @@ import { computeDateDifference } from "@/utils/Utils";
 
 export default {
   name: "step-1",
-  description: "In this step, the general information of the contract is set.",
+  description: "General Information",
   data: () => ({
-    name: null,
-    type: null,
-    startDate: null,
-    endDate: null,
-    prolongationLength: null,
     active: false,
   }),
   provide() {
@@ -121,6 +117,62 @@ export default {
     },
   },
   computed: {
+    name: {
+      get() {
+        return this.$store.state.document.new.generalInformation.name;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "name",
+          value,
+        });
+      },
+    },
+    type: {
+      get() {
+        return this.$store.state.document.new.generalInformation.type;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "type",
+          value,
+        });
+      },
+    },
+    startDate: {
+      get() {
+        return this.$store.state.document.new.generalInformation.startDate;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "startDate",
+          value,
+        });
+      },
+    },
+    endDate: {
+      get() {
+        return this.$store.state.document.new.generalInformation.endDate;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "endDate",
+          value,
+        });
+      },
+    },
+    prolongationLength: {
+      get() {
+        return this.$store.state.document.new.generalInformation
+          .prolongationLength;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "prolongationLength",
+          value,
+        });
+      },
+    },
     endDateDisabled() {
       return this.startDate === null;
     },
@@ -131,25 +183,6 @@ export default {
     contractTypes() {
       return ["Normal", "Special"];
     },
-  },
-  beforeMount() {
-    // TODO: check if imported data is correct
-    const generalInformation = this.state("generalInformation");
-    if (generalInformation) {
-      const {
-        name,
-        type,
-        startDate,
-        endDate,
-        prolongationLength,
-      } = generalInformation;
-      this.name = name;
-      this.prolongationLength = prolongationLength;
-      this.active = this.prolongationLength > 0;
-      this.type = type;
-      this.startDate = new Date(startDate);
-      this.endDate = new Date(endDate);
-    }
   },
 };
 </script>
