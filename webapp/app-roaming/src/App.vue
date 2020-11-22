@@ -3,10 +3,11 @@
     <error-overlay />
     <breadcrumb />
     <v-main class="background">
-      <v-overlay :value="isLoading">
-        Loading, please wait...
-        <v-progress-circular indeterminate></v-progress-circular>
-      </v-overlay>
+      <v-container fill-height fluid v-if="isLoading">
+        <v-row no-gutters align="center" justify="center">
+          <v-progress-circular :size="50" color="primary" indeterminate />
+        </v-row>
+      </v-container>
       <router-view />
     </v-main>
   </v-app>

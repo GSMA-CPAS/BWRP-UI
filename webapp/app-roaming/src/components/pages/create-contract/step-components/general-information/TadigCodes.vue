@@ -1,8 +1,8 @@
 <template>
   <fragment>
-    <v-textarea v-model="codes" rows="2" auto-grow label="TADIG Codes" />
+    <v-textarea v-model="value.codes" rows="2" auto-grow label="TADIG Codes" />
     <v-checkbox
-      v-model="includeContractParty"
+      v-model="value.includeContractParty"
       auto-grow
       label="also contract party"
     />
@@ -12,8 +12,8 @@
 export default {
   name: "tadig-codes",
   description: "description",
-  data() {
-    return { codes: null, includeContractParty: false };
+  props: {
+    value: Object,
   },
 };
 </script>

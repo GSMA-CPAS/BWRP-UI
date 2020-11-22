@@ -1,7 +1,7 @@
 <template>
   <fragment>
     <form-container>
-      <row label="Contract Name & Type">
+      <row label="Contract Name and Contract Type">
         <v-col>
           <v-text-field
             label="Contract Name"
@@ -20,7 +20,7 @@
           />
         </v-col>
       </row>
-      <row label="Start Date & End Date">
+      <row label="Start Date and End Date">
         <date-picker v-model="startDate" label="Start Date" />
         <date-picker
           v-model="endDate"
@@ -29,7 +29,7 @@
           label="End Date"
         />
       </row>
-      <row label="Agreement Period & Prolongation Length">
+      <row label="Agreement Period and Prolongation Length">
         <v-col>
           <v-row>
             <v-text-field
@@ -47,29 +47,46 @@
         </v-col>
         <v-col>
           <v-row>
-            <v-text-field
-              label="Prolongation Length"
-              :disabled="!active"
-              v-model="prolongationLength"
-              suffix="months"
-            />
-            <tooltip
-              tooltip-text="default prolongation length is 12 months, when active"
-            >
-              <template #activator="{ on }">
-                <v-checkbox
-                  class="ml-2 pa-2"
-                  v-on="on"
-                  v-model="active"
-                ></v-checkbox>
-              </template>
-            </tooltip>
+            <v-col>
+              <v-text-field
+                label="Prolongation Length"
+                :disabled="!active"
+                v-model="prolongationLength"
+                suffix="months"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-checkbox v-model="active" />
+            </v-col>
           </v-row>
         </v-col>
       </row>
+      <row label="Taxes and Authors">
+        <v-col>
+          <v-row>
+            <v-col>
+              <div class="v-text-field">
+                {{ `Taxes ${taxesIncluded ? "included" : "excluded"}` }}
+              </div>
+            </v-col>
+            <v-col cols="2">
+              <v-checkbox v-model="taxesIncluded" />
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col>
+          <v-text-field label="Authors" v-model="authors" />
+        </v-col>
+      </row>
+      <v-divider />
+      <parties label="Additional Information" />
+      <v-row>
+        <v-col><general-information-party-form v-model="userData" /></v-col>
+        <v-divider vertical></v-divider>
+        <v-col><general-information-party-form v-model="partnerData" /></v-col>
+      </v-row>
     </form-container>
     <div class="float-right mt-3">
-      <app-button label="previous" :disabled="true" text />
       <app-button
         label="next"
         @button-pressed="validate('generalInformation')"
@@ -85,6 +102,8 @@ import moment from "moment";
 import { validationMixin } from "@/utils/mixins/component-specfic";
 import HelpTooltip from "@/components/other/HelpTooltip.vue";
 import { computeDateDifference } from "@/utils/Utils";
+import Parties from "../step-components/Parties.vue";
+import GeneralInformationPartyForm from "../step-components/discount-form-components/GeneralInformationPartyForm.vue";
 
 export default {
   name: "step-1",
@@ -108,7 +127,11 @@ export default {
       maxValue: maxValue(moment().add(25, "years")._d),
     },
   },
-  components: { HelpTooltip },
+  components: {
+    Parties,
+    HelpTooltip,
+    GeneralInformationPartyForm,
+  },
   watch: {
     active(isActive) {
       isActive
@@ -169,6 +192,50 @@ export default {
       set(value) {
         this.$store.commit("document/new/updateGeneralInformation", {
           key: "prolongationLength",
+          value,
+        });
+      },
+    },
+    taxesIncluded: {
+      get() {
+        return this.$store.state.document.new.generalInformation.taxesIncluded;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "taxesIncluded",
+          value,
+        });
+      },
+    },
+    authors: {
+      get() {
+        return this.$store.state.document.new.generalInformation.authors;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "authors",
+          value,
+        });
+      },
+    },
+    userData: {
+      get() {
+        return this.$store.state.document.new.generalInformation.userData;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "userData",
+          value,
+        });
+      },
+    },
+    partnerData: {
+      get() {
+        return this.$store.state.document.new.generalInformation.partnerData;
+      },
+      set(value) {
+        this.$store.commit("document/new/updateGeneralInformation", {
+          key: "partnerData",
           value,
         });
       },

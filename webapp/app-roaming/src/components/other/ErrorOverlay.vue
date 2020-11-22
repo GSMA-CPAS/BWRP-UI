@@ -1,5 +1,5 @@
 <template>
-  <v-overlay v-if="errorResponse" opacity="0.95" v-model="showError">
+  <v-overlay v-if="errorResponse" opacity="0.5" v-model="showError">
     <v-card width="750" class="pa-2" light>
       <v-card-title>
         {{ errorResponse.statusText }}

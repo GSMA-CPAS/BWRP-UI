@@ -3,7 +3,7 @@
     <template #activator="{ on }">
       <slot name="activator" :on="on" />
     </template>
-    <span>{{tooltipText}}</span>
+    <span>{{ tooltipText }}</span>
   </v-tooltip>
 </template>
 <script>

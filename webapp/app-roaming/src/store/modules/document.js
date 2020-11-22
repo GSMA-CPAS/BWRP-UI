@@ -1,4 +1,3 @@
-import router from "@/router";
 /* eslint-disable no-unused-vars */
 import Vue from "vue";
 import newDocumentModule from "./document-submodules/NewDocument";
@@ -29,22 +28,18 @@ const documentModule = {
         )
         .then((res) => {
           dispatch("app-state/signing", false, { root: true });
-          dispatch("getSignatures");
+          dispatch("getSignatures", state.document.documentId);
         })
         .catch((err) => {
           log(err);
         });
     },
-    async getDocument({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
+    async getDocument(
+      { commit, dispatch, rootGetters, getters, rootState, state },
+      documentID
+    ) {
       await Vue.axios
-        .get(`/documents/${getters.documentID}`, { withCredentials: true })
+        .get(`/documents/${documentID}`, { withCredentials: true })
         .then((document) => {
           const { id, documentId, data, fromMSP, toMSP } = document;
           const documentData = JSON.parse(data);
@@ -61,16 +56,12 @@ const documentModule = {
           // dispatch(["app-state/loadError"], err);
         });
     },
-    getSignatures({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
+    getSignatures(
+      { commit, dispatch, rootGetters, getters, rootState, state },
+      documentID
+    ) {
       const { fromMSP, toMSP } = state.document;
-      const url = "" + `/signatures/${getters.documentID}/`;
+      const url = "" + `/signatures/${documentID}/`;
       const fromMSPRequest = Vue.axios.get(url + fromMSP);
       const toMSPRequest = Vue.axios.get(url + toMSP);
       Vue.axios
@@ -85,22 +76,15 @@ const documentModule = {
           console.log(err);
         });
     },
-    async loadData({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
-      await dispatch("getDocument");
-      dispatch("getSignatures");
+    async loadData(
+      { commit, dispatch, rootGetters, getters, rootState, state },
+      documentID
+    ) {
+      await dispatch("getDocument", documentID);
+      dispatch("getSignatures", documentID);
     },
   },
   getters: {
-    documentID() {
-      return router.currentRoute.params.cid;
-    },
     isSigned: (state, getters) => {
       const { fromMSP, toMSP } = getters;
       const minSignaturesFromMSP =

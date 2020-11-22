@@ -33,7 +33,7 @@ export default {
   description: "Component: Timeline",
   mixins: [timelineMixin],
   beforeMount() {
-    this.loadData();
+    this.loadData(this.$route.params.cid);
   },
 };
 </script>

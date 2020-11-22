@@ -1,122 +1,127 @@
 <template>
-    <layout :loading="loading">
-        <v-container fluid>
-            <v-row>
-                <v-col cols="12">
-                    <v-breadcrumbs :items="breadcrumbItems" large></v-breadcrumbs>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" lg="6">
-                    <v-card>
-                        <v-card-title>
-                            PASSWORD
-                        </v-card-title>
-                        <v-card-text>
-                           Changing your password will sign you out. You will need to enter your new password to login again.
-                        </v-card-text>
-                        <v-card-actions class="pa-4">
-                            <v-btn color="primary" tile to="/account/security/password">Change Password</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" lg="6">
-                    <v-card>
-                        <v-card-title>
-                            {{twoFactorHeaderText}}
-                        </v-card-title>
-                        <v-card-text>
-                            {{twoFactorMainText}}
-                        </v-card-text>
-                        <v-card-actions class="pa-4">
-                            <v-btn color="primary" tile @click="toggleTwoFactor">{{twoFactorButtonText}}</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
-    </layout>
+  <layout :loading="loading">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12">
+          <v-breadcrumbs :items="breadcrumbItems" large></v-breadcrumbs>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" lg="6">
+          <v-card>
+            <v-card-title>
+              PASSWORD
+            </v-card-title>
+            <v-card-text>
+              Changing your password will sign you out. You will need to enter your new password to login again.
+            </v-card-text>
+            <v-card-actions class="pa-4">
+              <v-btn color="primary" tile to="/account/security/password">Change Password</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" lg="6">
+          <v-card>
+            <v-card-title>
+              {{ twoFactorHeaderText }}
+            </v-card-title>
+            <v-card-text>
+              {{ twoFactorMainText }}
+            </v-card-text>
+            <v-card-actions class="pa-4">
+              <v-btn color="primary" tile @click="toggleTwoFactor">{{ twoFactorButtonText }}</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </layout>
 </template>
 
 <script>
 
-    import Layout from '@/components/layouts/LayoutAccount';
+import Layout from '@/components/layouts/LayoutAccount';
 
-    export default {
+export default {
 
-        name: 'Security',
+  name: 'Security',
 
-        data: () => ({
-            loading: true,
-            breadcrumbItems: [
-                {
-                    text: 'Security'.toUpperCase(),
-                    disabled: true
-                },
-            ],
-            twoFactorIsEnabled: false,
-            twoFactorHeaderText: "",
-            twoFactorMainText: "",
-            twoFactorButtonText: ""
-        }),
+  data: () => ({
+    loading: true,
+    breadcrumbItems: [
+      {
+        text: 'Security'.toUpperCase(),
+        disabled: true,
+      },
+    ],
+    twoFactorIsEnabled: false,
+    twoFactorHeaderText: '',
+    twoFactorMainText: '',
+    twoFactorButtonText: '',
+  }),
 
-        created: function() {
-            setTimeout(() => {
-                this.fetchTwoFactorStatus();
-            }, 200);
-        },
+  created: function() {
+    setTimeout(() => {
+      this.fetchTwoFactorStatus();
+    }, 200);
+  },
 
-        methods: {
+  methods: {
 
-            fetchTwoFactorStatus() {
-                this.$http({method:'get', url: '/api/v1/users/2fa/status', withCredentials: true}).then((response) => {
-                    this.twoFactorIsEnabled = response.data.isEnabled;
-                    if (this.twoFactorIsEnabled) {
-                        this.twoFactorHeaderText = 'TURN OFF TWO-FACTOR AUTHENTICATION';
-                        this.twoFactorMainText = 'If you turn off two-factor authentication, your account will be protected with only your password. This will make your account less secure.';
-                        this.twoFactorButtonText = 'Turn off Two-Factor Authentication';
-                    } else {
-                        this.twoFactorHeaderText = 'TWO-FACTOR AUTHENTICATION';
-                        this.twoFactorMainText = 'Two-factor authentication adds an extra layer of protection to the login process. Once enabled and configured, each time you sign in, you will be asked to enter an additional security code generated by your authenticator app (such as Google Authenticator or Authy).';
-                        this.twoFactorButtonText = 'Enable Two-Factor Authentication';
-                    }
-                    this.loading = false;
-                }).catch((error) => {
-                    this.loading = false;
-                    this.$modal.error(error);
-                });
-            },
-
-            toggleTwoFactor() {
-                if (this.twoFactorIsEnabled) {
-                    this.$modal.confirm({title: "Turn off two-factor authentication", message: "Turning off two-factor authentication will make your account less secure. Are you sure you want to proceed?",
-                        callbackOk: () => {
-                            this.loading = true;
-                            this.$http({method:'post', url: '/api/v1/users/2fa/disable', withCredentials: true}).then((/*response*/) => {
-                                this.loading = false;
-                                this.$modal.info({title: "Success", message: "Two-factor authentication has been disabled successfully!",
-                                    callbackOk: () => {
-                                        this.loading = true;
-                                        this.fetchTwoFactorStatus();
-                                    }
-                                });
-                            }).catch( error => {
-                                this.loading = false;
-                                this.$modal.error(error);
-                            });
-                        }
-                    });
-                } else {
-                    this.$router.push({path: '/account/security/2fa'});
-                }
-            }
-        },
-
-        components: {
-            Layout
+    fetchTwoFactorStatus() {
+      this.$http({method: 'get', url: '/api/v1/users/2fa/status', withCredentials: true}).then((response) => {
+        this.twoFactorIsEnabled = response.data.isEnabled;
+        if (this.twoFactorIsEnabled) {
+          this.twoFactorHeaderText = 'TURN OFF TWO-FACTOR AUTHENTICATION';
+          this.twoFactorMainText = 'If you turn off two-factor authentication, your account will be protected with only your password. This will make your account less secure.';
+          this.twoFactorButtonText = 'Turn off Two-Factor Authentication';
+        } else {
+          this.twoFactorHeaderText = 'TWO-FACTOR AUTHENTICATION';
+          this.twoFactorMainText = 'Two-factor authentication adds an extra layer of protection to the login process. Once enabled and configured, each time you sign in, you will be asked to enter an additional security code generated by your authenticator app (such as Google Authenticator or Authy).';
+          this.twoFactorButtonText = 'Enable Two-Factor Authentication';
         }
-    }
+        this.loading = false;
+      }).catch((error) => {
+        this.loading = false;
+        this.$modal.error(error);
+      });
+    },
+
+    toggleTwoFactor() {
+      if (this.twoFactorIsEnabled) {
+        this.$modal.confirm({
+          title: 'Turn off two-factor authentication',
+          message: 'Turning off two-factor authentication will make your account less secure. Are you sure you want to proceed?',
+          callbackOk: () => {
+            this.loading = true;
+            this.$http({method: 'post', url: '/api/v1/users/2fa/disable', withCredentials: true}).
+                then((/* response */) => {
+                  this.loading = false;
+                  this.$modal.info({
+                    title: 'Success', message: 'Two-factor authentication has been disabled successfully!',
+                    callbackOk: () => {
+                      this.loading = true;
+                      this.fetchTwoFactorStatus();
+                    },
+                  });
+                }).
+                catch((error) => {
+                  this.loading = false;
+                  this.$modal.error(error);
+                });
+          },
+        });
+      } else {
+        this.$router.push({path: '/account/security/2fa'});
+      }
+    },
+  },
+
+  components: {
+    Layout,
+  },
+};
 
 </script>

@@ -15,6 +15,16 @@ const defaultState = () => ({
     startDate: null,
     endDate: null,
     prolongationLength: null,
+    taxesIncluded: false,
+    authors: null,
+    userData: {
+      currencyForAllDiscounts: null,
+      tadigCodes: { codes: null, includeContractParty: false },
+    },
+    partnerData: {
+      currencyForAllDiscounts: null,
+      tadigCodes: { codes: null, includeContractParty: false },
+    },
   },
 });
 
@@ -80,9 +90,9 @@ const newDocumentModule = {
     },
     resetState(state) {
       Object.assign(state, defaultState());
-      Object.assign(state.userData.bankDetails, defaultBankDetailsState());
+      // Object.assign(state.userData.bankDetails, defaultBankDetailsState());
       Object.assign(state.userData.signatures, defaultSignaturesState());
-      Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
+      // Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
       Object.assign(state.partnerData.signatures, defaultSignaturesState());
     },
   },
@@ -112,7 +122,6 @@ const newDocumentModule = {
         }
         index++;
       }
-      log(partner);
       commit("READ_JSON", fileAsJSON);
       commit("SET_PARTNER", partner);
     },
@@ -162,17 +171,25 @@ const newDocumentModule = {
     contract: (state, getters, rootState) => {
       const user = getters.msps.user;
       const { generalInformation, partner, partnerData, userData } = state;
+      const {
+        userData: gUserData,
+        partnerData: gPartnerData,
+      } = generalInformation;
+
+      delete generalInformation.partnerData;
+      delete generalInformation.userData;
 
       const contract = {
-        generalInformation,
+        generalInformation: {
+          ...generalInformation,
+          [partner]: gPartnerData,
+          [user]: gUserData,
+        },
         [partner]: partnerData,
         [user]: userData,
       };
       return contract;
     },
-    // state: (state) => (key) => {
-    //   return state[key];
-    // },
     msps: (state, getters, rootState) => {
       return {
         user: rootState.user.organization.mspid,
@@ -184,7 +201,7 @@ const newDocumentModule = {
     partnerData: {
       namespaced,
       state: () => ({
-        bankDetails: defaultBankDetailsState(),
+        // bankDetails: defaultBankDetailsState(),
         signatures: defaultSignaturesState(),
         discountModels: null,
       }),
@@ -192,7 +209,7 @@ const newDocumentModule = {
     userData: {
       namespaced,
       state: () => ({
-        bankDetails: defaultBankDetailsState(),
+        // bankDetails: defaultBankDetailsState(),
         signatures: defaultSignaturesState(),
         discountModels: null,
       }),
