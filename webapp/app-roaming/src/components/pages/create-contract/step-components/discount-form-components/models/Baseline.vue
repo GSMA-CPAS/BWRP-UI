@@ -28,9 +28,7 @@
         <v-text-field label="Rate" v-model="baseline.rate" placeholder="0" />
       </v-col>
       <revenue-commitment-checkbox v-model="baseline.revenueCommitment" />
-    </v-row>
-    <v-row justify="center">
-      <app-button icon :svg="icons.add" @button-pressed="addBaseline" />
+      <app-button icon :svg="icons.add" @button-pressed="addBaseline" alt="Add new entry"/>
     </v-row>
   </fragment>
 </template>
