@@ -26,26 +26,26 @@
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
           <app-button @button-pressed="addSignature" :svg="icons.add" icon />
-        </v-col>        
+        </v-col>
       </v-row>
     </v-col>
   </fragment>
 </template>
 <script>
-import { required, minLength } from "vuelidate/lib/validators";
+import {required, minLength} from 'vuelidate/lib/validators';
 import {
   duplicateMixin,
   validationMixin,
-} from "@/utils/mixins/component-specfic";
+} from '@/utils/mixins/component-specfic';
 export default {
-  name: "signature-form",
-  description: "description",
+  name: 'signature-form',
+  description: 'description',
   mixins: [duplicateMixin, validationMixin],
   data() {
     return {
       signatures: [
         {
-          id: "signature-0",
+          id: 'signature-0',
           name: null,
           role: null,
         },
@@ -56,17 +56,17 @@ export default {
     signatures: {
       required,
       $each: {
-        name: { required, minLength: minLength(2) },
-        role: { required, minLength: minLength(2) },
+        name: {required, minLength: minLength(2)},
+        role: {required, minLength: minLength(2)},
       },
     },
   },
   components: {},
-  props: { value: Array },
+  props: {value: Array},
   watch: {
     signatures: {
       handler(val) {
-        this.$emit("input", val);
+        this.$emit('input', val);
       },
       deep: true,
     },
@@ -84,7 +84,7 @@ export default {
     },
     nameErrors(index) {
       const errors = [];
-      const { $dirty, name } = this.$v.signatures.$each.$iter[index];
+      const {$dirty, name} = this.$v.signatures.$each.$iter[index];
       if (!$dirty) return errors;
       !name.required && errors.push(`Please enter name`);
       !name.minLength && errors.push(`Name must have at least 2 letters.`);

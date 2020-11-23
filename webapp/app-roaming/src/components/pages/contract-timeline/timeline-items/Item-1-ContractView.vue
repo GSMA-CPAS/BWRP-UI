@@ -12,12 +12,12 @@
   </timeline-item>
 </template>
 <script>
-import { timelineMixin } from "@/utils/mixins/component-specfic";
-import Contract from "@/components/dialogs/Contract.vue";
+import {timelineMixin} from '@/utils/mixins/component-specfic';
+import Contract from '@/components/dialogs/Contract.vue';
 export default {
-  name: "item-1",
-  description: "description",
+  name: 'item-1',
+  description: 'description',
   mixins: [timelineMixin],
-  components: { Contract },
+  components: {Contract},
 };
 </script>

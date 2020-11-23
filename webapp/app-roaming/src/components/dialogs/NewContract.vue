@@ -31,14 +31,14 @@
   </app-dialog>
 </template>
 <script>
-import { dataMixin } from "@/utils/mixins/handle-data";
-import { PATHS } from "@/utils/Enums";
-import { timelineMixin } from "@/utils/mixins/component-specfic";
+import {dataMixin} from '@/utils/mixins/handle-data';
+import {PATHS} from '@/utils/Enums';
+import {timelineMixin} from '@/utils/mixins/component-specfic';
 
 export default {
-  name: "create-contract",
-  description: "This is the dialog view when creating a new contract.",
-  data: () => ({ partner: null, fileAsJSON: null }),
+  name: 'create-contract',
+  description: 'This is the dialog view when creating a new contract.',
+  data: () => ({partner: null, fileAsJSON: null}),
   computed: {
     partnerSelected() {
       return this.partner === null;

@@ -11,11 +11,11 @@
 </template>
 <script>
 export default {
-  name: "approve-button",
-  description: "description",
+  name: 'approve-button',
+  description: 'description',
   mixins: [],
   data() {
-    return { active: true };
+    return {active: true};
   },
   components: {},
   props: {},

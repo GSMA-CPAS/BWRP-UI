@@ -15,7 +15,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col v-for="{ label, key } in subRowLabels" :key="key">{{
+          <v-col v-for="{label, key} in subRowLabels" :key="key">{{
             label
           }}</v-col>
         </v-row>
@@ -35,19 +35,19 @@
   </fragment>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from 'vuex';
 export default {
-  name: "parties-header",
-  description: "description",
-  computed: { ...mapGetters("document", ["parties"]) },
+  name: 'parties-header',
+  description: 'description',
+  computed: {...mapGetters('document', ['parties'])},
   data() {
-    return { currentParty: 0 };
+    return {currentParty: 0};
   },
-  props: { single: Boolean, subRowLabels: Array },
+  props: {single: Boolean, subRowLabels: Array},
   methods: {
     switchPartner() {
       this.currentParty = this.currentParty === 0 ? 1 : 0;
-      this.$emit("party-switch", this.currentParty);
+      this.$emit('party-switch', this.currentParty);
     },
   },
 };

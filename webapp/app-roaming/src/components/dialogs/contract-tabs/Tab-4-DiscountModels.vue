@@ -25,7 +25,7 @@
       <v-divider vertical></v-divider>
       <v-col>
         <v-row class="font-weight-medium">
-          <v-col v-for="{ label, key } in otherInformationLabels" :key="key">{{
+          <v-col v-for="{label, key} in otherInformationLabels" :key="key">{{
             label
           }}</v-col>
         </v-row>
@@ -40,28 +40,28 @@
   </fragment>
 </template>
 <script>
-import PartiesHeader from "../components/PartiesHeader.vue";
-import { utilsMixin } from "@/utils/mixins/handle-data";
-import { timelineMixin } from "@/utils/mixins/component-specfic";
+import PartiesHeader from '../components/PartiesHeader.vue';
+import {utilsMixin} from '@/utils/mixins/handle-data';
+import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "tab-4",
-  label: "Discount Models",
+  name: 'tab-4',
+  label: 'Discount Models',
   description:
-    "In this tab the discount models of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
+    'In this tab the discount models of a contract are displayed. The tab is found in the contract timeline when clicking on "View Contract"',
   mixins: [utilsMixin, timelineMixin],
   components: {
     PartiesHeader,
   },
   methods: {
     renderModel(model) {
-      var path = null;
+      let path = null;
       switch (model) {
-        case "Flat IOT":
-          path = "FlatIOT";
+        case 'Flat IOT':
+          path = 'FlatIOT';
           break;
-        case "Baselines Incremental":
-        case "Baselines Non-Incremental":
-          path = "Baseline";
+        case 'Baselines Incremental':
+        case 'Baselines Non-Incremental':
+          path = 'Baseline';
           break;
         default:
           path = this._.upperFirst(this._.camelCase(model));
@@ -73,72 +73,98 @@ export default {
   computed: {
     otherInformationLabels() {
       const otherInformationLabels = [
-        "Overall Revenue Commitment",
-        "Currency for all Discounts",
-        "TADIG Codes",
-        "Additional Comments",
+        'Overall Revenue Commitment',
+        'Currency for all Discounts',
+        'TADIG Codes',
+        'Additional Comments',
       ];
       return this.labelsToCamelCase(otherInformationLabels);
     },
     labels() {
       const discountModelsLabels = [
-        "Model",
-        "Increment",
-        "Threshold",
-        "Rate",
-        "Revenue Commitment",
+        'Model',
+        'Increment',
+        'Threshold',
+        'Rate',
+        'Revenue Commitment',
       ];
       return this.labelsToCamelCase(discountModelsLabels);
     },
     overallRevenueCommitment() {
-      return { amount: 10000, currency: "EUR" };
+      return {amount: 10000, currency: 'EUR'};
     },
     testData() {
       return [
         {
-          service: "MOC",
-          model: "Flat IOT",
-          increment: "60 sec",
+          service: 'MOC',
+          model: 'Flat IOT',
+          increment: '60 sec',
           rate: 0,
           revenueCommitment: true,
         },
         {
-          service: "MOC Local",
-          model: "Balanced / Unbalanced",
-          increment: "1 sec",
-          balanced: { rate: 0, revenueCommitment: true },
-          unbalanced: { rate: 0, revenueCommitment: false },
+          service: 'MOC Local',
+          model: 'Balanced / Unbalanced',
+          increment: '1 sec',
+          balanced: {
+            rate: 0,
+            revenueCommitment: true,
+          },
+          unbalanced: {
+            rate: 0,
+            revenueCommitment: false,
+          },
         },
         {
-          service: "MOC Back Home",
-          model: "Baselines Incremental",
-          increment: "AA14",
+          service: 'MOC Back Home',
+          model: 'Baselines Incremental',
+          increment: 'AA14',
           baselines: [
-            { from: 0, to: 500, rate: 0.2, revenueCommitment: false },
-            { from: 500, to: Infinity, rate: 0.1, revenueCommitment: false },
+            {
+              from: 0,
+              to: 500,
+              rate: 0.2,
+              revenueCommitment: false,
+            },
+            {
+              from: 500,
+              to: Infinity,
+              rate: 0.1,
+              revenueCommitment: false,
+            },
           ],
         },
         {
-          service: "MOC EU/EEA",
-          model: "Baselines Non-Incremental",
-          increment: "1 sec",
+          service: 'MOC EU/EEA',
+          model: 'Baselines Non-Incremental',
+          increment: '1 sec',
           baselines: [
-            { from: 0, to: 600, rate: 0.25, revenueCommitment: true },
-            { from: 600, to: Infinity, rate: 0.125, revenueCommitment: false },
+            {
+              from: 0,
+              to: 600,
+              rate: 0.25,
+              revenueCommitment: true,
+            },
+            {
+              from: 600,
+              to: Infinity,
+              rate: 0.125,
+              revenueCommitment: false,
+            },
           ],
         },
         {
-          service: "MOC RoW",
-          model: "Revenue Commit",
-          increment: "60 sec",
+          service: 'MOC RoW',
+          model: 'Revenue Commit',
+          increment: '60 sec',
           threshold: 10000,
           rate: 0.1,
           revenueCommitment: true,
         },
         {
-          service: "Data",
-          model: "Unlimited Commit",
-          increment: "60 sec",
+          service: 'Data',
+          model: 'Unlimited Commit',
+          increment: '60 sec',
           revenueCommitment: false,
         },
       ];

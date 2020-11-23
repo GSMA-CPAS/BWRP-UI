@@ -1,60 +1,60 @@
-import { mapActions, mapGetters, mapState } from "vuex";
-import { utilsMixin } from "./handle-data";
+import {mapActions, mapGetters, mapState} from 'vuex';
+import {utilsMixin} from './handle-data';
 const bankFieldsMixin = {
   mixins: [utilsMixin],
   computed: {
     fields() {
       const bankLabels = [
-        "Contact Name (Accounting)",
-        "Contact Phone (Accounting)",
-        "Contact Email (Accounting)",
-        "Contact Name (Contract)",
-        "Contact Phone (Contract)",
-        "Contact Email (Contract)",
-        "IBAN",
-        "SWIFT/BIC",
-        "Bank Name",
-        "Bank Address",
-        "Bank Account Name",
+        'Contact Name (Accounting)',
+        'Contact Phone (Accounting)',
+        'Contact Email (Accounting)',
+        'Contact Name (Contract)',
+        'Contact Phone (Contract)',
+        'Contact Email (Contract)',
+        'IBAN',
+        'SWIFT/BIC',
+        'Bank Name',
+        'Bank Address',
+        'Bank Account Name',
       ];
       return this.labelsToCamelCase(bankLabels);
     },
   },
 };
-export { bankFieldsMixin };
+export {bankFieldsMixin};
 
 const discountModelsMixin = {
-  props: { data: Object },
+  props: {data: Object},
 };
-export { discountModelsMixin };
+export {discountModelsMixin};
 
 const duplicateMixin = {
   computed: {
     icons() {
       return {
-        add: "plus",
-        remove: "delete",
-        edit: "pencil",
+        add: 'plus',
+        remove: 'delete',
+        edit: 'pencil',
       };
     },
   },
 };
-export { duplicateMixin };
+export {duplicateMixin};
 
 const appStateMixin = {
   methods: {
-    ...mapActions("app-state", ["setErrorVisibility"]),
+    ...mapActions('app-state', ['setErrorVisibility']),
   },
   computed: {
-    ...mapState("app-state", [
-      "errorResponse",
-      "showError",
-      "isLoading",
-      "hideOverlay",
+    ...mapState('app-state', [
+      'errorResponse',
+      'showError',
+      'isLoading',
+      'hideOverlay',
     ]),
   },
 };
-export { appStateMixin };
+export {appStateMixin};
 
 const timelineMixin = {
   mixins: [utilsMixin],
@@ -62,43 +62,45 @@ const timelineMixin = {
     parseSignature(signature) {
       return `${signature?.name}, ${signature?.role}`;
     },
-    ...mapActions("document/new", ["startContract"]),
-    ...mapActions("partners", ["loadPartners"]),
-    ...mapActions("document", ["loadData", "signDocument"]),
-    ...mapGetters("document", ["exists"]),
+    ...mapActions('document/new', ['startContract']),
+    ...mapActions('partners', ['loadPartners']),
+    ...mapActions('document', ['loadData', 'signDocument']),
+    ...mapGetters('document', ['exists']),
   },
   computed: {
-    ...mapState("app-state", ["signing"]),
-    ...mapState("document", {
+    ...mapState('app-state', ['signing']),
+    ...mapState('document', {
       generalInformation: (state) => state.document.data.generalInformation,
       documentData: (state) => state.document.data,
     }),
-    ...mapGetters("document", [
-      "bankDetails",
-      "signatures",
-      "parties",
-      "name",
-      "isSigned",
-      "fromMSP",
-      "toMSP",
+    ...mapGetters('document', [
+      'bankDetails',
+      'signatures',
+      'parties',
+      'name',
+      'isSigned',
+      'fromMSP',
+      'toMSP',
     ]),
-    ...mapGetters("partners", ["list"]),
+    ...mapGetters('partners', ['list']),
   },
 };
-export { timelineMixin };
+export {timelineMixin};
 
 const validationMixin = {
   methods: {
     twoFormsValidate(key) {
       if (this.activeValidation) {
-        var valid = false;
+        let valid = false;
         const data = {};
         for (const key in this.$refs) {
-          const { $v, _data } = this.$refs[key];
-          data[key] = key === "signatures" ? _data.signatures : _data;
-          const { $touch, $invalid } = $v;
-          $touch();
-          valid = !$invalid;
+          if (Object.prototype.hasOwnProperty.call(this.$refs, key)) {
+            const {$v, _data} = this.$refs[key];
+            data[key] = key === 'signatures' ? _data.signatures : _data;
+            const {$touch, $invalid} = $v;
+            $touch();
+            valid = !$invalid;
+          }
         }
         valid &&
           this.nextStep({
@@ -110,7 +112,7 @@ const validationMixin = {
     },
     validate(key) {
       if (this.activeValidation) {
-        const { $touch, $invalid } = this.$v;
+        const {$touch, $invalid} = this.$v;
         $touch();
         const valid = !$invalid;
         valid &&
@@ -123,8 +125,8 @@ const validationMixin = {
       this.nextStep();
     },
 
-    ...mapActions("app-state", ["loadError"]),
-    ...mapActions("document/new", ["nextStep", "previousStep"]),
+    ...mapActions('app-state', ['loadError']),
+    ...mapActions('document/new', ['nextStep', 'previousStep']),
     requiredError(field) {
       const errors = [];
       if (!this.$v[field].$dirty) return errors;
@@ -148,7 +150,7 @@ const validationMixin = {
   },
   computed: {
     activeValidation: () => false,
-    ...mapGetters("document/new", ["state", "msps"]),
+    ...mapGetters('document/new', ['msps']),
   },
 };
-export { validationMixin };
+export {validationMixin};

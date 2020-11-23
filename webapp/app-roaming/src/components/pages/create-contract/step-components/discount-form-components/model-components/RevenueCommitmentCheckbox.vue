@@ -9,16 +9,16 @@
 </template>
 <script>
 export default {
-  name: "revenue-commitment-checkbox",
-  description: "description",
-  props: { value: Boolean },
+  name: 'revenue-commitment-checkbox',
+  description: 'description',
+  props: {value: Boolean},
   computed: {
     checked: {
       get() {
         return this.value;
       },
       set(value) {
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
     },
   },

@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import DisabledThreshold from "../model-components/DisabledThreshold.vue";
-import DisabledCondition from "../model-components/DisabledCondition.vue";
-import RevenueCommitmentCheckbox from "../model-components/RevenueCommitmentCheckbox.vue";
+import DisabledThreshold from '../model-components/DisabledThreshold.vue';
+import DisabledCondition from '../model-components/DisabledCondition.vue';
+import RevenueCommitmentCheckbox from '../model-components/RevenueCommitmentCheckbox.vue';
 export default {
-  name: "flat-iot",
-  model: "Flat IOT",
+  name: 'flat-iot',
+  model: 'Flat IOT',
   data() {
-    return { rate: null, revenueCommitment: false };
+    return {rate: null, revenueCommitment: false};
   },
   components: {
     RevenueCommitmentCheckbox,

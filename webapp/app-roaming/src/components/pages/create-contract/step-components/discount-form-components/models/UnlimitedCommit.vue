@@ -10,14 +10,14 @@
 </template>
 
 <script>
-import RevenueCommitmentCheckbox from "../model-components/RevenueCommitmentCheckbox";
-import DisabledThreshold from "../model-components/DisabledThreshold.vue";
-import DisabledCondition from "../model-components/DisabledCondition.vue";
+import RevenueCommitmentCheckbox from '../model-components/RevenueCommitmentCheckbox';
+import DisabledThreshold from '../model-components/DisabledThreshold.vue';
+import DisabledCondition from '../model-components/DisabledCondition.vue';
 export default {
-  name: "unlimited-commit",
-  model: "Unlimited Commit",
+  name: 'unlimited-commit',
+  model: 'Unlimited Commit',
   data() {
-    return { revenueCommitment: false };
+    return {revenueCommitment: false};
   },
   components: {
     DisabledCondition,

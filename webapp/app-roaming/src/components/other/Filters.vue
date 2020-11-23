@@ -21,9 +21,9 @@
 </template>
 <script>
 export default {
-  name: "filters",
-  description: "This component is used to filter documents or settlements.",
-  props: { onClear: Function },
+  name: 'filters',
+  description: 'This component is used to filter documents or settlements.',
+  props: {onClear: Function},
   methods: {
     distinct(values, key) {
       return [...new Set(values.map((x) => x[this._.camelCase(key)]))];

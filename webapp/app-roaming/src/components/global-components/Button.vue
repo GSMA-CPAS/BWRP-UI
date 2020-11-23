@@ -9,8 +9,8 @@
 
 <script>
 export default {
-  name: "app-button",
-  description: "Custom vuetify button to add more flexibility",
+  name: 'app-button',
+  description: 'Custom vuetify button to add more flexibility',
   props: {
     to: String,
     label: String,
@@ -60,7 +60,7 @@ export default {
     },
     color: {
       type: String,
-      default: "primary",
+      default: 'primary',
     },
     small: {
       type: Boolean,
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     handleClick(e) {
-      this.$emit("button-pressed", e);
+      this.$emit('button-pressed', e);
     },
   },
 };

@@ -6,24 +6,24 @@
   </app-dialog>
 </template>
 <script>
-import Tabs from "../global-components/Tabs.vue";
+import Tabs from '../global-components/Tabs.vue';
 export default {
   components: {
     Tabs,
   },
-  name: "contract",
-  description: "This is the dialog view for the contract information.",
+  name: 'contract',
+  description: 'This is the dialog view for the contract information.',
   computed: {
     tabs() {
       const components = require.context(
-        "./contract-tabs",
-        false,
-        /(Tab-)\d-\w*\.(vue|js)$/
+          './contract-tabs',
+          false,
+          /(Tab-)\d-\w*\.(vue|js)$/
       );
       const tabs = components.keys().map((x) => {
         const component = components(x).default;
-        const { label, name } = component;
-        return { key: name, label, component };
+        const {label, name} = component;
+        return {key: name, label, component};
       });
       return tabs;
     },

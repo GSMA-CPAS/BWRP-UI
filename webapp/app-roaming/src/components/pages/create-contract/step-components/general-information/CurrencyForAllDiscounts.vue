@@ -3,8 +3,8 @@
 </template>
 <script>
 export default {
-  name: "currency-for-all-discounts",
-  description: "description",
+  name: 'currency-for-all-discounts',
+  description: 'description',
   props: {
     value: String,
   },
@@ -14,7 +14,7 @@ export default {
         return this.value;
       },
       set(value) {
-        this.$emit("input", value);
+        this.$emit('input', value);
       },
     },
   },

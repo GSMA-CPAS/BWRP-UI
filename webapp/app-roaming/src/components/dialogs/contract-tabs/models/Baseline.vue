@@ -9,7 +9,7 @@
     </v-row>
     <v-divider />
     <v-row
-      v-for="({ to, from, rate, revenueCommitment }, index) in data.baselines"
+      v-for="({to, from, rate, revenueCommitment}, index) in data.baselines"
       :key="index"
     >
       <v-col>{{ `Baseline ${index + 1}` }}</v-col>
@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import { discountModelsMixin } from "@/utils/mixins/component-specfic";
+import {discountModelsMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "baseline-template",
-  model: "Baseline",
+  name: 'baseline-template',
+  model: 'Baseline',
   mixins: [discountModelsMixin],
 };
 </script>

@@ -10,8 +10,8 @@
 </template>
 <script>
 export default {
-  name: "tadig-codes",
-  description: "description",
+  name: 'tadig-codes',
+  description: 'description',
   props: {
     value: Object,
   },

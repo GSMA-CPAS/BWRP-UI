@@ -14,13 +14,13 @@
   </fragment>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from 'vuex';
 export default {
-  name: "parties-row",
-  description: "description",
-  props: { label: String },
+  name: 'parties-row',
+  description: 'description',
+  props: {label: String},
   computed: {
-    ...mapGetters("document/new", ["msps"]),
+    ...mapGetters('document/new', ['msps']),
   },
 };
 </script>

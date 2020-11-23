@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import RevenueCommitmentCheckbox from "../model-components/RevenueCommitmentCheckbox";
-import DisabledCondition from "../model-components/DisabledCondition.vue";
+import RevenueCommitmentCheckbox from '../model-components/RevenueCommitmentCheckbox';
+import DisabledCondition from '../model-components/DisabledCondition.vue';
 
 export default {
-  name: "revenue-commit",
-  model: "Revenue Commit",
+  name: 'revenue-commit',
+  model: 'Revenue Commit',
   data() {
-    return { threshold: null, rate: null, revenueCommitment: false };
+    return {threshold: null, rate: null, revenueCommitment: false};
   },
   components: {
     DisabledCondition,
@@ -27,6 +27,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

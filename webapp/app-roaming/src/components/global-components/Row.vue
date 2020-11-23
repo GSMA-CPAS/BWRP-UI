@@ -21,12 +21,12 @@
 </template>
 <script>
 export default {
-  name: "row",
-  description: "This is a custom row",
+  name: 'row',
+  description: 'This is a custom row',
   props: {
-    label: { type: String, default: "Missing Row Label" },
+    label: {type: String, default: 'Missing Row Label'},
     type: String,
-    cols: { type: String, default: "3" },
+    cols: {type: String, default: '3'},
     noDivider: Boolean,
     fillerCol: Boolean,
   },

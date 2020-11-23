@@ -7,18 +7,18 @@
   </fragment>
 </template>
 <script>
-import TadigCodes from "../general-information/TadigCodes.vue";
-import CurrencyForAllDiscounts from "../general-information/CurrencyForAllDiscounts.vue";
+import TadigCodes from '../general-information/TadigCodes.vue';
+import CurrencyForAllDiscounts from '../general-information/CurrencyForAllDiscounts.vue';
 export default {
-  name: "general-info-party-form",
-  description: "description",
+  name: 'general-info-party-form',
+  description: 'description',
   mixins: [],
   data: () => ({}),
   components: {
     CurrencyForAllDiscounts,
     TadigCodes,
   },
-  props: { value: Object },
+  props: {value: Object},
   watch: {},
   methods: {},
   computed: {},

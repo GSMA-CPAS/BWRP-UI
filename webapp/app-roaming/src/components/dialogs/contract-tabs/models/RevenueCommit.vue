@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import { discountModelsMixin } from "@/utils/mixins/component-specfic";
+import {discountModelsMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "revenue-commit",
-  model: "Revenue Commit",
+  name: 'revenue-commit',
+  model: 'Revenue Commit',
   mixins: [discountModelsMixin],
 };
 </script>

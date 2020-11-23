@@ -12,10 +12,10 @@
 </template>
 <script>
 export default {
-  name: "overall-revenue-commitment",
-  description: "description",
+  name: 'overall-revenue-commitment',
+  description: 'description',
   data() {
-    return { amount: null, currency: null };
+    return {amount: null, currency: null};
   },
 };
 </script>

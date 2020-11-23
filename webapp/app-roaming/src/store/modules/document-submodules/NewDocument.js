@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import router from "@/router";
-import { PATHS } from "@/utils/Enums";
-import Vue from "vue";
+import router from '@/router';
+import {PATHS} from '@/utils/Enums';
+import Vue from 'vue';
 
-const { log } = console;
+const {log} = console;
 const namespaced = true;
 
 const defaultState = () => ({
@@ -19,11 +19,11 @@ const defaultState = () => ({
     authors: null,
     userData: {
       currencyForAllDiscounts: null,
-      tadigCodes: { codes: null, includeContractParty: false },
+      tadigCodes: {codes: null, includeContractParty: false},
     },
     partnerData: {
       currencyForAllDiscounts: null,
-      tadigCodes: { codes: null, includeContractParty: false },
+      tadigCodes: {codes: null, includeContractParty: false},
     },
   },
 });
@@ -45,7 +45,7 @@ const defaultBankDetailsState = () => ({
 
 const defaultSignaturesState = () => [
   {
-    id: "signature-0",
+    id: 'signature-0',
     name: null,
     role: null,
   },
@@ -56,15 +56,15 @@ const newDocumentModule = {
   state: defaultState(),
   mutations: {
     updateGeneralInformation(state, payload) {
-      const { key, value } = payload;
+      const {key, value} = payload;
       state.generalInformation[key] = value;
     },
     updateBankDetails(state, payload) {
-      const { key, value } = payload;
+      const {key, value} = payload;
       Object.assign(state[key].bankDetails, value);
     },
     updateSignatures(state, payload) {
-      const { key, value } = payload;
+      const {key, value} = payload;
       Object.assign(state[key].signatures, value);
     },
     DECREMENT_STEP(state) {
@@ -81,11 +81,13 @@ const newDocumentModule = {
     },
     READ_JSON: (state, json) => {
       for (const key in json) {
-        state[key] = json[key];
+        if (Object.prototype.hasOwnProperty.call(json, key)) {
+          state[key] = json[key];
+        }
       }
     },
     SAVE_DATA(state, payload) {
-      const { key, data } = payload;
+      const {key, data} = payload;
       state[key] = data;
     },
     resetState(state) {
@@ -98,21 +100,21 @@ const newDocumentModule = {
   },
   actions: {
     startContract(
-      { commit, dispatch, rootGetters, getters, rootState, state },
-      payload
+        {commit, dispatch, rootGetters, getters, rootState, state},
+        payload,
     ) {
-      const user = rootGetters["user/organizationMSPID"];
-      const { partner, fileAsJSON } = payload;
-      var index = 0;
+      const user = rootGetters['user/organizationMSPID'];
+      const {partner, fileAsJSON} = payload;
+      let index = 0;
 
-      for (let key in fileAsJSON) {
-        if (key === "generalInformation") {
+      for (const key in fileAsJSON) {
+        if (key === 'generalInformation') {
           continue;
         } else {
           Object.defineProperty(
-            fileAsJSON,
-            index === 0 ? "userData" : "partnerData",
-            Object.getOwnPropertyDescriptor(fileAsJSON, key)
+              fileAsJSON,
+            index === 0 ? 'userData' : 'partnerData',
+            Object.getOwnPropertyDescriptor(fileAsJSON, key),
           );
           if (index === 0) {
             !(key === user) && delete fileAsJSON[key];
@@ -122,22 +124,19 @@ const newDocumentModule = {
         }
         index++;
       }
-      commit("READ_JSON", fileAsJSON);
-      commit("SET_PARTNER", partner);
+      commit('READ_JSON', fileAsJSON);
+      commit('SET_PARTNER', partner);
     },
-    nextStep({ commit, dispatch, rootGetters, getters, rootState, state }) {
-      commit("INCREMENT_STEP");
+    nextStep({commit, dispatch, rootGetters, getters, rootState, state}) {
+      commit('INCREMENT_STEP');
     },
-    previousStep({ commit, dispatch, rootGetters, getters, rootState, state }) {
-      commit("DECREMENT_STEP");
+    previousStep({commit, dispatch, rootGetters, getters, rootState, state}) {
+      commit('DECREMENT_STEP');
     },
-    setStep(
-      { commit, dispatch, rootGetters, getters, rootState, state },
-      step
-    ) {
-      commit("SET_STEP", step);
+    setStep({commit, dispatch, rootGetters, getters, rootState, state}, step) {
+      commit('SET_STEP', step);
     },
-    async saveContract({
+    saveContract({
       commit,
       dispatch,
       rootGetters,
@@ -145,43 +144,45 @@ const newDocumentModule = {
       rootState,
       state,
     }) {
-      const data = getters.contract;
-      const toMSP = getters.msps.partner;
-      await Vue.axios
-        .post(
-          "/documents",
-          { type: "contract", toMSP, data },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          console.log(
-            `%c Successfully added new contract!`,
-            "color:#5cb85c; font-weight:800"
-          );
-          router.push(PATHS.contracts);
-        })
-        .catch((err) => {
-          console.log(err);
-          router.push(PATHS.contracts);
-        });
-      commit("resetState");
+      dispatch('app-state/loading', true, {root: true});
+      setTimeout(()=>{
+        const data = getters.contract;
+        const toMSP = getters.msps.partner;
+        Vue.axios
+            .post(
+                '/documents',
+                {type: 'contract', toMSP, data},
+                {withCredentials: true},
+            )
+            .then((res) => {
+              console.log(
+                  `%c Successfully added new contract!`,
+                  'color:#5cb85c; font-weight:800',
+              );
+              commit('resetState');
+              router.push(PATHS.contracts);
+            })
+            .catch((err) => {
+              console.log(err);
+              router.push(PATHS.contracts);
+            });
+      }, 50);
     },
   },
   getters: {
     contract: (state, getters, rootState) => {
       const user = getters.msps.user;
-      const { generalInformation, partner, partnerData, userData } = state;
+      const {generalInformation, partner, partnerData, userData} = state;
       const {
         userData: gUserData,
         partnerData: gPartnerData,
+        ...otherVariables
       } = generalInformation;
 
-      delete generalInformation.partnerData;
-      delete generalInformation.userData;
 
       const contract = {
         generalInformation: {
-          ...generalInformation,
+          otherVariables,
           [partner]: gPartnerData,
           [user]: gUserData,
         },
