@@ -4,6 +4,9 @@ import router from "./router";
 import { vuetify } from "./plugins/all-plugins";
 import "./utils/filters/global-filters";
 
+import titleMixin from "./utils/mixins/page-title";
+Vue.mixin(titleMixin);
+
 // register global components
 const components = require.context(
   "@/components/global-components/",

@@ -38,9 +38,10 @@
     export default {
 
         name: 'UserCreate',
-
+        title: 'User Creation',
         data: () => ({
             loading: false,
+
             breadcrumbItems: [
                 {
                     text: 'Users'.toUpperCase(),

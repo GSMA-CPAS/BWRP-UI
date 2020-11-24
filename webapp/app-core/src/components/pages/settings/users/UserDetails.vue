@@ -98,7 +98,7 @@
     export default {
 
         name: 'UserDetails',
-
+        title: 'User Details',
         data: () => ({
             loading: true,
             breadcrumbItems: [

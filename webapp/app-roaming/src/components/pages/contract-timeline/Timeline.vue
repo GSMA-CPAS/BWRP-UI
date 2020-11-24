@@ -30,6 +30,7 @@ export default {
     Item1ContractView,
   },
   name: "timeline",
+  title: 'Contract Timeline',
   description: "Component: Timeline",
   mixins: [timelineMixin],
   beforeMount() {

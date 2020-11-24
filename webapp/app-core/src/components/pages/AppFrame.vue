@@ -1,7 +1,7 @@
 <template>
     <layout :loading="loading">
         <div>
-            <iframe v-if="app" class="app-frame" :src="'/app/' + app.packageName"></iframe>
+            <iframe v-if="app" id="app-frame" class="app-frame" :src="'/app/' + app.packageName"></iframe>
         </div>
     </layout>
 

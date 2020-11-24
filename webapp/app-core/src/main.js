@@ -4,6 +4,9 @@ import vuetify from './plugins/vuetify';
 import Axios from 'axios';
 import router from './router';
 
+import titleMixin from "./utils/mixins/page-title";
+Vue.mixin(titleMixin);
+
 import Modal from '@/components/dialog/Plugin';
 Vue.use(Modal);
 

@@ -37,7 +37,7 @@
     export default {
 
         name: 'UserList',
-
+        title: 'Webapp Users',
         data: () => ({
             loading: true,
             breadcrumbItems: [

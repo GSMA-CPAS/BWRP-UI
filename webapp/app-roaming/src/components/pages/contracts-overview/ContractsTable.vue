@@ -39,7 +39,7 @@
 import { mapState } from "vuex";
 import Filters from "@/components/other/Filters.vue";
 export default {
-  name: "contracts-table",
+  name: "contracts-table",  
   description: "In this table, the documents are displayed.",
   data() {
     return {
