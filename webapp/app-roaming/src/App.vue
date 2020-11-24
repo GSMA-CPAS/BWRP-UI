@@ -3,7 +3,7 @@
     <error-overlay />
     <breadcrumb />
     <v-main class="background">
-      <v-container fill-height fluid v-if="isLoading">
+      <v-container fill-height fluid v-show="isLoading">
         <v-row no-gutters align="center" justify="center">
           <v-progress-circular :size="50" color="primary" indeterminate />
         </v-row>
@@ -14,27 +14,27 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import Breadcrumb from "./components/navigation/Breadcrumb.vue";
-import ErrorOverlay from "./components/other/ErrorOverlay.vue";
-import { appStateMixin } from "@/utils/mixins/component-specfic";
+import {mapState, mapActions} from 'vuex';
+import Breadcrumb from './components/navigation/Breadcrumb.vue';
+import ErrorOverlay from './components/other/ErrorOverlay.vue';
+import {appStateMixin} from '@/utils/mixins/component-specfic';
 
 export default {
   components: {
     ErrorOverlay,
     Breadcrumb,
   },
-  name: "app",
+  name: 'app',
   mixins: [appStateMixin],
   methods: {
-    ...mapActions(["setup", "loadDocuments"]),
+    ...mapActions(['setup', 'loadDocuments']),
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(['user']),
   },
   watch: {
     async $route(to, from) {
-      if (from.name === "create-page") {
+      if (from.name === 'create-page') {
         await this.loadDocuments();
       }
     },

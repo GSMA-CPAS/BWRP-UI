@@ -19,13 +19,13 @@
   </fragment>
 </template>
 <script>
-import { timelineMixin } from "@/utils/mixins/component-specfic";
-import PartiesHeader from "../components/PartiesHeader.vue";
+import {timelineMixin} from '@/utils/mixins/component-specfic';
+import PartiesHeader from '../components/PartiesHeader.vue';
 export default {
-  name: "tab-3",
-  label: "Signatures",
+  name: 'tab-3',
+  label: 'Signatures',
   description:
-    "In this tab the signatures of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
+    'In this tab the signatures of a contract are displayed. The tab is found in the contract timeline when clicking on "View Contract"',
   mixins: [timelineMixin],
   data() {
     return {};
@@ -36,7 +36,7 @@ export default {
   methods: {
     parseSignature(signature) {
       return `${this.$options.filters.isNil(
-        signature?.name
+        signature?.name,
       )}, ${this.$options.filters.isNil(signature?.role)}`;
     },
   },

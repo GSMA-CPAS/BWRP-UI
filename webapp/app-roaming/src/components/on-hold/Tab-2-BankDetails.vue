@@ -10,16 +10,16 @@
   </fragment>
 </template>
 <script>
-import PartiesHeader from "../components/PartiesHeader.vue";
+import PartiesHeader from '../components/PartiesHeader.vue';
 import {
   bankFieldsMixin,
   timelineMixin,
-} from "@/utils/mixins/component-specfic";
+} from '@/utils/mixins/component-specfic';
 export default {
-  name: "tab-2",
-  label: "Bank details",
+  name: 'tab-2',
+  label: 'Bank details',
   description:
-    "In this tab the bank details of a contract are displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
+    'In this tab the bank details of a contract are displayed. The tab is found in the contract timeline when clicking on \'View Contract\'',
   mixins: [bankFieldsMixin, timelineMixin],
   components: {
     PartiesHeader,

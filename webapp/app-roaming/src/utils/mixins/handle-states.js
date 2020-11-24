@@ -1,6 +1,6 @@
 const handleComponentVisibilityMixin = {
   data() {
-    return { component: false };
+    return {component: false};
   },
   methods: {
     hide() {
@@ -19,7 +19,7 @@ const handleComponentVisibilityMixin = {
     },
   },
 };
-export { handleComponentVisibilityMixin };
+export {handleComponentVisibilityMixin};
 const counterMixin = {
   data() {
     return {
@@ -38,4 +38,4 @@ const counterMixin = {
     },
   },
 };
-export { counterMixin };
+export {counterMixin};

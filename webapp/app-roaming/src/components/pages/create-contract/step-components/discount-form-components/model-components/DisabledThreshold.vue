@@ -5,6 +5,6 @@
 </template>
 <script>
 export default {
-  name: "disabled-threshold",
+  name: 'disabled-threshold',
 };
 </script>

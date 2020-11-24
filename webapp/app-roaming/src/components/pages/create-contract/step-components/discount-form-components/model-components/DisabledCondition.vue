@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  name: "disabled-commitment",
-  props: ["placeholder"],
+  name: 'disabled-commitment',
+  props: ['placeholder'],
 };
 </script>

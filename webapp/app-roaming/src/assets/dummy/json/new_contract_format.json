@@ -9,15 +9,27 @@
     "authors": "fd",
     "TMUS": {
       "currencyForAllDiscounts": "JPY",
-      "tadigCodes": { "codes": "dfd", "includeContractParty": true }
+      "tadigCodes": {
+        "codes": "dfd",
+        "includeContractParty": true
+      }
     },
     "DTAG": {
       "currencyForAllDiscounts": "EUR",
-      "tadigCodes": { "codes": "fds", "includeContractParty": false }
+      "tadigCodes": {
+        "codes": "fds",
+        "includeContractParty": false
+      }
     }
   },
   "TMUS": {
-    "signatures": [{ "id": "signature-0", "name": "x", "role": "c" }],
+    "signatures": [
+      {
+        "id": "signature-0",
+        "name": "x",
+        "role": "c"
+      }
+    ],
     "bankDetails": {
       "iban": null,
       "bankName": null,
@@ -35,7 +47,13 @@
     "discountModels": null
   },
   "DTAG": {
-    "signatures": [{ "id": "signature-0", "name": "c", "role": "x" }],
+    "signatures": [
+      {
+        "id": "signature-0",
+        "name": "c",
+        "role": "x"
+      }
+    ],
     "bankDetails": {
       "iban": null,
       "bankName": "fsdfs",

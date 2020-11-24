@@ -28,26 +28,31 @@
         <v-text-field label="Rate" v-model="baseline.rate" placeholder="0" />
       </v-col>
       <revenue-commitment-checkbox v-model="baseline.revenueCommitment" />
-    </v-row>
-    <v-row justify="center">
-      <app-button icon :svg="icons.add" @button-pressed="addBaseline" />
+      <v-col cols="1" class="mr-1">
+        <app-button
+          icon
+          :svg="icons.add"
+          @button-pressed="addBaseline"
+          alt="Add new entry"
+        />
+      </v-col>
     </v-row>
   </fragment>
 </template>
 
 <script>
-import RevenueCommitmentCheckbox from "../model-components/RevenueCommitmentCheckbox";
-import { duplicateMixin } from "@/utils/mixins/component-specfic";
-import { required, numeric } from "vuelidate/lib/validators";
-import DisabledCondition from "../model-components/DisabledCondition.vue";
+import RevenueCommitmentCheckbox from '../model-components/RevenueCommitmentCheckbox';
+import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {required, numeric} from 'vuelidate/lib/validators';
+import DisabledCondition from '../model-components/DisabledCondition.vue';
 export default {
-  name: "baseline-template",
-  model: "Baseline",
+  name: 'baseline-template',
+  model: 'Baseline',
   mixins: [duplicateMixin],
   data() {
     return {
       baselines: [
-        { from: 0, to: Infinity, rate: null, revenueCommitment: false },
+        {from: 0, to: Infinity, rate: null, revenueCommitment: false},
       ],
     };
   },
@@ -56,9 +61,9 @@ export default {
     baselines: {
       required,
       $each: {
-        from: { required, numeric },
-        to: { required, numeric },
-        rate: { required, numeric },
+        from: {required, numeric},
+        to: {required, numeric},
+        rate: {required, numeric},
       },
     },
   },
@@ -68,7 +73,7 @@ export default {
   },
   methods: {
     addBaseline() {
-      const { to, rate } = this.baselines[this.lastIndex];
+      const {to, rate} = this.baselines[this.lastIndex];
       this.baselines.push({
         from: to,
         to: Infinity,
@@ -77,7 +82,7 @@ export default {
       });
     },
     updateThreshold(index) {
-      const { from, to } = this.baselines[index];
+      const {from, to} = this.baselines[index];
       index > 0 && (this.baselines[index - 1].to = from);
       index !== this.lastIndex && (this.baselines[index + 1].from = to);
     },

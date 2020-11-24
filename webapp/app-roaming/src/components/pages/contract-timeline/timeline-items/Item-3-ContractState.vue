@@ -13,7 +13,7 @@
 </template>
 <script>
 export default {
-  name: "item-3",
-  description: "description",
+  name: 'item-3',
+  description: 'description',
 };
 </script>

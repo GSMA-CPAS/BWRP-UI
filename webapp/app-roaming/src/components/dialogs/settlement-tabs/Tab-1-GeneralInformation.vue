@@ -74,13 +74,13 @@
   </fragment>
 </template>
 <script>
-import { timelineMixin } from "@/utils/mixins/component-specfic";
-import PartiesHeader from "../components/PartiesHeader.vue";
+import {timelineMixin} from '@/utils/mixins/component-specfic';
+import PartiesHeader from '../components/PartiesHeader.vue';
 export default {
-  name: "tab-1",
-  label: "General Information",
+  name: 'tab-1',
+  label: 'General Information',
   description:
-    "In this tab the general information of a settlement is displayed. The tab is found in the contract timeline when clicking on 'View Settlement'",
+    'In this tab the general information of a settlement is displayed. The tab is found in the contract timeline when clicking on \'View Settlement\'',
   mixins: [timelineMixin],
   components: {
     PartiesHeader,

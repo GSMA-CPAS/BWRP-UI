@@ -1,6 +1,6 @@
-import store from "../store/index";
-import Vue from "vue";
-import Vuex from "vuex";
+import store from '../store/index';
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
 

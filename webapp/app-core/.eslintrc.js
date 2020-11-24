@@ -12,11 +12,11 @@ module.exports = {
     parser: "babel-eslint"
   },
   rules: {
-    "no-console": "warn",
+    "no-console": "off",
     "require-jsdoc": "off",
     "comma-dangle": "off",
     "max-len": [ "warn", {
-      "code": 360
+      "code": 240
     }],
   }
 }

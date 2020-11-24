@@ -72,15 +72,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import {duplicateMixin} from "@/utils/mixins/component-specfic";
-import RatingPlanInput from "./discount-form-components/RatingPlanInput";
 import ConditionPicker from "./discount-form-components/ConditionPicker";
-/*import DiscountPicker from "./discount-form-components/DiscountPicker.vue";
-import OverallRevenueCommitment from "./discount-form-components/OverallRevenueCommitment.vue";
-import AdditionalComments from "./discount-form-components/AdditionalComments.vue";
-import CurrencyForAllDiscounts from "./discount-form-components/CurrencyForAllDiscounts.vue";
-import TadigCodes from "./discount-form-components/TadigCodes.vue";
-import AdditionalComments from "./discount-form-components/AdditionalComments.vue";*/
+
 export default {
   name: "discount-form",
   description: "description",

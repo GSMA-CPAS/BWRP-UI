@@ -18,11 +18,11 @@
   </v-overlay>
 </template>
 <script>
-import { appStateMixin } from "@/utils/mixins/component-specfic";
+import {appStateMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "error-overlay",
+  name: 'error-overlay',
   description:
-    "This is the overlay which appears when an api call returns an error.",
+    'This is the overlay which appears when an api call returns an error.',
   mixins: [appStateMixin],
 };
 </script>

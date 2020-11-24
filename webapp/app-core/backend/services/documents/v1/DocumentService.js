@@ -137,18 +137,20 @@ class DocumentService extends AbstractService {
         const storageKey = body.data.storageKey;
         try {
           // process all documents and delete in transient db after successful storage in local db
-          const availableDocumendIDs = await this.getBackendAdapter('blockchain').getPrivateDocumentIDs();
-          this.getLogger().debug('[DocumentService::/event] availableDocumendIDs: %s', JSON.stringify(availableDocumendIDs));
-          for (const i in availableDocumendIDs) {
-            this.getLogger().debug('[DocumentService::/event] i: %d , availableDocumendIDs[i]: %s ', i, availableDocumendIDs[i]);
-            const document = await this.getBackendAdapter('blockchain').getPrivateDocument(availableDocumendIDs[i]);
-            if (document) {
-              const privateDocument = this.converToPrivateDocument(document);
-              await this.processPrivateDocument(privateDocument);
-              const documentIsStored = await this.getBackendAdapter('localStorage').existsDocument(privateDocument.documentId);
-              if (documentIsStored) {
-                await this.getBackendAdapter('blockchain').deletePrivateDocument(privateDocument.documentId);
-                this.getLogger().info('[DocumentService::/event] Deleted document with id %s successfully', privateDocument.documentId);
+          const availableDocumentIDs = await this.getBackendAdapter('blockchain').getPrivateDocumentIDs();
+          this.getLogger().debug('[DocumentService::/event] availableDocumentIDs: %s', JSON.stringify(availableDocumentIDs));
+          for (const id in availableDocumentIDs) {
+            if (Object.prototype.hasOwnProperty.call(availableDocumentIDs, id)) {
+              this.getLogger().debug('[DocumentService::/event] id: %d , availableDocumentIDs[id]: %s ', id, availableDocumentIDs[id]);
+              const document = await this.getBackendAdapter('blockchain').getPrivateDocument(availableDocumentIDs[id]);
+              if (document) {
+                const privateDocument = this.converToPrivateDocument(document);
+                await this.processPrivateDocument(privateDocument);
+                const documentIsStored = await this.getBackendAdapter('localStorage').existsDocument(privateDocument.documentId);
+                if (documentIsStored) {
+                  await this.getBackendAdapter('blockchain').deletePrivateDocument(privateDocument.documentId);
+                  this.getLogger().info('[DocumentService::/event] Deleted document with id %s successfully', privateDocument.documentId);
+                }
               }
             }
           }

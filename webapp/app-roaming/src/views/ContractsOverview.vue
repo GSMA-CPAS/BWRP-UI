@@ -11,14 +11,14 @@
   </v-card>
 </template>
 <script>
-import { PATHS } from "@/utils/Enums";
-import NewContractVue from "../components/dialogs/NewContract.vue";
-import ContractsTable from "../components/pages/contracts-overview/ContractsTable.vue";
+import {PATHS} from '@/utils/Enums';
+import NewContractVue from '../components/dialogs/NewContract.vue';
+import ContractsTable from '../components/pages/contracts-overview/ContractsTable.vue';
 export default {
-  name: "contracts-overview",
-  text: "Contracts",
+  name: 'contracts-overview',
+  text: 'Contracts',
   path: PATHS.contracts,
-  description: "Overview page of all Contracts",
-  components: { NewContractDialog: NewContractVue, ContractsTable },
+  description: 'Overview page of all Contracts',
+  components: {NewContractDialog: NewContractVue, ContractsTable},
 };
 </script>

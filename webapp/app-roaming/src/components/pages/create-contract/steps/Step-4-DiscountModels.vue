@@ -17,10 +17,10 @@
 import Parties from "../step-components/Parties.vue";
 import { validationMixin } from "@/utils/mixins/component-specfic";
 import DiscountForm from "../step-components/DiscountForm.vue";
-// import ConditionForm from "../step-components/ConditionForm";
+
 export default {
-  name: "step-4",
-  description: "Discount Models",
+  name: 'step-4',
+  description: 'Discount Models',
   mixins: [validationMixin],
   components: {
     Parties,

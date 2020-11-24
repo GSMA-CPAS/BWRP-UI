@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import { discountModelsMixin } from "@/utils/mixins/component-specfic";
+import {discountModelsMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "unlimited-commit",
-  model: "Unlimited Commit",
+  name: 'unlimited-commit',
+  model: 'Unlimited Commit',
   mixins: [discountModelsMixin],
 };
 </script>

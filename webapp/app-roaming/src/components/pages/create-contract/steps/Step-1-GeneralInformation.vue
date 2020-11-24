@@ -66,7 +66,7 @@
           <v-row>
             <v-col>
               <div class="v-text-field">
-                {{ `Taxes ${taxesIncluded ? "included" : "excluded"}` }}
+                {{ `Taxes ${taxesIncluded ? 'included' : 'excluded'}` }}
               </div>
             </v-col>
             <v-col cols="2">
@@ -97,17 +97,17 @@
 </template>
 
 <script>
-import { required, minValue, maxValue } from "vuelidate/lib/validators";
-import moment from "moment";
-import { validationMixin } from "@/utils/mixins/component-specfic";
-import HelpTooltip from "@/components/other/HelpTooltip.vue";
-import { computeDateDifference } from "@/utils/Utils";
-import Parties from "../step-components/Parties.vue";
-import GeneralInformationPartyForm from "../step-components/discount-form-components/GeneralInformationPartyForm.vue";
+import {required, minValue, maxValue} from 'vuelidate/lib/validators';
+import moment from 'moment';
+import {validationMixin} from '@/utils/mixins/component-specfic';
+import HelpTooltip from '@/components/other/HelpTooltip.vue';
+import {computeDateDifference} from '@/utils/Utils';
+import Parties from '../step-components/Parties.vue';
+import GeneralInformationPartyForm from '../step-components/discount-form-components/GeneralInformationPartyForm.vue';
 
 export default {
-  name: "step-1",
-  description: "General Information",
+  name: 'step-1',
+  description: 'General Information',
   data: () => ({
     active: false,
   }),
@@ -118,13 +118,13 @@ export default {
   },
   mixins: [validationMixin],
   validations: {
-    name: { required },
-    type: { required },
-    startDate: { required, minValue: minValue(moment()._d) },
+    name: {required},
+    type: {required},
+    startDate: {required, minValue: minValue(moment()._d)},
     endDate: {
       required,
-      minValue: minValue(moment().add(1, "months")._d),
-      maxValue: maxValue(moment().add(25, "years")._d),
+      minValue: minValue(moment().add(1, 'months')._d),
+      maxValue: maxValue(moment().add(25, 'years')._d),
     },
   },
   components: {
@@ -134,9 +134,9 @@ export default {
   },
   watch: {
     active(isActive) {
-      isActive
-        ? (this.prolongationLength = 12)
-        : (this.prolongationLength = null);
+      isActive ?
+        (this.prolongationLength = 12) :
+        (this.prolongationLength = null);
     },
   },
   computed: {
@@ -145,8 +145,8 @@ export default {
         return this.$store.state.document.new.generalInformation.name;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "name",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'name',
           value,
         });
       },
@@ -156,8 +156,8 @@ export default {
         return this.$store.state.document.new.generalInformation.type;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "type",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'type',
           value,
         });
       },
@@ -167,8 +167,8 @@ export default {
         return this.$store.state.document.new.generalInformation.startDate;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "startDate",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'startDate',
           value,
         });
       },
@@ -178,8 +178,8 @@ export default {
         return this.$store.state.document.new.generalInformation.endDate;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "endDate",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'endDate',
           value,
         });
       },
@@ -187,11 +187,11 @@ export default {
     prolongationLength: {
       get() {
         return this.$store.state.document.new.generalInformation
-          .prolongationLength;
+            .prolongationLength;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "prolongationLength",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'prolongationLength',
           value,
         });
       },
@@ -201,8 +201,8 @@ export default {
         return this.$store.state.document.new.generalInformation.taxesIncluded;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "taxesIncluded",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'taxesIncluded',
           value,
         });
       },
@@ -212,8 +212,8 @@ export default {
         return this.$store.state.document.new.generalInformation.authors;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "authors",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'authors',
           value,
         });
       },
@@ -223,8 +223,8 @@ export default {
         return this.$store.state.document.new.generalInformation.userData;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "userData",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'userData',
           value,
         });
       },
@@ -234,8 +234,8 @@ export default {
         return this.$store.state.document.new.generalInformation.partnerData;
       },
       set(value) {
-        this.$store.commit("document/new/updateGeneralInformation", {
-          key: "partnerData",
+        this.$store.commit('document/new/updateGeneralInformation', {
+          key: 'partnerData',
           value,
         });
       },
@@ -248,7 +248,7 @@ export default {
       return diff ? diff : null;
     },
     contractTypes() {
-      return ["Normal", "Special"];
+      return ['Normal', 'Special'];
     },
   },
 };

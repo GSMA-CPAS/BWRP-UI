@@ -36,19 +36,19 @@
   </v-data-table>
 </template>
 <script>
-import { mapState } from "vuex";
-import Filters from "@/components/other/Filters.vue";
+import {mapState} from 'vuex';
+import Filters from '@/components/other/Filters.vue';
 export default {
-  name: "contracts-table",
-  description: "In this table, the documents are displayed.",
+  name: 'contracts-table',
+  description: 'In this table, the documents are displayed.',
   data() {
     return {
-      search: "",
+      search: '',
       headers: [
-        { text: "Document ID", value: "documentId", align: "start" },
-        { text: "From MSP", value: "fromMSP" },
-        { text: "To MSP", value: "toMSP" },
-        { text: "State", value: "state" },
+        {text: 'Document ID', value: 'documentId', align: 'start'},
+        {text: 'From MSP', value: 'fromMSP'},
+        {text: 'To MSP', value: 'toMSP'},
+        {text: 'State', value: 'state'},
       ],
     };
   },
@@ -66,7 +66,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["documents"]),
+    ...mapState(['documents']),
   },
 };
 </script>

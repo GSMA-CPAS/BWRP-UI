@@ -14,6 +14,7 @@ const appStateModule = {
       state.showError = isVisible;
     },
     SET_LOADING(state, isLoading) {
+      console.log(isLoading);
       state.isLoading = isLoading;
     },
     SET_SIGNING: (state, signing) => {
@@ -24,22 +25,22 @@ const appStateModule = {
     },
   },
   actions: {
-    loadError({ commit, dispatch }, error) {
-      commit("SET_ERROR", error);
-      dispatch("setErrorVisibility", true);
-      commit("SET_LOADING", false);
+    loadError({commit, dispatch}, error) {
+      commit('SET_ERROR', error);
+      dispatch('setErrorVisibility', true);
+      commit('SET_LOADING', false);
     },
-    loading({ commit }, isLoading) {
-      commit("SET_LOADING", isLoading);
+    loading({commit}, isLoading) {
+      commit('SET_LOADING', isLoading);
     },
-    setErrorVisibility({ commit }, isVisible) {
-      commit("SET_ERROR_VISIBILITY", isVisible);
+    setErrorVisibility({commit}, isVisible) {
+      commit('SET_ERROR_VISIBILITY', isVisible);
     },
-    setOverlay({ commit }, showOverlay) {
-      commit("SET_OVERLAY", showOverlay);
+    setOverlay({commit}, showOverlay) {
+      commit('SET_OVERLAY', showOverlay);
     },
-    signing({ commit }, signing) {
-      commit("SET_SIGNING", signing);
+    signing({commit}, signing) {
+      commit('SET_SIGNING', signing);
     },
   },
   getters: {},

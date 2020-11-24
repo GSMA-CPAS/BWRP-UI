@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import { discountModelsMixin } from "@/utils/mixins/component-specfic";
+import {discountModelsMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "flat-iot",
-  model: "Flat IOT",
+  name: 'flat-iot',
+  model: 'Flat IOT',
   mixins: [discountModelsMixin],
 };
 </script>

@@ -9,13 +9,15 @@
       :key="key"
       :value="key"
     >
-      <component :is="component"></component>
+      <keep-alive>
+        <component :is="component"></component>
+      </keep-alive>
     </v-tab-item>
   </v-tabs>
 </template>
 <script>
 export default {
-  name: "tabs",
+  name: 'tabs',
   data() {
     return {
       tab: null,
@@ -25,8 +27,8 @@ export default {
     tabs: {
       type: Array,
       default: () => [
-        { label: "TAB 1", key: "tab-1" },
-        { label: "TAB 2", key: "tab-2" },
+        {label: 'TAB 1', key: 'tab-1'},
+        {label: 'TAB 2', key: 'tab-2'},
       ],
     },
   },

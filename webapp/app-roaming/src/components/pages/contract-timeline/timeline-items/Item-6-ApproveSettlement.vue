@@ -22,10 +22,10 @@
   </timeline-item>
 </template>
 <script>
-import ApproveButton from "./buttons/Approve.vue";
+import ApproveButton from './buttons/Approve.vue';
 export default {
-  name: "item-1",
-  description: "description",
-  components: { ApproveButton },
+  name: 'item-1',
+  description: 'description',
+  components: {ApproveButton},
 };
 </script>

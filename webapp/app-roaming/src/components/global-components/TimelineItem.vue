@@ -14,12 +14,12 @@
 </template>
 <script>
 export default {
-  name: "timeline-item",
-  description: "description",
+  name: 'timeline-item',
+  description: 'description',
   computed: {
     timelineItemProps() {
       return {
-        color: "transparent",
+        color: 'transparent',
         class: `hide-dot`,
         large: true,
       };
