@@ -5,7 +5,7 @@
         Discounts will be active if the TAP charges will be at least as high as the value below.
       </v-col>
     </v-row>
-    <revenue-commitment-input/>
+    <revenue-commitment-input v-model="revenueCommitment"/>
   </fragment>
 </template>
 
@@ -17,7 +17,15 @@ export default {
   name: "contract-revenue-commit",
   model: "Contract Revenue Commitment",
   data() {
-    return { threshold: null, rate: null, revenueCommitment: false };
+    return { revenueCommitment: null };
+  },
+  watch: {
+    revenueCommitment: {
+      handler(val) {
+        this.$emit("input", val);
+      },
+      deep: true,
+    },
   },
   components: {
     RevenueCommitmentInput,

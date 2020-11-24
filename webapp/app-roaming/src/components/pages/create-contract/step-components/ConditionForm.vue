@@ -1,6 +1,6 @@
 <template>
   <v-col>
-      <condition-picker />
+      <condition-picker v-model="condition" />
   </v-col>
 </template>
 <script>
@@ -10,6 +10,19 @@ export default {
   description: "description",
   components: {
     ConditionPicker,
+  },
+  data() {
+    return {
+      condition: null,
+    };
+  },
+  watch: {
+    condition: {
+      handler(val) {
+        this.$emit("input", val);
+      },
+      deep: true,
+    },
   },
 };
 </script>
