@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-row>
       <disabled-condition placeholder="Unconditional" />
       <disabled-threshold />
@@ -8,7 +8,7 @@
       </v-col>
       <revenue-commitment-checkbox v-model="revenueCommitment" />
     </v-row>
-  </fragment>
+  </div>
 </template>
 
 <script>

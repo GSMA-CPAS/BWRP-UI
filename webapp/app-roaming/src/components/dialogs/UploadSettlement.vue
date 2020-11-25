@@ -12,7 +12,7 @@
           file-types=".xlsx"
         />
       </template>
-      <template #actions="{ cancel }">
+      <template #actions="{cancel}">
         <v-spacer />
         <app-button text label="Cancel" @button-pressed="cancel" />
         <app-button

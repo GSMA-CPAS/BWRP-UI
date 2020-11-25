@@ -3,12 +3,12 @@
     <error-overlay />
     <breadcrumb />
     <v-main class="background">
-      <v-container fill-height fluid v-show="isLoading">
+      <v-container fill-height fluid v-if="isLoading">
         <v-row no-gutters align="center" justify="center">
           <v-progress-circular :size="50" color="primary" indeterminate />
         </v-row>
       </v-container>
-      <router-view />
+      <router-view v-show="!isLoading" />
     </v-main>
   </v-app>
 </template>
@@ -45,5 +45,5 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "./styles/app.scss";
+@import './styles/app.scss';
 </style>

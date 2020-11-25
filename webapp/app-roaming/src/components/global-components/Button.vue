@@ -2,7 +2,7 @@
   <v-btn v-on="$listeners" v-bind="$props" @click="handleClick">
     {{ label }}
     <v-icon :size="iconSize" v-if="svg" :color="color" :right="!_.isNil(label)">
-      {{ "mdi-" + svg }}
+      {{ 'mdi-' + svg }}
     </v-icon>
   </v-btn>
 </template>
@@ -61,6 +61,14 @@ export default {
     color: {
       type: String,
       default: 'primary',
+    },
+    xLarge: {
+      type: Boolean,
+      default: false,
+    },
+    large: {
+      type: Boolean,
+      default: false,
     },
     small: {
       type: Boolean,

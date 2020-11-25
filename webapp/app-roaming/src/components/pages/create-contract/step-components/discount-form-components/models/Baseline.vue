@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-row
       align="baseline"
       v-for="(baseline, index) in baselines"
@@ -37,7 +37,7 @@
         />
       </v-col>
     </v-row>
-  </fragment>
+  </div>
 </template>
 
 <script>
