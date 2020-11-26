@@ -14,31 +14,31 @@
 </template>
 <script>
 export default {
-  name: "condition-picker",
-  description: "description",
+  name: 'condition-picker',
+  description: 'description',
   data() {
-    return { selectedConditionName: null, selectedCondition: null };
+    return {selectedConditionName: null, selectedCondition: null};
   },
   components: {
   },
-  props: { service: { type: String, default: "missing service" } },
+  props: {service: {type: String, default: 'missing service'}},
   watch: {
     selectedCondition: {
       handler() {
-        this.$emit("input", this.$data);
+        this.$emit('input', this.$data);
       },
       deep: true,
     },
     selectedConditionName: {
       handler() {
-        this.$emit("input", this.$data);
+        this.$emit('input', this.$data);
       },
       deep: true,
     },
   },
   computed: {
     condition() {
-      var path = null;
+      let path = null;
       switch (this.selectedConditionName) {
         case 'Contract Revenue Commitment':
           path = 'ContractRevenueCommit';
@@ -59,9 +59,9 @@ export default {
     },
     conditions() {
       return [
-          "Unconditional",
-          "Contract Revenue Commitment",
-          "Deal Revenue Commitment",
+        'Unconditional',
+        'Contract Revenue Commitment',
+        'Deal Revenue Commitment',
       ];
     },
   },

@@ -13,31 +13,31 @@
 </template>
 <script>
 export default {
-  name: "revenue-commitment-input",
-  description: "description",
+  name: 'revenue-commitment-input',
+  description: 'description',
   data() {
     return {
       includingTaxes: false,
       value: null,
       currency: null,
-    }
+    };
   },
   watch: {
     includingTaxes: {
       handler() {
-        this.$emit("input", this.$data);
+        this.$emit('input', this.$data);
       },
       deep: true,
     },
     value: {
       handler() {
-        this.$emit("input", this.$data);
+        this.$emit('input', this.$data);
       },
       deep: true,
     },
     currency: {
       handler() {
-        this.$emit("input", this.$data);
+        this.$emit('input', this.$data);
       },
       deep: true,
     },

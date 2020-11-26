@@ -4,10 +4,10 @@
   </v-col>
 </template>
 <script>
-import ConditionPicker from "./discount-form-components/ConditionPicker";
+import ConditionPicker from './discount-form-components/ConditionPicker';
 export default {
-  name: "condition-form",
-  description: "description",
+  name: 'condition-form',
+  description: 'description',
   components: {
     ConditionPicker,
   },
@@ -19,7 +19,7 @@ export default {
   watch: {
     condition: {
       handler(val) {
-        this.$emit("input", val);
+        this.$emit('input', val);
       },
       deep: true,
     },

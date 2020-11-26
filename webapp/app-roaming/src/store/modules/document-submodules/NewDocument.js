@@ -73,7 +73,7 @@ const newDocumentModule = {
       Object.assign(state[key].signatures, value);
     },
     updateDiscountModels(state, payload) {
-      const { key, value } = payload;
+      const {key, value} = payload;
       Object.assign(state[key].discountModels, value);
     },
     DECREMENT_STEP(state) {

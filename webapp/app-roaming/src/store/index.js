@@ -9,15 +9,15 @@ export default new Vuex.Store({
     // TEST DATA
     documents: [],
     services: [
-      "MOC Back Home",
-      "MOC Local",
-      "MTC",
-      "SMS MO",sss
-      "M2M",
-      "NB-IoT",
-      "LTE-M",
-      "VoLTE",
-      "DATA"
+      'MOC Back Home',
+      'MOC Local',
+      'MTC',
+      'SMS MO',
+      'M2M',
+      'NB-IoT',
+      'LTE-M',
+      'VoLTE',
+      'DATA'
     ],
   },
   mutations: {

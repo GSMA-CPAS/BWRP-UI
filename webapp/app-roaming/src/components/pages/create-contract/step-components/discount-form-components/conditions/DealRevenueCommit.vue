@@ -11,18 +11,18 @@
 
 <script>
 
-import RevenueCommitmentInput from "../condition-components/RevenueCommitmentInput";
+import RevenueCommitmentInput from '../condition-components/RevenueCommitmentInput';
 
 export default {
-  name: "deal-revenue-commit",
-  model: "Deal Revenue Commitment",
+  name: 'deal-revenue-commit',
+  model: 'Deal Revenue Commitment',
   data() {
-    return { revenueCommitment: null };
+    return {revenueCommitment: null};
   },
   watch: {
     revenueCommitment: {
       handler(val) {
-        this.$emit("input", val);
+        this.$emit('input', val);
       },
       deep: true,
     },

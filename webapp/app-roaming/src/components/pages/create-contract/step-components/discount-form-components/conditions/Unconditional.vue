@@ -7,8 +7,8 @@
 <script>
 
 export default {
-  name: "unconditional",
-  model: "Unconditional",
+  name: 'unconditional',
+  model: 'Unconditional',
   data() {
     return {
     };

@@ -25,38 +25,21 @@
       </v-row>
     </fragment>
   </v-col>
-    <!--
-    <row type="secondary" label="Regular Human Traffic / Exceptional Traffic" />
-    <div v-for="service in services" :key="`${service} exceptional`">
-      <discount-picker :service="service"></discount-picker>
-    </div>
-    <row type="secondary" label="Non Exceptional Traffic" />
-    <div
-      v-for="service in exceptionalTrafficServices"
-      :key="`${service} non-exceptional`"
-    >
-      <discount-picker :service="service"></discount-picker>
-    </div>
-    <row type="secondary" label="Overall Revenue Commitment" />
-    <overall-revenue-commitment />
-    <row type="secondary" label="Additional Comments" />
-    <additional-comments />
-    -->
 </template>
 <script>
-import {duplicateMixin} from "@/utils/mixins/component-specfic";
-/*import DiscountPicker from "./discount-form-components/DiscountPicker.vue";
+import {duplicateMixin} from '@/utils/mixins/component-specfic';
+/* import DiscountPicker from "./discount-form-components/DiscountPicker.vue";
 import OverallRevenueCommitment from "./discount-form-components/OverallRevenueCommitment.vue";
 import AdditionalComments from "./discount-form-components/AdditionalComments.vue";
 import CurrencyForAllDiscounts from "./discount-form-components/CurrencyForAllDiscounts.vue";
 import TadigCodes from "./discount-form-components/TadigCodes.vue";
 import AdditionalComments from "./discount-form-components/AdditionalComments.vue";*/
 export default {
-  name: "rating-plan-input",
-  description: "description",
+  name: 'rating-plan-input',
+  description: 'description',
   mixins: [duplicateMixin],
   components: {
-    /*AdditionalComments,
+    /* AdditionalComments,
     TadigCodes,
     CurrencyForAllDiscounts,
     OverallRevenueCommitment,
@@ -66,7 +49,7 @@ export default {
     return {
       tiers: [
         {
-          id: "tier-0",
+          id: 'tier-0',
           threshold: 0,
         },
       ],
@@ -75,7 +58,7 @@ export default {
   watch: {
     tiers: {
       handler(val) {
-        this.$emit("input", val);
+        this.$emit('input', val);
       },
       deep: true,
     },
