@@ -155,7 +155,6 @@ const newDocumentModule = {
       rootState,
       state,
     }) {
-      dispatch('app-state/loading', true, {root: true});
       setTimeout(()=>{
         const data = getters.contract;
         const toMSP = getters.msps.partner;

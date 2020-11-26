@@ -1,7 +1,7 @@
 <template>
-  <fragment>
+  <div>
     <v-stepper vertical v-model="step">
-      <fragment v-for="{content, index} in steps" :key="index">
+      <div v-for="{content, index} in steps" :key="index">
         <v-stepper-step
           editable
           @click="setStep(index)"
@@ -14,7 +14,7 @@
             <component :is="content" />
           </v-stepper-content>
         </v-stepper-items>
-      </fragment>
+      </div>
       <v-row class="mt-5">
         <app-button
           class="ml-5"
@@ -25,7 +25,7 @@
         <app-button @click="saveContract" class="mr-5" label="Confirm" />
       </v-row>
     </v-stepper>
-  </fragment>
+  </div>
 </template>
 <script>
 import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';

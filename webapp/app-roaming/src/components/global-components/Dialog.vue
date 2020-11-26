@@ -1,6 +1,6 @@
 <template>
   <v-dialog :width="width" v-model="component">
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <app-button
         :loading="loading"
         :outlined="outlined"

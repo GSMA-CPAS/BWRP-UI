@@ -7,9 +7,9 @@
       <Item-1-ContractView />
       <Item-2-Signatures />
       <Item-4-SettlementView v-if="isSigned" />
-      <Item-5-Discrepancies :class="{ 'opacity-0': exists('discrepancies') }" />
+      <Item-5-Discrepancies :class="{'opacity-0': exists('discrepancies')}" />
       <Item-6-ApproveSettlement
-        :class="{ 'opacity-0': exists('discrepancies') }"
+        :class="{'opacity-0': exists('discrepancies')}"
       />
     </v-timeline>
   </v-container>

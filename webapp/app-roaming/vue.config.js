@@ -1,15 +1,15 @@
-const packageJson = require("./package.json");
+const packageJson = require('./package.json');
 
 module.exports = {
-  transpileDependencies: ["vuetify"],
+  transpileDependencies: ['vuetify'],
 
   devServer: {
-    host: "localhost",
+    host: 'localhost',
 
     port: 9000,
     proxy: {
-      "^/api/*": {
-        target: "http://localhost:3000",
+      '^/api/*': {
+        target: 'http://localhost:3000',
         ws: true,
         changeOrigin: true,
       },
@@ -17,7 +17,7 @@ module.exports = {
   },
 
   publicPath:
-    process.env.NODE_ENV === "production"
-      ? "/app/" + packageJson.name + "/"
-      : "/",
+    process.env.NODE_ENV === 'production' ?
+      '/app/' + packageJson.name + '/' :
+      '/',
 };

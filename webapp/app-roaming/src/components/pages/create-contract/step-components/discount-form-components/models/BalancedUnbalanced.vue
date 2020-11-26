@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-row v-for="(condition, index) in _data" :key="index">
       <disabled-condition :placeholder="index | startCase" />
       <disabled-threshold />
@@ -8,7 +8,7 @@
       </v-col>
       <revenue-commitment-checkbox v-model="condition.revenueCommitment" />
     </v-row>
-  </fragment>
+  </div>
 </template>
 
 <script>

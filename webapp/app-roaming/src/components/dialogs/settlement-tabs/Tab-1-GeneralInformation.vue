@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <parties-header />
     <v-row align="baseline" class="font-weight-medium">
       <v-col cols="3" class="primary--text text-uppercase">Breakdown</v-col>
@@ -71,7 +71,7 @@
         </v-row>
       </v-col>
     </row>
-  </fragment>
+  </div>
 </template>
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';

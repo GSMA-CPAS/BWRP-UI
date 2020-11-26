@@ -18,19 +18,45 @@
         </v-col>
       </v-row>
     </template>
-    <template #item="{ item }">
-      <tr @click="to(item.documentId)" @keypress.enter="to(item.documentId)" tabindex="0">
+    <template #item="{item}">
+      <tr
+        @click="to(item.documentId)"
+        @keypress.enter="to(item.documentId)"
+        tabindex="0"
+      >
         <td class="pa-6">
           {{
             `${item.documentId.substring(0, 5)}...${item.documentId.substring(
               item.documentId.length - 5,
-              item.documentId.length
+              item.documentId.length,
             )}`
           }}
         </td>
-        <td>{{ item.fromMSP }}</td>
-        <td>{{ item.toMSP }}</td>
+        <td>someReferenceID</td>
+        <td>someName</td>
+        <td>someAuthor</td>
+        <td>lastModification</td>
+        <td>startDate</td>
+        <td>endDate</td>
         <td>{{ item.state }}</td>
+        <td @click.stop>
+          <v-menu offset-y>
+            <template v-slot:activator="{on, attrs}">
+              <app-button
+                v-bind="attrs"
+                v-on="on"
+                tile
+                svg="dots-horizontal"
+                icon
+              />
+            </template>
+            <v-list>
+              <v-list-item link v-for="(item, i) in items" :key="i">
+                <v-list-item-title v-text="item.title" />
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </td>
       </tr>
     </template>
   </v-data-table>
@@ -46,9 +72,16 @@ export default {
       search: '',
       headers: [
         {text: 'Document ID', value: 'documentId', align: 'start'},
-        {text: 'From MSP', value: 'fromMSP'},
-        {text: 'To MSP', value: 'toMSP'},
+        {text: 'Internal Reference', value: 'referenceID'},
+        {text: 'Name', value: 'contractName'},
+        {text: 'Author', value: 'author'},
+        {text: 'Last Modification', value: 'lastModification'},
+        {text: 'Start Date', value: 'startDate'},
+        {text: 'End Date', value: 'endDate'},
         {text: 'State', value: 'state'},
+        {text: 'Actions', value: 'action'},
+        // {text: 'From MSP', value: 'fromMSP'},
+        // {text: 'To MSP', value: 'toMSP'},
       ],
     };
   },
@@ -66,6 +99,9 @@ export default {
     },
   },
   computed: {
+    items() {
+      return [{title: 'Summary'}, {title: 'Edit'}, {title: 'Delete'}];
+    },
     ...mapState(['documents']),
   },
 };

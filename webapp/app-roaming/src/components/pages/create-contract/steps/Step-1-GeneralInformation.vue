@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <form-container>
       <row label="Contract Name and Contract Type">
         <v-col>
@@ -93,7 +93,7 @@
         @keydown.tab="validate('generalInformation')"
       />
     </div>
-  </fragment>
+  </div>
 </template>
 
 <script>
