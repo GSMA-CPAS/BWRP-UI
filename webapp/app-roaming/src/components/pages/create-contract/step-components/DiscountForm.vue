@@ -44,7 +44,7 @@
       <div v-if="service.pricingModel !== 'Not Charged'">
         <row label="Unit">
           <v-col>
-            <v-text-field v-model="service.unit" placeholder="Minutes"/>
+            <v-text-field v-model="service.unit" placeholder="Usage unit to charge"/>
           </v-col>
         </row>
       </div>
@@ -73,7 +73,7 @@
       <div v-if="service.accessPricingModel !== 'Not Charged'">
         <row label="Unit">
           <v-col>
-            <v-text-field v-model="service.accessPricingUnit" placeholder="Minutes"/>
+            <v-text-field v-model="service.accessPricingUnit" placeholder="Access unit to charge"/>
           </v-col>
         </row>
       </div>
