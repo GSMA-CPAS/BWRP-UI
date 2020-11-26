@@ -37,13 +37,10 @@
 </template>
 
 <script>
-import { discountModelsMixin } from "@/utils/mixins/component-specfic";
+import {discountModelsMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "balanced-unbalanced",
-  model: "Balanced / Unbalanced",
+  name: 'balanced-unbalanced',
+  model: 'Balanced / Unbalanced',
   mixins: [discountModelsMixin],
 };
 </script>
-
-<style>
-</style>

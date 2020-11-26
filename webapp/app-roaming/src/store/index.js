@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import Vue from "vue";
-import Vuex from "vuex";
-import allModules from "./modules/all-modules";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import allModules from './modules/all-modules';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -9,16 +9,16 @@ export default new Vuex.Store({
     // TEST DATA
     documents: [],
     services: [
-      "MOC",
-      "MOC Local",
-      "MOC Back Home",
-      "MOC EU/EEA",
-      "MOC RoW",
-      "MOC Premium/Satellite",
-      "MOC Special Destinations",
-      "MTC",
-      "SMS",
-      "Data",
+      'MOC',
+      'MOC Local',
+      'MOC Back Home',
+      'MOC EU/EEA',
+      'MOC RoW',
+      'MOC Premium/Satellite',
+      'MOC Special Destinations',
+      'MTC',
+      'SMS',
+      'Data',
     ],
   },
   mutations: {
@@ -27,45 +27,45 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    setup({ commit, dispatch, rootGetters, getters, rootState, state }) {
-      const { request, response } = Vue.axios.interceptors;
+    setup({commit, dispatch, rootGetters, getters, rootState, state}) {
+      const {request, response} = Vue.axios.interceptors;
       request.use(
-        (config) => {
-          const { method, baseURL, url, signing } = config;
-          console.log(
-            `%c Made ${method} request to ${baseURL + url}`,
-            "color:green; font-weight:800"
-          );
-          signing
-            ? dispatch("app-state/signing", true)
-            : dispatch("app-state/loading", true);
+          (config) => {
+            const {method, baseURL, url, signing} = config;
+            console.log(
+                `%c Made ${method} request to ${baseURL + url}`,
+                'color:green; font-weight:800'
+            );
+          signing ?
+            dispatch('app-state/signing', true) :
+            dispatch('app-state/loading', true);
           return config;
-        },
-        (error) => {
-          dispatch("app-state/loadError", error);
-          return Promise.reject(error);
-        }
+          },
+          (error) => {
+            dispatch('app-state/loadError', error);
+            return Promise.reject(error);
+          }
       );
       response.use(
-        (response) => {
-          dispatch("app-state/loading", false);
-          try {
-            return JSON.parse(response.data);
-          } catch {
-            return response.data;
+          (response) => {
+            dispatch('app-state/loading', false);
+            try {
+              return JSON.parse(response.data);
+            } catch {
+              return response.data;
+            }
+          },
+          (error) => {
+            if (error.response?.status === 401) {
+              parent.postMessage('unauthorized', '*');
+            }
+            dispatch('app-state/loadError', error.response);
+            return Promise.reject(error);
           }
-        },
-        (error) => {
-          if (error.response?.status === 401) {
-            parent.postMessage("unauthorized", "*");
-          }
-          dispatch("app-state/loadError", error.response);
-          return Promise.reject(error);
-        }
       );
 
-      dispatch("user/initializeUser");
-      dispatch("loadDocuments");
+      dispatch('user/initializeUser');
+      dispatch('loadDocuments');
     },
     loadDocuments({
       commit,
@@ -76,13 +76,13 @@ export default new Vuex.Store({
       state,
     }) {
       Vue.axios
-        .get("/documents", { withCredentials: true })
-        .then((res) => {
-          commit("LOAD_DOCUMENTS", res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          .get('/documents', {withCredentials: true})
+          .then((res) => {
+            commit('LOAD_DOCUMENTS', res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
     },
   },
   modules: allModules,

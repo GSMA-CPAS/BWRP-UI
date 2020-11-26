@@ -9,9 +9,9 @@
 </template>
 <script>
 export default {
-  name: "additional-comments",
+  name: 'additional-comments',
   data() {
-    return { comments: null };
+    return {comments: null};
   },
 };
 </script>

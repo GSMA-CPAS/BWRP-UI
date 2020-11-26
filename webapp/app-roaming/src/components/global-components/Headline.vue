@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "app-headline",
-  props: { title: { type: String, default: "Missing Title" } },
+  name: 'app-headline',
+  props: {title: {type: String, default: 'Missing Title'}},
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <v-dialog :width="width" v-model="component">
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <app-button
         :loading="loading"
         :outlined="outlined"
@@ -30,18 +30,18 @@
   </v-dialog>
 </template>
 <script>
-import { handleComponentVisibilityMixin } from "@/utils/mixins/handle-states";
+import {handleComponentVisibilityMixin} from '@/utils/mixins/handle-states';
 export default {
-  name: "app-dialog",
-  description: "This is a custom dialog.",
+  name: 'app-dialog',
+  description: 'This is a custom dialog.',
   mixins: [handleComponentVisibilityMixin],
   props: {
     outlined: Boolean,
-    label: { type: String, default: "Missing Label" },
-    title: { type: String, default: "Missing Title" },
-    width: { type: String, default: "60vw" },
-    hideIcon: { type: Boolean, default: false },
-    loading: { type: Boolean, default: false },
+    label: {type: String, default: 'Missing Label'},
+    title: {type: String, default: 'Missing Title'},
+    width: {type: String, default: '60vw'},
+    hideIcon: {type: Boolean, default: false},
+    loading: {type: Boolean, default: false},
   },
 };
 </script>

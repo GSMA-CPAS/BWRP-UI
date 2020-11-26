@@ -1,6 +1,6 @@
 <template>
-  <fragment>
-    <v-row v-for="(condition,index) in _data" :key="index">
+  <div>
+    <v-row v-for="(condition, index) in _data" :key="index">
       <disabled-condition :placeholder="index | startCase" />
       <disabled-threshold />
       <v-col>
@@ -8,21 +8,21 @@
       </v-col>
       <revenue-commitment-checkbox v-model="condition.revenueCommitment" />
     </v-row>
-  </fragment>
+  </div>
 </template>
 
 <script>
-import RevenueCommitmentCheckbox from "../model-components/RevenueCommitmentCheckbox";
-import DisabledThreshold from "../model-components/DisabledThreshold.vue";
-import DisabledCondition from "../model-components/DisabledCondition.vue";
+import RevenueCommitmentCheckbox from '../model-components/RevenueCommitmentCheckbox';
+import DisabledThreshold from '../model-components/DisabledThreshold.vue';
+import DisabledCondition from '../model-components/DisabledCondition.vue';
 
 export default {
-  name: "balanced-unbalanced",
-  model: "Balanced / Unbalanced",
+  name: 'balanced-unbalanced',
+  model: 'Balanced / Unbalanced',
   data() {
     return {
-      balanced: { rate: null, revenueCommitment: false },
-      unbalanced: { rate: null, revenueCommitment: false },
+      balanced: {rate: null, revenueCommitment: false},
+      unbalanced: {rate: null, revenueCommitment: false},
     };
   },
   components: {
@@ -33,5 +33,3 @@ export default {
 };
 </script>
 
-<style>
-</style>

@@ -12,12 +12,12 @@
   </timeline-item>
 </template>
 <script>
-import Discrepancies from "@/components/dialogs/Discrepancies.vue";
-import { timelineMixin } from "@/utils/mixins/component-specfic";
+import Discrepancies from '@/components/dialogs/Discrepancies.vue';
+import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "item-1",
-  description: "description",
+  name: 'item-1',
+  description: 'description',
   mixins: [timelineMixin],
-  components: { Discrepancies },
+  components: {Discrepancies},
 };
 </script>

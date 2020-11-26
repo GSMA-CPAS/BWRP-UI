@@ -18,22 +18,22 @@
   </v-col>
 </template>
 <script>
-import { mapState } from "vuex";
-import DiscountPicker from "./discount-form-components/DiscountPicker.vue";
-import OverallRevenueCommitment from "./discount-form-components/OverallRevenueCommitment.vue";
-import AdditionalComments from "./discount-form-components/AdditionalComments.vue";
+import {mapState} from 'vuex';
+import DiscountPicker from './discount-form-components/DiscountPicker.vue';
+import OverallRevenueCommitment from './discount-form-components/OverallRevenueCommitment.vue';
+import AdditionalComments from './discount-form-components/AdditionalComments.vue';
 export default {
-  name: "discount-form",
-  description: "description",
+  name: 'discount-form',
+  description: 'description',
   components: {
     AdditionalComments,
     OverallRevenueCommitment,
     DiscountPicker,
   },
   computed: {
-    ...mapState(["services"]),
+    ...mapState(['services']),
     exceptionalTrafficServices() {
-      return ["MOC", "MTC", "SMS", "Data"];
+      return ['MOC', 'MTC', 'SMS', 'Data'];
     },
   },
 };

@@ -2,14 +2,14 @@
   <timeline />
 </template>
 <script>
-import { PATHS } from "@/utils/Enums";
-import Timeline from "../../components/pages/contract-timeline/Timeline.vue";
+import {PATHS} from '@/utils/Enums';
+import Timeline from '../../components/pages/contract-timeline/Timeline.vue';
 export default {
-  name: "timeline-page",
-  title: 'Contract timeline',  
-  text: "Timeline",
-  description: "On this page, the timeline of a contract is displayed.",
+  name: 'timeline-page',
+  title: 'Contract timeline', 
+  text: 'Timeline',
+  description: 'On this page, the timeline of a contract is displayed.',
   path: PATHS.contractTimeline,
-  components: { Timeline },
+  components: {Timeline},
 };
 </script>

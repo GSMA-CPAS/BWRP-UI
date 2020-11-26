@@ -30,31 +30,31 @@
   </v-menu>
 </template>
 <script>
-import moment from "moment";
-import { validationMixin } from "@/utils/mixins/component-specfic";
+import moment from 'moment';
+import {validationMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "date-picker",
-  description: "This is a custom date picker.",
-  inject: ["$v"],
+  name: 'date-picker',
+  description: 'This is a custom date picker.',
+  inject: ['$v'],
   data() {
-    return { menu: false };
+    return {menu: false};
   },
   mixins: [validationMixin],
   props: {
-    label: { type: String, default: "Date Picker" },
-    min: { type: Date, default: null },
-    max: { type: Date, default: null },
+    label: {type: String, default: 'Date Picker'},
+    min: {type: Date, default: null},
+    max: {type: Date, default: null},
     value: Date,
     disabled: Boolean,
   },
   watch: {
     menu(val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = "MONTH"));
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'MONTH'));
     },
   },
   methods: {
-    ISOStringDate(input) {
-      const date = input || moment(new Date()).add(1, "months")._d;
+    isoDate(input) {
+      const date = input || moment(new Date()).add(1, 'months')._d;
       return date.toISOString().substr(0, 10);
     },
   },
@@ -63,21 +63,21 @@ export default {
       return this._.camelCase(this.label);
     },
     date: {
-      get: function () {
-        return this.value && this.ISOStringDate(this.value);
+      get: function() {
+        return this.value && this.isoDate(this.value);
       },
-      set: function (newValue) {
+      set: function(newValue) {
         this.$refs.menu.save(newValue);
-        this.$emit("input", new Date(newValue));
+        this.$emit('input', new Date(newValue));
       },
     },
     maxDate() {
-      return this.ISOStringDate(this.max || moment().add(10, "years")._d);
+      return this.isoDate(this.max || moment().add(10, 'years')._d);
     },
     minDate() {
-      return this.min
-        ? this.ISOStringDate(moment(this.min).add(1, "months")._d)
-        : null;
+      return this.min ?
+        this.isoDate(moment(this.min).add(1, 'months')._d) :
+        null;
     },
   },
 };

@@ -23,12 +23,12 @@
   </div>
 </template>
 <script>
-import { utilsMixin } from "@/utils/mixins/handle-data";
-import PartiesHeader from "../components/PartiesHeader.vue";
+import {utilsMixin} from '@/utils/mixins/handle-data';
+import PartiesHeader from '../components/PartiesHeader.vue';
 export default {
-  name: "traffic-form",
+  name: 'traffic-form',
   description:
-    "This is the traffic form, which displays either the out- or inbound details.",
+    'This is the traffic form, which displays either the out- or inbound details.',
   mixins: [utilsMixin],
   data() {
     return {
@@ -36,7 +36,7 @@ export default {
       settlementDetails: [
         // TMUS
         {
-          MOC: {
+          'MOC': {
             traffic: 21321,
             avgTapRate: 0,
             tapCharges: 0,
@@ -45,7 +45,7 @@ export default {
             discountedCharges: 0,
             discount: 1,
           },
-          "MOC Local": {
+          'MOC Local': {
             traffic: 3210,
             avgTapRate: 0,
             tapCharges: 0,
@@ -57,7 +57,7 @@ export default {
         },
         // DTAG
         {
-          MOC: {
+          'MOC': {
             traffic: 21321,
             avgTapRate: 0,
             tapCharges: 0,
@@ -66,7 +66,7 @@ export default {
             discountedCharges: 0,
             discount: 1,
           },
-          "MOC Local": {
+          'MOC Local': {
             traffic: 130,
             avgTapRate: 0,
             tapCharges: 0,
@@ -90,38 +90,41 @@ export default {
   computed: {
     totals() {
       return Object.values(this.settlementDetails[this.currentParty]).reduce(
-        (totals, curService) => {
-          for (const key in totals) {
-            totals[key] += curService[key];
+          (totals, curService) => {
+            for (const key in totals) {
+              if (Object.prototype.hasOwnProperty.call(totals, key)) {
+                totals[key] += curService[key];
+              }
+            }
+            return totals;
+          },
+          {
+            traffic: 0,
+            avgTapRate: 0,
+            tapCharges: 0,
+            preCommIot: 0,
+            postCommIot: 0,
+            discountedCharges: 0,
+            discount: 0,
           }
-          return totals;
-        },
-        {
-          traffic: 0,
-          avgTapRate: 0,
-          tapCharges: 0,
-          preCommIot: 0,
-          postCommIot: 0,
-          discountedCharges: 0,
-          discount: 0,
-        }
       );
     },
     labels() {
       const trafficLabels = [
-        "Traffic",
-        "Avg. Tap Rate",
-        "Tap Charges",
-        "Pre Comm. IOT",
-        "Post Comm. IOT",
-        "Discounted Charges",
-        "Discount",
+        'Traffic',
+        'Avg. Tap Rate',
+        'Tap Charges',
+        'Pre Comm. IOT',
+        'Post Comm. IOT',
+        'Discounted Charges',
+        'Discount',
       ];
       return this.labelsToCamelCase(trafficLabels);
     },
   },
 };
 </script>
+
 <style scoped>
 .no-wrap {
   flex-wrap: nowrap;

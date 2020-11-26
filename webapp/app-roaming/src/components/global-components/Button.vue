@@ -2,15 +2,15 @@
   <v-btn v-on="$listeners" v-bind="$props" @click="handleClick">
     {{ label }}
     <v-icon :size="iconSize" v-if="svg" :color="color" :right="!_.isNil(label)">
-      {{ "mdi-" + svg }}
+      {{ 'mdi-' + svg }}
     </v-icon>
   </v-btn>
 </template>
 
 <script>
 export default {
-  name: "app-button",
-  description: "Custom vuetify button to add more flexibility",
+  name: 'app-button',
+  description: 'Custom vuetify button to add more flexibility',
   props: {
     to: String,
     label: String,
@@ -60,7 +60,15 @@ export default {
     },
     color: {
       type: String,
-      default: "primary",
+      default: 'primary',
+    },
+    xLarge: {
+      type: Boolean,
+      default: false,
+    },
+    large: {
+      type: Boolean,
+      default: false,
     },
     small: {
       type: Boolean,
@@ -73,7 +81,7 @@ export default {
   },
   methods: {
     handleClick(e) {
-      this.$emit("button-pressed", e);
+      this.$emit('button-pressed', e);
     },
   },
 };

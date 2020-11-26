@@ -19,12 +19,12 @@
   </fragment>
 </template>
 <script>
-import { validationMixin } from "@/utils/mixins/component-specfic";
-import BankForm from "../step-components/BankForm.vue";
-import Parties from "../step-components/Parties.vue";
+import {validationMixin} from '@/utils/mixins/component-specfic';
+import BankForm from '../step-components/BankForm.vue';
+import Parties from '../step-components/Parties.vue';
 export default {
-  name: "step-1",
-  description: "Bank Details",
+  name: 'step-1',
+  description: 'Bank Details',
   mixins: [validationMixin],
   components: {
     BankForm,
@@ -36,8 +36,8 @@ export default {
         return this.$store.state.document.new.userData.bankDetails;
       },
       set(value) {
-        this.$store.commit("document/new/updateBankDetails", {
-          key: "userData",
+        this.$store.commit('document/new/updateBankDetails', {
+          key: 'userData',
           value,
         });
       },
@@ -47,8 +47,8 @@ export default {
         return this.$store.state.document.new.partnerData.bankDetails;
       },
       set(value) {
-        this.$store.commit("document/new/updateBankDetails", {
-          key: "partnerData",
+        this.$store.commit('document/new/updateBankDetails', {
+          key: 'partnerData',
           value,
         });
       },

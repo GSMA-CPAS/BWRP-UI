@@ -12,7 +12,7 @@
           file-types=".xlsx"
         />
       </template>
-      <template #actions="{ cancel }">
+      <template #actions="{cancel}">
         <v-spacer />
         <app-button text label="Cancel" @button-pressed="cancel" />
         <app-button
@@ -29,17 +29,17 @@
   </fragment>
 </template>
 <script>
-/*  
+/*
   INFO: SUBJECT to changes
  */
 export default {
-  name: "upload-settlement",
-  description: "description",
+  name: 'upload-settlement',
+  description: 'description',
   data() {
-    return { file: null, active: true };
+    return {file: null, active: true};
   },
   components: {},
-  props: { actionButtonProps: Object },
+  props: {actionButtonProps: Object},
   methods: {
     loadFile(file) {
       this.file = file;

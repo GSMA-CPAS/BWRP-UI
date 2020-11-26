@@ -17,12 +17,12 @@ const userModule = {
       rootState,
       state,
     }) {
-      const user = localStorage.getItem("appContext");
+      const user = localStorage.getItem('appContext');
       if (user) {
         try {
-          commit("SET_USER", JSON.parse(user));
+          commit('SET_USER', JSON.parse(user));
         } catch (error) {
-          console.error("Failed to parse user from local storage");
+          console.error('Failed to parse user from local storage');
         }
       }
     },
@@ -35,7 +35,7 @@ const userModule = {
       return state.organization.title;
     },
     isAdmin(state) {
-      //TODO:
+      // TODO:
     },
   },
 };

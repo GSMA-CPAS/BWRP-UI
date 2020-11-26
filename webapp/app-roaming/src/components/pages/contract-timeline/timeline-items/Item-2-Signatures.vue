@@ -17,12 +17,12 @@
   </timeline-item>
 </template>
 <script>
-import SignButton from "./buttons/Sign.vue";
-import Signatures from "@/components/dialogs/Signatures.vue";
-import { timelineMixin } from "@/utils/mixins/component-specfic";
+import SignButton from './buttons/Sign.vue';
+import Signatures from '@/components/dialogs/Signatures.vue';
+import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "item-3",
-  description: "description",
+  name: 'item-3',
+  description: 'description',
   mixins: [timelineMixin],
   components: {
     Signatures,

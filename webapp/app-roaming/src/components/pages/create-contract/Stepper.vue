@@ -1,7 +1,7 @@
 <template>
-  <fragment>
+  <div>
     <v-stepper vertical v-model="step">
-      <fragment v-for="{ content, index } in steps" :key="index">
+      <div v-for="{content, index} in steps" :key="index">
         <v-stepper-step
           editable
           @click="setStep(index)"
@@ -14,7 +14,7 @@
             <component :is="content" />
           </v-stepper-content>
         </v-stepper-items>
-      </fragment>
+      </div>
       <v-row class="mt-5">
         <app-button
           class="ml-5"
@@ -25,42 +25,43 @@
         <app-button @click="saveContract" class="mr-5" label="Confirm" />
       </v-row>
     </v-stepper>
-  </fragment>
+  </div>
 </template>
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
 export default {
-  name: "stepper",
+  name: 'stepper',
   title: 'New contract',
-  description: "Stepper used for contract-creation.",
+  description: 'Stepper used for contract-creation.',
   methods: {
-    ...mapActions("document/new", ["saveContract", "setStep"]),
-    ...mapMutations("document/new", ["resetState"]),
+    ...mapActions('document/new', ['saveContract', 'setStep']),
+    ...mapMutations('document/new', ['resetState']),
     downloadDocument() {
-      delete this.contract.step;
+      const contract = this.contract;
+      delete contract.step;
       const data =
-        "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(this.contract));
-      const link = document.createElement("a");
+        'data:text/json;charset=utf-8,' +
+        encodeURIComponent(JSON.stringify(contract));
+      const link = document.createElement('a');
       link.href = data;
-      link.setAttribute("download", "contract.json");
+      link.setAttribute('download', 'contract.json');
       document.body.appendChild(link);
       link.click();
     },
   },
   computed: {
-    ...mapGetters("document/new", ["contract"]),
-    ...mapState("document/new", ["step"]),
+    ...mapGetters('document/new', ['contract']),
+    ...mapState('document/new', ['step']),
     steps() {
       const components = require.context(
-        "./steps/",
-        false,
-        /(Step-).*.(vue|js)$/
+          './steps/',
+          false,
+          /(Step-).*.(vue|js)$/,
       );
-      var i = 1;
+      let i = 1;
       const steps = components
-        .keys()
-        .map((x) => ({ content: components(x).default, index: i++ }));
+          .keys()
+          .map((x) => ({content: components(x).default, index: i++}));
       return steps;
     },
   },

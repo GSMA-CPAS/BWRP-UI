@@ -89,14 +89,14 @@
   </fragment>
 </template>
 <script>
-import HelpTooltip from "@/components/other/HelpTooltip.vue";
-import { timelineMixin } from "@/utils/mixins/component-specfic";
-import PartiesHeader from "../components/PartiesHeader.vue";
+import HelpTooltip from '@/components/other/HelpTooltip.vue';
+import {timelineMixin} from '@/utils/mixins/component-specfic';
+import PartiesHeader from '../components/PartiesHeader.vue';
 export default {
-  name: "tab-1",
-  label: "General Information",
+  name: 'tab-1',
+  label: 'General Information',
   description:
-    "In this tab the general information of a contract is displayed. The tab is found in the contract timeline when clicking on 'View Contract'",
+    'In this tab the general information of a contract is displayed. The tab is found in the contract timeline when clicking on "View Contract"',
   components: {
     HelpTooltip,
     PartiesHeader,

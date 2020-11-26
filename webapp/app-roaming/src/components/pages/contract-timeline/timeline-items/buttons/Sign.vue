@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-icon v-if="isSigned" color="success" x-large>
       mdi-check-circle-outline
     </v-icon>
@@ -11,7 +11,7 @@
       label="Sign"
       :loading="signing"
     >
-      <template #actions="{ cancel }">
+      <template #actions="{cancel}">
         <app-button @button-pressed="cancel" outlined label="Cancel" />
         <app-button
           @button-pressed="
@@ -22,13 +22,13 @@
         />
       </template>
     </app-dialog>
-  </fragment>
+  </div>
 </template>
 <script>
-import { timelineMixin } from "@/utils/mixins/component-specfic";
+import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "sign-button",
-  description: "description",
+  name: 'sign-button',
+  description: 'description',
   mixins: [timelineMixin],
   methods: {
     async onSign() {

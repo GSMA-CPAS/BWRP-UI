@@ -20,4 +20,4 @@ const PATHS = Object.freeze({
 const CONFIG = Object.freeze({
   apiBaseURL,
 });
-export { PATHS, CONFIG };
+export {PATHS, CONFIG};

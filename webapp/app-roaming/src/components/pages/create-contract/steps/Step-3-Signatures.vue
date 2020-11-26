@@ -19,12 +19,12 @@
   </fragment>
 </template>
 <script>
-import Parties from "../step-components/Parties.vue";
-import SignatureForm from "../step-components/SignatureForm.vue";
-import { validationMixin } from "@/utils/mixins/component-specfic";
+import Parties from '../step-components/Parties.vue';
+import SignatureForm from '../step-components/SignatureForm.vue';
+import {validationMixin} from '@/utils/mixins/component-specfic';
 export default {
-  name: "step-3",
-  description: "Signatures",
+  name: 'step-3',
+  description: 'Signatures',
   mixins: [validationMixin],
   components: {
     SignatureForm,
@@ -36,8 +36,8 @@ export default {
         return this.$store.state.document.new.userData.signatures;
       },
       set(value) {
-        this.$store.commit("document/new/updateSignatures", {
-          key: "userData",
+        this.$store.commit('document/new/updateSignatures', {
+          key: 'userData',
           value,
         });
       },
@@ -47,8 +47,8 @@ export default {
         return this.$store.state.document.new.partnerData.signatures;
       },
       set(value) {
-        this.$store.commit("document/new/updateSignatures", {
-          key: "partnerData",
+        this.$store.commit('document/new/updateSignatures', {
+          key: 'partnerData',
           value,
         });
       },

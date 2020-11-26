@@ -8,33 +8,33 @@
           <v-progress-circular :size="50" color="primary" indeterminate />
         </v-row>
       </v-container>
-      <router-view />
+      <router-view v-show="!isLoading" />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
-import Breadcrumb from "./components/navigation/Breadcrumb.vue";
-import ErrorOverlay from "./components/other/ErrorOverlay.vue";
-import { appStateMixin } from "@/utils/mixins/component-specfic";
+import {mapState, mapActions} from 'vuex';
+import Breadcrumb from './components/navigation/Breadcrumb.vue';
+import ErrorOverlay from './components/other/ErrorOverlay.vue';
+import {appStateMixin} from '@/utils/mixins/component-specfic';
 
 export default {
   components: {
     ErrorOverlay,
     Breadcrumb,
   },
-  name: "app",
+  name: 'app',
   mixins: [appStateMixin],
   methods: {
-    ...mapActions(["setup", "loadDocuments"]),
+    ...mapActions(['setup', 'loadDocuments']),
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(['user']),
   },
   watch: {
     async $route(to, from) {
-      if (from.name === "create-page") {
+      if (from.name === 'create-page') {
         await this.loadDocuments();
       }
     },
@@ -45,5 +45,5 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "./styles/app.scss";
+@import './styles/app.scss';
 </style>

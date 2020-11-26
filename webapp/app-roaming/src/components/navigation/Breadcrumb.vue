@@ -21,21 +21,21 @@
 
 <script>
 export default {
-  name: "breadcrumb",
+  name: 'breadcrumb',
   data: () => ({
     items: [
       {
-        text: "Contracts",
-        to: "/contracts",
+        text: 'Contracts',
+        to: '/contracts',
       },
     ],
   }),
   methods: {
     refreshPage() {
-      this.$store.dispatch("document/loadData", this.$route.params.cid);
+      this.$store.dispatch('document/loadData', this.$route.params.cid);
     },
     addBreadcrumb(text, to) {
-      this.items.push({ text, to });
+      this.items.push({text, to});
     },
     removeLastBreacrumb() {
       this.isHome && this.items.pop();
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     refreshActive() {
-      return this.$route.name === "timeline-page";
+      return this.$route.name === 'timeline-page';
     },
     isHome() {
       return this.items.length > 1;
@@ -51,22 +51,21 @@ export default {
   },
   watch: {
     $route(to, from) {
-      const { name, meta, params, path } = to;
-      name === "contracts-overview" && this.removeLastBreacrumb();
-      console.log(from);
-      if (from.name === "contracts-overview") {
-        to.name === "timeline-page"
-          ? this.addBreadcrumb(params.cid, path)
-          : this.addBreadcrumb(meta.name, path);
+      const {name, meta, params, path} = to;
+      name === 'contracts-overview' && this.removeLastBreacrumb();
+      if (from.name === 'contracts-overview') {
+        to.name === 'timeline-page' ?
+          this.addBreadcrumb(params.cid, path) :
+          this.addBreadcrumb(meta.text, path);
       }
     },
   },
   beforeMount() {
-    const { name, meta, path, params } = this.$route;
-    if (name === "timeline-page") {
+    const {name, meta, path, params} = this.$route;
+    if (name === 'timeline-page') {
       this.addBreadcrumb(params.cid, path);
     } else {
-      name !== "contracts-overview" && this.addBreadcrumb(meta.text, path);
+      name !== 'contracts-overview' && this.addBreadcrumb(meta.text, path);
     }
   },
 };

@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: "form-container",
-  description: "This is a custom form container."
+  name: 'form-container',
+  description: 'This is a custom form container.'
 };
 </script>
