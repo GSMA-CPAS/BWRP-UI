@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-row>
         <v-col cols="6">
-          <v-breadcrumbs :items="breadcrumbItems" large></v-breadcrumbs>
+          <breadcrumbs :items="breadcrumbItems" />
         </v-col>
         <v-col cols="6" class="text-right">
           <v-btn tile color="primary" to="/settings/users/create">Create User</v-btn>
@@ -37,6 +37,7 @@
 <script>
 
 import Layout from '@/components/layouts/LayoutSettings';
+import breadcrumbs from '../../../navigation/Breadcrumbs';
 
 export default {
 
@@ -110,7 +111,8 @@ export default {
   },
 
   components: {
-    Layout
+    Layout,
+    breadcrumbs
   }
 };
 </script>

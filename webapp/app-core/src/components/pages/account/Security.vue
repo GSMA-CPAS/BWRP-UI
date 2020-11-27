@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-row>
         <v-col cols="12">
-          <v-breadcrumbs :items="breadcrumbItems" large></v-breadcrumbs>
+          <breadcrumbs :items="breadcrumbItems" />
         </v-col>
       </v-row>
       <v-row>
@@ -43,6 +43,7 @@
 <script>
 
 import Layout from '@/components/layouts/LayoutAccount';
+import breadcrumbs from '../../navigation/Breadcrumbs';
 
 export default {
 
@@ -121,6 +122,7 @@ export default {
 
   components: {
     Layout,
+    breadcrumbs
   },
 };
 

@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-row>
         <v-col cols="12">
-          <v-breadcrumbs :items="breadcrumbItems" large></v-breadcrumbs>
+          <breadcrumbs :items="breadcrumbItems" />
         </v-col>
       </v-row>
       <v-row>
@@ -33,11 +33,11 @@
 
 import Layout from '@/components/layouts/LayoutAccount';
 import {validationRules} from '@/utils/ValidationRules';
+import breadcrumbs from '../../navigation/Breadcrumbs';
 
 export default {
 
   name: 'Password',
-
   data: () => ({
     loading: false,
     breadcrumbItems: [
@@ -87,7 +87,8 @@ export default {
   },
 
   components: {
-    Layout
+    Layout,
+    breadcrumbs
   }
 };
 
