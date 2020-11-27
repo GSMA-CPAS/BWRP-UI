@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav aria-label="Breadcrumbs">
     <v-breadcrumbs large :items="items"></v-breadcrumbs>
   </nav>
 </template>

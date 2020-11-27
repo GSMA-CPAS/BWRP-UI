@@ -1,7 +1,7 @@
 <template>
   <v-row class="flex-grow-0 ma-0 pa-0">
     <v-col>
-      <nav>
+      <nav aria-label="Breadcrumbs">
         <v-breadcrumbs large :items="items"></v-breadcrumbs>
       </nav>
     </v-col>
