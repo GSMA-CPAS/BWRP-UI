@@ -51,6 +51,11 @@ const defaultSignaturesState = () => [
   },
 ];
 
+const defaultDiscountModelsState = () => ({
+  condition: null
+});
+
+
 const newDocumentModule = {
   namespaced,
   state: defaultState(),
@@ -66,6 +71,10 @@ const newDocumentModule = {
     updateSignatures(state, payload) {
       const {key, value} = payload;
       Object.assign(state[key].signatures, value);
+    },
+    updateDiscountModels(state, payload) {
+      const {key, value} = payload;
+      Object.assign(state[key].discountModels, value);
     },
     DECREMENT_STEP(state) {
       state.step--;
@@ -94,8 +103,10 @@ const newDocumentModule = {
       Object.assign(state, defaultState());
       // Object.assign(state.userData.bankDetails, defaultBankDetailsState());
       Object.assign(state.userData.signatures, defaultSignaturesState());
+      Object.assign(state.userData.discountModels, defaultDiscountModelsState());
       // Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
       Object.assign(state.partnerData.signatures, defaultSignaturesState());
+      Object.assign(state.partnerData.discountModels, defaultDiscountModelsState());
     },
   },
   actions: {
@@ -203,7 +214,7 @@ const newDocumentModule = {
       state: () => ({
         // bankDetails: defaultBankDetailsState(),
         signatures: defaultSignaturesState(),
-        discountModels: null,
+        discountModels: defaultDiscountModelsState(),
       }),
     },
     userData: {
@@ -211,7 +222,7 @@ const newDocumentModule = {
       state: () => ({
         // bankDetails: defaultBankDetailsState(),
         signatures: defaultSignaturesState(),
-        discountModels: null,
+        discountModels: defaultDiscountModelsState(),
       }),
     },
   },
