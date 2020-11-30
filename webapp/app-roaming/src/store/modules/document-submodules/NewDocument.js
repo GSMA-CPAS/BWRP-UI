@@ -192,7 +192,7 @@ const newDocumentModule = {
 
       const contract = {
         generalInformation: {
-          otherVariables,
+          ...otherVariables,
           [partner]: gPartnerData,
           [user]: gUserData,
         },

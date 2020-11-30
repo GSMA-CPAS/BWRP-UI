@@ -14,7 +14,6 @@ const appStateModule = {
       state.showError = isVisible;
     },
     SET_LOADING(state, isLoading) {
-      console.log(isLoading);
       state.isLoading = isLoading;
     },
     SET_SIGNING: (state, signing) => {

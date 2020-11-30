@@ -3,10 +3,10 @@
   <v-data-table :items="documents" :headers="headers" :search="search">
     <template v-slot:top>
       <v-row>
-        <v-col>
+        <!-- <v-col>
           <filters :onClear="clearFilters"> </filters>
-        </v-col>
-        <v-col cols="5">
+        </v-col> -->
+        <v-col cols="6">
           <v-text-field
             outlined
             v-model="search"
@@ -63,7 +63,7 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-import Filters from '@/components/other/Filters.vue';
+// import Filters from '@/components/other/Filters.vue';
 export default {
   name: 'contracts-table',
   description: 'In this table, the documents are displayed.',
@@ -86,7 +86,7 @@ export default {
     };
   },
   components: {
-    Filters,
+    // Filters,
   },
   methods: {
     clearFilters() {
