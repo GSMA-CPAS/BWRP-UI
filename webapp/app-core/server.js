@@ -38,12 +38,18 @@ app.use(history({
       to: function(context) {
         return context.parsedUrl.pathname;
       }
+    },
+    {
+      from: /^\/proxy\/.*$/,
+      to: function(context) {
+        return context.parsedUrl.pathname;
+      }
     }
   ]
 }));
 
-app.use(express.json({limit: '10mb'}));
-app.use(express.urlencoded({extended: true}));
+app.use(/^\/(?!proxy).*$/, express.json({limit: '10mb'}));
+app.use(/^\/(?!proxy).*$/, express.urlencoded({extended: true}));
 
 app.use(helmet());
 app.use(
@@ -110,14 +116,13 @@ if (sessionConfig.cookie.secure === true) {
 
   for (const serviceName in services) {
     if (Object.prototype.hasOwnProperty.call(services, serviceName)) {
-      const serviceConfigPath = 'services.' + serviceName;
-      const serviceConfig = config.get(serviceConfigPath);
+      const serviceConfig = config.get('services.' + serviceName);
       if (serviceConfig.enabled === true) {
         const serviceClassPath = global.GLOBAL_BACKEND_ROOT + '/services' + serviceConfig.classPath;
         try {
           fs.statSync(serviceClassPath + '.js');
-          const Service = require(serviceClassPath);
-          const appService = await new Service(serviceName, serviceConfig, app, database);
+          const ServiceClass = require(serviceClassPath);
+          const appService = await new ServiceClass(serviceName, serviceConfig, app, database);
           if (serviceConfig.route) {
             let csrfProtectionEnabled = serviceConfig.csrfProtectionEnabled;
             if (csrfProtectionEnabled === undefined) {

@@ -8,7 +8,7 @@ const documentModule = {
   state: () => ({document: null, signatures: null}),
   mutations: {
     UPDATE_DOCUMENT: (state, document) => {
-      // log(document);
+      log(document);
       state.document = document;
     },
     UPDATE_SIGNATURES: (state, signatures) => {

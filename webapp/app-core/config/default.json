@@ -102,6 +102,12 @@
         {"type": "wallet", "name": "WalletAdapter"}
       ]
     },
+    "ProxyService": {
+      "enabled": false,
+      "classPath": "/proxy/v1/ProxyService",
+      "route": "/proxy",
+      "csrfProtectionEnabled": false
+    },
     "SwaggerService": {
       "enabled": false,
       "classPath": "/swagger/v1/SwaggerService",
