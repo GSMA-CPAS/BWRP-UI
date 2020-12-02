@@ -3,9 +3,9 @@
     <form-container>
       <parties label="Discount Models" />
       <v-row>
-        <discount-form :ref="msps.user" v-model="userDiscountModels" :tadigs="userTadigs"/>
+        <discount-form :ref="msps.user" v-model="userDiscountModels" :home-tadigs="userTadigs" :visitor-tadigs="partnerTadigs"/>
         <v-divider vertical />
-        <discount-form :ref="msps.partner" v-model="partnerDiscountModels"/>
+        <discount-form :ref="msps.partner" v-model="partnerDiscountModels"  :home-tadigs="partnerTadigs" :visitor-tadigs="userTadigs"/>
       </v-row>
     </form-container>
     <div class="float-right mt-3">
@@ -52,6 +52,9 @@ export default {
     },
     userTadigs() {
       return this.$store.state.document.new.generalInformation?.userData?.tadigCodes?.codes?.split(',');
+    },
+    partnerTadigs() {
+      return this.$store.state.document.new.generalInformation?.partnerData?.tadigCodes?.codes?.split(',');
     },
   }
 };

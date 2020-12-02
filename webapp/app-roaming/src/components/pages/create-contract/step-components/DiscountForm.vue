@@ -1,131 +1,61 @@
 <template>
   <v-col>
-    <row type="secondary" label="Condition"></row>
+    <row type="primary" label="Condition" />
+    <v-divider />
     <condition-picker v-model="condition"/>
     <v-row>
       <br><br>
     </v-row>
-    <row type="secondary" label="Services"></row>
-    <fragment v-for="(service, index ) in chosenServices" :key="service.id">
+    <row type="primary" label="Service Groups" />
+    <v-divider />
+    <fragment v-for="(serviceGroup, index ) in serviceGroups" :key="serviceGroup.id">
       <v-row>
         <v-col>
-          <v-select
-            v-model="service.name"
-            :items="services"
-            placeholder="Select Service"
-          />
+          <b>Group {{index+1}}</b>
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
           <app-button
             :disabled="isDisabled"
-            @button-pressed="removeService(index)"
+            @button-pressed="removeServiceGroup(index)"
             :svg="icons.remove"
             icon
           />
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
-          <app-button @button-pressed="addService" :svg="icons.add" icon />
+          <app-button @button-pressed="addServiceGroup" :svg="icons.add" icon />
         </v-col>
       </v-row>
-      <row label="TADIGs">
-        <v-col>
-          <v-autocomplete v-model="service.tadigs" multiple :items="$props.tadigs" label="TADIGs" placeholder="All (Default)" />
-        </v-col>
-      </row>
-      <row label="Usage Pricing Model">
-        <v-col>
-          <v-select
-            :items="['Not Charged','Normal','Balanced/Unbalanced']"
-            placeholder="Select Model"
-            v-model="service.pricingModel"
-          />
-        </v-col>
-      </row>
-      <div v-if="service.pricingModel !== 'Not Charged'">
-        <row label="Unit">
-          <v-col>
-            <v-text-field v-model="service.unit" placeholder="Usage unit to charge"/>
-          </v-col>
-        </row>
-      </div>
-      <div v-if="service.pricingModel === 'Normal'">
-        <row  label="Rate">
-          <rating-plan-input v-model="service.rate"/>
-        </row>
-      </div>
-      <div v-if="service.pricingModel === 'Balanced/Unbalanced'">
-        <row label="Balanced Rate">
-          <rating-plan-input v-model="service.balancedRate"/>
-        </row>
-        <row label="Unbalanced Rate">
-          <rating-plan-input v-model="service.unbalancedRate"/>
-        </row>
-      </div>
-      <row label="Access Pricing Model">
-        <v-col>
-          <v-select
-            :items="['Not Charged','Normal']"
-            placeholder="Select Model"
-            v-model="service.accessPricingModel"
-          />
-        </v-col>
-      </row>
-      <div v-if="service.accessPricingModel !== 'Not Charged'">
-        <row label="Unit">
-          <v-col>
-            <v-text-field v-model="service.accessPricingUnit" placeholder="Access unit to charge"/>
-          </v-col>
-        </row>
-      </div>
-      <div v-if="service.accessPricingModel === 'Normal'">
-        <row  label="Rate">
-          <rating-plan-input v-model="service.accessPricingRate"/>
-        </row>
-      </div>
+      <service-group-form v-model="serviceGroups[index]" :home-tadig-options="homeTadigs" :visitor-tadig-options="visitorTadigs"/>
+      <v-divider />
     </fragment>
   </v-col>
 </template>
 <script>
-import {mapState} from 'vuex';
 import ConditionPicker from './discount-form-components/ConditionPicker';
 import {duplicateMixin} from '../../../../utils/mixins/component-specfic';
-import RatingPlanInput from './discount-form-components/RatingPlanInput';
+import ServiceGroupForm from './ServiceGroupForm';
 
 export default {
   name: 'discount-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['tadigs'],
+  props: ['homeTadigs', 'visitorTadigs'],
   components: {
-    RatingPlanInput,
-    ConditionPicker
-    /* AdditionalComments,
-    TadigCodes,
-    CurrencyForAllDiscounts,
-    OverallRevenueCommitment,
-    DiscountPicker,*/
+    ConditionPicker,
+    ServiceGroupForm,
   },
   data() {
     return {
       condition: null,
-      chosenServices: [
+      serviceGroups: [
         {
-          id: 'service-0',
-          name: null,
-          rate: null,
-          unit: null,
-          balancedRate: null,
-          unbalancedRate: null,
-          pricingModel: 'Normal',
-          accessPricingModel: 'Not Charged',
-          accessPricingUnit: null,
-          accessPricingRate: null,
+          id: 'service-group-0',
         },
       ],
     };
   },
   watch: {
-    chosenServices: {
+    serviceGroups: {
       handler() {
         this.$emit('input', this.$data);
       },
@@ -139,20 +69,19 @@ export default {
     },
   },
   methods: {
-    addService() {
-      this.chosenServices.push({
-        id: `service-${this.chosenServices.length}`,
+    addServiceGroup() {
+      this.serviceGroups.push({
+        id: `service-group-${this.serviceGroups.length}`,
         name: null,
       });
     },
-    removeService(index) {
-      this.chosenServices.splice(index, 1);
+    removeServiceGroup(index) {
+      this.serviceGroups.splice(index, 1);
     }
   },
   computed: {
-    ...mapState(['services']),
     isDisabled() {
-      return this.chosenServices.length === 1;
+      return this.serviceGroups.length === 1;
     },
   },
 };
