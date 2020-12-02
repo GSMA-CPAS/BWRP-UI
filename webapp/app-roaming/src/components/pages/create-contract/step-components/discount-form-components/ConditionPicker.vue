@@ -9,7 +9,11 @@
         />
       </v-col>
     </v-row>
-    <component v-if="!disabledModel" :is="condition" v-model="selectedCondition"/>
+    <component
+      v-if="!disabledModel"
+      :is="condition"
+      v-model="selectedCondition"
+    />
   </fragment>
 </template>
 <script>
@@ -19,8 +23,7 @@ export default {
   data() {
     return {selectedConditionName: null, selectedCondition: null};
   },
-  components: {
-  },
+  components: {},
   props: {service: {type: String, default: 'missing service'}},
   watch: {
     selectedCondition: {
@@ -47,15 +50,15 @@ export default {
           path = 'DealRevenueCommit';
           break;
         default:
-          path = this._.upperFirst(this._.camelCase(this.selectedConditionName));
+          path = this._.upperFirst(
+              this._.camelCase(this.selectedConditionName),
+          );
       }
       const models = require.context(`./conditions/`, false, /.(vue)$/);
       return models(`./${path}.vue`).default;
     },
     disabledModel() {
-      return (
-        this.selectedConditionName === null
-      );
+      return this.selectedConditionName === null;
     },
     conditions() {
       return [

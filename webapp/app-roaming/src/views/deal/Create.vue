@@ -7,8 +7,10 @@ import Stepper from '@/components/pages/create-contract/Stepper.vue';
 export default {
   name: 'create-page',
   text: 'New',
-  description: 'On this page, the contract is created.',
+  description: 'On this page, the deal is created.',
   path: PATHS.createContract,
-  components: {Stepper},
+  components: {
+    Stepper,
+  },
 };
 </script>

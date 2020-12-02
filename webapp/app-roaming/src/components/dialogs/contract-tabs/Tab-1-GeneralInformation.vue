@@ -54,11 +54,11 @@
     <parties-header />
     <row label="Currency for all discounts">
       <v-col>
-        {{ generalInformation[fromMSP].currencyForAllDiscounts }}
+        {{ generalInformation[fromMSP].currencyForAllDiscounts | isNil }}
       </v-col>
       <v-divider vertical />
       <v-col>
-        {{ generalInformation[toMSP].currencyForAllDiscounts }}
+        {{ generalInformation[toMSP].currencyForAllDiscounts | isNil }}
       </v-col>
     </row>
     <row label="TADIG Codes">

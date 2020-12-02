@@ -156,31 +156,31 @@ const newDocumentModule = {
       state,
     }) {
       setTimeout(()=>{
-        const data = getters.contract;
+        const data = getters.deal;
         const toMSP = getters.msps.partner;
         Vue.axios
             .post(
                 '/documents',
-                {type: 'contract', toMSP, data},
+                {type: 'deal', toMSP, data},
                 {withCredentials: true},
             )
             .then((res) => {
               console.log(
-                  `%c Successfully added new contract!`,
+                  `%c Successfully added new deal!`,
                   'color:#5cb85c; font-weight:800',
               );
               commit('resetState');
-              router.push(PATHS.contracts);
+              router.push(PATHS.deals);
             })
             .catch((err) => {
               console.log(err);
-              router.push(PATHS.contracts);
+              router.push(PATHS.deals);
             });
       }, 50);
     },
   },
   getters: {
-    contract: (state, getters, rootState) => {
+    deal: (state, getters, rootState) => {
       const user = getters.msps.user;
       const {generalInformation, partner, partnerData, userData} = state;
       const {
@@ -190,7 +190,7 @@ const newDocumentModule = {
       } = generalInformation;
 
 
-      const contract = {
+      const deal = {
         generalInformation: {
           ...otherVariables,
           [partner]: gPartnerData,
@@ -199,7 +199,7 @@ const newDocumentModule = {
         [partner]: partnerData,
         [user]: userData,
       };
-      return contract;
+      return deal;
     },
     msps: (state, getters, rootState) => {
       return {

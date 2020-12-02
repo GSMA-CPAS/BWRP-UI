@@ -11,7 +11,7 @@
             outlined
             v-model="search"
             append-icon="mdi-magnify"
-            label="Search Contract"
+            label="Search for document"
             single-line
             hide-details
           />
@@ -24,6 +24,7 @@
         @keypress.enter="to(item.documentId)"
         tabindex="0"
       >
+        <td>someReferenceID</td>
         <td class="pa-6">
           {{
             `${item.documentId.substring(0, 5)}...${item.documentId.substring(
@@ -32,7 +33,7 @@
             )}`
           }}
         </td>
-        <td>someReferenceID</td>
+        <td>{{ item.fromMSP }}</td>
         <td>someName</td>
         <td>someAuthor</td>
         <td>lastModification</td>
@@ -51,8 +52,21 @@
               />
             </template>
             <v-list>
-              <v-list-item link v-for="(item, i) in items" :key="i">
-                <v-list-item-title v-text="item.title" />
+              <v-list-item
+                link
+                v-for="(item, i) in items"
+                @click="item.action"
+                :key="i"
+              >
+                <v-list-item-icon>
+                  <v-icon
+                    v-text="`mdi-${item.icon}`"
+                    :color="item.iconColor"
+                  ></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.title" />
+                </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -65,14 +79,15 @@
 import {mapState} from 'vuex';
 // import Filters from '@/components/other/Filters.vue';
 export default {
-  name: 'contracts-table',
+  name: 'deals-table',
   description: 'In this table, the documents are displayed.',
   data() {
     return {
       search: '',
       headers: [
-        {text: 'Document ID', value: 'documentId', align: 'start'},
         {text: 'Internal Reference', value: 'referenceID'},
+        {text: 'Document ID', value: 'documentId'},
+        {text: 'From MSP', value: 'fromMSP'},
         {text: 'Name', value: 'contractName'},
         {text: 'Author', value: 'author'},
         {text: 'Last Modification', value: 'lastModification'},
@@ -80,7 +95,6 @@ export default {
         {text: 'End Date', value: 'endDate'},
         {text: 'State', value: 'state'},
         {text: 'Actions', value: 'action'},
-        // {text: 'From MSP', value: 'fromMSP'},
         // {text: 'To MSP', value: 'toMSP'},
       ],
     };
@@ -95,12 +109,37 @@ export default {
       });
     },
     to(cid) {
-      this.$router.push(`/contract-timeline/${cid}`);
+      this.$router.push(`/deal-timeline/${cid}`);
+    },
+    onSummary() {
+      console.log('Pressed Summary');
+    },
+    onUpload() {
+      console.log('Pressed Upload');
+    },
+    onEdit() {
+      console.log('Pressed Edit');
+    },
+    onDelete() {
+      console.log('Pressed Delete');
     },
   },
   computed: {
     items() {
-      return [{title: 'Summary'}, {title: 'Edit'}, {title: 'Delete'}];
+      return [
+        {title: 'Summary', icon: 'clipboard-text', action: this.onSummary},
+        {title: 'Upload Usage Report', icon: 'upload', action: this.onUpload},
+        {
+          title: 'Edit',
+          icon: 'pencil',
+          action: this.onEdit,
+        },
+        {
+          title: 'Delete',
+          icon: 'delete',
+          action: this.onDelete,
+        },
+      ];
     },
     ...mapState(['documents']),
   },
