@@ -22,7 +22,7 @@
           @button-pressed="downloadDocument"
         />
         <v-spacer />
-        <app-button @click="saveContract" class="mr-5" label="Confirm" />
+        <app-button @click="saveContract" class="mr-5" label="Save & Propose To Partner" />
       </v-row>
     </v-stepper>
   </div>
