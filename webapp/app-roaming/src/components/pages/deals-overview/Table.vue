@@ -33,7 +33,7 @@
             )}`
           }}
         </td>
-        <td>{{ item.fromMSP }}</td>
+        <td>{{ item.toMSP }}</td>
         <td>someName</td>
         <td>someAuthor</td>
         <td>lastModification</td>
@@ -87,7 +87,7 @@ export default {
       headers: [
         {text: 'Internal Reference', value: 'referenceID'},
         {text: 'Document ID', value: 'documentId'},
-        {text: 'From MSP', value: 'fromMSP'},
+        {text: 'Partner', value: 'toMSP'},
         {text: 'Name', value: 'contractName'},
         {text: 'Author', value: 'author'},
         {text: 'Last Modification', value: 'lastModification'},
