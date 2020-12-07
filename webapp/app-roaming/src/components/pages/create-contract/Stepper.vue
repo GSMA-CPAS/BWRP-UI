@@ -22,7 +22,11 @@
           @button-pressed="downloadDocument"
         />
         <v-spacer />
-        <app-button @click="saveContract" class="mr-5" label="Save & Propose To Partner" />
+        <app-button
+          @click="saveContract"
+          class="mr-5"
+          label="Save & Propose To Partner"
+        />
       </v-row>
     </v-stepper>
   </div>
@@ -36,7 +40,7 @@ export default {
     ...mapActions('document/new', ['saveContract', 'setStep']),
     ...mapMutations('document/new', ['resetState']),
     downloadDocument() {
-      const contract = this.contract;
+      const contract = this.deal;
       delete contract.step;
       const data =
         'data:text/json;charset=utf-8,' +
@@ -49,7 +53,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('document/new', ['contract']),
+    ...mapGetters('document/new', ['deal']),
     ...mapState('document/new', ['step']),
     steps() {
       const components = require.context(
