@@ -16,15 +16,7 @@
       "description": ""
     },
     {
-      "name": "documents",
-      "description": ""
-    },
-    {
-      "name": "signatures",
-      "description": ""
-    },
-    {
-      "name": "network",
+      "name": "blockchain",
       "description": ""
     }
   ],
@@ -383,31 +375,15 @@
         }
       }
     },
-    "/documents": {
+    "/blockchain/documents": {
       "get": {
         "tags": [
-          "documents"
+          "blockchain"
         ],
         "summary": "List all documents",
         "description": "",
         "produces": [
           "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "type",
-            "description": "Document type",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "state",
-            "description": "Document state",
-            "required": false,
-            "type": "string"
-          }
         ],
         "responses": {
           "200": {
@@ -423,7 +399,7 @@
       },
       "post": {
         "tags": [
-          "documents"
+          "blockchain"
         ],
         "summary": "Create document",
         "description": "",
@@ -442,14 +418,24 @@
             "schema": {
               "type": "object",
               "properties": {
-                "type": {
-                  "type": "string"
-                },
                 "toMSP": {
                   "type": "string"
                 },
                 "data": {
-                  "type": "object"
+                  "type": "object",
+                  "example": {
+                    "header": {
+                      "version": "1.0",
+                      "type": "contract",
+                      "msps": {
+                        "DTAG": {"minSignatures": 2},
+                        "TMUS": {"minSignatures": 2}
+                      }
+                    },
+                    "body": {
+                      "price1": "1.0"
+                    }
+                  }
                 }
               }
             }
@@ -468,10 +454,10 @@
         }
       }
     },
-    "/documents/{documentId}": {
+    "/blockchain/documents/{documentId}": {
       "get": {
         "tags": [
-          "documents"
+          "blockchain"
         ],
         "summary": "Find document by id",
         "description": "",
@@ -500,10 +486,10 @@
         }
       }
     },
-    "/signatures/{documentId}": {
+    "/blockchain/signatures/{documentId}": {
       "put": {
         "tags": [
-          "signatures"
+          "blockchain"
         ],
         "summary": "Add document signature",
         "description": "",
@@ -532,10 +518,10 @@
         }
       }
     },
-    "/signatures/{documentId}/{mspid}": {
+    "/blockchain/signatures/{documentId}/{mspid}": {
       "get": {
         "tags": [
-          "signatures"
+          "blockchain"
         ],
         "summary": "Get all signature specified by documentId and mspid",
         "description": "",
@@ -571,10 +557,10 @@
         }
       }
     },
-    "/network/discovery/msps": {
+    "/blockchain/discovery/msps": {
       "get": {
         "tags": [
-          "network"
+          "blockchain"
         ],
         "summary": "Discover mspids",
         "description": "",
@@ -594,10 +580,10 @@
         }
       }
     },
-    "/network/discovery/msps/{msp}": {
+    "/blockchain/discovery/msps/{msp}": {
       "get": {
         "tags": [
-          "network"
+          "blockchain"
         ],
         "summary": "Discover by mspid",
         "description": "",

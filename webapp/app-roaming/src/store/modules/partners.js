@@ -12,7 +12,7 @@ const partnersModule = {
   actions: {
     loadPartners({commit, dispatch, rootGetters, getters, rootState, state}) {
       Vue.axios
-          .get('/network/discovery/msps', {withCredentials: true})
+          .get('/discovery/msps', {withCredentials: true})
           .then((data) => {
             const parsedData = data;
 

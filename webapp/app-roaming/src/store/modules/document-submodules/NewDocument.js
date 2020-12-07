@@ -156,12 +156,22 @@ const newDocumentModule = {
       state,
     }) {
       setTimeout(()=>{
-        const data = getters.deal;
+        // const data = getters.deal;
+        const data = {
+          'header': {
+            'version': '1.0',
+            'type': 'deal',
+            'msps': {}
+          },
+          'body': getters.deal
+        };
         const toMSP = getters.msps.partner;
+        data.header.msps[getters.msps.user] = {minSignatures: 2};
+        data.header.msps[toMSP] = {minSignatures: 2};
         Vue.axios
             .post(
                 '/documents',
-                {type: 'deal', toMSP, data},
+                {toMSP, data},
                 {withCredentials: true},
             )
             .then((res) => {

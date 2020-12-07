@@ -72,29 +72,10 @@
       "route": "/api/v1/apps",
       "csrfProtectionEnabled": false
     },
-    "NetworkService": {
+    "BlockchainService": {
       "enabled": true,
-      "classPath": "/network/v1/NetworkService",
-      "route": "/api/v1/network",
-      "csrfProtectionEnabled": false,
-      "useBackendAdapters": [
-        {"type": "blockchain", "name": "BlockchainAdapter"}
-      ]
-    },
-    "DocumentService": {
-      "enabled": true,
-      "classPath": "/documents/v1/DocumentService",
-      "route": "/api/v1/documents",
-      "csrfProtectionEnabled": false,
-      "useBackendAdapters": [
-        {"type": "blockchain", "name": "BlockchainAdapter"},
-        {"type": "localStorage", "name": "LocalStorageAdapter"}
-      ]
-    },
-    "SignatureService": {
-      "enabled": true,
-      "classPath": "/signatures/v1/SignatureService",
-      "route": "/api/v1/signatures",
+      "classPath": "/blockchain/v1/BlockchainService",
+      "route": "/api/v1/blockchain",
       "csrfProtectionEnabled": false,
       "useBackendAdapters": [
         {"type": "blockchain", "name": "BlockchainAdapter"},

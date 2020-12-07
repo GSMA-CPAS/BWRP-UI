@@ -12,7 +12,6 @@ class LocalStorageAdapter extends AbstractAdapter {
     try {
       const documentData = {
         'documentId': documentId,
-        'type': data.type,
         'fromMSP': data.fromMSP,
         'toMSP': data.toMSP,
         'data': data.data,
@@ -68,17 +67,34 @@ class LocalStorageAdapter extends AbstractAdapter {
     return rows[0].documentId;
   }
 
-  async getDocuments(type, state) {
-    try {
-      if (type && state) {
-        return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents WHERE `type` = ? AND state = ?', [type, state]);
-      } else if (type) {
-        return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents WHERE `type` = ?', [type]);
-      } else if (state) {
-        return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents WHERE `state` = ?', [state]);
-      } else {
-        return await this.getDatabase().query('SELECT documentId, fromMSP, toMSP, `state`, `type` FROM documents');
+  async getDocuments(query) {
+    let extracts = '';
+    let filters = '';
+
+    if (query) {
+      if (query.extract) {
+        if (Array.isArray(query.extract)) {
+          for (let i=0; i < query.extract.length; i++) {
+            // console.log(query.extract[i]);
+            extracts += ', JSON_EXTRACT(data, "$.' + query.extract[i] + '") as `' + query.extract[i] + '`';
+          }
+        } else {
+          extracts = ', JSON_EXTRACT(data, "$.' + query.extract + '") as `' + query.extract + '`';
+        }
       }
+      if (typeof query.filter === 'object' && query.filter !== null) {
+        for (const [key, value] of Object.entries(query.filter)) {
+          // console.log(`key=${key} value=${value}`);
+          filters = ' WHERE JSON_EXTRACT(data, "$.' + key + '") = "' + value + '"';
+        }
+      }
+    }
+
+    const sql = 'SELECT documentId, fromMSP, toMSP, state, ts' + extracts + ' FROM documents' + filters + ' ORDER BY ts DESC';
+    this.getLogger().debug('[LocalStorageAdapter::getDocuments] sql query - %s', sql);
+
+    try {
+      return await this.getDatabase().query(sql);
     } catch (error) {
       this.getLogger().error('[LocalStorageAdapter::getDocuments] failed to get documents - %s', error.message);
       throw error;
@@ -114,11 +130,11 @@ class LocalStorageAdapter extends AbstractAdapter {
               'CREATE TABLE IF NOT EXISTS documents (' +
               '`id` INT AUTO_INCREMENT, ' +
               '`documentId` VARCHAR(128) NOT NULL, ' +
-              '`type` VARCHAR(64) NOT NULL, ' +
               '`fromMSP` VARCHAR(64) NOT NULL, ' +
               '`toMSP` VARCHAR(64) NOT NULL, ' +
               '`data` json NOT NULL, ' +
               '`state` VARCHAR(64) NOT NULL, ' +
+              '`ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, ' +
               '`fromStorageKey` VARCHAR(64) AS (SHA2(CONCAT(fromMSP, documentId), 256)) STORED NOT NULL, ' +
               '`toStorageKey` VARCHAR(64) AS (SHA2(CONCAT(toMSP, documentId), 256)) STORED NOT NULL, ' +
               'PRIMARY KEY (id), ' +
