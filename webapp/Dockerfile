@@ -18,9 +18,9 @@ RUN apk update \
     && rm -rf /root/cache /var/cache/apk/* /root/.cache \
     && apk add --no-cache --virtual .node-dev-deps python make g++ gcc \
     && npm config set unsafe-perm true \
-    && npm install \
+    && npm install --quiet \
     && npm run build \
-    && npm install --save ./apps/roaming \
+    && npm install --quiet --save ./apps/roaming \
     && npm run build --prefix node_modules/app-roaming \
     && apk del .node-dev-deps
 
