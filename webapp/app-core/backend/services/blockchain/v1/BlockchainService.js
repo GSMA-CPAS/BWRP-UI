@@ -15,6 +15,7 @@ class BlockchainService extends AbstractService {
     this.requiredAdapterType('wallet');
     this.registerRequestHandler();
     this.mspid = config.organization.mspid;
+    this.requiredAdapterType('common');
   }
 
   /*
@@ -63,7 +64,8 @@ class BlockchainService extends AbstractService {
      */
     this.getRouter().get('/documents', ensureAuthenticated, async (req, res) => {
       try {
-        const response = await this.getBackendAdapter('localStorage').getDocuments(req.query);
+        // const response = await this.getBackendAdapter('localStorage').getDocuments(req.query);
+        const response = await this.getBackendAdapter('common').getContracts();
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
@@ -79,7 +81,8 @@ class BlockchainService extends AbstractService {
     this.getRouter().get('/documents/:documentId', ensureAuthenticated, async (req, res) => {
       const documentId = req.params.documentId;
       try {
-        const response = await this.getBackendAdapter('localStorage').getDocument(documentId);
+        // const response = await this.getBackendAdapter('localStorage').getDocument(documentId);
+        const response = await this.getBackendAdapter('common').getContractById(documentId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
@@ -96,16 +99,17 @@ class BlockchainService extends AbstractService {
       try {
         const toMSP = req.body.toMSP;
         const data = req.body.data;
-        const documentDataBase64 = Buffer.from(JSON.stringify(data)).toString('base64');
-        const response = await this.getBackendAdapter('blockchain').uploadPrivateDocument(toMSP, documentDataBase64);
-        const documentId = response.documentID;
-        const documentData = {
-          'fromMSP': this.mspid,
-          'toMSP': toMSP,
-          'data': JSON.stringify(data),
-          'state': Enums.documentState.PENDING,
-        };
-        await this.getBackendAdapter('localStorage').storeDocument(documentId, documentData);
+        // const documentDataBase64 = Buffer.from(JSON.stringify(data)).toString('base64');
+        // const response = await this.getBackendAdapter('blockchain').uploadPrivateDocument(toMSP, documentDataBase64);
+        // const documentId = response.documentID;
+        // const documentData = {
+        //   'fromMSP': this.mspid,
+        //   'toMSP': toMSP,
+        //   'data': JSON.stringify(data),
+        //   'state': Enums.documentState.PENDING,
+        // };
+        // await this.getBackendAdapter('localStorage').storeDocument(documentId, documentData);
+        const response = await this.getBackendAdapter('common').createContract(toMSP, data);
         return res.json(response);
       } catch (error) {
         this.getLogger().error('[BlockchainService::/] Failed to store document - %s', error.message);
@@ -167,7 +171,8 @@ class BlockchainService extends AbstractService {
       const documentId = req.params.documentId;
       const msp = req.params.msp;
       try {
-        const response = await this.getBackendAdapter('blockchain').getSignatures(documentId, msp);
+        // const response = await this.getBackendAdapter('blockchain').getSignatures(documentId, msp);
+        const response = await this.getBackendAdapter('common').getSignatures(documentId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({

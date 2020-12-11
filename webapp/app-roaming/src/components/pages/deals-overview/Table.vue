@@ -20,8 +20,8 @@
     </template>
     <template #item="{item}">
       <tr
-        @click="to(item.documentId)"
-        @keypress.enter="to(item.documentId)"
+        @click="to(item.contractId + '?d=' + item.documentId)"
+        @keypress.enter="to(item.contractId + '?d=' + item.documentId)"
         tabindex="0"
       >
         <td>someReferenceID</td>

@@ -36,6 +36,14 @@
   },
 
   "apps": {
+    "roaming": {
+      "name": "roaming",
+      "enabled": true,
+      "packageName": "app-roaming",
+      "displayName": "Roaming",
+      "config": {
+      }
+    }
   },
 
   "services": {
@@ -80,7 +88,8 @@
       "useBackendAdapters": [
         {"type": "blockchain", "name": "BlockchainAdapter"},
         {"type": "localStorage", "name": "LocalStorageAdapter"},
-        {"type": "wallet", "name": "WalletAdapter"}
+        {"type": "wallet", "name": "WalletAdapter"},
+        {"type": "common", "name": "CommonAdapter"}      
       ]
     },
     "ProxyService": {
@@ -153,6 +162,12 @@
     "LocalStorageAdapter": {
       "classPath": "/adapter/storage/v1/LocalStorageAdapter",
       "config": {
+      }
+    },
+    "CommonAdapter": {
+      "classPath": "/adapter/common/v1/CommonAdapter",
+      "config": {
+        "url": ""
       }
     }
   }
