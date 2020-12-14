@@ -1,7 +1,7 @@
 <template>
   <div>
     <form-container>
-      <row label="Contract Name and Contract Type">
+      <row label="Contract Name and Deal Type">
         <v-col>
           <v-text-field
             label="Contract Name"

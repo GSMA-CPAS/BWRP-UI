@@ -13,7 +13,7 @@
         <file-uploader @file-upload="saveFile" file-types=".json" />
       </v-row>
     </template>
-    <template #actions="{ cancel }">
+    <template #actions="{cancel}">
       <app-button
         text
         label="Cancel"

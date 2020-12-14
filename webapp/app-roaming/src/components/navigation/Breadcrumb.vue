@@ -25,8 +25,8 @@ export default {
   data: () => ({
     items: [
       {
-        text: 'Contracts',
-        to: '/contracts',
+        text: 'Deals',
+        to: '/deals',
       },
     ],
   }),
@@ -52,8 +52,8 @@ export default {
   watch: {
     $route(to, from) {
       const {name, meta, params, path} = to;
-      name === 'contracts-overview' && this.removeLastBreacrumb();
-      if (from.name === 'contracts-overview') {
+      name === 'deals-overview' && this.removeLastBreacrumb();
+      if (from.name === 'deals-overview') {
         to.name === 'timeline-page' ?
           this.addBreadcrumb(params.cid, path) :
           this.addBreadcrumb(meta.text, path);
@@ -65,7 +65,7 @@ export default {
     if (name === 'timeline-page') {
       this.addBreadcrumb(params.cid, path);
     } else {
-      name !== 'contracts-overview' && this.addBreadcrumb(meta.text, path);
+      name !== 'deals-overview' && this.addBreadcrumb(meta.text, path);
     }
   },
 };

@@ -199,32 +199,42 @@ const newDocumentModule = {
       state,
     }) {
       setTimeout(()=>{
-        const data = getters.contract;
+        // const data = getters.deal;
+        const data = {
+          'header': {
+            'version': '1.0',
+            'type': 'deal',
+            'msps': {}
+          },
+          'body': getters.deal
+        };
         const toMSP = getters.msps.partner;
         const user = getters.msps.user;
+        data.header.msps[getters.msps.user] = {minSignatures: 2};
+        data.header.msps[toMSP] = {minSignatures: 2};
         Vue.axios
             .post(
                 '/documents',
-                {type: 'contract', toMSP, data: convertModelsModule.convertUiModelToJsonModel(user, toMSP, data)},
+                {toMSP, data: convertModelsModule.convertUiModelToJsonModel(user, toMSP, data)},
                 {withCredentials: true},
             )
             .then((res) => {
               console.log(
-                  `%c Successfully added new contract!`,
+                  `%c Successfully added new deal!`,
                   'color:#5cb85c; font-weight:800',
               );
               commit('resetState');
-              router.push(PATHS.contracts);
+              router.push(PATHS.deals);
             })
             .catch((err) => {
               console.log(err);
-              router.push(PATHS.contracts);
+              router.push(PATHS.deals);
             });
       }, 50);
     },
   },
   getters: {
-    contract: (state, getters, rootState) => {
+    deal: (state, getters, rootState) => {
       const user = getters.msps.user;
       const {generalInformation, partner, partnerData, userData} = state;
       const {
@@ -234,7 +244,7 @@ const newDocumentModule = {
       } = generalInformation;
 
 
-      const contract = {
+      const deal = {
         generalInformation: {
           ...otherVariables,
           [partner]: gPartnerData,
@@ -243,7 +253,7 @@ const newDocumentModule = {
         [partner]: partnerData,
         [user]: userData,
       };
-      return contract;
+      return deal;
     },
     msps: (state, getters, rootState) => {
       return {

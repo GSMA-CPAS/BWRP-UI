@@ -7,7 +7,7 @@
       v-else
       outlined
       hide-icon
-      title="Are you sure you want to sign this contract?"
+      title="Are you sure you want to sign this deal?"
       label="Sign"
       :loading="signing"
     >

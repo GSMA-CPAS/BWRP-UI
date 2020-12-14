@@ -16,7 +16,7 @@ export default {
   name: 'tab-2',
   label: 'Bank details',
   description:
-    'In this tab the bank details of a contract are displayed. The tab is found in the contract timeline when clicking on \'View Contract\'',
+    'In this tab the bank details of a contract are displayed. The tab is found in the contract timeline when clicking on View Contract',
   mixins: [bankFieldsMixin, timelineMixin],
   components: {
     PartiesHeader,

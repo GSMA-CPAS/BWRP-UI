@@ -17,6 +17,8 @@ $ NODE_ENV=production npm run build
 $ npm link
 </pre>
 
+``NODE_ENV=production`` with ``npm run build`` important for setting correct ``publicPath`` (see webapp/app-roaming/vue.config.js)
+
 **Install app-core**
 
 <pre>
@@ -28,7 +30,7 @@ $ npm link app-roaming
 
 **Configuration**
 
-Create config file ``production-org1.json`` in folder ``webapp/app-core/config``.
+Create config file ``development-org1.json`` in folder ``webapp/app-core/config``.
 
 <pre>
 {
@@ -89,16 +91,16 @@ Create config file ``production-org1.json`` in folder ``webapp/app-core/config``
             "config": {
                 "url": "http://localhost:8081",
                 "webhooks": [
-                    {"eventName": "STORE:DOCUMENTHASH", "callbackUrl": "http://{host}:{port}/api/v1/documents/event"},
-                    {"eventName": "STORE:SIGNATURE", "callbackUrl": "http://{host}:{port}/api/v1/signatures/event"}
+                    {"eventName": "STORE:DOCUMENTHASH", "callbackUrl": "http://{host}:{port}/api/v1/blockchain/documents/events"},
+                    {"eventName": "STORE:SIGNATURE", "callbackUrl": "http://{host}:{port}/api/v1/blockchain/signatures/events"}
                 ]
             }
         }
     }
 }
 </pre>
-
-To support hierarchical configurations node-config (https://github.com/lorenwest/node-config) is used. 
+ 
+NPM package ``config`` (https://github.com/lorenwest/node-config) is used to support hierarchical configurations.
 
 **Setup**
 
@@ -108,13 +110,20 @@ To support hierarchical configurations node-config (https://github.com/lorenwest
 
 <pre>
 $ cd webapp/app-core
-$ NODE_ENV=production-org1 node setup.js
+$ NODE_ENV=development-org1 node setup.js
 </pre>
 
 **Start webapp**
 
 <pre>
 $ cd webapp/app-core
-$ NODE_ENV=production-org1 node server.js
+$ NODE_ENV=development-org1 node server.js
 -> http://localhost:3000
+</pre>
+
+Sign-in:
+
+<pre>
+Username: admin
+Password: admin
 </pre>

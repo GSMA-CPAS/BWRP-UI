@@ -2,15 +2,15 @@
   <fragment>
     <v-row>
       <v-col>
-        Discounts will be active if the TAP charges will be at least as high as the value below.
+        Discounts will be active if the TAP charges will be at least as high as
+        the value below.
       </v-col>
     </v-row>
-    <revenue-commitment-input v-model="revenueCommitment"/>
+    <revenue-commitment-input v-model="revenueCommitment" />
   </fragment>
 </template>
 
 <script>
-
 import RevenueCommitmentInput from '../condition-components/RevenueCommitmentInput';
 
 export default {

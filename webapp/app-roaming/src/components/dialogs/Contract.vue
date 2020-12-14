@@ -18,7 +18,7 @@ export default {
       const components = require.context(
           './contract-tabs',
           false,
-          /(Tab-)\d-\w*\.(vue|js)$/
+          /(Tab-)\d-\w*\.(vue|js)$/,
       );
       const tabs = components.keys().map((x) => {
         const component = components(x).default;
