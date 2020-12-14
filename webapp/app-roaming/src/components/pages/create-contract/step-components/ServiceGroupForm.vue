@@ -58,10 +58,10 @@
       </div>
       <div v-if="service.pricingModel === 'Balanced/Unbalanced'">
         <row label="Balanced Rate">
-          <rating-plan-input v-model="service.balancedRate"/>
+          <rating-plan-input v-model="service.balancedRate" :disable-thresholds="true" :disable-fixed="true"/>
         </row>
         <row label="Unbalanced Rate">
-          <rating-plan-input v-model="service.unbalancedRate"/>
+          <rating-plan-input v-model="service.unbalancedRate" :disable-thresholds="true" :disable-fixed="true"/>
         </row>
       </div>
       <row label="Access Pricing Model">
@@ -97,7 +97,7 @@ export default {
   name: 'service-group-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['homeTadigOptions', 'visitorTadigOptions'],
+  props: ['homeTadigOptions', 'visitorTadigOptions', 'value'],
   components: {
     RatingPlanInput,
   },
@@ -163,6 +163,12 @@ export default {
     isDisabled() {
       return this.chosenServices.length === 1;
     },
+  },
+  beforeMount() {
+    this.visitorTadigs = this.value.visitorTadigs;
+    this.homeTadigs = this.value.homeTadigs;
+    this.condition = this.value.condition;
+    this.chosenServices = this.value.chosenServices;
   },
 };
 </script>

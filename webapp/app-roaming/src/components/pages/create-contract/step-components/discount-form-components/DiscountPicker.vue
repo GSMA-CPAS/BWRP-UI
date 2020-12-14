@@ -35,7 +35,7 @@ export default {
     RevenueCommit,
     BalancedUnbalanced,
   },
-  props: {service: {type: String, default: 'missing service'}},
+  props: ['service', 'value'],
   methods: {
     checkModel(selectedModel) {
       return this.selectedModel === selectedModel;
@@ -77,6 +77,9 @@ export default {
     increments() {
       return ['1 sec', '60 sec', 'AA14'];
     },
+  },
+  beforeMount() {
+    this.selectedModel = this.value;
   },
 };
 </script>

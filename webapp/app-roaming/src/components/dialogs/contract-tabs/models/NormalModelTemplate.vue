@@ -1,0 +1,39 @@
+<template>
+  <v-col>
+    <v-row>
+      <v-col><b>{{ modelType }}</b></v-col>
+      <v-col>{{ data.unit }}</v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+    </v-row>
+    <v-divider />
+    <v-row
+      v-for="({start, fixedPrice, linearPrice}, index) in data.ratingPlan.rate.thresholds"
+      :key="index"
+    >
+      <v-col>Normal</v-col>
+      <v-col>{{ `Tier ${index + 1}` }}</v-col>
+      <v-col>{{ `${start} ➜ ${(index + 1) === data.ratingPlan.rate.thresholds.length ? 'Unlimited' : data.ratingPlan.rate.thresholds[index+1].start}` }}</v-col>
+      <v-col>{{ fixedPrice }}</v-col>
+      <v-col>{{ linearPrice }}</v-col>
+      <v-col></v-col>
+      <!--<v-col>
+        <v-icon v-if="revenueCommitment" color="primary"
+          >mdi-checkbox-marked-outline</v-icon
+        >
+      </v-col>-->
+    </v-row>
+  </v-col>
+</template>
+
+<script>
+import {discountModelsMixin} from '@/utils/mixins/component-specfic';
+export default {
+  name: 'normal-model-template',
+  label: 'Normal Model Template',
+  mixins: [discountModelsMixin],
+  props: ['modelType']
+};
+</script>

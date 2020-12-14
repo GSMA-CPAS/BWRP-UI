@@ -1,6 +1,7 @@
 <template>
   <fragment>
-    <v-col>{{ data.model }}</v-col>
+
+    <v-col>{{ data.usagePricing.kind }}</v-col>
     <v-col>{{ data.increment }}</v-col>
     <v-col>N/A</v-col>
     <v-col>{{ data.rate | isNil }}</v-col>

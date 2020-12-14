@@ -39,7 +39,7 @@ export default {
   name: 'discount-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['homeTadigs', 'visitorTadigs'],
+  props: ['homeTadigs', 'visitorTadigs', 'value'],
   components: {
     ConditionPicker,
     ServiceGroupForm,
@@ -83,6 +83,10 @@ export default {
     isDisabled() {
       return this.serviceGroups.length === 1;
     },
+  },
+  beforeMount() {
+    this.condition = this.value.condition;
+    this.serviceGroups = this.value.serviceGroups;
   },
 };
 </script>

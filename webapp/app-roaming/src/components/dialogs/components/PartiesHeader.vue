@@ -47,7 +47,7 @@ export default {
   methods: {
     switchPartner() {
       this.currentParty = this.currentParty === 0 ? 1 : 0;
-      this.$emit('party-switch', this.currentParty);
+      this.$emit('party-switch', this.currentParty, this.parties[this.currentParty]);
     },
   },
 };

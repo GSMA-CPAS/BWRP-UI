@@ -70,7 +70,6 @@ const timelineMixin = {
   computed: {
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
-      generalInformation: (state) => state.document.data.generalInformation,
       documentData: (state) => state.document.data,
     }),
     ...mapGetters('document', [
