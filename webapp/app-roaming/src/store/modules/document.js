@@ -20,7 +20,7 @@ const documentModule = {
       Vue.axios
           .put(
               // `/signatures/` + state.document.documentId,
-              `/signatures/` + state.document.id
+              `/signatures/` + state.document.id,
               {},
               {
                 signing: true,
