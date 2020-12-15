@@ -212,10 +212,11 @@ const newDocumentModule = {
         const user = getters.msps.user;
         data.header.msps[getters.msps.user] = {minSignatures: 2};
         data.header.msps[toMSP] = {minSignatures: 2};
+        data.body = convertModelsModule.convertUiModelToJsonModel(user, toMSP, data.body);
         Vue.axios
             .post(
                 '/documents',
-                {toMSP, data: convertModelsModule.convertUiModelToJsonModel(user, toMSP, data)},
+                {toMSP, data},
                 {withCredentials: true},
             )
             .then((res) => {

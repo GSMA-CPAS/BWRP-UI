@@ -44,9 +44,11 @@ export default {
     },
   },
   beforeMount() {
-    this.includingTaxes = this.value.includingTaxes;
-    this.commitmentValue = this.value.commitmentValue;
-    this.currency = this.value.currency;
+    if ( this.value ) {
+      this.includingTaxes = this.value.includingTaxes;
+      this.commitmentValue = this.value.commitmentValue;
+      this.currency = this.value.currency;
+    }
   },
 };
 </script>

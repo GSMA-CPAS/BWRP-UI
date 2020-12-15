@@ -72,7 +72,6 @@ export default {
     addServiceGroup() {
       this.serviceGroups.push({
         id: `service-group-${this.serviceGroups.length}`,
-        name: null,
       });
     },
     removeServiceGroup(index) {

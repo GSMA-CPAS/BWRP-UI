@@ -165,10 +165,29 @@ export default {
     },
   },
   beforeMount() {
-    this.visitorTadigs = this.value.visitorTadigs;
-    this.homeTadigs = this.value.homeTadigs;
-    this.condition = this.value.condition;
-    this.chosenServices = this.value.chosenServices;
+    if ( this.value ) {
+      this.visitorTadigs = this.value.visitorTadigs;
+      this.homeTadigs = this.value.homeTadigs;
+      this.condition = this.value.condition;
+      this.chosenServices = this.value.chosenServices;
+    }
+
+    if ( !this.chosenServices || this.chosenServices.length === 0 ) {
+      this.chosenServices = [
+        {
+          id: 'service-0',
+          name: null,
+          rate: null,
+          unit: null,
+          balancedRate: null,
+          unbalancedRate: null,
+          pricingModel: 'Normal',
+          accessPricingModel: 'Not Charged',
+          accessPricingUnit: null,
+          accessPricingRate: null,
+        }
+      ];
+    }
   },
 };
 </script>
