@@ -16,6 +16,7 @@ import RevenueCommitmentInput from '../condition-components/RevenueCommitmentInp
 export default {
   name: 'deal-revenue-commit',
   model: 'Deal Revenue Commitment',
+  props: ['value'],
   data() {
     return {revenueCommitment: null};
   },
@@ -29,6 +30,9 @@ export default {
   },
   components: {
     RevenueCommitmentInput,
+  },
+  beforeMount() {
+    this.revenueCommitment = this.value;
   },
 };
 </script>

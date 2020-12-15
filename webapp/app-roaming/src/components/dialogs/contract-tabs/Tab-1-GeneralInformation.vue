@@ -2,29 +2,29 @@
   <fragment class="text-center">
     <v-row>
       <v-col>
-        <row no-divider label="Name">{{ generalInformation.name | isNil }}</row>
+        <row no-divider label="Name">{{ documentData.metadata.name | isNil }}</row>
       </v-col>
       <v-col>
-        <row no-divider label="Type">{{ generalInformation.type | isNil }}</row>
+        <row no-divider label="Type">{{ documentData.metadata.type | isNil }}</row>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <row no-divider label="Start Date">
-          {{ generalInformation.startDate | parseDate }}
+          {{ documentData.framework.term.start | parseDate }}
         </row>
       </v-col>
       <v-col>
         <row no-divider label="End Date">
-          {{ generalInformation.endDate | parseDate }}
+          {{ documentData.framework.term.end | parseDate }}
         </row>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <row no-divider label="Prolongation Length">
-          <div v-if="generalInformation.prolongationLength > 0">
-            {{ `${generalInformation.prolongationLength} months` }}
+          <div v-if="documentData.framework.term.prolongation > 0">
+            {{ `${documentData.framework.term.prolongation} months` }}
             <help-tooltip
               icon="message-alert-outline"
               text="This contract will renew automatically"
@@ -35,7 +35,7 @@
       </v-col>
       <v-col>
         <row no-divider label="Taxes">
-          <div v-if="generalInformation.taxesIncluded">Included</div>
+          <div v-if="documentData.framework.payment.taxesIncluded">Included</div>
           <div v-else>Excluded</div>
         </row>
       </v-col>
@@ -43,7 +43,7 @@
     <v-row>
       <v-col>
         <row label="Authors" no-divider>
-          <v-col>{{ generalInformation.authors | isNil }}</v-col>
+          <v-col>{{ documentData.metadata.authors | isNil }}</v-col>
         </row>
       </v-col>
       <v-col />
@@ -54,20 +54,20 @@
     <parties-header />
     <row label="Currency for all discounts">
       <v-col>
-        {{ generalInformation[fromMSP].currencyForAllDiscounts | isNil }}
+        {{ documentData.framework.partyInformation[fromMSP].contractCurrency }}
       </v-col>
       <v-divider vertical />
       <v-col>
-        {{ generalInformation[toMSP].currencyForAllDiscounts | isNil }}
+        {{ documentData.framework.partyInformation[toMSP].contractCurrency }}
       </v-col>
     </row>
     <row label="TADIG Codes">
       <v-col>
         <div>
-          {{ generalInformation[fromMSP].tadigCodes.codes | isNil }}
+          {{ documentData.framework.partyInformation[fromMSP].defaultTadigCodes.join(', ') }}
         </div>
         <template
-          v-if="generalInformation[fromMSP].tadigCodes.includeContractParty"
+          v-if="documentData.framework.partyInformation[fromMSP].includeContractParty"
         >
           Include contract party
           <v-icon color="primary"> mdi-checkbox-marked-outline </v-icon>
@@ -76,10 +76,10 @@
       <v-divider vertical />
       <v-col>
         <div>
-          {{ generalInformation[toMSP].tadigCodes.codes | isNil }}
+          {{ documentData.framework.partyInformation[toMSP].defaultTadigCodes.join(', ') }}
         </div>
         <template
-          v-if="generalInformation[toMSP].tadigCodes.includeContractParty"
+          v-if="documentData.framework.partyInformation[fromMSP].includeContractParty"
         >
           Include contract party
           <v-icon color="primary"> mdi-checkbox-marked-outline </v-icon>

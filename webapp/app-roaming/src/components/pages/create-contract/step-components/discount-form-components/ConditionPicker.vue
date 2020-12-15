@@ -24,7 +24,7 @@ export default {
     return {selectedConditionName: null, selectedCondition: null};
   },
   components: {},
-  props: {service: {type: String, default: 'missing service'}},
+  props: ['service', 'value'],
   watch: {
     selectedCondition: {
       handler() {
@@ -67,6 +67,12 @@ export default {
         'Deal Revenue Commitment',
       ];
     },
+  },
+  beforeMount() {
+    if ( this.value ) {
+      this.selectedConditionName = this.value.selectedConditionName;
+      this.selectedCondition = this.value.selectedCondition;
+    }
   },
 };
 </script>

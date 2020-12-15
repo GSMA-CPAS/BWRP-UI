@@ -1,7 +1,7 @@
 <template>
   <v-row>
       <v-col>
-        <v-text-field v-model="value" label="Value"/>
+        <v-text-field v-model="commitmentValue" label="Value"/>
       </v-col>
       <v-col>
         <v-text-field v-model="currency" label="Currency"/>
@@ -15,10 +15,11 @@
 export default {
   name: 'revenue-commitment-input',
   description: 'description',
+  props: ['value'],
   data() {
     return {
       includingTaxes: false,
-      value: null,
+      commitmentValue: null,
       currency: null,
     };
   },
@@ -41,6 +42,13 @@ export default {
       },
       deep: true,
     },
-  }
+  },
+  beforeMount() {
+    if ( this.value ) {
+      this.includingTaxes = this.value.includingTaxes;
+      this.commitmentValue = this.value.commitmentValue;
+      this.currency = this.value.currency;
+    }
+  },
 };
 </script>

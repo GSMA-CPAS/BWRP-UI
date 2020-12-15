@@ -3,15 +3,15 @@
     <parties-header />
     <row
       v-for="i in longestArray([
-        documentData[fromMSP].signatures,
-        documentData[toMSP].signatures,
+        documentData.framework.signers[fromMSP],
+        documentData.framework.signers[toMSP],
       ])"
       :label="`Signature ${i}`"
       :key="i"
     >
       <fragment v-for="(msp, index) in parties" :key="msp">
         <v-col>{{
-          parseSignature(documentData[msp].signatures[i - 1]) | isNil
+          parseSignature(documentData.framework.signers[msp][i - 1]) | isNil
         }}</v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>

@@ -2,16 +2,16 @@
   <v-col>
     <fragment v-for="(tier, index) in tiers" :key="tier.id">
       <v-row>
-        <v-col>
+        <v-col v-if="!disableThresholds">
           <v-text-field :disabled="index === 0" v-model="tier.threshold" label="Threshold"/>
         </v-col>
-        <v-col>
-          <v-text-field v-model="tier.fixedPrice" label="Fixed Price" />
+        <v-col v-if="!disableFixed">
+          <v-text-field v-model="tier.fixedPrice" label="Fixed Price"/>
         </v-col>
         <v-col>
           <v-text-field v-model="tier.linearPrice" label="Linear Price" />
         </v-col>
-        <v-col align-self="center" class="mr-3" cols="1">
+        <v-col align-self="center" class="mr-3" cols="1"  v-if="!disableThresholds">
           <app-button
             :disabled="isDisabled || index === 0"
             @button-pressed="removeTier(index)"
@@ -19,8 +19,8 @@
             icon
           />
         </v-col>
-        <v-col align-self="center" class="mr-3" cols="1">
-          <app-button @button-pressed="addTier" :svg="icons.add" icon />
+        <v-col align-self="center" class="mr-3" cols="1" v-if="!disableThresholds">
+          <app-button @button-pressed="addTier" :svg="icons.add" icon :disabled="disableThresholds"/>
         </v-col>
       </v-row>
     </fragment>
@@ -45,6 +45,7 @@ export default {
     OverallRevenueCommitment,
     DiscountPicker,*/
   },
+  props: ['value', 'disableThresholds', 'disableFixed'],
   data() {
     return {
       tiers: [
@@ -78,6 +79,11 @@ export default {
     isDisabled() {
       return this.tiers.length === 1;
     },
+  },
+  beforeMount() {
+    if ( this.value ) {
+      this.tiers = this.value;
+    }
   },
 };
 </script>

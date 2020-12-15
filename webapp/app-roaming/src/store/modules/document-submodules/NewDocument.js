@@ -2,9 +2,15 @@
 import router from '@/router';
 import {PATHS} from '@/utils/Enums';
 import Vue from 'vue';
+import convertModelsModule from './convert-models';
 
 const {log} = console;
 const namespaced = true;
+
+function parseISOString(s) {
+  const b = s.split(/\D+/);
+  return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
+}
 
 const defaultState = () => ({
   step: 1,
@@ -52,9 +58,29 @@ const defaultSignaturesState = () => [
 ];
 
 const defaultDiscountModelsState = () => ({
-  condition: null
+  condition: null,
+  serviceGroups: [
+    {
+      id: 'service-group-0',
+      homeTadigs: [],
+      visitorTadigs: [],
+      chosenServices: [
+        {
+          id: 'service-0',
+          name: null,
+          rate: null,
+          unit: null,
+          balancedRate: null,
+          unbalancedRate: null,
+          pricingModel: 'Normal',
+          accessPricingModel: 'Not Charged',
+          accessPricingUnit: null,
+          accessPricingRate: null,
+        },
+      ],
+    },
+  ]
 });
-
 
 const newDocumentModule = {
   namespaced,
@@ -116,26 +142,43 @@ const newDocumentModule = {
     ) {
       const user = rootGetters['user/organizationMSPID'];
       const {partner, fileAsJSON} = payload;
-      let index = 0;
 
-      for (const key in fileAsJSON) {
-        if (key === 'generalInformation') {
-          continue;
-        } else {
-          Object.defineProperty(
-              fileAsJSON,
-            index === 0 ? 'userData' : 'partnerData',
-            Object.getOwnPropertyDescriptor(fileAsJSON, key),
-          );
-          if (index === 0) {
-            !(key === user) && delete fileAsJSON[key];
-          } else if (index === 1) {
-            !(key === partner) && delete fileAsJSON[key];
+      const loadedJson = {};
+
+      if ( fileAsJSON ) {
+        if ( fileAsJSON.generalInformation ) {
+          loadedJson.generalInformation = fileAsJSON.generalInformation;
+
+          if ( loadedJson.generalInformation[user] ) {
+            loadedJson.generalInformation.userData = loadedJson.generalInformation[user];
+            delete loadedJson.generalInformation[user];
+          }
+
+          if ( loadedJson.generalInformation[partner] ) {
+            loadedJson.generalInformation.partnerData = loadedJson.generalInformation[partner];
+            delete loadedJson.generalInformation[partner];
           }
         }
-        index++;
+
+        if ( fileAsJSON[user] ) {
+          loadedJson.userData = fileAsJSON[user];
+        }
+
+        if ( fileAsJSON[partner] ) {
+          loadedJson.partnerData = fileAsJSON[partner];
+        }
+
+        if ( loadedJson.generalInformation.startDate ) {
+          loadedJson.generalInformation.startDate = parseISOString(loadedJson.generalInformation.startDate);
+        }
+
+        if ( loadedJson.generalInformation.endDate ) {
+          loadedJson.generalInformation.endDate = parseISOString(loadedJson.generalInformation.endDate);
+        }
       }
-      commit('READ_JSON', fileAsJSON);
+
+
+      commit('READ_JSON', loadedJson);
       commit('SET_PARTNER', partner);
     },
     nextStep({commit, dispatch, rootGetters, getters, rootState, state}) {
@@ -166,8 +209,10 @@ const newDocumentModule = {
           'body': getters.deal
         };
         const toMSP = getters.msps.partner;
+        const user = getters.msps.user;
         data.header.msps[getters.msps.user] = {minSignatures: 2};
         data.header.msps[toMSP] = {minSignatures: 2};
+        data.body = convertModelsModule.convertUiModelToJsonModel(user, toMSP, data.body);
         Vue.axios
             .post(
                 '/documents',
