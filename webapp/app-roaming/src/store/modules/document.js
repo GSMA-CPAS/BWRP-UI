@@ -19,7 +19,8 @@ const documentModule = {
     signDocument({commit, dispatch, rootGetters, getters, rootState, state}) {
       Vue.axios
           .put(
-              `/signatures/` + state.document.documentId,
+              // `/signatures/` + state.document.documentId,
+              `/signatures/` + state.document.id
               {},
               {
                 signing: true,
@@ -28,7 +29,8 @@ const documentModule = {
           )
           .then((res) => {
             dispatch('app-state/signing', false, {root: true});
-            dispatch('getSignatures', state.document.documentId);
+            // dispatch('getSignatures', state.document.documentId);
+            dispatch('getSignatures', state.document.id);
           })
           .catch((err) => {
             log(err);
@@ -62,10 +64,13 @@ const documentModule = {
     ) {
       const {fromMSP, toMSP} = state.document;
       const url = '' + `/signatures/${documentID}/`;
-      const fromMSPRequest = Vue.axios.get(url + fromMSP);
-      const toMSPRequest = Vue.axios.get(url + toMSP);
+      // const fromMSPRequest = Vue.axios.get(url + fromMSP);
+      // const toMSPRequest = Vue.axios.get(url + toMSP);
+      // to temporary fix path. we do not need /all
+      const signatures = Vue.axios.get(url + 'all');
       await Vue.axios
-          .all([fromMSPRequest, toMSPRequest], {
+          // .all([fromMSPRequest, toMSPRequest], {
+          .all([signatures], {
             withCredentials: true,
           })
           .then((data) => {
@@ -122,7 +127,8 @@ const documentModule = {
             response.push(
                 {
                   signature: signatures[key].signature,
-                  from: index === 0 ? state.document.fromMSP : state.document.toMSP,
+                  // from: index === 0 ? state.document.fromMSP : state.document.toMSP,
+                  from: signatures[key].msp,
                 }
                 //   `${signatures[key].signature} from ${
                 //   index === 0 ? state.document.fromMSP : state.document.toMSP

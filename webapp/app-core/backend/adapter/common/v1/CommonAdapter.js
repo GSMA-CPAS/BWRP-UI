@@ -42,17 +42,26 @@ class CommonAdapter extends AbstractAdapter {
 
       return {id: item.contractId, documentId: item.documentId, fromMSP: item.header.fromMsp.mspId, toMSP: item.header.toMsp.mspId, data: JSON.stringify({body: item.body, header: header}), state: 'sent', ts: item.lastModificationDate, fromStorageKey: fromSk, toStorageKey: toSK};
     } catch (error) {
+      this.getLogger().error('[CommonAdapter::getContractById] failed to get contract - %s', error.message);
+      throw error;
+    }
+  }
+
+  async getRawContractById(contractId) {
+    try {
+      const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/?format=RAW').json();
+      item.data = item.raw;
+      this.getLogger().debug('[CommonAdapter::getContractById] get contract in RAW: - %s', JSON.stringify(item));
+      return item;
+    } catch (error) {
       this.getLogger().error('[CommonAdapter::getContracts] failed to get contracts - %s', error.message);
       throw error;
     }
   }
 
+
   async createContract(toMsp, data) {
     try {
-
-      console.log(toMsp);
-      console.log(data);
-
       const header = {name: data.body.generalInformation.name, type: 'contract', version: data.header.version};
       for (const msp in data.header.msps) {
         if (msp == toMsp) {
@@ -63,21 +72,13 @@ class CommonAdapter extends AbstractAdapter {
       }
 
       const payload = {header: header, body: data.body};
-
-      console.log(JSON.stringify(payload));
-
       const contract = await got.post(
           this.adapterConfig.url + '/api/v1/contracts/', {
             json: payload,
             responseType: 'json'
           });
 
-      console.log(contract.body);
-
       const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contract.body.contractId + '/send/',{responseType: 'json'});
-
-      console.log(response.body);
-
       this.getLogger().debug('[CommonAdapter::createContract] create new contract: - %s', JSON.stringify(response.body));
       return response.body;
 
@@ -89,18 +90,51 @@ class CommonAdapter extends AbstractAdapter {
 
   async getSignatures(contractId) {
     try {
-      const lists = await got(this.adapterConfig.url + '/api/v1/contracts/5fd23f420e549c001d29c42b4d4b/signatures/').json();
-      this.getLogger().debug('[CommonAdapter::getSignatures] get all contracts: - %s', JSON.stringify(lists));
-//      const processed = [];
-//      for (const item of lists) {
-//        processed.push({contractId: item.contractId, documentId: item.documentId, fromMSP: item.header.fromMsp.mspId, toMSP: item.header.toMsp.mspId, state: item.state, lastModification: item.lastModificationDate, ts: item.lastModificationDate, type: item.header.type, name: item.header.name, version: item.header.version});
-//      }
-      return {};
+      const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/').json();
+      this.getLogger().debug('[CommonAdapter::getSignatures] get all signatures of contracts: - %s', JSON.stringify(lists));
+      const processed = [];
+      for (const item of lists) {
+        if (item.state == 'SIGNED') {
+          const result = await got(this.adapterConfig.url + '/api/v1/contracts/' + item.contractId + '/signatures/' + item.signatureId).json();
+          processed.push(result);
+        }
+      }
+      return processed;
     } catch (error) {
-      this.getLogger().error('[CommonAdapter::getSignatures] failed to get contracts - %s', error.message);
+      this.getLogger().error('[CommonAdapter::getSignatures] failed to get all signatures - %s', error.message);
       throw error;
     }
   }
+
+  // need support for "signatureId"
+  async signContract(contractId, selfMsp, certificate, signatureAlgo, signature) {
+    console.log('here 2');
+    try {
+      const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/').json();
+      this.getLogger().debug('[CommonAdapter::signContract] get all signatures of contracts: - %s', JSON.stringify(lists));
+      for (const item of lists) {
+        if (item.msp == selfMsp && item.state == 'UNSIGNED') {
+          const payload = {
+            certificate: certificate,
+            algorithm: signatureAlgo,
+            signature: signature
+          };
+          this.getLogger().debug('[CommonAdapter::signContract] sigining contracts: - %s', JSON.stringify(payload));
+          return await got.put(this.adapterConfig.url + '/api/v1/contracts/' + item.contractId + '/signatures/' + item.signatureId, {json: payload, responseType: 'json'});
+        }
+      }
+      // new error code is required
+      throw new Error(JSON.stringify({
+        code: ErrorCodes.ERR_NOT_FOUND,
+        message: 'Contract has already been signed',
+      }));
+
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::signContract] failed to sign contracts - %s', error.message);
+      throw error;
+    }
+  }
+
 
   async initialize() {
   }

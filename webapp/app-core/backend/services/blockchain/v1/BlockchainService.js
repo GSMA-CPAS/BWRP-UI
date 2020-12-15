@@ -191,10 +191,12 @@ class BlockchainService extends AbstractService {
         const identity = await this.getBackendAdapter('wallet').getIdentity(req.user.enrollmentId);
         const privateKey = identity.credentials.privateKey;
         const certificate = identity.credentials.certificate;
-        const document = await this.getBackendAdapter('localStorage').getDocument(documentId);
+        // const document = await this.getBackendAdapter('localStorage').getDocument(documentId);
+        const document = await this.getBackendAdapter('common').getRawContractById(documentId);
         const signature = cryptoUtils.createSignature(privateKey, document.data);
         const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
-        await this.getBackendAdapter('blockchain').uploadSignature(documentId, certificate, signatureAlgo, signature);
+        // await this.getBackendAdapter('blockchain').uploadSignature(documentId, certificate, signatureAlgo, signature);
+        await this.getBackendAdapter('common').signContract(documentId, this.mspid, certificate, signatureAlgo, signature);
         return res.json({
           signature: signature,
           algorithm: signatureAlgo,
