@@ -34,9 +34,9 @@
           }}
         </td>
         <td>{{ item.toMSP }}</td>
-        <td>someName</td>
+        <td>{{ item.name }}</td>
         <td>someAuthor</td>
-        <td>lastModification</td>
+        <td>{{ item.lastModification }}</td>
         <td>startDate</td>
         <td>endDate</td>
         <td>{{ item.state }}</td>
