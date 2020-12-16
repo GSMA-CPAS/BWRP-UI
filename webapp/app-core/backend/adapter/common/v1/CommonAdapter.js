@@ -137,13 +137,13 @@ class CommonAdapter extends AbstractAdapter {
     try {
       let response;
       if (msp) {
-        response = await got(this.adapterConfig.url + '/discovery/msps/' + msp);
+        response = await got(this.adapterConfig.url + '/api/v1/discovery/msps/' + msp);
       } else {
-        response = await got(this.adapterConfig.url + '/discovery/msps');
+        response = await got(this.adapterConfig.url + '/api/v1/discovery/msps');
       }
       return response.body;
     } catch (error) {
-      this.getLogger().error('[BlockchainAdapter::discovery] failed to discover msp - %s', error.message);
+      this.getLogger().error('[CommonAdapter::discovery] failed to discover msp - %s', error.message);
       throw error;
     }
   }
