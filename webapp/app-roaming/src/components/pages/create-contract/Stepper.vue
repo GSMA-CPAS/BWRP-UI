@@ -23,7 +23,7 @@
         />
         <v-spacer />
         <app-button
-          @click="saveContract"
+          @click="doSaveContract"
           class="mr-5"
           label="Save & Propose To Partner"
         />
@@ -51,6 +51,14 @@ export default {
       document.body.appendChild(link);
       link.click();
     },
+    doSaveContract() {
+      this.saveContract().catch((e) => {
+        this.$store.dispatch('app-state/loadError', {
+          title: 'Error saving contract',
+          body: 'Could not save contract - the contract information may be incomplete or filled incorrectly'
+        });
+      });
+    }
   },
   computed: {
     ...mapGetters('document/new', ['deal']),

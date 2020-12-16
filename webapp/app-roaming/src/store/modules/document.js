@@ -135,7 +135,7 @@ const documentModule = {
 
       return Vue.lodash.flatten(combinedSignatures);
     },
-    parties: (state) => {
+    saveContractparties: (state) => {
       const {fromMSP, toMSP} = state.document;
       return [fromMSP, toMSP];
     },
