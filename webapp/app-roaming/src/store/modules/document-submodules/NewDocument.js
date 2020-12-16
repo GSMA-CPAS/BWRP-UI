@@ -198,40 +198,48 @@ const newDocumentModule = {
       rootState,
       state,
     }) {
-      setTimeout(()=>{
-        // const data = getters.deal;
-        const data = {
-          'header': {
-            'version': '1.0',
-            'type': 'deal',
-            'msps': {}
-          },
-          'body': getters.deal
-        };
-        const toMSP = getters.msps.partner;
-        const user = getters.msps.user;
-        data.header.msps[getters.msps.user] = {minSignatures: 2};
-        data.header.msps[toMSP] = {minSignatures: 2};
-        data.body = convertModelsModule.convertUiModelToJsonModel(user, toMSP, data.body);
-        Vue.axios
-            .post(
-                '/documents',
-                {toMSP, data},
-                {withCredentials: true},
-            )
-            .then((res) => {
-              console.log(
-                  `%c Successfully added new deal!`,
-                  'color:#5cb85c; font-weight:800',
-              );
-              commit('resetState');
-              router.push(PATHS.deals);
-            })
-            .catch((err) => {
-              console.log(err);
-              router.push(PATHS.deals);
-            });
-      }, 50);
+      return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+          try {
+            // const data = getters.deal;
+            const data = {
+              'header': {
+                'version': '1.0',
+                'type': 'deal',
+                'msps': {}
+              },
+              'body': getters.deal
+            };
+            const toMSP = getters.msps.partner;
+            const user = getters.msps.user;
+            data.header.msps[getters.msps.user] = {minSignatures: 2};
+            data.header.msps[toMSP] = {minSignatures: 2};
+            data.body = convertModelsModule.convertUiModelToJsonModel(user, toMSP, data.body);
+            Vue.axios
+                .post(
+                    '/documents',
+                    {toMSP, data},
+                    {withCredentials: true},
+                )
+                .then((res) => {
+                  console.log(
+                      `%c Successfully added new deal!`,
+                      'color:#5cb85c; font-weight:800',
+                  );
+                  resolve();
+                  commit('resetState');
+                  router.push(PATHS.deals);
+                })
+                .catch((err) => {
+                  console.log(err);
+                  reject(err);
+                  router.push(PATHS.deals);
+                });
+          } catch (err) {
+            reject(err);
+          }
+        }, 50);
+      });
     },
   },
   getters: {
