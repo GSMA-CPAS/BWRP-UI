@@ -36,14 +36,6 @@
   },
 
   "apps": {
-    "roaming": {
-      "name": "roaming",
-      "enabled": true,
-      "packageName": "app-roaming",
-      "displayName": "Roaming",
-      "config": {
-      }
-    }
   },
 
   "services": {
