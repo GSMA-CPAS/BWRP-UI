@@ -79,7 +79,7 @@ const defaultDiscountModelsState = () => ({
         },
       ],
     },
-  ]
+  ],
 });
 
 const newDocumentModule = {
@@ -129,10 +129,16 @@ const newDocumentModule = {
       Object.assign(state, defaultState());
       // Object.assign(state.userData.bankDetails, defaultBankDetailsState());
       Object.assign(state.userData.signatures, defaultSignaturesState());
-      Object.assign(state.userData.discountModels, defaultDiscountModelsState());
+      Object.assign(
+          state.userData.discountModels,
+          defaultDiscountModelsState(),
+      );
       // Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
       Object.assign(state.partnerData.signatures, defaultSignaturesState());
-      Object.assign(state.partnerData.discountModels, defaultDiscountModelsState());
+      Object.assign(
+          state.partnerData.discountModels,
+          defaultDiscountModelsState(),
+      );
     },
   },
   actions: {
@@ -145,38 +151,43 @@ const newDocumentModule = {
 
       const loadedJson = {};
 
-      if ( fileAsJSON ) {
-        if ( fileAsJSON.generalInformation ) {
+      if (fileAsJSON) {
+        if (fileAsJSON.generalInformation) {
           loadedJson.generalInformation = fileAsJSON.generalInformation;
 
-          if ( loadedJson.generalInformation[user] ) {
-            loadedJson.generalInformation.userData = loadedJson.generalInformation[user];
+          if (loadedJson.generalInformation[user]) {
+            loadedJson.generalInformation.userData =
+              loadedJson.generalInformation[user];
             delete loadedJson.generalInformation[user];
           }
 
-          if ( loadedJson.generalInformation[partner] ) {
-            loadedJson.generalInformation.partnerData = loadedJson.generalInformation[partner];
+          if (loadedJson.generalInformation[partner]) {
+            loadedJson.generalInformation.partnerData =
+              loadedJson.generalInformation[partner];
             delete loadedJson.generalInformation[partner];
           }
         }
 
-        if ( fileAsJSON[user] ) {
+        if (fileAsJSON[user]) {
           loadedJson.userData = fileAsJSON[user];
         }
 
-        if ( fileAsJSON[partner] ) {
+        if (fileAsJSON[partner]) {
           loadedJson.partnerData = fileAsJSON[partner];
         }
 
-        if ( loadedJson.generalInformation.startDate ) {
-          loadedJson.generalInformation.startDate = parseISOString(loadedJson.generalInformation.startDate);
+        if (loadedJson.generalInformation.startDate) {
+          loadedJson.generalInformation.startDate = parseISOString(
+              loadedJson.generalInformation.startDate,
+          );
         }
 
-        if ( loadedJson.generalInformation.endDate ) {
-          loadedJson.generalInformation.endDate = parseISOString(loadedJson.generalInformation.endDate);
+        if (loadedJson.generalInformation.endDate) {
+          loadedJson.generalInformation.endDate = parseISOString(
+              loadedJson.generalInformation.endDate,
+          );
         }
       }
-
 
       commit('READ_JSON', loadedJson);
       commit('SET_PARTNER', partner);
@@ -190,50 +201,43 @@ const newDocumentModule = {
     setStep({commit, dispatch, rootGetters, getters, rootState, state}, step) {
       commit('SET_STEP', step);
     },
-    saveContract({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
+    saveContract({commit, dispatch, rootGetters, getters, rootState, state}) {
       return new Promise((resolve, reject) => {
-        setTimeout(()=>{
+        setTimeout(() => {
           try {
-            // const data = getters.deal;
+            // const data = getters.contract;
             const data = {
-              'header': {
-                'version': '1.0',
-                'type': 'deal',
-                'msps': {}
+              header: {
+                version: '1.0',
+                type: 'contract',
+                msps: {},
               },
-              'body': getters.deal
+              body: getters.contract,
             };
             const toMSP = getters.msps.partner;
             const user = getters.msps.user;
             data.header.msps[getters.msps.user] = {minSignatures: 2};
             data.header.msps[toMSP] = {minSignatures: 2};
-            data.body = convertModelsModule.convertUiModelToJsonModel(user, toMSP, data.body);
+            data.body = convertModelsModule.convertUiModelToJsonModel(
+                user,
+                toMSP,
+                data.body,
+            );
             Vue.axios
-                .post(
-                    '/documents',
-                    {toMSP, data},
-                    {withCredentials: true},
-                )
+                .post('/documents', {toMSP, data}, {withCredentials: true})
                 .then((res) => {
                   console.log(
-                      `%c Successfully added new deal!`,
+                      `%c Successfully added new contract!`,
                       'color:#5cb85c; font-weight:800',
                   );
                   resolve();
                   commit('resetState');
-                  router.push(PATHS.deals);
+                  router.push(PATHS.contracts);
                 })
                 .catch((err) => {
                   console.log(err);
                   reject(err);
-                  router.push(PATHS.deals);
+                  router.push(PATHS.contracts);
                 });
           } catch (err) {
             reject(err);
@@ -243,7 +247,7 @@ const newDocumentModule = {
     },
   },
   getters: {
-    deal: (state, getters, rootState) => {
+    contract: (state, getters, rootState) => {
       const user = getters.msps.user;
       const {generalInformation, partner, partnerData, userData} = state;
       const {
@@ -252,8 +256,7 @@ const newDocumentModule = {
         ...otherVariables
       } = generalInformation;
 
-
-      const deal = {
+      const contract = {
         generalInformation: {
           ...otherVariables,
           [partner]: gPartnerData,
@@ -262,7 +265,7 @@ const newDocumentModule = {
         [partner]: partnerData,
         [user]: userData,
       };
-      return deal;
+      return contract;
     },
     msps: (state, getters, rootState) => {
       return {

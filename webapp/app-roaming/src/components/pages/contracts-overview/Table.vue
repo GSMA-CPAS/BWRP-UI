@@ -79,7 +79,7 @@
 import {mapState} from 'vuex';
 // import Filters from '@/components/other/Filters.vue';
 export default {
-  name: 'deals-table',
+  name: 'contracts-table',
   description: 'In this table, the documents are displayed.',
   data() {
     return {
@@ -109,7 +109,7 @@ export default {
       });
     },
     to(cid) {
-      this.$router.push(`/deal-timeline/${cid}`);
+      this.$router.push(`/contract-timeline/${cid}`);
     },
     onSummary() {
       console.log('Pressed Summary');

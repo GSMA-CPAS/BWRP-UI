@@ -2,7 +2,7 @@
   <fragment>
     <v-row>
       <v-col>
-        Discounts will be active if the calculated deal charges will be at least as high as the value below.
+        Discounts will be active if the calculated contract charges will be at least as high as the value below.
       </v-col>
     </v-row>
     <revenue-commitment-input v-model="revenueCommitment"/>
@@ -14,8 +14,8 @@
 import RevenueCommitmentInput from '../condition-components/RevenueCommitmentInput';
 
 export default {
-  name: 'deal-revenue-commit',
-  model: 'Deal Revenue Commitment',
+  name: 'contract-revenue-commit',
+  model: 'Contract Revenue Commitment',
   props: ['value'],
   data() {
     return {revenueCommitment: null};

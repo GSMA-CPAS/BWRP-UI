@@ -9,7 +9,7 @@
       />
     </template>
     <v-card class="pa-1">
-      <v-card-title class="headline text-uppercase">
+      <v-card-title class="headline">
         {{ title }}
         <fragment v-if="!hideIcon">
           <v-spacer />

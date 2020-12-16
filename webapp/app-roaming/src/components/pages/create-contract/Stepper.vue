@@ -40,7 +40,7 @@ export default {
     ...mapActions('document/new', ['saveContract', 'setStep']),
     ...mapMutations('document/new', ['resetState']),
     downloadDocument() {
-      const contract = this.deal;
+      const contract = this.contract;
       delete contract.step;
       const data =
         'data:text/json;charset=utf-8,' +
@@ -61,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('document/new', ['deal']),
+    ...mapGetters('document/new', ['contract']),
     ...mapState('document/new', ['step']),
     steps() {
       const components = require.context(

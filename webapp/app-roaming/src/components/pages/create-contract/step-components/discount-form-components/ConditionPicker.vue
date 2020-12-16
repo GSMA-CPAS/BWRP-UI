@@ -64,12 +64,12 @@ export default {
       return [
         'Unconditional',
         'Contract Revenue Commitment',
-        'Deal Revenue Commitment',
+        'Contract Revenue Commitment',
       ];
     },
   },
   beforeMount() {
-    if ( this.value ) {
+    if (this.value) {
       this.selectedConditionName = this.value.selectedConditionName;
       this.selectedCondition = this.value.selectedCondition;
     }
