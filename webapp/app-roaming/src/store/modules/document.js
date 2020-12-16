@@ -67,7 +67,7 @@ const documentModule = {
       // const fromMSPRequest = Vue.axios.get(url + fromMSP);
       // const toMSPRequest = Vue.axios.get(url + toMSP);
       // to temporary fix path. we do not need /all
-      const signatures = Vue.axios.get(url + 'all');
+      const signatures = Vue.axios.get(url);
       await Vue.axios
           // .all([fromMSPRequest, toMSPRequest], {
           .all([signatures], {

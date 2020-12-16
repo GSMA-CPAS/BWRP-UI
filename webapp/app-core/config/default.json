@@ -88,6 +88,15 @@
       "useBackendAdapters": [
         {"type": "blockchain", "name": "BlockchainAdapter"},
         {"type": "localStorage", "name": "LocalStorageAdapter"},
+        {"type": "wallet", "name": "WalletAdapter"}
+      ]
+    },
+    "CommonService": {
+      "enabled": true,
+      "classPath": "/common/v1/CommonService",
+      "route": "/api/v1/common",
+      "csrfProtectionEnabled": false,
+      "useBackendAdapters": [
         {"type": "wallet", "name": "WalletAdapter"},
         {"type": "common", "name": "CommonAdapter"}      
       ]

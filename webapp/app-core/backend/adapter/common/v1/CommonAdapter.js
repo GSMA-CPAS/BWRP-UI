@@ -10,8 +10,8 @@ class CommonAdapter extends AbstractAdapter {
     super(adapterName, adapterConfig, database);
   }
 
-
-  async getContracts() {
+  // TODO: support for query parameter to search for contracts.
+  async getContracts(query) {
     try {
       const lists = await got(this.adapterConfig.url + '/api/v1/contracts/').json();
       this.getLogger().debug('[CommonAdapter::getContracts] get all contracts: - %s', JSON.stringify(lists));
@@ -58,7 +58,6 @@ class CommonAdapter extends AbstractAdapter {
       throw error;
     }
   }
-
 
   async createContract(toMsp, data) {
     try {
@@ -107,8 +106,7 @@ class CommonAdapter extends AbstractAdapter {
   }
 
   // need support for "signatureId"
-  async signContract(contractId, selfMsp, certificate, signatureAlgo, signature) {
-    console.log('here 2');
+  async signContract(contractId, signatureId, selfMsp, certificate, signatureAlgo, signature) {
     try {
       const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/').json();
       this.getLogger().debug('[CommonAdapter::signContract] get all signatures of contracts: - %s', JSON.stringify(lists));
@@ -125,7 +123,7 @@ class CommonAdapter extends AbstractAdapter {
       }
       // new error code is required
       throw new Error(JSON.stringify({
-        code: ErrorCodes.ERR_NOT_FOUND,
+        code: ErrorCodes.ERR_FORBIDDEN,
         message: 'Contract has already been signed',
       }));
 
@@ -135,6 +133,20 @@ class CommonAdapter extends AbstractAdapter {
     }
   }
 
+  async discovery(msp) {
+    try {
+      let response;
+      if (msp) {
+        response = await got(this.adapterConfig.url + '/discovery/msps/' + msp);
+      } else {
+        response = await got(this.adapterConfig.url + '/discovery/msps');
+      }
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[BlockchainAdapter::discovery] failed to discover msp - %s', error.message);
+      throw error;
+    }
+  }
 
   async initialize() {
   }
