@@ -3,11 +3,7 @@
     <error-overlay />
     <breadcrumb />
     <v-main class="background">
-      <v-container fill-height fluid v-if="isLoading">
-        <v-row no-gutters align="center" justify="center">
-          <v-progress-circular :size="50" color="primary" indeterminate />
-        </v-row>
-      </v-container>
+      <loading-spinner />
       <router-view v-show="!isLoading" />
     </v-main>
   </v-app>
@@ -18,11 +14,13 @@ import {mapState, mapActions} from 'vuex';
 import Breadcrumb from './components/navigation/Breadcrumb.vue';
 import ErrorOverlay from './components/other/ErrorOverlay.vue';
 import {appStateMixin} from '@/utils/mixins/component-specfic';
+import LoadingSpinner from './components/other/LoadingSpinner.vue';
 
 export default {
   components: {
     ErrorOverlay,
     Breadcrumb,
+    LoadingSpinner,
   },
   name: 'app',
   mixins: [appStateMixin],
