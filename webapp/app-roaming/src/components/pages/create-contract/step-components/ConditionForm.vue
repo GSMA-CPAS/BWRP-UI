@@ -11,6 +11,7 @@ export default {
   components: {
     ConditionPicker,
   },
+  props: ['value'],
   data() {
     return {
       condition: null,
@@ -23,6 +24,9 @@ export default {
       },
       deep: true,
     },
+  },
+  beforeMount() {
+    this.condition = this.value;
   },
 };
 </script>

@@ -1,7 +1,7 @@
 
 <template>
   <v-container v-if="$store.state.document">
-    <app-headline :title="`Deal ${name}`" />
+    <app-headline :title="`Contract ${name}`" />
     <v-divider />
     <v-timeline reverse>
       <Item-1-ContractView />

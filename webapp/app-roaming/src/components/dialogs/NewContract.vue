@@ -1,5 +1,5 @@
 <template>
-  <app-dialog title="new contract" label="create contract">
+  <app-dialog title="NEW CONTRACT" label="create contract">
     <template #content>
       <v-row>
         <v-select

@@ -41,7 +41,10 @@ export default new Vuex.Store({
           return config;
           },
           (error) => {
-            dispatch('app-state/loadError', error);
+            dispatch('app-state/loadError', {
+              title: error.statusText,
+              body: `Status code ${error.status}`,
+            });
             return Promise.reject(error);
           }
       );
@@ -58,7 +61,10 @@ export default new Vuex.Store({
             if (error.response?.status === 401) {
               parent.postMessage('unauthorized', '*');
             }
-            dispatch('app-state/loadError', error.response);
+            dispatch('app-state/loadError', {
+              title: error.response.statusText,
+              body: `Status code ${error.response.status}`,
+            });
             return Promise.reject(error);
           }
       );

@@ -8,9 +8,9 @@ const bankFieldsMixin = {
         'Contact Name (Accounting)',
         'Contact Phone (Accounting)',
         'Contact Email (Accounting)',
-        'Contact Name (Deal)',
-        'Contact Phone (Deal)',
-        'Contact Email (Deal)',
+        'Contact Name (Contract)',
+        'Contact Phone (Contract)',
+        'Contact Email (Contract)',
         'IBAN',
         'SWIFT/BIC',
         'Bank Name',
@@ -70,7 +70,6 @@ const timelineMixin = {
   computed: {
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
-      generalInformation: (state) => state.document.data.generalInformation,
       documentData: (state) => state.document.data,
     }),
     ...mapGetters('document', [

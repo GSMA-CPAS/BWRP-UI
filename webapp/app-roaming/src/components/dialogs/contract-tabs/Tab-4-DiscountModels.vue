@@ -1,23 +1,54 @@
 <template>
   <fragment>
-    <parties-header single :sub-row-labels="labels" />
-    <row
-      type="secondary"
-      class="pa-4"
-      label="Regular Human Traffic / Exceptional Traffic"
-    />
-    <v-divider />
-    <row
-      cols="2"
-      v-for="(data, index) in testData"
-      :key="`row-${index}`"
-      :label="data.service"
-    >
-      <component :is="renderModel(data.model)" :data="data" />
-    </row>
-    <v-divider />
-    <row type="secondary" class="pa-4" label="Non Exceptional Traffic" />
-    <v-divider />
+    <parties-header single :sub-row-labels="labels" v-on:party-switch="partySwitch"/>
+    <div v-for="(serviceGroup, sgIndex) in discountData.serviceGroups" :key="`party-${partyId}-sg-${sgIndex}`">
+      <row
+        type="secondary"
+        class="pa-4"
+        :label="`Group ${sgIndex+1}`"
+      />
+      <v-divider />
+      <row cols="2" label="TADIGs">
+        <v-col>
+          <v-row>
+            <v-col><b>Home</b></v-col>
+            <v-col>{{ serviceGroup.homeTadigs && serviceGroup.homeTadigs.length > 0 ? serviceGroup.homeTadigs.join(', ') : 'Default' }}</v-col>
+            <v-col></v-col>
+            <v-col></v-col>
+            <v-col></v-col>
+            <v-col></v-col>
+          </v-row>
+          <v-row>
+            <v-col><b>Visitor</b></v-col>
+            <v-col>{{ serviceGroup.visitorTadigs && serviceGroup.visitorTadigs.length > 0 ? serviceGroup.visitorTadigs.join(', ') : 'Default' }}</v-col>
+            <v-col></v-col>
+            <v-col></v-col>
+            <v-col></v-col>
+            <v-col></v-col>
+          </v-row>
+        </v-col>
+      </row>
+      <v-divider />
+      <fragment v-for="(service, index) in serviceGroup.services" :key="`party-${partyId}-sg-${sgIndex}-row-${index}`">
+        <row cols="2" :label="service.service">
+          <v-col>
+            <template v-if="service.usagePricing">
+              <v-row>
+                <normal-model-template v-if="service.usagePricing.ratingPlan.kind === 'Normal'" :data="service.usagePricing" model-type="Usage"/>
+                <balanced-unbalanced-model-template v-if="service.usagePricing.ratingPlan.kind === 'Balanced/Unbalanced'" :data="service.usagePricing" model-type="Usage"/>
+              </v-row>
+            </template>
+
+            <template v-if="service.accessPricing">
+              <v-row>
+                <normal-model-template v-if="service.accessPricing.ratingPlan.kind === 'Normal'" :data="service.accessPricing" model-type="Access"/>
+              </v-row>
+            </template>
+          </v-col>
+        </row>
+        <v-divider />
+      </fragment>
+    </div>
     <row type="secondary" class="pa-4" label="Other information" />
     <v-divider />
     <v-row align="baseline" class="text-center">
@@ -30,10 +61,11 @@
           }}</v-col>
         </v-row>
         <v-row>
-          <v-col>5000 EUR</v-col>
-          <v-col>EUR</v-col>
-          <v-col>CODE 1, CODE 2, CODE 3, CODE 4, CODE 5, CODE 6, CODE 7</v-col>
-          <v-col>someComment</v-col>
+          <v-col>{{ documentData.framework.partyInformation[this.parties[this.partyId]].contractCurrency}}</v-col>
+          <v-col>{{ discountData.condition.kind }}</v-col>
+          <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.currency : '' }}</v-col>
+          <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.value : '' }}</v-col>
+          <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.includingTaxes : '' }}</v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -43,6 +75,9 @@
 import PartiesHeader from '../components/PartiesHeader.vue';
 import {utilsMixin} from '@/utils/mixins/handle-data';
 import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {mapGetters} from 'vuex';
+import NormalModelTemplate from './models/NormalModelTemplate.vue';
+import BalancedUnbalancedModelTemplate from './models/BalancedUnbalancedModelTemplate.vue';
 export default {
   name: 'tab-4',
   label: 'Discount Models',
@@ -51,11 +86,25 @@ export default {
   mixins: [utilsMixin, timelineMixin],
   components: {
     PartiesHeader,
+    NormalModelTemplate,
+    BalancedUnbalancedModelTemplate
+  },
+  data() {
+    return {
+      partyId: 0,
+    };
   },
   methods: {
+    partySwitch(partyId, party) {
+      this.partyId = partyId;
+    },
     renderModel(model) {
+      if ( model === undefined ) {
+        return;
+      }
+
       let path = null;
-      switch (model) {
+      switch (model.ratingPlan.kind) {
         case 'Flat IOT':
           path = 'FlatIOT';
           break;
@@ -64,34 +113,40 @@ export default {
           path = 'Baseline';
           break;
         default:
-          path = this._.upperFirst(this._.camelCase(model));
+          path = this._.upperFirst(this._.camelCase(model.ratingPlan.kind));
       }
       const models = require.context(`./models/`, false, /.(vue)$/);
       return models(`./${path}.vue`).default;
     },
   },
   computed: {
+    ...mapGetters('document', ['parties']),
     otherInformationLabels() {
       const otherInformationLabels = [
-        'Overall Revenue Commitment',
         'Currency for all Discounts',
-        'TADIG Codes',
-        'Additional Comments',
+        'Condition Type',
+        'Condition Value',
+        'Condition Currency',
+        'Condition Includes Taxes?',
       ];
       return this.labelsToCamelCase(otherInformationLabels);
     },
     labels() {
       const discountModelsLabels = [
-        'Model',
-        'Increment',
+        'Type',
+        'Unit/Tier',
         'Threshold',
-        'Rate',
+        'Fixed Rate',
+        'Linear Rate',
         'Revenue Commitment',
       ];
       return this.labelsToCamelCase(discountModelsLabels);
     },
     overallRevenueCommitment() {
       return {amount: 10000, currency: 'EUR'};
+    },
+    discountData() {
+      return this.documentData.discounts[this.parties[this.partyId]];
     },
     testData() {
       return [

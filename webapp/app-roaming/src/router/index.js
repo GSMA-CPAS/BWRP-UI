@@ -12,8 +12,8 @@ const routes = components.keys().map((x) => {
   return {name, component, path, meta: {text}};
 });
 
-// index page redirects to deals overview
-routes.push({path: '/', redirect: '/deals'});
+// index page redirects to contracts overview
+routes.push({path: '/', redirect: '/contracts'});
 
 const router = new VueRouter({
   mode: 'history',

@@ -62,7 +62,6 @@ export default {
     },
   },
   components: {},
-  props: {value: Array},
   watch: {
     signatures: {
       handler(val) {
@@ -105,6 +104,7 @@ export default {
       return this.signatures.length === 1;
     },
   },
+  props: {value: Array},
   beforeMount() {
     this.signatures = this.value;
   },

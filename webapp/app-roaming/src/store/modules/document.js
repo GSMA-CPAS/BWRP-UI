@@ -25,7 +25,7 @@ const documentModule = {
               {
                 signing: true,
                 withCredentials: true,
-              }
+              },
           )
           .then((res) => {
             dispatch('app-state/signing', false, {root: true});
@@ -38,7 +38,7 @@ const documentModule = {
     },
     async getDocument(
         {commit, dispatch, rootGetters, getters, rootState, state},
-        documentID
+        documentID,
     ) {
       await Vue.axios
           .get(`/documents/${documentID}`, {withCredentials: true})
@@ -60,7 +60,7 @@ const documentModule = {
     },
     async getSignatures(
         {commit, dispatch, rootGetters, getters, rootState, state},
-        documentID
+        documentID,
     ) {
       const {fromMSP, toMSP} = state.document;
       const url = '' + `/signatures/${documentID}/`;
@@ -83,7 +83,7 @@ const documentModule = {
     },
     async loadData(
         {commit, dispatch, rootGetters, getters, rootState, state},
-        documentID
+        documentID,
     ) {
       await dispatch('getDocument', documentID);
       await dispatch('getSignatures', documentID);
@@ -103,7 +103,7 @@ const documentModule = {
               acc[curVal.from]++;
               return acc;
             },
-            {[getters.fromMSP]: 0, [toMSP]: 0}
+            {[getters.fromMSP]: 0, [toMSP]: 0},
         );
       const isSigned =
         minSignaturesFromMSP <= totalSignatures[fromMSP] &&
