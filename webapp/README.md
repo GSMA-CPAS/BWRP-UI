@@ -87,13 +87,9 @@ Create config file ``development-org1.json`` in folder ``webapp/app-core/config`
                 "userEnrollmentSecret": "secret123"
             }
         },
-        "BlockchainAdapter": {
+        "CommonAdapter": {
             "config": {
-                "url": "http://localhost:8081",
-                "webhooks": [
-                    {"eventName": "STORE:DOCUMENTHASH", "callbackUrl": "http://{host}:{port}/api/v1/blockchain/documents/events"},
-                    {"eventName": "STORE:SIGNATURE", "callbackUrl": "http://{host}:{port}/api/v1/blockchain/signatures/events"}
-                ]
+                "url": "http://localhost:3030"
             }
         }
     }
