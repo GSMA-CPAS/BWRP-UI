@@ -95,7 +95,7 @@ class CommonService extends AbstractService {
       try {
         const toMSP = req.body.toMSP;
         const data = req.body.data;
-        // TODO: sync paylod requirement with common adapter. currently some Pre processing is needed in the Adapter code.
+        // TODO: sync payload requirement with common adapter. currently some Pre processing is needed in the Adapter code.
         const response = await this.getBackendAdapter('common').createContract(toMSP, data);
         return res.json(response);
       } catch (error) {

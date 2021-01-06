@@ -17,8 +17,18 @@ class CommonAdapter extends AbstractAdapter {
       this.getLogger().debug('[CommonAdapter::getContracts] get all contracts: - %s', JSON.stringify(lists));
       const processed = [];
       for (const item of lists) {
-        if (item.documentId != undefined) {
-          processed.push({contractId: item.contractId, documentId: item.documentId, fromMSP: item.header.fromMsp.mspId, toMSP: item.header.toMsp.mspId, state: item.state, lastModification: item.lastModificationDate, ts: item.lastModificationDate, type: item.header.type, name: item.header.name, version: item.header.version});
+        if (item.documentId !== undefined) {
+          processed.push({
+            contractId: item.contractId,
+            documentId: item.documentId,
+            fromMSP: item.header.fromMsp.mspId,
+            toMSP: item.header.toMsp.mspId,
+            state: item.state,
+            lastModification: item.lastModificationDate,
+            ts: item.lastModificationDate,
+            type: item.header.type,
+            name: item.header.name,
+            version: item.header.version});
         }
       }
       return processed;
@@ -36,11 +46,19 @@ class CommonAdapter extends AbstractAdapter {
       const toSK = crypto.createHash('sha256').update(item.header.toMsp.mspId + item.documentId).digest('hex').toString('utf8');
 
       // convert header
-      const header = { name: item.header.name, type: 'deal', version: item.header.version, msps: {}};
+      const header = {name: item.header.name, type: 'contract', version: item.header.version, msps: {}};
       header.msps[item.header.fromMsp.mspId] = {minSignatures: item.header.fromMsp.signatures.length};
       header.msps[item.header.toMsp.mspId] = {minSignatures: item.header.toMsp.signatures.length};
-
-      return {id: item.contractId, documentId: item.documentId, fromMSP: item.header.fromMsp.mspId, toMSP: item.header.toMsp.mspId, data: JSON.stringify({body: item.body, header: header}), state: 'sent', ts: item.lastModificationDate, fromStorageKey: fromSk, toStorageKey: toSK};
+      return {
+        id: item.contractId,
+        documentId: item.documentId,
+        fromMSP: item.header.fromMsp.mspId,
+        toMSP: item.header.toMsp.mspId,
+        data: JSON.stringify({body: item.body, header: header}),
+        state: 'sent',
+        ts: item.lastModificationDate,
+        fromStorageKey: fromSk,
+        toStorageKey: toSK};
     } catch (error) {
       this.getLogger().error('[CommonAdapter::getContractById] failed to get contract - %s', error.message);
       throw error;
@@ -61,12 +79,38 @@ class CommonAdapter extends AbstractAdapter {
 
   async createContract(toMsp, data) {
     try {
-      const header = {name: data.body.generalInformation.name, type: 'contract', version: data.header.version};
+      const header = {name: data.body.metadata.name, type: 'contract', version: data.header.version};
       for (const msp in data.header.msps) {
-        if (msp == toMsp) {
-          header.toMsp = {mspId: msp, signatures: data.body[msp].signatures}
+        if (msp === toMsp) {
+          // header.toMsp = {mspId: msp, signatures: data.body[msp].signatures};
+          // todo: hardcoded
+          header.toMsp = {mspId: msp, signatures: [
+            {
+              'id': 'id',
+              'name': 'name',
+              'role': 'role'
+            },
+            {
+              'id': 'id',
+              'name': 'name',
+              'role': 'role'
+            }
+          ]};
         } else {
-          header.fromMsp = {mspId: msp, signatures: data.body[msp].signatures}
+          // header.fromMsp = {mspId: msp, signatures: data.body[msp].signatures};
+          // todo: hardcoded
+          header.fromMsp = {mspId: msp, signatures: [
+            {
+              'id': 'id',
+              'name': 'name',
+              'role': 'role'
+            },
+            {
+              'id': 'id',
+              'name': 'name',
+              'role': 'role'
+            }
+          ]};
         }
       }
 
@@ -77,10 +121,9 @@ class CommonAdapter extends AbstractAdapter {
             responseType: 'json'
           });
 
-      const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contract.body.contractId + '/send/',{responseType: 'json'});
+      const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contract.body.contractId + '/send/', {responseType: 'json'});
       this.getLogger().debug('[CommonAdapter::createContract] create new contract: - %s', JSON.stringify(response.body));
       return response.body;
-
     } catch (error) {
       this.getLogger().error('[CommonAdapter::createContract] failed to create contract - %s', error.message);
       throw error;
@@ -93,7 +136,7 @@ class CommonAdapter extends AbstractAdapter {
       this.getLogger().debug('[CommonAdapter::getSignatures] get all signatures of contracts: - %s', JSON.stringify(lists));
       const processed = [];
       for (const item of lists) {
-        if (item.state == 'SIGNED') {
+        if (item.state === 'SIGNED') {
           const result = await got(this.adapterConfig.url + '/api/v1/contracts/' + item.contractId + '/signatures/' + item.signatureId).json();
           processed.push(result);
         }
@@ -111,7 +154,7 @@ class CommonAdapter extends AbstractAdapter {
       const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/').json();
       this.getLogger().debug('[CommonAdapter::signContract] get all signatures of contracts: - %s', JSON.stringify(lists));
       for (const item of lists) {
-        if (item.msp == selfMsp && item.state == 'UNSIGNED') {
+        if (item.msp === selfMsp && item.state === 'UNSIGNED') {
           const payload = {
             certificate: certificate,
             algorithm: signatureAlgo,
@@ -126,7 +169,6 @@ class CommonAdapter extends AbstractAdapter {
         code: ErrorCodes.ERR_FORBIDDEN,
         message: 'Contract has already been signed',
       }));
-
     } catch (error) {
       this.getLogger().error('[CommonAdapter::signContract] failed to sign contracts - %s', error.message);
       throw error;

@@ -73,7 +73,7 @@
       "csrfProtectionEnabled": false
     },
     "BlockchainService": {
-      "enabled": true,
+      "enabled": false,
       "classPath": "/blockchain/v1/BlockchainService",
       "route": "/api/v1/blockchain",
       "csrfProtectionEnabled": false,
