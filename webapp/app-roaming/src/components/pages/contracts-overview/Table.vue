@@ -20,8 +20,8 @@
     </template>
     <template #item="{item}">
       <tr
-        @click="to(item.documentId)"
-        @keypress.enter="to(item.documentId)"
+        @click="to(item.contractId + '?d=' + item.documentId)"
+        @keypress.enter="to(item.contractId + '?d=' + item.documentId)"
         tabindex="0"
       >
         <td>someReferenceID</td>
@@ -34,9 +34,9 @@
           }}
         </td>
         <td>{{ item.toMSP }}</td>
-        <td>someName</td>
+        <td>{{ item.name }}</td>
         <td>someAuthor</td>
-        <td>lastModification</td>
+        <td>{{ item.lastModification }}</td>
         <td>startDate</td>
         <td>endDate</td>
         <td>{{ item.state }}</td>

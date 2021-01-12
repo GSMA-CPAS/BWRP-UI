@@ -31,27 +31,27 @@ const createAdapterInstance = (adapterName, database) => {
 
 /**
  * Returns true if given backend adapter is used by a service
- * @param adapterName
- * @returns {boolean}
+ * @param {string} adapterName
+ * @return {boolean}
  */
-/* const isAdapterUsedByService = (adapterName) => {
-    const services = config.get('services');
-    for (let serviceName in services) {
-        if (services.hasOwnProperty(serviceName)) {
-            if (config.get('services.' + serviceName + '.enabled') === true) {
-                let backendAdapters = 'services.' + serviceName + '.useBackendAdapters';
-                if (config.has(backendAdapters)) {
-                    for (let adapter of config.get(backendAdapters)) {
-                        if (adapter.name === adapterName) {
-                            return true;
-                        }
-                    }
-                }
+const isAdapterUsedByService = (adapterName) => {
+  const services = config.get('services');
+  for (const serviceName in services) {
+    if (Object.prototype.hasOwnProperty.call(services, serviceName)) {
+      if (config.get('services.' + serviceName + '.enabled') === true) {
+        const backendAdapters = 'services.' + serviceName + '.useBackendAdapters';
+        if (config.has(backendAdapters)) {
+          for (const adapter of config.get(backendAdapters)) {
+            if (adapter.name === adapterName) {
+              return true;
             }
+          }
         }
+      }
     }
-    return false;
-};*/
+  }
+  return false;
+};
 
 const setup = async () => {
   const database = new Database(config.get('database'));
@@ -84,22 +84,26 @@ const setup = async () => {
 
   // initialize BlockchainAdapter
 
-  const blockchainAdapter = createAdapterInstance('BlockchainAdapter', database);
-  try {
-    await blockchainAdapter.initialize();
-  } catch (error) {
-    console.error(error.message);
-    throw error;
+  if (isAdapterUsedByService('BlockchainAdapter')) {
+    const blockchainAdapter = createAdapterInstance('BlockchainAdapter', database);
+    try {
+      await blockchainAdapter.initialize();
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
   }
 
   // initialize LocalStorageAdapter
 
-  const localStorageAdapter = createAdapterInstance('LocalStorageAdapter', database);
-  try {
-    await localStorageAdapter.initialize();
-  } catch (error) {
-    console.error(error.message);
-    throw error;
+  if (isAdapterUsedByService('LocalStorageAdapter')) {
+    const localStorageAdapter = createAdapterInstance('LocalStorageAdapter', database);
+    try {
+      await localStorageAdapter.initialize();
+    } catch (error) {
+      console.error(error.message);
+      throw error;
+    }
   }
 
   // close database

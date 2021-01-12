@@ -52,10 +52,12 @@ export default {
   watch: {
     $route(to, from) {
       const {name, meta, params, path} = to;
+      console.log(params);
       name === 'contracts-overview' && this.removeLastBreacrumb();
       if (from.name === 'contracts-overview') {
         to.name === 'timeline-page' ?
-          this.addBreadcrumb(params.cid, path) :
+          // this.addBreadcrumb(params.cid, path) :
+          this.addBreadcrumb(to.query.d, path) :
           this.addBreadcrumb(meta.text, path);
       }
     },
