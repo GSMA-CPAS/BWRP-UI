@@ -6,7 +6,7 @@
     transition="scale-transition"
     min-width="290px"
   >
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <v-text-field
         :error-messages="requiredError(key)"
         v-bind="$props"
@@ -19,7 +19,6 @@
     </template>
     <v-date-picker
       :min="minDate"
-      type="month"
       ref="picker"
       color="secondary"
       v-model="date"
