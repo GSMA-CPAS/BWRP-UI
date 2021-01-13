@@ -7,7 +7,7 @@
     </template>
     <slot name="content">
       <v-card>
-        <v-card-title>Missing Content </v-card-title>
+        <v-card-title>Missing Content</v-card-title>
       </v-card>
     </slot>
   </v-timeline-item>

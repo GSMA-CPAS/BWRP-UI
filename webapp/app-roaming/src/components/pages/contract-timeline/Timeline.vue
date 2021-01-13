@@ -3,7 +3,7 @@
   <v-container v-if="$store.state.document">
     <app-headline :title="`Contract ${name}`" />
     <v-divider />
-    <v-timeline reverse>
+    <v-timeline dense>
       <Item-1-ContractView />
       <Item-2-Signatures />
       <Item-4-SettlementView v-if="isSigned" />
