@@ -40,7 +40,7 @@
         <td>startDate</td>
         <td>endDate</td>
         <td>{{ item.state }}</td>
-        <td @click.stop>
+        <!-- <td @click.stop>
           <v-menu offset-y>
             <template v-slot:activator="{on, attrs}">
               <app-button
@@ -70,7 +70,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-        </td>
+        </td> -->
       </tr>
     </template>
   </v-data-table>
@@ -94,7 +94,7 @@ export default {
         {text: 'Start Date', value: 'startDate'},
         {text: 'End Date', value: 'endDate'},
         {text: 'State', value: 'state'},
-        {text: 'Actions', value: 'action'},
+        // {text: 'Actions', value: 'action'},
         // {text: 'To MSP', value: 'toMSP'},
       ],
     };
