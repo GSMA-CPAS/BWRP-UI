@@ -41,6 +41,11 @@ const duplicateMixin = {
 };
 export {duplicateMixin};
 
+const appDetailsMixin = {
+  computed: {...mapGetters('app-details', ['version'])},
+};
+
+export {appDetailsMixin};
 const appStateMixin = {
   methods: {
     ...mapActions('app-state', ['setErrorVisibility']),

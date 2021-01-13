@@ -1,6 +1,19 @@
-const packageJson = require('./package.json');
+const fs = require('fs');
+const webpack = require('webpack');
+const packageJson = fs.readFileSync('./package.json');
+const version = JSON.parse(packageJson).version || 0;
+const name = JSON.parse(packageJson).name || 'undefined';
 
 module.exports = {
+  configureWebpack: {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          PACKAGE_VERSION: '"' + version + '"',
+        },
+      }),
+    ],
+  },
   transpileDependencies: ['vuetify'],
 
   devServer: {
@@ -17,7 +30,5 @@ module.exports = {
   },
 
   publicPath:
-    process.env.NODE_ENV === 'production' ?
-      '/app/' + packageJson.name + '/' :
-      '/',
+    process.env.NODE_ENV === 'production' ? '/app/' + name + '/' : '/',
 };
