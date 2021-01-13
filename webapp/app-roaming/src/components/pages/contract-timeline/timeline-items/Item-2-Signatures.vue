@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card color="#fafafa">
+      <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>
           {{ `Signed ${signatures.length} times.` }}
         </v-card-text>

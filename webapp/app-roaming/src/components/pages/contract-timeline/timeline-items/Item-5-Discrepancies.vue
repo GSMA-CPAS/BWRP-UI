@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card color="#fafafa">
+      <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>DISCREPANCIES COMPUTED</v-card-text>
         <v-card-actions>
           <v-spacer />

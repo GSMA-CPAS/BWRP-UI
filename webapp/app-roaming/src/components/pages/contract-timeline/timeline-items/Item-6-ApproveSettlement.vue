@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card class="ml-7" color="#fafafa">
+      <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>
           <div>Approved...</div>
           <br />
@@ -22,10 +22,12 @@
   </timeline-item>
 </template>
 <script>
+import {timelineMixin} from '@/utils/mixins/component-specfic';
 import ApproveButton from './buttons/Approve.vue';
 export default {
   name: 'item-1',
   description: 'description',
+  mixins: [timelineMixin],
   components: {ApproveButton},
 };
 </script>

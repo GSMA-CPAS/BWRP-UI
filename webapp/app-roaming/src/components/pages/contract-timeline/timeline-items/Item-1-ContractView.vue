@@ -1,7 +1,7 @@
 <template >
   <timeline-item>
     <template #content>
-      <v-card color="#fafafa">
+      <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>CREATED at {date} by {{ fromMSP }}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

@@ -73,6 +73,9 @@ const timelineMixin = {
     ...mapGetters('document', ['exists']),
   },
   computed: {
+    cardTextStyle() {
+      return {'ml-4': true};
+    },
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
       documentData: (state) => state.document.data,

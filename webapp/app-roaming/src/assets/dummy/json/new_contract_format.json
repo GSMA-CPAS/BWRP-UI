@@ -1,23 +1,23 @@
 {
   "generalInformation": {
-    "name": "Nae",
-    "type": "Special",
-    "startDate": "2020-05-01T00:00:00.000Z",
-    "endDate": "2020-12-01T00:00:00.000Z",
+    "name": "test",
+    "type": "Normal",
+    "startDate": "2021-01-01T00:00:00.000Z",
+    "endDate": "2021-12-01T00:00:00.000Z",
     "prolongationLength": null,
-    "taxesIncluded": true,
-    "authors": "fd",
+    "taxesIncluded": false,
+    "authors": "paul",
     "TMUS": {
-      "currencyForAllDiscounts": "JPY",
+      "currencyForAllDiscounts": "USD",
       "tadigCodes": {
-        "codes": "dfd",
-        "includeContractParty": true
+        "codes": "xyz",
+        "includeContractParty": false
       }
     },
     "DTAG": {
       "currencyForAllDiscounts": "EUR",
       "tadigCodes": {
-        "codes": "fds",
+        "codes": "abc",
         "includeContractParty": false
       }
     }
@@ -26,48 +26,92 @@
     "signatures": [
       {
         "id": "signature-0",
-        "name": "x",
-        "role": "c"
+        "name": "bob",
+        "role": "law"
       }
     ],
-    "bankDetails": {
-      "iban": null,
-      "bankName": null,
-      "currency": "JPY",
-      "swiftBic": null,
-      "bankAddress": null,
-      "bankAccountName": null,
-      "contactNameContract": null,
-      "contactEmailContract": null,
-      "contactPhoneContract": null,
-      "contactNameAccounting": "g",
-      "contactEmailAccounting": null,
-      "contactPhoneAccounting": null
-    },
-    "discountModels": null
+    "discountModels": {
+      "condition": {
+        "selectedConditionName": "Unconditional",
+        "selectedCondition": null
+      },
+      "serviceGroups": [
+        {
+          "homeTadigs": [
+            "xyz"
+          ],
+          "visitorTadigs": [
+            "abc"
+          ],
+          "chosenServices": [
+            {
+              "id": "service-0",
+              "name": "MOC Back Home",
+              "rate": [
+                {
+                  "id": "tier-0",
+                  "threshold": 0,
+                  "fixedPrice": "1",
+                  "linearPrice": "2"
+                }
+              ],
+              "unit": "",
+              "balancedRate": null,
+              "unbalancedRate": null,
+              "pricingModel": "Normal",
+              "accessPricingModel": "Not Charged",
+              "accessPricingUnit": null,
+              "accessPricingRate": null
+            }
+          ]
+        }
+      ]
+    }
   },
   "DTAG": {
     "signatures": [
       {
         "id": "signature-0",
-        "name": "c",
-        "role": "x"
+        "name": "hans",
+        "role": "law"
       }
     ],
-    "bankDetails": {
-      "iban": null,
-      "bankName": "fsdfs",
-      "currency": "EUR",
-      "swiftBic": null,
-      "bankAddress": null,
-      "bankAccountName": null,
-      "contactNameContract": null,
-      "contactEmailContract": null,
-      "contactPhoneContract": null,
-      "contactNameAccounting": null,
-      "contactEmailAccounting": null,
-      "contactPhoneAccounting": null
-    },
-    "discountModels": null
+    "discountModels": {
+      "condition": {
+        "selectedConditionName": "Unconditional",
+        "selectedCondition": null
+      },
+      "serviceGroups": [
+        {
+          "homeTadigs": [
+            "abc"
+          ],
+          "visitorTadigs": [
+            "xyz"
+          ],
+          "chosenServices": [
+            {
+              "id": "service-0",
+              "name": "MOC Back Home",
+              "rate": [
+                {
+                  "id": "tier-0",
+                  "threshold": 0,
+                  "fixedPrice": "1",
+                  "linearPrice": "2"
+                }
+              ],
+              "unit": "",
+              "balancedRate": null,
+              "unbalancedRate": null,
+              "pricingModel": "Normal",
+              "accessPricingModel": "Not Charged",
+              "accessPricingUnit": null,
+              "accessPricingRate": null
+            }
+          ]
+        }
+      ]
+    }
   }
 }
