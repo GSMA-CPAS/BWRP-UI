@@ -18,6 +18,9 @@ const databaseConnection = config.get('database').connection;
 global.GLOBAL_ROOT = path.resolve(__dirname);
 global.GLOBAL_BACKEND_ROOT = path.resolve(__dirname + '/backend');
 
+const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
+const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
+
 const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
 const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
@@ -35,6 +38,12 @@ app.use(history({
     },
     {
       from: /^\/app\/.*$/,
+      to: function(context) {
+        return context.parsedUrl.pathname;
+      }
+    },
+    {
+      from: /^\/app-api\/.*$/,
       to: function(context) {
         return context.parsedUrl.pathname;
       }
@@ -160,7 +169,9 @@ if (sessionConfig.cookie.secure === true) {
     const appConfig = config.get('apps.' + moduleAppName);
     if (appConfig.enabled) {
       try {
-        await require(appConfig.packageName).init(app, logger, appConfig.config);
+        const router = new express.Router();
+        await require(appConfig.packageName).init(app, router, database, logger, appConfig.config);
+        app.use('/app-api/' + appConfig.packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, router);
         app.use('/app/' + appConfig.packageName, express.static(path.join(__dirname, '/node_modules/' + appConfig.packageName + '/dist'))); // todo: check if folder exists!
         logger.info('[%s] app successfully loaded', appConfig.packageName);
       } catch (error) {
