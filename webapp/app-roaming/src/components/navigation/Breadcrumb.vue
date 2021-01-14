@@ -1,32 +1,61 @@
 <template>
-  <v-row class="flex-grow-0 ma-0 pa-0">
+  <v-app-bar clipped-left app>
     <v-col>
       <v-breadcrumbs large :items="items"></v-breadcrumbs>
     </v-col>
-    <v-col
-      v-if="refreshActive"
-      align-self="center"
-      class="text-center"
-      cols="1"
-    >
+    <!-- <v-col align-self="center" class="text-center" cols="2">
+      <v-menu offset-y rounded="lg">
+        <template v-slot:activator="{on, attrs}">
+          <app-button svg="dots-vertical" icon v-bind="attrs" v-on="on" />
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="({action, icon, title}, i) in options"
+            @click="action"
+            :key="i"
+          >
+            <v-list-item-icon right>
+              <v-icon v-text="`mdi-${icon}`" />
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="title" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-col> -->
+
+    <v-col cols="4" align-self="center" class="text-end">
       <app-button
-        icon-size="35"
-        icon
+        v-if="refreshActive"
+        icon-size="20"
+        label="Refresh"
         svg="refresh"
+        outlined
         @button-pressed="refreshPage"
+        class="ma-2"
+      />
+
+      <app-button
+        label="Workspace"
+        :to="toWorkspace"
+        outlined
+        icon-size="20"
+        svg="cog-outline"
       />
     </v-col>
-  </v-row>
+  </v-app-bar>
 </template>
 
 <script>
+import {PATHS} from '@/utils/Enums';
 export default {
   name: 'breadcrumb',
   data: () => ({
     items: [
       {
         text: 'Contracts',
-        to: '/contracts',
+        to: PATHS.contracts,
       },
     ],
   }),
@@ -42,8 +71,29 @@ export default {
     },
   },
   computed: {
+    options() {
+      const options = [
+        {
+          action: this.redirectToWorkspace,
+          title: 'Configure Workspace',
+          icon: 'cog-outline',
+          show: true,
+        },
+      ];
+
+      this.refreshActive &&
+        options.push({
+          action: this.refreshPage,
+          title: 'Refresh Page',
+          icon: 'refresh',
+        });
+      return options;
+    },
     refreshActive() {
       return this.$route.name === 'timeline-page';
+    },
+    toWorkspace() {
+      return PATHS.editWorkspace;
     },
     isHome() {
       return this.items.length > 1;
@@ -54,9 +104,9 @@ export default {
       const {name, meta, params, path} = to;
       console.log(params);
       name === 'contracts-overview' && this.removeLastBreacrumb();
+      // this.addBreadcrumb(params.cid, path) :
       if (from.name === 'contracts-overview') {
         to.name === 'timeline-page' ?
-          // this.addBreadcrumb(params.cid, path) :
           this.addBreadcrumb(to.query.d, path) :
           this.addBreadcrumb(meta.text, path);
       }
