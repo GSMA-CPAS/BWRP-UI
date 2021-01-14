@@ -7,15 +7,23 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+    <template v-slot:append>
+      <app-footer />
+    </template>
   </v-navigation-drawer>
 </template>
 <script>
+import AppFooter from '@/components/other/Footer.vue';
 export default {
   data() {
     return {
       items: [{title: 'TADIG Codes'}, {title: 'TADIG Groups'}],
       mini: true,
     };
+  },
+
+  components: {
+    AppFooter,
   },
 };
 </script>
