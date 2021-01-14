@@ -1,7 +1,12 @@
 <template>
   <v-navigation-drawer app permanent clipped>
     <v-list dense>
-      <v-list-item v-for="item in items" :key="item.title" link>
+      <v-list-item
+        v-for="item in items"
+        :key="item.title"
+        link
+        @click="onMenuChange(item)"
+      >
         <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
@@ -18,10 +23,13 @@ export default {
   data() {
     return {
       items: [{title: 'TADIG Codes'}, {title: 'TADIG Groups'}],
-      mini: true,
     };
   },
-
+  methods: {
+    onMenuChange(i) {
+      this.$emit('onmenuchange', i.title);
+    },
+  },
   components: {
     AppFooter,
   },
