@@ -2,13 +2,13 @@
   <fragment>
     <v-col>
       <v-row v-for="(signature, index) in signatures" :key="signature.id">
-        <!-- <v-col>
+        <v-col>
           <v-text-field
             :error-messages="nameErrors(index)"
             v-model="signature.name"
             label="Name"
           ></v-text-field>
-        </v-col> -->
+        </v-col>
         <v-col>
           <v-text-field
             :error-messages="roleErrors(index)"
@@ -56,7 +56,7 @@ export default {
     signatures: {
       required,
       $each: {
-        // name: {required, minLength: minLength(2)},
+        name: {required, minLength: minLength(2)},
         role: {required, minLength: minLength(2)},
       },
     },
@@ -81,14 +81,14 @@ export default {
     removeSignature(index) {
       this.signatures.splice(index, 1);
     },
-    // nameErrors(index) {
-    //   const errors = [];
-    //   const {$dirty, name} = this.$v.signatures.$each.$iter[index];
-    //   if (!$dirty) return errors;
-    //   !name.required && errors.push(`Please enter name`);
-    //   !name.minLength && errors.push(`Name must have at least 2 letters.`);
-    //   return errors;
-    // },
+    nameErrors(index) {
+      const errors = [];
+      const {$dirty, name} = this.$v.signatures.$each.$iter[index];
+      if (!$dirty) return errors;
+      !name.required && errors.push(`Please enter name`);
+      !name.minLength && errors.push(`Name must have at least 2 letters.`);
+      return errors;
+    },
     roleErrors(index) {
       const errors = [];
       if (!this.$v.signatures.$each.$iter[index].$dirty) return errors;
