@@ -1,7 +1,7 @@
 'use strict';
 
 exports.init = async (app, router, database, logger, config) => {
-  // curl -X GET http://localhost:3000/app-api/app-roaming/tadig/codes
+  // curl -X GET http://localhost:3000/api/app-roaming/tadig/codes
   router.get('/tadig/codes', async (req, res) => {
     try {
       const result = await database.query('SELECT * FROM tadig_codes');
@@ -11,7 +11,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  //  curl -X POST http://localhost:3000/app-api/app-roaming/tadig/codes -d '{"code":"AEE"}' -H "Content-Type: application/json"
+  //  curl -X POST http://localhost:3000/api/app-roaming/tadig/codes -d '{"code":"AEE"}' -H "Content-Type: application/json"
   router.post('/tadig/codes', async (req, res) => {
     try {
       await database.query('INSERT INTO tadig_codes SET code=?', [req.body.code]);
@@ -21,7 +21,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  //  curl -X DELETE http://localhost:3000/app-api/app-roaming/tadig/codes/1
+  //  curl -X DELETE http://localhost:3000/api/app-roaming/tadig/codes/1
   router.delete('/tadig/codes/:id', async (req, res) => {
     const id = req.params.id;
     try {
@@ -32,7 +32,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  // curl -X GET http://localhost:3000/app-api/app-roaming/tadig/groups
+  // curl -X GET http://localhost:3000/api/app-roaming/tadig/groups
   router.get('/tadig/groups', async (req, res) => {
     try {
       const result = await database.query('SELECT * FROM tadig_groups');
@@ -42,7 +42,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  // curl -X GET http://localhost:3000/app-api/app-roaming/tadig/groups/1
+  // curl -X GET http://localhost:3000/api/app-roaming/tadig/groups/1
   router.get('/tadig/groups/:id', async (req, res) => {
     const tadigGroupId = req.params.id;
     try {
@@ -53,7 +53,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  //  curl -X POST http://localhost:3000/app-api/app-roaming/tadig/groups -d '{"name":"Europe"}' -H "Content-Type: application/json"
+  //  curl -X POST http://localhost:3000/api/app-roaming/tadig/groups -d '{"name":"Europe"}' -H "Content-Type: application/json"
   router.post('/tadig/groups', async (req, res) => {
     try {
       await database.query('INSERT INTO tadig_groups SET name=?', [req.body.name]);
@@ -63,7 +63,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  //  curl -X POST http://localhost:3000/app-api/app-roaming/tadig/groups/1/codes -d '[1,2]' -H "Content-Type: application/json"
+  //  curl -X POST http://localhost:3000/api/app-roaming/tadig/groups/1/codes -d '[1,2]' -H "Content-Type: application/json"
   router.post('/tadig/groups/:id/codes', async (req, res) => {
     const tadigGroupId = req.params.id;
     const tadigCodeIds = req.body;
@@ -79,7 +79,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  //  curl -X DELETE http://localhost:3000/app-api/app-roaming/tadig/groups/1/codes -d '[3,4]' -H "Content-Type: application/json"
+  //  curl -X DELETE http://localhost:3000/api/app-roaming/tadig/groups/1/codes -d '[3,4]' -H "Content-Type: application/json"
   router.delete('/tadig/groups/:id/codes', async (req, res) => {
     const tadigGroupId = req.params.id;
     const tadigCodeIds = req.body;
@@ -95,7 +95,7 @@ exports.init = async (app, router, database, logger, config) => {
       res.status(500).json({status: 500, code: 'ERR_INTERNAL_SERVER_ERROR', message: 'Internal Server Error'});
     }
   });
-  //  curl -X DELETE http://localhost:3000/app-api/app-roaming/tadig/groups/1
+  //  curl -X DELETE http://localhost:3000/api/app-roaming/tadig/groups/1
   router.delete('/tadig/groups/:id', async (req, res) => {
     const id = req.params.id;
     try {

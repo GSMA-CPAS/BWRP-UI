@@ -43,12 +43,6 @@ app.use(history({
       }
     },
     {
-      from: /^\/app-api\/.*$/,
-      to: function(context) {
-        return context.parsedUrl.pathname;
-      }
-    },
-    {
       from: /^\/proxy\/.*$/,
       to: function(context) {
         return context.parsedUrl.pathname;
@@ -171,8 +165,8 @@ if (sessionConfig.cookie.secure === true) {
       try {
         const router = new express.Router();
         await require(appConfig.packageName).init(app, router, database, logger, appConfig.config);
-        app.use('/app-api/' + appConfig.packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, router);
-        app.use('/app/' + appConfig.packageName, express.static(path.join(__dirname, '/node_modules/' + appConfig.packageName + '/dist'))); // todo: check if folder exists!
+        app.use('/api/' + appConfig.packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, router);
+        app.use('/app/' + appConfig.packageName, express.static(path.join(__dirname, '/node_modules/' + appConfig.packageName + '/dist')));
         logger.info('[%s] app successfully loaded', appConfig.packageName);
       } catch (error) {
         logger.error('[%s] failed to load app - %s', appConfig.packageName, error.message);
