@@ -101,8 +101,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      const {name, meta, params, path} = to;
-      console.log(params);
+      const {name, meta, /*  params, */ path} = to;
+      // console.log(params);
       name === 'contracts-overview' && this.removeLastBreacrumb();
       // this.addBreadcrumb(params.cid, path) :
       if (from.name === 'contracts-overview') {

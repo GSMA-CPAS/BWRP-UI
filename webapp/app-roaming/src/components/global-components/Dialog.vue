@@ -6,6 +6,7 @@
         :outlined="outlined"
         v-on="on"
         :label="label"
+        :svg="svg"
       />
     </template>
     <v-card class="pa-1">
@@ -38,6 +39,7 @@ export default {
   props: {
     outlined: Boolean,
     label: {type: String, default: 'Missing Label'},
+    svg: {type: String},
     title: {type: String, default: 'Missing Title'},
     width: {type: String, default: '60vw'},
     hideIcon: {type: Boolean, default: false},

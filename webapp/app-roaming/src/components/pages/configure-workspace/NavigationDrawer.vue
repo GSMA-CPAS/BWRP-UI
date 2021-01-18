@@ -4,9 +4,11 @@
       <v-list-item
         v-for="item in items"
         :key="item.title"
-        link
         @click="onMenuChange(item)"
       >
+        <v-list-item-icon>
+          <v-icon>mdi-{{ item.icon }}</v-icon>
+        </v-list-item-icon>
         <v-list-item-content>
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
@@ -22,7 +24,10 @@ import AppFooter from '@/components/other/Footer.vue';
 export default {
   data() {
     return {
-      items: [{title: 'TADIG Codes'}, {title: 'TADIG Groups'}],
+      items: [
+        {title: 'TADIG Codes', icon: 'alpha-t'},
+        {title: 'TADIG Groups', icon: 'alpha-t-circle-outline'},
+      ],
     };
   },
   methods: {
