@@ -84,19 +84,6 @@ export default {
   data() {
     return {
       search: '',
-      headers: [
-        {text: 'Internal Reference', value: 'referenceID'},
-        {text: 'Document ID', value: 'documentId'},
-        {text: 'Partner', value: 'toMSP'},
-        {text: 'Name', value: 'contractName'},
-        {text: 'Author', value: 'author'},
-        {text: 'Last Modification', value: 'lastModification'},
-        {text: 'Start Date', value: 'startDate'},
-        {text: 'End Date', value: 'endDate'},
-        {text: 'State', value: 'state'},
-        // {text: 'Actions', value: 'action'},
-        // {text: 'To MSP', value: 'toMSP'},
-      ],
     };
   },
   components: {
@@ -125,6 +112,21 @@ export default {
     },
   },
   computed: {
+    headers() {
+      return [
+        {text: 'Internal Reference', value: 'referenceID'},
+        {text: 'Document ID', value: 'documentId'},
+        {text: 'Partner', value: 'toMSP'},
+        {text: 'Name', value: 'contractName'},
+        {text: 'Author', value: 'author'},
+        {text: 'Last Modification', value: 'lastModification'},
+        {text: 'Start Date', value: 'startDate'},
+        {text: 'End Date', value: 'endDate'},
+        {text: 'State', value: 'state'},
+        // {text: 'Actions', value: 'action'},
+        // {text: 'To MSP', value: 'toMSP'},
+      ];
+    },
     items() {
       return [
         {title: 'Summary', icon: 'clipboard-text', action: this.onSummary},
