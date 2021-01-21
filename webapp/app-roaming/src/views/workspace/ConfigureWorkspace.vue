@@ -1,9 +1,7 @@
 <template>
-  <v-container class="background">
+  <v-container fluid class="background">
     <navigation-drawer @onmenuchange="changeMenu" />
-    <v-card>
-      <workspace-view :menu="menu" />
-    </v-card>
+    <workspace-view :menu="menu" />
   </v-container>
 </template>
 <script>

@@ -1,7 +1,8 @@
 <template>
   <div>
     <form-container>
-      <row label="Contract Name and Contract Type">
+      <row label="Contract Name">
+        <!-- and Contract Type -->
         <v-col>
           <v-text-field
             label="Contract Name"
@@ -10,7 +11,7 @@
             v-model="name"
           />
         </v-col>
-        <v-col>
+        <!-- <v-col>
           <v-select
             label="Contract Type"
             v-on="inputListeners('type')"
@@ -18,7 +19,7 @@
             :items="contractTypes"
             v-model="type"
           />
-        </v-col>
+        </v-col> -->
       </row>
       <row label="Start Date and End Date">
         <date-picker v-model="startDate" label="Start Date" />
