@@ -32,7 +32,9 @@ const duplicateMixin = {
   computed: {
     icons() {
       return {
+        view: 'eye',
         add: 'plus',
+        minus: 'minus',
         remove: 'delete',
         edit: 'pencil',
       };

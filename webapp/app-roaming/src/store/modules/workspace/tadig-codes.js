@@ -31,7 +31,6 @@ const tadigCodesModule = {
       rootState,
       state,
     }) {
-      // TODO:
       await appAPI
         .get('/tadig/codes', {withCredentials})
         .then((codes) => {
@@ -45,10 +44,18 @@ const tadigCodesModule = {
     ) {
       await appAPI
         .delete(`/tadig/codes/${id}/`)
-        .then()
+        .then(({status}) => {
+          if (status === 200) {
+            dispatch('loadCodes');
+          }
+        })
         .catch((e) => {});
     },
   },
-  getters: {},
+  getters: {
+    codes: (state) => {
+      return state.codes.map(({code}) => code);
+    },
+  },
 };
 export default tadigCodesModule;
