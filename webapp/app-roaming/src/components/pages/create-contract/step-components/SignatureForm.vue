@@ -10,11 +10,12 @@
           ></v-text-field>
         </v-col>
         <v-col>
-          <v-text-field
-            :error-messages="roleErrors(index)"
+          <v-combobox
             v-model="signature.role"
+            :items="predefinedRoles"
+            :error-messages="roleErrors(index)"
             label="Role"
-          ></v-text-field>
+          />
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
           <app-button
@@ -24,7 +25,7 @@
             icon
           />
         </v-col>
-        <v-col align-self="center" class="mr-3" cols="1">
+        <v-col align-self="center" class="mr-4" cols="1">
           <app-button @button-pressed="addSignature" :svg="icons.add" icon />
         </v-col>
       </v-row>
@@ -61,7 +62,6 @@ export default {
       },
     },
   },
-  components: {},
   watch: {
     signatures: {
       handler(val) {
@@ -100,6 +100,17 @@ export default {
     },
   },
   computed: {
+    predefinedRoles() {
+      return [
+        'CEO',
+        'User',
+        'Admin',
+        'Viewer',
+        'Legal',
+        'Finance',
+        'Commercial',
+      ];
+    },
     isDisabled() {
       return this.signatures.length === 1;
     },
