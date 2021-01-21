@@ -1,6 +1,6 @@
 <template>
   <v-tooltip v-bind="tooltipProps">
-    <template #activator="{ on }">
+    <template #activator="{on}">
       <slot name="activator" :on="on" />
     </template>
     <span>{{ tooltipText }}</span>

@@ -11,7 +11,7 @@ export default {
   description: 'This is a custom currency selector',
   data() {
     return {
-      availableCurrencies: ['EUR', 'USD', 'GBP', 'JPY', 'CNY'],
+      availableCurrencies: ['EUR', 'USD', 'GBP'],
       currencyLabel: 'Select Currency',
     };
   },
