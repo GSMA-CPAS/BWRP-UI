@@ -50,7 +50,7 @@
               Enroll User
             </v-card-title>
             <v-card-text>
-              Enroll registered user to create new signed certificate
+              Enroll registered user to create new signed certificate.
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-btn color="primary" tile @click="enroll">Enroll user</v-btn>
@@ -59,12 +59,15 @@
         </v-col>
       </v-row>
       <v-spacer></v-spacer>
-      <v-row>
+      <v-row v-if="loggedInUser !== user.username">
         <v-col cols="12" lg="6">
           <v-card>
             <v-card-title>
-              Reset Password
+              Reset User Password
             </v-card-title>
+            <v-card-text>
+              User password will be changed to the new password. User certificate will not be renewed. User must change password after first login.
+            </v-card-text>
             <v-form ref="formResetPassword" v-model="valid" lazy-validation @submit.prevent="resetPassword">
               <v-card-text>
                 <v-text-field v-model="newPasswordReset" label="New Password" color="secondary"
@@ -115,6 +118,7 @@ export default {
         disabled: true,
       },
     ],
+    loggedInUser: null,
     userId: null,
     user: {
       username: '',
@@ -140,9 +144,14 @@ export default {
 
   created: function() {
     this.userId = this.$route.params.id;
-    setTimeout(() => {
-      this.fetchUser();
-    }, 100);
+    this.$store.dispatch('appContext').then((response) => {
+      this.loggedInUser = response.user.username;
+      setTimeout(() => {
+        this.fetchUser();
+      }, 100);
+    }, (error) => {
+      this.$modal.error(error);
+    });
   },
 
   methods: {
@@ -204,7 +213,7 @@ export default {
           newPassword: this.newPasswordReset,
         };
         this.$modal.confirm({
-          title: 'Reset Password', message: 'Are you sure?',
+          title: 'Reset User Password', message: 'Are you sure?',
           callbackOk: () => {
             this.loading = true;
             this.$http({

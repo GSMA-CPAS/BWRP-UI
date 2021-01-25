@@ -47,14 +47,14 @@ export default {
   }),
 
   mounted() {
-    try {
-      const appContext = JSON.parse(localStorage.getItem('appContext'));
+    this.$store.dispatch('appContext').then((response) => {
+      const appContext = response;
       this.mspid = appContext.organization.mspid;
       this.username = appContext.user.username;
       this.isAdmin = appContext.user.isAdmin;
-    } catch (error) {
+    }, (error) => {
       this.$modal.error(error);
-    }
+    });
   },
 
   methods: {

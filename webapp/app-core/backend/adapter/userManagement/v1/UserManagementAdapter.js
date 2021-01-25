@@ -329,14 +329,6 @@ class UserManagementAdapter extends AbstractAdapter {
       throw error;
     }
 
-    if (user.username === 'admin') {
-      this.getLogger().warn('[UserManagementAdapter::resetPassword] failed to reset password for %s', user.username);
-      throw new Error(JSON.stringify({
-        code: ErrorCodes.ERR_VALIDATION,
-        message: 'Admin password cannot be reset',
-      }));
-    }
-
     try {
       const pwdKeys = await this.createPasswordHashAndEncKeys(newPassword);
       await this.getDatabase().

@@ -3,6 +3,7 @@ import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import Axios from 'axios';
 import router from './router';
+import store from './store/index';
 
 import Modal from '@/components/dialog/Plugin';
 Vue.use(Modal);
@@ -71,5 +72,6 @@ router.beforeEach((to, from, next) => {
 new Vue({
   vuetify,
   router,
+  store,
   render: (h) => h(App)
 }).$mount('#app');
