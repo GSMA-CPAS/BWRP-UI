@@ -49,9 +49,9 @@ class CommonAdapter extends AbstractAdapter {
       let toSk = '';
       for (const msp in item.header.msps) {
         if (msp === selfMSP) {
-          fromSk = crypto.createHash('sha256').update(item.header[msp].mspId + item.referenceId).digest('hex').toString('utf8');
+          fromSk = crypto.createHash('sha256').update(msp + item.referenceId).digest('hex').toString('utf8');
         } else {
-          toSk = crypto.createHash('sha256').update(item.header[msp].mspId + item.referenceId).digest('hex').toString('utf8');
+          toSk = crypto.createHash('sha256').update(msp + item.referenceId).digest('hex').toString('utf8');
         }
       }
 
