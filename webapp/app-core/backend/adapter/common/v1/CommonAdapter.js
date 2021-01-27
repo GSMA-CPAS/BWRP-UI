@@ -124,6 +124,13 @@ class CommonAdapter extends AbstractAdapter {
       //  }
       // }
 
+      const check = true
+      for (const msp in data.header.msps) {
+        // escape eslint check
+        if (check == true) {
+          data.header.msps[msp].minSignatures = data.body.framework.signers[msp].length;
+        }
+      }
       const payload = {header: header, body: data.body};
       const contract = await got.post(
           this.adapterConfig.url + '/api/v1/contracts/', {
