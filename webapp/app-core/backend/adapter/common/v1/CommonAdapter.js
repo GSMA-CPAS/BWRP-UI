@@ -42,8 +42,6 @@ class CommonAdapter extends AbstractAdapter {
     try {
       const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId).json();
       this.getLogger().debug('[CommonAdapter::getContractById] get contract: - %s', JSON.stringify(item));
-      const fromSk = crypto.createHash('sha256').update(item.header.fromMsp.mspId + item.referenceId).digest('hex').toString('utf8');
-      const toSK = crypto.createHash('sha256').update(item.header.toMsp.mspId + item.referenceId).digest('hex').toString('utf8');
 
       // convert header
       const header = {name: item.header.name, type: 'contract', version: item.header.version, msps: item.header.msps};
@@ -57,8 +55,7 @@ class CommonAdapter extends AbstractAdapter {
         data: JSON.stringify({body: item.body, header: header}),
         state: 'sent',
         ts: item.lastModificationDate,
-        fromStorageKey: fromSk,
-        toStorageKey: toSK};
+      };
     } catch (error) {
       this.getLogger().error('[CommonAdapter::getContractById] failed to get contract - %s', error.message);
       throw error;
