@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import {appAPI} from '../workspace';
+import Vue from 'vue';
 
 const namespaced = true;
 const withCredentials = true;
@@ -20,7 +20,7 @@ const tadigGroupsModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       group,
     ) {
-      await appAPI
+      await Vue.axios.local
         .post('/tadig/groups', {name: group}, {withCredentials})
         .then((res) => {
           dispatch('loadGroups');
@@ -36,10 +36,10 @@ const tadigGroupsModule = {
       state,
     }) {
       // TODO:
-      await appAPI
+      await Vue.axios.local
         .get('/tadig/groups', {withCredentials})
         .then((groups) => {
-          commit('UPDATE_GROUPS', groups.data);
+          commit('UPDATE_GROUPS', groups);
         })
         .catch((e) => {});
     },
@@ -47,10 +47,10 @@ const tadigGroupsModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       id,
     ) {
-      await appAPI
+      await Vue.axios.local
         .get(`/tadig/groups/${id}`, {withCredentials})
-        .then(({data}) => {
-          commit('UPDATE_GROUP_CODES', data);
+        .then((groupCodes) => {
+          commit('UPDATE_GROUP_CODES', groupCodes);
         })
         .catch((e) => {});
     },
@@ -58,9 +58,10 @@ const tadigGroupsModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       {id, codes},
     ) {
-      await appAPI
+      await Vue.axios.local
         .post(`/tadig/groups/${id}/codes`, codes, {withCredentials})
         .then((res) => {
+          dispatch('loadGroupCodes');
           console.log(res);
         })
         .catch((e) => {});
@@ -69,9 +70,10 @@ const tadigGroupsModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       {id, codes},
     ) {
-      await appAPI
+      await Vue.axios.local
         .delete(`/tadig/groups/${id}/codes`, {data: codes}, {withCredentials})
         .then((res) => {
+          dispatch('loadGroupCodes');
           console.log(res);
         })
         .catch((e) => {});
@@ -80,10 +82,10 @@ const tadigGroupsModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       id,
     ) {
-      await appAPI
+      await Vue.axios.local
         .delete(`/tadig/groups/${id}/`)
-        .then(({status}) => {
-          if (status === 200) {
+        .then(({success}) => {
+          if (success) {
             dispatch('loadGroups');
           }
         })
@@ -98,7 +100,7 @@ const tadigGroupsModule = {
       state,
     }) {
       // TODO:
-      await appAPI
+      await Vue.axios.local
         .get('/tadig/groups', {withCredentials})
         .then((groups) => {
           commit('UPDATE_GROUPS', groups.data);

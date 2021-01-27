@@ -130,21 +130,21 @@ const newDocumentModule = {
       // Object.assign(state.userData.bankDetails, defaultBankDetailsState());
       Object.assign(state.userData.signatures, defaultSignaturesState());
       Object.assign(
-          state.userData.discountModels,
-          defaultDiscountModelsState(),
+        state.userData.discountModels,
+        defaultDiscountModelsState(),
       );
       // Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
       Object.assign(state.partnerData.signatures, defaultSignaturesState());
       Object.assign(
-          state.partnerData.discountModels,
-          defaultDiscountModelsState(),
+        state.partnerData.discountModels,
+        defaultDiscountModelsState(),
       );
     },
   },
   actions: {
     startContract(
-        {commit, dispatch, rootGetters, getters, rootState, state},
-        payload,
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      payload,
     ) {
       const user = rootGetters['user/organizationMSPID'];
       const {partner, fileAsJSON} = payload;
@@ -178,13 +178,13 @@ const newDocumentModule = {
 
         if (loadedJson.generalInformation.startDate) {
           loadedJson.generalInformation.startDate = parseISOString(
-              loadedJson.generalInformation.startDate,
+            loadedJson.generalInformation.startDate,
           );
         }
 
         if (loadedJson.generalInformation.endDate) {
           loadedJson.generalInformation.endDate = parseISOString(
-              loadedJson.generalInformation.endDate,
+            loadedJson.generalInformation.endDate,
           );
         }
       }
@@ -219,26 +219,26 @@ const newDocumentModule = {
             data.header.msps[getters.msps.user] = {minSignatures: 2};
             data.header.msps[toMSP] = {minSignatures: 2};
             data.body = convertModelsModule.convertUiModelToJsonModel(
-                user,
-                toMSP,
-                data.body,
+              user,
+              toMSP,
+              data.body,
             );
-            Vue.axios
-                .post('/documents', {toMSP, data}, {withCredentials: true})
-                .then((res) => {
-                  console.log(
-                      `%c Successfully added new contract!`,
-                      'color:#5cb85c; font-weight:800',
-                  );
-                  resolve();
-                  commit('resetState');
-                  router.push(PATHS.contracts);
-                })
-                .catch((err) => {
-                  console.log(err);
-                  reject(err);
-                  router.push(PATHS.contracts);
-                });
+            Vue.axios.commonAdapter
+              .post('/documents', {toMSP, data}, {withCredentials: true})
+              .then((res) => {
+                console.log(
+                  `%c Successfully added new contract!`,
+                  'color:#5cb85c; font-weight:800',
+                );
+                resolve();
+                commit('resetState');
+                router.push(PATHS.contracts);
+              })
+              .catch((err) => {
+                console.log(err);
+                reject(err);
+                router.push(PATHS.contracts);
+              });
           } catch (err) {
             reject(err);
           }
