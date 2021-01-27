@@ -22,8 +22,7 @@ class CommonAdapter extends AbstractAdapter {
             contractId: item.contractId,
             documentId: item.referenceId,
             referenceId: item.referenceId,
-            fromMSP: item.header.fromMsp.mspId,
-            toMSP: item.header.toMsp.mspId,
+            msps: item.header.msps,
             state: item.state,
             lastModification: item.lastModificationDate,
             ts: item.lastModificationDate,
@@ -47,15 +46,14 @@ class CommonAdapter extends AbstractAdapter {
       const toSK = crypto.createHash('sha256').update(item.header.toMsp.mspId + item.referenceId).digest('hex').toString('utf8');
 
       // convert header
-      const header = {name: item.header.name, type: 'contract', version: item.header.version, msps: {}};
-      header.msps[item.header.fromMsp.mspId] = {minSignatures: item.header.fromMsp.signatures.length};
-      header.msps[item.header.toMsp.mspId] = {minSignatures: item.header.toMsp.signatures.length};
+      const header = {name: item.header.name, type: 'contract', version: item.header.version, msps: item.header.msps};
+      // header.msps[item.header.fromMsp.mspId] = {minSignatures: item.header.fromMsp.signatures.length};
+      // header.msps[item.header.toMsp.mspId] = {minSignatures: item.header.toMsp.signatures.length};
       return {
         id: item.contractId,
         documentId: item.referenceId,
         referenceId: item.referenceId,
-        fromMSP: item.header.fromMsp.mspId,
-        toMSP: item.header.toMsp.mspId,
+        msps: item.header.msps,
         data: JSON.stringify({body: item.body, header: header}),
         state: 'sent',
         ts: item.lastModificationDate,
@@ -81,40 +79,40 @@ class CommonAdapter extends AbstractAdapter {
 
   async createContract(toMsp, data) {
     try {
-      const header = {name: data.body.metadata.name, type: 'contract', version: data.header.version};
-      for (const msp in data.header.msps) {
-        if (msp === toMsp) {
-          // header.toMsp = {mspId: msp, signatures: data.body[msp].signatures};
-          // todo: hardcoded
-          header.toMsp = {mspId: msp, signatures: [
-            {
-              'id': 'id',
-              'name': 'name',
-              'role': 'role'
-            },
-            {
-              'id': 'id',
-              'name': 'name',
-              'role': 'role'
-            }
-          ]};
-        } else {
-          // header.fromMsp = {mspId: msp, signatures: data.body[msp].signatures};
-          // todo: hardcoded
-          header.fromMsp = {mspId: msp, signatures: [
-            {
-              'id': 'id',
-              'name': 'name',
-              'role': 'role'
-            },
-            {
-              'id': 'id',
-              'name': 'name',
-              'role': 'role'
-            }
-          ]};
-        }
-      }
+      const header = {name: data.body.metadata.name, type: 'contract', version: data.header.version, msps: data.header.msps};
+      // for (const msp in data.header.msps) {
+      //  if (msp === toMsp) {
+      //    // header.toMsp = {mspId: msp, signatures: data.body[msp].signatures};
+      //    // todo: hardcoded
+      //    header.toMsp = {mspId: msp, signatures: [
+      //      {
+      //        'id': 'id',
+      //        'name': 'name',
+      //        'role': 'role'
+      //      },
+      //      {
+      //        'id': 'id',
+      //        'name': 'name',
+      //        'role': 'role'
+      //      }
+      //    ]};
+      //  } else {
+      //    // header.fromMsp = {mspId: msp, signatures: data.body[msp].signatures};
+      //    // todo: hardcoded
+      //    header.fromMsp = {mspId: msp, signatures: [
+      //      {
+      //        'id': 'id',
+      //        'name': 'name',
+      //        'role': 'role'
+      //      },
+      //      {
+      //        'id': 'id',
+      //        'name': 'name',
+      //        'role': 'role'
+      //      }
+      //    ]};
+      //  }
+      // }
 
       const payload = {header: header, body: data.body};
       const contract = await got.post(
