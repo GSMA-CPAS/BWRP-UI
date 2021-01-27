@@ -38,10 +38,22 @@ class CommonAdapter extends AbstractAdapter {
     }
   }
 
-  async getContractById(contractId) {
+  // currently passing self mspid for some Payload convertion. Require some cleanup.
+  async getContractById(contractId, selfMSP) {
     try {
       const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId).json();
       this.getLogger().debug('[CommonAdapter::getContractById] get contract: - %s', JSON.stringify(item));
+
+      // to be removed if not required.
+      let fromSk = '';
+      let toSk = '';
+      for (const msp in item.header.msps) {
+        if (msp === selfMSP) {
+          fromSk = crypto.createHash('sha256').update(item.header[msp].mspId + item.referenceId).digest('hex').toString('utf8');
+        } else {
+          toSk = crypto.createHash('sha256').update(item.header[msp].mspId + item.referenceId).digest('hex').toString('utf8');
+        }
+      }
 
       // convert header
       const header = {name: item.header.name, type: 'contract', version: item.header.version, msps: item.header.msps};
@@ -55,7 +67,8 @@ class CommonAdapter extends AbstractAdapter {
         data: JSON.stringify({body: item.body, header: header}),
         state: 'sent',
         ts: item.lastModificationDate,
-      };
+        fromStorageKey: fromSk,
+        toStorageKey: toSk};
     } catch (error) {
       this.getLogger().error('[CommonAdapter::getContractById] failed to get contract - %s', error.message);
       throw error;

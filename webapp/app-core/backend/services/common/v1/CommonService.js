@@ -78,7 +78,8 @@ class CommonService extends AbstractService {
     this.getRouter().get('/documents/:contractId', ensureAuthenticated, async (req, res) => {
       const contractId = req.params.contractId;
       try {
-        const response = await this.getBackendAdapter('common').getContractById(contractId);
+        // currently passing self mspid for some Payload convertion. Require some cleanup.
+        const response = await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
