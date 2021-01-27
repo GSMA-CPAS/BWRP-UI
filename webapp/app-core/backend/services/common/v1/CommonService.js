@@ -193,6 +193,41 @@ class CommonService extends AbstractService {
     });
 
     /**
+     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}
+     */
+    this.getRouter().get('/usages/:contractId/:usageId', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const usageId = req.params.usageId;
+        const response = await this.getBackendAdapter('common').getUsagesById(contractId, usageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get usages of contracts by usageId',
+        })), 'GET /');
+      }
+    });
+
+    /**
+     *  curl -X POST http://{host}:{port}/api/v1/common/usages/{contractId} -d '{"header":{...},"body":{...}}' -H "Content-Type: application/json"
+     */
+    this.getRouter().post('/usages/:contractId', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const data = req.body;
+        const response = await this.getBackendAdapter('common').createUsage(contractId, data);
+        return res.json(response);
+      } catch (error) {
+        this.getLogger().error('[CommonService::/] Failed to store usage - %s', error.message);
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to store usage',
+        })), 'POST /');
+      }
+    });
+
+    /**
      * curl -X GET http://{host}:{port}/api/v1/common/settlements/{contractId}
      */
     this.getRouter().get('/settlements/:contractId', ensureAuthenticated, async (req, res) => {
@@ -204,6 +239,23 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get settlements of contracts',
+        })), 'GET /');
+      }
+    });
+
+    /**
+     * curl -X GET http://{host}:{port}/api/v1/common/settlements/{contractId}/{settlementId}
+     */
+    this.getRouter().get('/usages/:contractId/:settlementId', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const settlementId = req.params.settlementId;
+        const response = await this.getBackendAdapter('common').getSettlementsById(contractId, settlementId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get settlements of contracts by usageId',
         })), 'GET /');
       }
     });

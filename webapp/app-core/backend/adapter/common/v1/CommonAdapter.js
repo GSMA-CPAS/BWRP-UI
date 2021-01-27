@@ -186,6 +186,33 @@ class CommonAdapter extends AbstractAdapter {
     }
   }
 
+  async getUsagesById(contractId, usageId) {
+    try {
+      const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId).json();
+      this.getLogger().debug('[CommonAdapter::getUsagesById] get usages by Id: - %s', JSON.stringify(item));
+      return item;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::getUsagesById] failed to get usages by Id - %s', error.message);
+      throw error;
+    }
+  }
+
+  async createUsage(contractId, data) {
+    try {
+      const response = await got.post(
+          this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/', {
+            json: data,
+            responseType: 'json'
+          });
+
+      this.getLogger().debug('[CommonAdapter::createUsage] create new Usage: - %s', JSON.stringify(response.body));
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::createUsage] failed to create usage - %s', error.message);
+      throw error;
+    }
+  }
+
   async getSettlements(contractId) {
     try {
       const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/').json();
@@ -193,6 +220,17 @@ class CommonAdapter extends AbstractAdapter {
       return lists;
     } catch (error) {
       this.getLogger().error('[CommonAdapter::getSettlements] failed to getSettlements of contractId:' + contractId + ' - %s', error.message);
+      throw error;
+    }
+  }
+
+  async getSettlementsById(contractId, settlementId) {
+    try {
+      const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/' + settlementId).json();
+      this.getLogger().debug('[CommonAdapter::getSettlementsById] get settlements by Id: - %s', JSON.stringify(item));
+      return item;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::getSettlementsById] failed to get settlements - %s', error.message);
       throw error;
     }
   }
