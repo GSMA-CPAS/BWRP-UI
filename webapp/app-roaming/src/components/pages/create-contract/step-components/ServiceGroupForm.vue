@@ -1,20 +1,32 @@
 <template>
   <v-col>
-    <br>
+    <br />
     <b>TADIGs</b>
     <row label="Home TADIGs">
       <v-col>
-        <v-autocomplete v-model="homeTadigs" multiple :items="$props.homeTadigOptions" label="TADIGs" placeholder="All (Default)" />
+        <v-autocomplete
+          v-model="homeTadigs"
+          multiple
+          :items="$props.homeTadigOptions"
+          label="TADIGs"
+          placeholder="All (Default)"
+        />
       </v-col>
     </row>
     <row label="Visitor TADIGs">
       <v-col>
-        <v-autocomplete v-model="visitorTadigs" multiple :items="$props.visitorTadigOptions" label="TADIGs" placeholder="All (Default)" />
+        <v-autocomplete
+          v-model="visitorTadigs"
+          multiple
+          :items="$props.visitorTadigOptions"
+          label="TADIGs"
+          placeholder="All (Default)"
+        />
       </v-col>
     </row>
-    <br>
+    <br />
     <b>Services</b>
-    <fragment v-for="(service, index ) in chosenServices" :key="service.id">
+    <fragment v-for="(service, index) in chosenServices" :key="service.id">
       <v-row>
         <v-col>
           <v-select
@@ -24,21 +36,20 @@
           />
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
-          <app-button
-            :disabled="isDisabled"
-            @button-pressed="removeService(index)"
-            :svg="icons.remove"
-            icon
-          />
+          <v-icon :disabled="isDisabled" @click="removeService(index)">
+            {{ `mdi-${icons.remove}` }}
+          </v-icon>
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
-          <app-button @button-pressed="addService" :svg="icons.add" icon />
+          <v-icon @click="addService">
+            {{ `mdi-${icons.add}` }}
+          </v-icon>
         </v-col>
       </v-row>
       <row label="Usage Pricing Model">
         <v-col>
           <v-select
-            :items="['Not Charged','Normal','Balanced/Unbalanced']"
+            :items="['Not Charged', 'Normal', 'Balanced/Unbalanced']"
             placeholder="Select Model"
             v-model="service.pricingModel"
           />
@@ -47,27 +58,38 @@
       <div v-if="service.pricingModel !== 'Not Charged'">
         <row label="Unit">
           <v-col>
-            <v-text-field v-model="service.unit" placeholder="Usage unit to charge"/>
+            <v-text-field
+              v-model="service.unit"
+              placeholder="Usage unit to charge"
+            />
           </v-col>
         </row>
       </div>
       <div v-if="service.pricingModel === 'Normal'">
         <row label="Rate">
-          <rating-plan-input v-model="service.rate"/>
+          <rating-plan-input v-model="service.rate" />
         </row>
       </div>
       <div v-if="service.pricingModel === 'Balanced/Unbalanced'">
         <row label="Balanced Rate">
-          <rating-plan-input v-model="service.balancedRate" :disable-thresholds="true" :disable-fixed="true"/>
+          <rating-plan-input
+            v-model="service.balancedRate"
+            :disable-thresholds="true"
+            :disable-fixed="true"
+          />
         </row>
         <row label="Unbalanced Rate">
-          <rating-plan-input v-model="service.unbalancedRate" :disable-thresholds="true" :disable-fixed="true"/>
+          <rating-plan-input
+            v-model="service.unbalancedRate"
+            :disable-thresholds="true"
+            :disable-fixed="true"
+          />
         </row>
       </div>
       <row label="Access Pricing Model">
         <v-col>
           <v-select
-            :items="['Not Charged','Normal']"
+            :items="['Not Charged', 'Normal']"
             placeholder="Select Model"
             v-model="service.accessPricingModel"
           />
@@ -76,13 +98,16 @@
       <div v-if="service.accessPricingModel !== 'Not Charged'">
         <row label="Unit">
           <v-col>
-            <v-text-field v-model="service.accessPricingUnit" placeholder="Access unit to charge"/>
+            <v-text-field
+              v-model="service.accessPricingUnit"
+              placeholder="Access unit to charge"
+            />
           </v-col>
         </row>
       </div>
       <div v-if="service.accessPricingModel === 'Normal'">
-        <row  label="Rate">
-          <rating-plan-input v-model="service.accessPricingRate"/>
+        <row label="Rate">
+          <rating-plan-input v-model="service.accessPricingRate" />
         </row>
       </div>
     </fragment>
@@ -156,7 +181,7 @@ export default {
     },
     removeService(index) {
       this.chosenServices.splice(index, 1);
-    }
+    },
   },
   computed: {
     ...mapState(['services']),
@@ -165,14 +190,14 @@ export default {
     },
   },
   beforeMount() {
-    if ( this.value ) {
+    if (this.value) {
       this.visitorTadigs = this.value.visitorTadigs;
       this.homeTadigs = this.value.homeTadigs;
       this.condition = this.value.condition;
       this.chosenServices = this.value.chosenServices;
     }
 
-    if ( !this.chosenServices || this.chosenServices.length === 0 ) {
+    if (!this.chosenServices || this.chosenServices.length === 0) {
       this.chosenServices = [
         {
           id: 'service-0',
@@ -185,7 +210,7 @@ export default {
           accessPricingModel: 'Not Charged',
           accessPricingUnit: null,
           accessPricingRate: null,
-        }
+        },
       ];
     }
   },

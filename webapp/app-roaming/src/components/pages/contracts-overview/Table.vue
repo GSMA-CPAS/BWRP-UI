@@ -8,7 +8,6 @@
         </v-col> -->
         <v-col cols="6">
           <v-text-field
-            outlined
             v-model="search"
             append-icon="mdi-magnify"
             label="Search for document"

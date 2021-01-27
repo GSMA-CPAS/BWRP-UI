@@ -18,15 +18,14 @@
           />
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
-          <app-button
-            :disabled="isDisabled"
-            @button-pressed="removeSignature(index)"
-            :svg="icons.remove"
-            icon
-          />
+          <v-icon :disabled="isDisabled" @click="removeSignature(index)">
+            {{ `mdi-${icons.remove}` }}
+          </v-icon>
         </v-col>
         <v-col align-self="center" class="mr-4" cols="1">
-          <app-button @button-pressed="addSignature" :svg="icons.add" icon />
+          <v-icon @click="addSignature">
+            {{ `mdi-${icons.add}` }}
+          </v-icon>
         </v-col>
       </v-row>
     </v-col>

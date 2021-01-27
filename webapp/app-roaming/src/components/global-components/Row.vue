@@ -2,13 +2,13 @@
   <fragment>
     <v-row
       v-if="type === 'primary'"
-      class="primary--text text-uppercase font-weight-medium pa-2"
+      class="primary--text text-uppercase font-weight-medium"
     >
       {{ label }}
     </v-row>
     <div
       v-else-if="type === 'secondary'"
-      class="secondary--text font-weight-medium h1 pa-1"
+      class="secondary--text font-weight-medium h1"
     >
       {{ label }}
     </div>

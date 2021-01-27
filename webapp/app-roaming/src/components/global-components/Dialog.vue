@@ -7,6 +7,7 @@
         v-on="on"
         :label="label"
         :svg="svg"
+        :min-width="labelMinWidth"
       />
     </template>
     <v-card class="pa-1">
@@ -14,7 +15,7 @@
         {{ title }}
         <fragment v-if="!hideIcon">
           <v-spacer />
-          <app-button color="dark" @button-pressed="hide" icon svg="close" />
+          <v-icon color="dark" @click="hide">mdi-close</v-icon>
         </fragment>
       </v-card-title>
       <div v-if="$scopedSlots['content']" class="pa-5">
@@ -44,6 +45,7 @@ export default {
     width: {type: String, default: '60vw'},
     hideIcon: {type: Boolean, default: false},
     loading: {type: Boolean, default: false},
+    labelMinWidth: String,
   },
 };
 </script>

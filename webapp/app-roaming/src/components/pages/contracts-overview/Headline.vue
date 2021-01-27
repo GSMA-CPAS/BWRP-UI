@@ -1,7 +1,7 @@
 <template>
   <v-card-title>
     <app-headline title="Contracts" />
-    <v-spacer></v-spacer>
+    <v-spacer />
     <new-contract-dialog />
   </v-card-title>
 </template>

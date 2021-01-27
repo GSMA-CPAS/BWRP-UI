@@ -25,7 +25,7 @@
       </v-menu>
     </v-col> -->
 
-    <v-col cols="4" align-self="center" class="text-end">
+    <v-col cols="4" class="text-end">
       <app-button
         v-if="refreshActive"
         icon-size="20"
@@ -33,7 +33,6 @@
         svg="refresh"
         outlined
         @button-pressed="refreshPage"
-        class="ma-2"
       />
 
       <app-button
@@ -106,9 +105,9 @@ export default {
       name === 'contracts-overview' && this.removeLastBreacrumb();
       // this.addBreadcrumb(params.cid, path) :
       if (from.name === 'contracts-overview') {
-        to.name === 'timeline-page' ?
-          this.addBreadcrumb(to.query.d, path) :
-          this.addBreadcrumb(meta.text, path);
+        to.name === 'timeline-page'
+          ? this.addBreadcrumb(to.query.d, path)
+          : this.addBreadcrumb(meta.text, path);
       }
     },
   },

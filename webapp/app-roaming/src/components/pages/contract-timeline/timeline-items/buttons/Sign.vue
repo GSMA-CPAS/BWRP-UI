@@ -9,6 +9,7 @@
       hide-icon
       title="Are you sure you want to sign this contract?"
       label="Sign"
+      label-min-width="90"
       :loading="signing"
     >
       <template #actions="{cancel}">

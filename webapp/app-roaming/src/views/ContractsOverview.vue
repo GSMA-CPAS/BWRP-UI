@@ -1,10 +1,12 @@
 <template>
-  <v-card class="pa-2">
-    <headline />
-    <v-card-text>
-      <contracts />
-    </v-card-text>
-  </v-card>
+  <v-container fluid class="background">
+    <v-card class="pa-2">
+      <headline />
+      <v-card-text>
+        <contracts />
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 <script>
 import {PATHS} from '@/utils/Enums';

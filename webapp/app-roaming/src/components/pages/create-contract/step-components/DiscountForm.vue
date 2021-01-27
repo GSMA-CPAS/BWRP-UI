@@ -2,30 +2,34 @@
   <v-col>
     <row type="primary" label="Condition" />
     <v-divider />
-    <condition-picker v-model="condition"/>
-    <v-row>
-      <br><br>
-    </v-row>
+    <condition-picker v-model="condition" />
+    <v-row> <br /><br /> </v-row>
     <row type="primary" label="Service Groups" />
     <v-divider />
-    <fragment v-for="(serviceGroup, index ) in serviceGroups" :key="serviceGroup.id">
+    <fragment
+      v-for="(serviceGroup, index) in serviceGroups"
+      :key="serviceGroup.id"
+    >
       <v-row>
         <v-col>
-          <b>Group {{index+1}}</b>
+          <b>Group {{ index + 1 }}</b>
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
-          <app-button
-            :disabled="isDisabled"
-            @button-pressed="removeServiceGroup(index)"
-            :svg="icons.remove"
-            icon
-          />
+          <v-icon @click="removeServiceGroup(index)" :disabled="isDisabled">
+            {{ `mdi-${icons.remove}` }}
+          </v-icon>
         </v-col>
         <v-col align-self="center" class="mr-3" cols="1">
-          <app-button @button-pressed="addServiceGroup" :svg="icons.add" icon />
+          <v-icon @click="addServiceGroup">
+            {{ `mdi-${icons.add}` }}
+          </v-icon>
         </v-col>
       </v-row>
-      <service-group-form v-model="serviceGroups[index]" :home-tadig-options="homeTadigs" :visitor-tadig-options="visitorTadigs"/>
+      <service-group-form
+        v-model="serviceGroups[index]"
+        :home-tadig-options="homeTadigs"
+        :visitor-tadig-options="visitorTadigs"
+      />
       <v-divider />
     </fragment>
   </v-col>
@@ -76,7 +80,7 @@ export default {
     },
     removeServiceGroup(index) {
       this.serviceGroups.splice(index, 1);
-    }
+    },
   },
   computed: {
     isDisabled() {
