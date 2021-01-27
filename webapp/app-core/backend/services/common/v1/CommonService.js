@@ -177,6 +177,7 @@ class CommonService extends AbstractService {
     });
 
     /**
+     * get list of available usages
      * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}
      */
     this.getRouter().get('/usages/:contractId', ensureAuthenticated, async (req, res) => {
@@ -188,11 +189,12 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get usages of contracts',
-        })), 'GET /');
+        })), 'GET /usages/:contractId');
       }
     });
 
     /**
+     * get usages ny usageId
      * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}
      */
     this.getRouter().get('/usages/:contractId/:usageId', ensureAuthenticated, async (req, res) => {
@@ -205,11 +207,12 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get usages of contracts by usageId',
-        })), 'GET /');
+        })), 'GET /usages/:contractId/:usageId');
       }
     });
 
     /**
+     * create a new usage
      *  curl -X POST http://{host}:{port}/api/v1/common/usages/{contractId} -d '{"header":{...},"body":{...}}' -H "Content-Type: application/json"
      */
     this.getRouter().post('/usages/:contractId', ensureAuthenticated, async (req, res) => {
@@ -223,7 +226,62 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to store usage',
-        })), 'POST /');
+        })), 'POST /usages/:contractId');
+      }
+    });
+
+    /**
+     * update usage by usageId
+     *  curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}
+     */
+    this.getRouter().put('/usages/:contractId/:usageId', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      const data = req.body;
+      try {
+        const response = await this.getBackendAdapter('common').updateUsage(contractId, usageId, data);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_SIGNATURE,
+          message: 'Failed to update usages',
+        })), 'PUT /usages/:contractId/:usageId');
+      }
+    });
+
+    /**
+     * delete usage by usageId
+     *  curl -X DELETE http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}
+     */
+    this.getRouter().delete('/usages/:contractId/:usageId', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      try {
+        const response = await this.getBackendAdapter('common').deleteUsage(contractId, usageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_SIGNATURE,
+          message: 'Failed to delete usages',
+        })), 'DELETE /usages/:contractId/:usageId');
+      }
+    });
+
+    /**
+     * Generated Settlement from usageId
+     * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/generate/
+     */
+    this.getRouter().put('/usages/:contractId/:usageId/generate/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      try {
+        const response = await this.getBackendAdapter('common').generateSettlementsById(contractId, usageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_SIGNATURE,
+          message: 'Failed to generate settlements',
+        })), 'PUT /usages/:contractId/:usageId/generate/');
       }
     });
 
@@ -239,14 +297,14 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get settlements of contracts',
-        })), 'GET /');
+        })), 'GET /settlements/:contractId');
       }
     });
 
     /**
      * curl -X GET http://{host}:{port}/api/v1/common/settlements/{contractId}/{settlementId}
      */
-    this.getRouter().get('/usages/:contractId/:settlementId', ensureAuthenticated, async (req, res) => {
+    this.getRouter().get('/settlements/:contractId/:settlementId', ensureAuthenticated, async (req, res) => {
       try {
         const contractId = req.params.contractId;
         const settlementId = req.params.settlementId;
@@ -256,7 +314,25 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get settlements of contracts by usageId',
-        })), 'GET /');
+        })), 'GET /settlements/:contractId/:settlementId');
+      }
+    });
+
+    /**
+     * Send Generated Settlement to Partner
+     * curl -X PUT http://{host}:{port}/api/v1/common/settlements/{contractId}/{settlementId}/send/
+     */
+    this.getRouter().put('/settlements/:contractId/:settlementId/send/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const settlementId = req.params.settlementId;
+      try {
+        const response = await this.getBackendAdapter('common').sendSettlementsById(contractId, settlementId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_SIGNATURE,
+          message: 'Failed to send settlements',
+        })), 'PUT /settlements/:contractId/:settlementId/send/');
       }
     });
 

@@ -213,6 +213,44 @@ class CommonAdapter extends AbstractAdapter {
     }
   }
 
+  async updateUsage(contractId, usageId, data) {
+    try {
+      const response = await got.put(
+          this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId, {
+            json: data,
+            responseType: 'json'
+          });
+
+      this.getLogger().debug('[CommonAdapter::updateUsage] update Usage: - %s', JSON.stringify(response.body));
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::updateUsage] failed to update usage - %s', error.message);
+      throw error;
+    }
+  }
+
+  async deleteUsage(contractId, usageId) {
+    try {
+      const response = await got.delete(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId, {responseType: 'json'});
+      this.getLogger().debug('[CommonAdapter::deleteUsage] delete usage: - %s', JSON.stringify(response.body));
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::deleteUsage] failed to delete usage - %s', error.message);
+      throw error;
+    }
+  }
+
+  async generateSettlementsById(contractId, usageId) {
+    try {
+      const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/generate/', {responseType: 'json'});
+      this.getLogger().debug('[CommonAdapter::createContract] generate settlement: - %s', JSON.stringify(response.body));
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::createContract] failed to generate settlement - %s', error.message);
+      throw error;
+    }
+  }
+
   async getSettlements(contractId) {
     try {
       const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/').json();
@@ -231,6 +269,17 @@ class CommonAdapter extends AbstractAdapter {
       return item;
     } catch (error) {
       this.getLogger().error('[CommonAdapter::getSettlementsById] failed to get settlements - %s', error.message);
+      throw error;
+    }
+  }
+
+  async sendSettlementsById(contractId, settlementId) {
+    try {
+      const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/' + settlementId + '/send/', {responseType: 'json'});
+      this.getLogger().debug('[CommonAdapter::createContract] create new contract: - %s', JSON.stringify(response.body));
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::createContract] failed to create contract - %s', error.message);
       throw error;
     }
   }
