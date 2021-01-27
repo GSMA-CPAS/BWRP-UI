@@ -60,9 +60,10 @@ const tadigGroupsModule = {
     ) {
       await Vue.axios.local
         .post(`/tadig/groups/${id}/codes`, codes, {withCredentials})
-        .then((res) => {
-          dispatch('loadGroupCodes');
-          console.log(res);
+        .then(({success}) => {
+          if (success) {
+            dispatch('loadGroupCodes', id);
+          }
         })
         .catch((e) => {});
     },
@@ -72,9 +73,10 @@ const tadigGroupsModule = {
     ) {
       await Vue.axios.local
         .delete(`/tadig/groups/${id}/codes`, {data: codes}, {withCredentials})
-        .then((res) => {
-          dispatch('loadGroupCodes');
-          console.log(res);
+        .then(({success}) => {
+          if (success) {
+            dispatch('loadGroupCodes', id);
+          }
         })
         .catch((e) => {});
     },
