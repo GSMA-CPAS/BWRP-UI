@@ -177,6 +177,38 @@ class CommonService extends AbstractService {
     });
 
     /**
+     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}
+     */
+    this.getRouter().get('/usages/:contractId', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const response = await this.getBackendAdapter('common').getUsages(contractId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get usages of contracts',
+        })), 'GET /');
+      }
+    });
+
+    /**
+     * curl -X GET http://{host}:{port}/api/v1/common/settlements/{contractId}
+     */
+    this.getRouter().get('/settlements/:contractId', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const response = await this.getBackendAdapter('common').getSettlements(contractId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get settlements of contracts',
+        })), 'GET /');
+      }
+    });
+
+    /**
      * curl -X GET http://{host}:{port}/api/v1/common/discovery/msps
      */
     this.getRouter().get('/discovery/msps', ensureAuthenticated, async (req, res) => {

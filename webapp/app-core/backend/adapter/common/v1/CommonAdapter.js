@@ -17,10 +17,11 @@ class CommonAdapter extends AbstractAdapter {
       this.getLogger().debug('[CommonAdapter::getContracts] get all contracts: - %s', JSON.stringify(lists));
       const processed = [];
       for (const item of lists) {
-        if (item.documentId !== undefined) {
+        if (item.referenceId !== undefined) {
           processed.push({
             contractId: item.contractId,
-            documentId: item.documentId,
+            documentId: item.referenceId,
+            referenceId: item.referenceId,
             fromMSP: item.header.fromMsp.mspId,
             toMSP: item.header.toMsp.mspId,
             state: item.state,
@@ -42,8 +43,8 @@ class CommonAdapter extends AbstractAdapter {
     try {
       const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId).json();
       this.getLogger().debug('[CommonAdapter::getContractById] get contract: - %s', JSON.stringify(item));
-      const fromSk = crypto.createHash('sha256').update(item.header.fromMsp.mspId + item.documentId).digest('hex').toString('utf8');
-      const toSK = crypto.createHash('sha256').update(item.header.toMsp.mspId + item.documentId).digest('hex').toString('utf8');
+      const fromSk = crypto.createHash('sha256').update(item.header.fromMsp.mspId + item.referenceId).digest('hex').toString('utf8');
+      const toSK = crypto.createHash('sha256').update(item.header.toMsp.mspId + item.referenceId).digest('hex').toString('utf8');
 
       // convert header
       const header = {name: item.header.name, type: 'contract', version: item.header.version, msps: {}};
@@ -51,7 +52,8 @@ class CommonAdapter extends AbstractAdapter {
       header.msps[item.header.toMsp.mspId] = {minSignatures: item.header.toMsp.signatures.length};
       return {
         id: item.contractId,
-        documentId: item.documentId,
+        documentId: item.referenceId,
+        referenceId: item.referenceId,
         fromMSP: item.header.fromMsp.mspId,
         toMSP: item.header.toMsp.mspId,
         data: JSON.stringify({body: item.body, header: header}),
@@ -171,6 +173,28 @@ class CommonAdapter extends AbstractAdapter {
       }));
     } catch (error) {
       this.getLogger().error('[CommonAdapter::signContract] failed to sign contracts - %s', error.message);
+      throw error;
+    }
+  }
+
+  async getUsages(contractId) {
+    try {
+      const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/').json();
+      this.getLogger().debug('[CommonAdapter::getUsages] get all Usages of contractId-' + contractId + ': - %s', JSON.stringify(lists));
+      return lists;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::getUsages] failed to getUsages of contractId:' + contractId + ' - %s', error.message);
+      throw error;
+    }
+  }
+
+  async getSettlements(contractId) {
+    try {
+      const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/').json();
+      this.getLogger().debug('[CommonAdapter::getSettlements] get all Settlements of contractId-' + contractId + ': - %s', JSON.stringify(lists));
+      return lists;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::getSettlements] failed to getSettlements of contractId:' + contractId + ' - %s', error.message);
       throw error;
     }
   }
