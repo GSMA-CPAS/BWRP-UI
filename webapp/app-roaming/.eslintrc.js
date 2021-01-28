@@ -8,7 +8,7 @@ module.exports = {
     parser: 'babel-eslint',
   },
   rules: {
-    indent: 'off',
+    'indent': 'off',
     'operator-linebreak': 'off',
     'no-console': 'off',
     'require-jsdoc': 'off',
