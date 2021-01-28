@@ -1,10 +1,14 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+const csv = require('fast-csv');
+
 exports.init = async (app, router, database, logger, config) => {
   // curl -X GET http://localhost:3000/api/app-roaming/tadig/codes
   router.get('/tadig/codes', async (req, res) => {
     try {
-      const result = await database.query('SELECT * FROM tadig_codes');
+      const result = await database.query('SELECT * FROM tadig_codes ORDER BY code');
       res.json(result);
     } catch (error) {
       logger.error(
@@ -58,7 +62,7 @@ exports.init = async (app, router, database, logger, config) => {
   // curl -X GET http://localhost:3000/api/app-roaming/tadig/groups
   router.get('/tadig/groups', async (req, res) => {
     try {
-      const result = await database.query('SELECT * FROM tadig_groups');
+      const result = await database.query('SELECT * FROM tadig_groups ORDER BY name');
       res.json(result);
     } catch (error) {
       logger.error(
@@ -188,6 +192,27 @@ exports.init = async (app, router, database, logger, config) => {
   await initTableTadigGroupsRelation(database, logger);
 };
 
+const importTadigCodes = (database, logger) => {
+  const csvData = [];
+  fs.createReadStream(path.resolve(__dirname, 'tadig_codes.csv'))
+  .pipe(csv.parse({
+    headers: true
+  }))
+  .on('error', (error) => {
+    logger.error('[app-roaming::init] Failed to parse tadig_codes.csv - ' + error.message);
+  })
+  .on('data', (row) => {
+    csvData.push(Object.values(row));
+  })
+  .on('end', (rowCount) => {
+    database.query('INSERT INTO tadig_codes (code, operator, country, region, op_group, mcc_mnc) VALUES ?', [csvData]).then((result) => {
+      logger.info('[app-roaming::init] tadig codes have been imported successfully!');
+    }, (error) => {
+      logger.error('[app-roaming::init] Failed to import tadig codes - ' + error.message());
+    });
+  });
+};
+
 const initTableTadigCodes = async (database, logger) => {
   const tableName = 'tadig_codes';
   try {
@@ -200,8 +225,13 @@ const initTableTadigCodes = async (database, logger) => {
             'CREATE TABLE IF NOT EXISTS ' +
             tableName +
             ' (' +
-            'id INT AUTO_INCREMENT, ' +
-            'code VARCHAR(100) NOT NULL, ' +
+            '`id` INT AUTO_INCREMENT, ' +
+            '`code` VARCHAR(64) NOT NULL, ' +
+            '`operator` VARCHAR(128) NOT NULL, ' +
+            '`country` VARCHAR(128) NOT NULL, ' +
+            '`region` VARCHAR(128) NOT NULL, ' +
+            '`op_group` VARCHAR(128) NOT NULL, ' +
+            '`mcc_mnc` VARCHAR(64) NOT NULL, ' +
             'PRIMARY KEY (id), ' +
             'CONSTRAINT uc_code UNIQUE (code))',
         );
@@ -209,6 +239,7 @@ const initTableTadigCodes = async (database, logger) => {
             '[app-roaming::init] table %s has been created successfully!',
             tableName,
         );
+        importTadigCodes(database, logger);
       } catch (error) {
         logger.error(
             '[app-roaming::init] failed to create %s table - %s ',
@@ -237,8 +268,8 @@ const initTableTadigGroups = async (database, logger) => {
             'CREATE TABLE IF NOT EXISTS ' +
             tableName +
             ' (' +
-            'id INT AUTO_INCREMENT, ' +
-            'name VARCHAR(100) NOT NULL, ' +
+            '`id` INT AUTO_INCREMENT, ' +
+            '`name` VARCHAR(100) NOT NULL, ' +
             'PRIMARY KEY (id), ' +
             'CONSTRAINT uc_name UNIQUE (name))',
         );
@@ -274,8 +305,8 @@ const initTableTadigGroupsRelation = async (database, logger) => {
             'CREATE TABLE IF NOT EXISTS ' +
             tableName +
             ' (' +
-            'tadig_code_id INT, ' +
-            'tadig_group_id INT, ' +
+            '`tadig_code_id` INT, ' +
+            '`tadig_group_id` INT, ' +
             'PRIMARY KEY (tadig_code_id, tadig_group_id), ' +
             'FOREIGN KEY (tadig_code_id) REFERENCES tadig_codes(id) ON DELETE CASCADE ON UPDATE CASCADE, ' +
             'FOREIGN KEY (tadig_group_id) REFERENCES tadig_groups(id) ON DELETE CASCADE ON UPDATE CASCADE)',
