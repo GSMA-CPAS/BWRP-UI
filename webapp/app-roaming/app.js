@@ -81,7 +81,7 @@ exports.init = async (app, router, database, logger, config) => {
     const tadigGroupId = req.params.id;
     try {
       const result = await database.query(
-          'SELECT tc.code, tgr.tadig_code_id FROM tadig_groups_relation tgr INNER JOIN tadig_codes tc ON tgr.tadig_code_id=tc.id WHERE tgr.tadig_group_id=?',
+          'SELECT tc.code, tc.operator, tc.country, tc.region, tc.op_group, tc.mcc_mnc, tgr.tadig_code_id FROM tadig_groups_relation tgr INNER JOIN tadig_codes tc ON tgr.tadig_code_id=tc.id WHERE tgr.tadig_group_id=?',
           [tadigGroupId],
       );
       res.json(result);
