@@ -102,7 +102,7 @@
           </tr>
         </template>
         <template v-slot:expanded-item="{}">
-          <td :colspan="headers.length" class="background">
+          <td :colspan="headers.length">
             <v-container>
               <v-data-table
                 v-if="groupCodes.length > 0"
