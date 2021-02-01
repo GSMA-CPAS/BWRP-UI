@@ -4,12 +4,9 @@
       <v-card-title>
         {{ errorResponse.title }}
         <v-spacer />
-        <app-button
-          color="black"
-          @button-pressed="setErrorVisibility(false)"
-          icon
-          svg="close"
-        />
+        <v-icon color="dark" @click="setErrorVisibility(false)">
+          mdi-close
+        </v-icon>
       </v-card-title>
       <v-card-text class="title error--text">{{
         `${errorResponse.body}`

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row>
+    <v-row class="mr-3 mb-1">
       <v-col align-self="center" class="text--disabled">CODES</v-col>
       <v-col align-self="center" class="text-end">
         <app-dialog label="Add Code" title="New Code">
@@ -20,7 +20,7 @@
         </app-dialog>
       </v-col>
     </v-row>
-    <v-card>
+    <v-card class="mr-5">
       <v-card-title>
         <v-text-field
           v-model="search"
@@ -74,6 +74,11 @@ export default {
     headers() {
       return [
         {text: 'Code', value: 'code'},
+        {text: 'Operator', value: 'operator'},
+        {text: 'Country', value: 'country'},
+        {text: 'Region', value: 'region'},
+        {text: 'Group', value: 'op_group'},
+        {text: 'MCC/MNC', value: 'mcc_mnc'},
         {text: 'Actions', value: 'actions', sortable: false, align: 'end'},
       ];
     },

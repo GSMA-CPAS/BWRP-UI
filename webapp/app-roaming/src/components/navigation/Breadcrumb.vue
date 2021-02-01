@@ -1,6 +1,6 @@
 <template>
   <v-app-bar clipped-left app>
-    <v-col>
+    <v-col class="pl-0">
       <v-breadcrumbs large :items="items"></v-breadcrumbs>
     </v-col>
     <!-- <v-col align-self="center" class="text-center" cols="2">
@@ -36,6 +36,7 @@
       />
 
       <app-button
+        class="ml-1 mr-2"
         label="Workspace"
         :to="toWorkspace"
         outlined

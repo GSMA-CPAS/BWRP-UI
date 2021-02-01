@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row>
+    <v-row class="mr-3 mb-1">
       <v-col align-self="center" class="text--disabled">GROUPS</v-col>
       <v-col align-self="center" class="text-end">
         <app-dialog label="Add Group" title="New Group">
@@ -21,7 +21,7 @@
       </v-col>
     </v-row>
 
-    <v-card>
+    <v-card class="mr-6">
       <v-card-title>
         <v-text-field
           v-model="search"
@@ -102,14 +102,14 @@
           </tr>
         </template>
         <template v-slot:expanded-item="{}">
-          <td :colspan="headers.length">
+          <td :colspan="headers.length" class="background">
             <v-container>
-              <row type="secondary" label="Codes" />
-              <v-row v-if="groupCodes.length > 0">
-                <v-col v-for="({code}, i) in groupCodes" :key="i">{{
-                  code
-                }}</v-col>
-              </v-row>
+              <v-data-table
+                v-if="groupCodes.length > 0"
+                :headers="groupHeaders"
+                :items="groupCodes"
+                hide-default-footer
+              />
               <v-row v-else class="font-italic"><v-col>No Codes</v-col></v-row>
             </v-container>
           </td>
@@ -177,6 +177,16 @@ export default {
         {text: 'Name', value: 'name'},
         {text: 'Actions', value: 'actions', sortable: false, align: 'end'},
         {text: '', value: 'data-table-expand'},
+      ];
+    },
+    groupHeaders() {
+      return [
+        {text: 'Code', value: 'code'},
+        {text: 'Operator', value: 'operator'},
+        {text: 'Country', value: 'country'},
+        {text: 'Region', value: 'region'},
+        {text: 'Group', value: 'op_group'},
+        {text: 'MCC/MNC', value: 'mcc_mnc'},
       ];
     },
   },
