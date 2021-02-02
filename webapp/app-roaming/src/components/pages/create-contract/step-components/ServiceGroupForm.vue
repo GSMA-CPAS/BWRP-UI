@@ -107,13 +107,13 @@
       <row v-if="serviceConfiguration[service.name] && serviceConfiguration[service.name].access" label="Access Pricing Model">
         <v-col>
           <v-select
-            :items="['Not Charged', 'Normal']"
+            :items="['Not Charged', 'Threshold - back to first', 'Tiered with Thresholds']"
             placeholder="Select Model"
             v-model="service.accessPricingModel"
           />
         </v-col>
       </row>
-      <div v-if="service.accessPricingModel === 'Normal'">
+      <div v-if="service.accessPricingModel && service.accessPricingModel !== 'Not Charged'">
         <row label="Unit">
           <v-col>
             <v-text-field
@@ -123,9 +123,14 @@
           </v-col>
         </row>
       </div>
-      <div v-if="service.accessPricingModel === 'Normal'">
+      <div v-if="service.accessPricingModel === 'Threshold - back to first'">
         <row label="Rate">
-          <rating-plan-input v-model="service.accessPricingRate" />
+          <rating-plan-input v-model="service.accessPricingRate"/>
+        </row>
+      </div>
+      <div v-if="service.accessPricingModel === 'Tiered with Thresholds'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.accessPricingRate"/>
         </row>
       </div>
     </fragment>
@@ -161,7 +166,7 @@ export default {
           accessPricingModel: null,
           accessPricingUnit: null,
           accessPricingRate: null,
-          defaultUnit: null,
+          prevDefaultUnit: null,
           includedInCommitment: true,
         },
       ],
@@ -173,9 +178,12 @@ export default {
         // Set default units if missing
         for ( const s of this.chosenServices ) {
           if ( this.serviceConfiguration[s.name] ) {
-            if ( this.serviceConfiguration[s.name].unit && ( s.unit === '' || !s.unit || s.unit === s.defaultUnit ) ) {
+            if ( this.serviceConfiguration[s.name].unit &&
+                s.unit !== this.serviceConfiguration[s.name].unit &&
+                ( s.unit === '' || s.unit === undefined || s.unit === null || s.unit === s.prevDefaultUnit ) ) {
               Vue.nextTick(() => {
                 s.unit = this.serviceConfiguration[s.name].unit;
+                this.$forceUpdate();
               });
             }
             s.defaultUnit = this.serviceConfiguration[s.name].unit;
