@@ -167,6 +167,7 @@ export default {
           accessPricingUnit: null,
           accessPricingRate: null,
           prevDefaultUnit: null,
+          prevDefaultAccessUnit: null,
           includedInCommitment: true,
         },
       ],
@@ -186,7 +187,19 @@ export default {
                 this.$forceUpdate();
               });
             }
-            s.defaultUnit = this.serviceConfiguration[s.name].unit;
+            s.prevDefaultUnit = this.serviceConfiguration[s.name].unit;
+          }
+
+          if ( this.serviceConfiguration[s.name] && this.serviceConfiguration[s.name].access ) {
+            if ( this.serviceConfiguration[s.name].accessUnit &&
+                s.accessPricingUnit !== this.serviceConfiguration[s.name].accessUnit &&
+                ( s.accessPricingUnit === '' || s.accessPricingUnit === undefined || s.accessPricingUnit === null || s.accessPricingUnit === s.prevDefaultAccessUnit ) ) {
+              Vue.nextTick(() => {
+                s.accessPricingUnit = this.serviceConfiguration[s.name].accessUnit;
+                this.$forceUpdate();
+              });
+            }
+            s.prevDefaultAccessUnit = this.serviceConfiguration[s.name].accessUnit;
           }
         }
 
