@@ -2,7 +2,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import allModules from './modules/all-modules';
-import metadata from '../../../../mockup/src/assets/dummy/json/metadata.json';
 
 Vue.use(Vuex);
 
@@ -56,8 +55,6 @@ const SERVICE_ORDER = [
 
 export default new Vuex.Store({
   state: {
-    // TEST DATA
-    metadata,
     serviceConfiguration: SERVICE_CONFIGURATION,
     services: SERVICE_ORDER,
   },
