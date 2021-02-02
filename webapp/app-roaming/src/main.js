@@ -2,7 +2,8 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import {vuetify} from './plugins/all-plugins';
-import './utils/filters/global-filters';
+import VCurrencyField from 'v-currency-field';
+import './utils/filtersÅ/global-filters';
 
 // register global components
 const components = require.context(
@@ -23,6 +24,16 @@ const userString = JSON.stringify({
 
 process.env.NODE_ENV === 'development' &&
   localStorage.setItem('appContext', userString);
+
+Vue.use(VCurrencyField, {
+  decimalLength: {min: 0, max: 5},
+  autoDecimalMode: true,
+  min: null,
+  max: null,
+  defaultValue: 0,
+  valueAsInteger: false,
+  allowNegative: true
+});
 
 new Vue({
   router,

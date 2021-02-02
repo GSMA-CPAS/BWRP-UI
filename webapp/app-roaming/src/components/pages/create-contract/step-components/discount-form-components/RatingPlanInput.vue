@@ -10,10 +10,10 @@
           />
         </v-col>
         <v-col v-if="!disableFixed">
-          <v-text-field v-model="tier.fixedPrice" label="Fixed Price" />
+          <v-currency-field v-model="tier.fixedPrice" label="Fixed Price" />
         </v-col>
         <v-col>
-          <v-text-field v-model="tier.linearPrice" label="Linear Price" />
+          <v-currency-field v-model="tier.linearPrice" label="Linear Price" />
         </v-col>
         <v-col
           align-self="center"

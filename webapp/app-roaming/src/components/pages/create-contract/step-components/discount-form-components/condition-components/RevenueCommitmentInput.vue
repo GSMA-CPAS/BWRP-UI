@@ -1,10 +1,10 @@
 <template>
   <v-row>
       <v-col>
-        <v-text-field v-model="commitmentValue" label="Value"/>
+        <v-currency-field v-model="commitmentValue" label="Value"/>
       </v-col>
       <v-col>
-        <v-text-field v-model="currency" label="Currency"/>
+        <currency-selector v-model="currency" label="Currency"/>
       </v-col>
       <v-col>
         <v-checkbox label="Including Taxes?" v-model="includingTaxes"/>
@@ -12,8 +12,10 @@
     </v-row>
 </template>
 <script>
+import CurrencySelector from '@/components/global-components/CurrencySelector';
 export default {
   name: 'revenue-commitment-input',
+  components: {CurrencySelector},
   description: 'description',
   props: ['value'],
   data() {
