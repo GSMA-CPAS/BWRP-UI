@@ -46,6 +46,9 @@
           </v-icon>
         </v-col>
       </v-row>
+      <row label="Included in commitment?">
+        <v-col><v-checkbox v-model="service.includedInCommitment"></v-checkbox></v-col>
+      </row>
       <row label="Usage Pricing Model">
         <v-col>
           <v-select
@@ -159,6 +162,7 @@ export default {
           accessPricingUnit: null,
           accessPricingRate: null,
           defaultUnit: null,
+          includedInCommitment: true,
         },
       ],
     };
@@ -168,12 +172,14 @@ export default {
       handler() {
         // Set default units if missing
         for ( const s of this.chosenServices ) {
-          if ( this.serviceConfiguration[s.name].unit && ( s.unit === '' || !s.unit || s.unit === s.defaultUnit ) ) {
-            Vue.nextTick(() => {
-              s.unit = this.serviceConfiguration[s.name].unit;
-            });
+          if ( this.serviceConfiguration[s.name] ) {
+            if ( this.serviceConfiguration[s.name].unit && ( s.unit === '' || !s.unit || s.unit === s.defaultUnit ) ) {
+              Vue.nextTick(() => {
+                s.unit = this.serviceConfiguration[s.name].unit;
+              });
+            }
+            s.defaultUnit = this.serviceConfiguration[s.name].unit;
           }
-          s.defaultUnit = this.serviceConfiguration[s.name].unit;
         }
 
         this.$emit('input', this.$data);
@@ -204,6 +210,7 @@ export default {
       this.chosenServices.push({
         id: `service-${this.chosenServices.length}`,
         name: null,
+        includedInCommitment: true,
       });
     },
     removeService(index) {
@@ -237,6 +244,7 @@ export default {
           accessPricingModel: 'Not Charged',
           accessPricingUnit: null,
           accessPricingRate: null,
+          includedInCommitment: true,
         },
       ];
     }

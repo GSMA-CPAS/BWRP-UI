@@ -63,6 +63,7 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
 function convertUiServiceToJsonModel(uiService) {
   return {
     service: uiService.name,
+    includedInCommitment: uiService.includedInCommitment,
     usagePricing: convertUiRatePlanToJsonModel(uiService),
     accessPricing: convertUiRatePlanToJsonModel({
       pricingModel: uiService.accessPricingModel,
