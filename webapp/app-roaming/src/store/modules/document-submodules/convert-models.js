@@ -8,7 +8,7 @@ function convertUiSignaturesToJsonModel(uiSignatures) {
 function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
   return {
     contractCurrency: uiPartyGeneralData.currencyForAllDiscounts,
-    defaultTadigCodes: uiPartyGeneralData.tadigCodes.codes.split(','),
+    defaultTadigCodes: uiPartyGeneralData.tadigCodes.codes,
     tadigGroups: {}
   };
 }

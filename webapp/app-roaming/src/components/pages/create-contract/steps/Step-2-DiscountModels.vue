@@ -93,10 +93,10 @@ export default {
       },
     },
     userTadigs() {
-      return this.$store.state.document.new.generalInformation?.userData?.tadigCodes?.codes?.split(',');
+      return this.$store.state.document.new.generalInformation?.userData?.tadigCodes?.codes;
     },
     partnerTadigs() {
-      return this.$store.state.document.new.generalInformation?.partnerData?.tadigCodes?.codes?.split(',');
+      return this.$store.state.document.new.generalInformation?.partnerData?.tadigCodes?.codes;
     },
     userDefaultCurrency() {
       return this.$store.state.document.new.generalInformation.userData?.currencyForAllDiscounts;

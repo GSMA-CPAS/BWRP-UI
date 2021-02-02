@@ -21,7 +21,8 @@ export default {
   props: {value: Object},
   watch: {},
   methods: {},
-  computed: {},
+  computed: {
+  },
   mounted() {},
 };
 </script>
