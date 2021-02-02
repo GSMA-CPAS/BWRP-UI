@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-row class="mr-3 mb-1">
+    <v-row class="mb-1">
       <v-col align-self="center" class="text--disabled">GROUPS</v-col>
-      <v-col align-self="center" class="text-end">
+      <v-col align-self="center" class="text-end pr-0">
         <app-dialog label="Add Group" title="New Group">
           <template #content>
             <v-text-field v-model="group" label="New Group"></v-text-field>
@@ -21,7 +21,7 @@
       </v-col>
     </v-row>
 
-    <v-card class="mr-6">
+    <v-card>
       <v-card-title>
         <v-text-field
           v-model="search"

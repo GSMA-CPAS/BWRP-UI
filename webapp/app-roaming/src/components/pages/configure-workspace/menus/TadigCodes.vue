@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-row class="mr-3 mb-1">
+    <v-row class="mb-1">
       <v-col align-self="center" class="text--disabled">CODES</v-col>
-      <v-col align-self="center" class="text-end">
+      <v-col align-self="center" class="text-end pr-0">
         <app-dialog label="Add Code" title="New Code">
           <template #content>
             <v-text-field v-model="code" label="New Code"></v-text-field>
@@ -20,7 +20,7 @@
         </app-dialog>
       </v-col>
     </v-row>
-    <v-card class="mr-5">
+    <v-card>
       <v-card-title>
         <v-text-field
           v-model="search"

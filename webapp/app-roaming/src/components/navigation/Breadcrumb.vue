@@ -25,7 +25,7 @@
       </v-menu>
     </v-col> -->
 
-    <v-col cols="4" class="text-end">
+    <v-col cols="4" class="text-end pr-0">
       <app-button
         v-if="refreshActive"
         icon-size="20"
@@ -36,7 +36,7 @@
       />
 
       <app-button
-        class="ml-1 mr-2"
+        class="ml-1"
         label="Workspace"
         :to="toWorkspace"
         outlined
@@ -122,3 +122,8 @@ export default {
   },
 };
 </script>
+<style>
+.v-toolbar .v-toolbar__content {
+  padding: 4px 12px !important;
+}
+</style>

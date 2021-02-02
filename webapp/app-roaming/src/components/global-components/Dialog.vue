@@ -46,6 +46,7 @@ export default {
     hideIcon: {type: Boolean, default: false},
     loading: {type: Boolean, default: false},
     labelMinWidth: String,
+    padding: String,
   },
 };
 </script>
