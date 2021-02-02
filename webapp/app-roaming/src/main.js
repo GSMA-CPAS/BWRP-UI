@@ -3,7 +3,7 @@ import App from './App.vue';
 import router from './router';
 import {vuetify} from './plugins/all-plugins';
 import VCurrencyField from 'v-currency-field';
-import './utils/filtersÅ/global-filters';
+import './utils/filters/global-filters';
 
 // register global components
 const components = require.context(

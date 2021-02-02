@@ -3,9 +3,9 @@
     <form-container>
       <parties label="Discount Models" label-extra-classes="grey--text"/>
       <v-row>
-        <discount-form :ref="msps.user" v-model="userDiscountModels" :home-tadigs="userTadigs" :visitor-tadigs="partnerTadigs" v-on:copy-other-side="copyFromUserSide" :key="'user'+userComponentKey"/>
+        <discount-form :ref="msps.user" v-model="userDiscountModels" :home-tadigs="userTadigs" :visitor-tadigs="partnerTadigs" v-on:copy-other-side="copyFromUserSide" :key="'user'+userComponentKey" :default-currency="userDefaultCurrency"/>
         <v-divider vertical />
-        <discount-form :ref="msps.partner" v-model="partnerDiscountModels"  :home-tadigs="partnerTadigs" :visitor-tadigs="userTadigs" v-on:copy-other-side="copyFromPartnerSide" :key="'partner'+partnerComponentKey"/>
+        <discount-form :ref="msps.partner" v-model="partnerDiscountModels"  :home-tadigs="partnerTadigs" :visitor-tadigs="userTadigs" v-on:copy-other-side="copyFromPartnerSide" :key="'partner'+partnerComponentKey" :default-currency="partnerDefaultCurrency"/>
       </v-row>
     </form-container>
     <div class="float-right mt-3">
@@ -41,7 +41,6 @@ export default {
       this.copySide('partner', 'user');
     },
     copySide(from, to) {
-      console.log(from, to, this.msps[from], this.msps[to]);
       if ( confirm(`Are you sure you want to copy the discount and condition information from ${this.msps[from]} side to ${this.msps[to]} side overriding any existing information in ${this.msps[to]}?`) ) {
         let data;
         if ( from === 'user') {
@@ -67,9 +66,6 @@ export default {
 
         this.userComponentKey += 1;
         this.partnerComponentKey += 1;
-
-        console.log('!U', this.partnerDiscountModels);
-        console.log('!P', this.userDiscountModels);
       }
     }
   },
@@ -101,6 +97,12 @@ export default {
     },
     partnerTadigs() {
       return this.$store.state.document.new.generalInformation?.partnerData?.tadigCodes?.codes?.split(',');
+    },
+    userDefaultCurrency() {
+      return this.$store.state.document.new.generalInformation.userData?.currencyForAllDiscounts;
+    },
+    partnerDefaultCurrency() {
+      return this.$store.state.document.new.generalInformation.partnerData?.currencyForAllDiscounts;
     },
   }
 };

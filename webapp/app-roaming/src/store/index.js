@@ -2,23 +2,41 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import allModules from './modules/all-modules';
+import metadata from '../../../../mockup/src/assets/dummy/json/metadata.json';
+
 Vue.use(Vuex);
+
+const SERVICE_CONFIGURATION = [
+  {name: 'MOC Back Home', unit: 'Min', access: false},
+  {name: 'MOC Local', unit: 'Min', access: false},
+  {name: 'MOC International', unit: 'Min', access: false},
+  {name: 'MOC EU', unit: 'Min', access: false},
+  {name: 'MOC EEA', unit: 'Min', access: false},
+  {name: 'MOC RoW', unit: 'Min', access: false},
+  {name: 'MOC Premium', unit: 'Min', access: false},
+  {name: 'MOC Satellite', unit: 'Min', access: false},
+  {name: 'MOC Video Telephony', unit: 'Min', access: false},
+  {name: 'MOC Special Destinations', unit: 'Min', access: false},
+  {name: 'MTC', unit: 'Min', access: false},
+  {name: 'SMSMO', unit: 'SMS', access: false},
+  {name: 'SMSMT', unit: 'SMS', access: false},
+  {name: 'M2M', unit: 'MB', access: false},
+  {name: 'NB-IoT', unit: 'MB', access: false},
+  {name: 'LTE-M', unit: 'MB', access: false},
+  {name: 'VoLTE', unit: 'MB', access: false},
+  {name: 'ViLTE', unit: 'MB', access: false},
+  {name: 'IMS Signalling', unit: 'MB', access: false},
+  {name: 'GPRS', unit: 'MB', access: false},
+  {name: 'Network Access', unit: 'IMSI', access: false},
+];
+
 
 export default new Vuex.Store({
   state: {
     // TEST DATA
-    documents: [],
-    services: [
-      'MOC Back Home',
-      'MOC Local',
-      'MTC',
-      'SMS MO',
-      'M2M',
-      'NB-IoT',
-      'LTE-M',
-      'VoLTE',
-      'DATA',
-    ],
+    metadata,
+    serviceConfiguration: SERVICE_CONFIGURATION,
+    services: SERVICE_CONFIGURATION.map((x) => x.name),
   },
   mutations: {
     LOAD_DOCUMENTS: (state, documents) => {

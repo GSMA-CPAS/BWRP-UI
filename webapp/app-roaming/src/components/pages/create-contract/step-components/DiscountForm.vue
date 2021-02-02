@@ -2,7 +2,7 @@
   <v-col>
     <row type="primary" label="Condition" />
     <v-divider />
-    <condition-picker v-model="condition" />
+    <condition-picker v-model="condition" :default-currency="defaultCurrency"/>
     <v-row> <br /><br /> </v-row>
     <row type="primary" label="Service Groups" />
     <v-divider />
@@ -48,7 +48,7 @@ export default {
   name: 'discount-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['homeTadigs', 'visitorTadigs', 'value'],
+  props: ['homeTadigs', 'visitorTadigs', 'value', 'defaultCurrency'],
   components: {
     ConditionPicker,
     ServiceGroupForm,

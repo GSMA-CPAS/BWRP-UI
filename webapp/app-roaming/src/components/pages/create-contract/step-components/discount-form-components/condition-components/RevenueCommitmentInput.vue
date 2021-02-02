@@ -13,11 +13,12 @@
 </template>
 <script>
 import CurrencySelector from '@/components/global-components/CurrencySelector';
+import Vue from 'vue';
 export default {
   name: 'revenue-commitment-input',
   components: {CurrencySelector},
   description: 'description',
-  props: ['value'],
+  props: ['value', 'defaultCurrency'],
   data() {
     return {
       includingTaxes: false,
@@ -40,6 +41,11 @@ export default {
     },
     currency: {
       handler() {
+        if ( this.$data.currency !== this.defaultCurrency ) {
+          if ( !confirm('The currency for the revenue commitment differs from the contract currency. Are you sure?') ) {
+            Vue.nextTick(() => this.$data.currency = this.defaultCurrency);
+          }
+        }
         this.$emit('input', this.$data);
       },
       deep: true,
@@ -50,6 +56,8 @@ export default {
       this.includingTaxes = this.value.includingTaxes;
       this.commitmentValue = this.value.commitmentValue;
       this.currency = this.value.currency;
+    } else {
+      this.currency = this.defaultCurrency;
     }
   },
 };
