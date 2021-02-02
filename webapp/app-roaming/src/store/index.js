@@ -6,37 +6,60 @@ import metadata from '../../../../mockup/src/assets/dummy/json/metadata.json';
 
 Vue.use(Vuex);
 
-const SERVICE_CONFIGURATION = [
-  {name: 'MOC Back Home', unit: 'Min', access: false},
-  {name: 'MOC Local', unit: 'Min', access: false},
-  {name: 'MOC International', unit: 'Min', access: false},
-  {name: 'MOC EU', unit: 'Min', access: false},
-  {name: 'MOC EEA', unit: 'Min', access: false},
-  {name: 'MOC RoW', unit: 'Min', access: false},
-  {name: 'MOC Premium', unit: 'Min', access: false},
-  {name: 'MOC Satellite', unit: 'Min', access: false},
-  {name: 'MOC Video Telephony', unit: 'Min', access: false},
-  {name: 'MOC Special Destinations', unit: 'Min', access: false},
-  {name: 'MTC', unit: 'Min', access: false},
-  {name: 'SMSMO', unit: 'SMS', access: false},
-  {name: 'SMSMT', unit: 'SMS', access: false},
-  {name: 'M2M', unit: 'MB', access: false},
-  {name: 'NB-IoT', unit: 'MB', access: false},
-  {name: 'LTE-M', unit: 'MB', access: false},
-  {name: 'VoLTE', unit: 'MB', access: false},
-  {name: 'ViLTE', unit: 'MB', access: false},
-  {name: 'IMS Signalling', unit: 'MB', access: false},
-  {name: 'GPRS', unit: 'MB', access: false},
-  {name: 'Network Access', unit: 'IMSI', access: false},
-];
+const SERVICE_CONFIGURATION = {
+  'MOC Back Home': {unit: 'Min', access: false},
+  'MOC Local': {unit: 'Min', access: false},
+  'MOC International': {unit: 'Min', access: false},
+  'MOC EU': {unit: 'Min', access: false},
+  'MOC EEA': {unit: 'Min', access: false},
+  'MOC RoW': {unit: 'Min', access: false},
+  'MOC Premium': {unit: 'Min', access: false},
+  'MOC Satellite': {unit: 'Min', access: false},
+  'MOC Video Telephony': {unit: 'Min', access: false},
+  'MOC Special Destinations': {unit: 'Min', access: false},
+  'MTC': {unit: 'Min', access: false},
+  'SMSMO': {unit: 'SMS', access: false},
+  'SMSMT': {unit: 'SMS', access: false},
+  'M2M': {unit: 'MB', access: true},
+  'NB-IoT': {unit: 'MB', access: true},
+  'LTE-M': {unit: 'MB', access: true},
+  'VoLTE': {unit: 'MB', access: false},
+  'ViLTE': {unit: 'MB', access: false},
+  'IMS Signalling': {unit: 'MB', access: false},
+  'GPRS': {unit: 'MB', access: false},
+  'Network Access': {unit: 'IMSI', access: false},
+};
 
+const SERVICE_ORDER = [
+  'MOC Back Home',
+  'MOC Local',
+  'MOC International',
+  'MOC EU',
+  'MOC EEA',
+  'MOC RoW',
+  'MOC Premium',
+  'MOC Satellite',
+  'MOC Video Telephony',
+  'MOC Special Destinations',
+  'MTC',
+  'SMSMO',
+  'SMSMT',
+  'M2M',
+  'NB-IoT',
+  'LTE-M',
+  'VoLTE',
+  'ViLTE',
+  'IMS Signalling',
+  'GPRS',
+  'Network Access',
+];
 
 export default new Vuex.Store({
   state: {
     // TEST DATA
     metadata,
     serviceConfiguration: SERVICE_CONFIGURATION,
-    services: SERVICE_CONFIGURATION.map((x) => x.name),
+    services: SERVICE_ORDER,
   },
   mutations: {
     LOAD_DOCUMENTS: (state, documents) => {

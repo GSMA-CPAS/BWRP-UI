@@ -86,7 +86,7 @@
           />
         </row>
       </div>
-      <row label="Access Pricing Model">
+      <row v-if="serviceConfiguration[service.name] && serviceConfiguration[service.name].access" label="Access Pricing Model">
         <v-col>
           <v-select
             :items="['Not Charged', 'Normal']"
@@ -95,7 +95,7 @@
           />
         </v-col>
       </row>
-      <div v-if="service.accessPricingModel !== 'Not Charged'">
+      <div v-if="service.accessPricingModel === 'Normal'">
         <row label="Unit">
           <v-col>
             <v-text-field
@@ -117,6 +117,7 @@
 import {mapState} from 'vuex';
 import {duplicateMixin} from '../../../../utils/mixins/component-specfic';
 import RatingPlanInput from './discount-form-components/RatingPlanInput';
+import Vue from 'vue';
 
 export default {
   name: 'service-group-form',
@@ -139,9 +140,10 @@ export default {
           balancedRate: null,
           unbalancedRate: null,
           pricingModel: 'Normal',
-          accessPricingModel: 'Not Charged',
+          accessPricingModel: null,
           accessPricingUnit: null,
           accessPricingRate: null,
+          defaultUnit: null,
         },
       ],
     };
@@ -149,6 +151,16 @@ export default {
   watch: {
     chosenServices: {
       handler() {
+        // Set default units if missing
+        for ( const s of this.chosenServices ) {
+          if ( this.serviceConfiguration[s.name].unit && ( s.unit === '' || !s.unit || s.unit === s.defaultUnit ) ) {
+            Vue.nextTick(() => {
+              s.unit = this.serviceConfiguration[s.name].unit;
+            });
+          }
+          s.defaultUnit = this.serviceConfiguration[s.name].unit;
+        }
+
         this.$emit('input', this.$data);
       },
       deep: true,
@@ -184,7 +196,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['services']),
+    ...mapState(['services', 'serviceConfiguration']),
     isDisabled() {
       return this.chosenServices.length === 1;
     },
