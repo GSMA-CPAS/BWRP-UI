@@ -1,7 +1,7 @@
 <template>
   <fragment>
     <form-container>
-      <parties label="Discount Models" />
+      <parties label="Discount Models" label-extra-classes="grey--text"/>
       <v-row>
         <discount-form :ref="msps.user" v-model="userDiscountModels" :home-tadigs="userTadigs" :visitor-tadigs="partnerTadigs" v-on:copy-other-side="copyFromUserSide" :key="'user'+userComponentKey"/>
         <v-divider vertical />
@@ -61,14 +61,12 @@ export default {
 
         if ( to === 'user') {
           this.userDiscountModels = data;
-
         } else if ( to === 'partner') {
           this.partnerDiscountModels = data;
         }
 
         this.userComponentKey += 1;
         this.partnerComponentKey += 1;
-        //this.$forceUpdate();
 
         console.log('!U', this.partnerDiscountModels);
         console.log('!P', this.userDiscountModels);

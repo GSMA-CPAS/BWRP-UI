@@ -4,7 +4,7 @@
       v-if="type === 'primary'"
       class="primary--text text-uppercase font-weight-medium"
     >
-      <v-col>
+      <v-col :class="labelExtraClasses">
         {{ label }}
       </v-col>
     </v-row>
@@ -27,6 +27,7 @@ export default {
   description: 'This is a custom row',
   props: {
     label: {type: String, default: 'Missing Row Label'},
+    labelExtraClasses: String,
     type: String,
     cols: {type: String, default: '3'},
     noDivider: Boolean,
