@@ -32,6 +32,11 @@
       />
       <v-divider />
     </fragment>
+    <v-row> <br /><br /> </v-row>
+    <v-row><app-button
+          @click="doCopyOtherSide"
+          label="Copy to other side"
+        /></v-row>
   </v-col>
 </template>
 <script>
@@ -80,6 +85,9 @@ export default {
     },
     removeServiceGroup(index) {
       this.serviceGroups.splice(index, 1);
+    },
+    doCopyOtherSide() {
+      this.$emit('copy-other-side', this.$data);
     },
   },
   computed: {
