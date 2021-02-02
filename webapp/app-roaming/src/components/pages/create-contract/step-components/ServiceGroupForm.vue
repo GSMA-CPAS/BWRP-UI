@@ -49,7 +49,7 @@
       <row label="Usage Pricing Model">
         <v-col>
           <v-select
-            :items="['Not Charged', 'Normal', 'Balanced/Unbalanced']"
+            :items="['Not Charged', 'Flat rate', 'Linear rate', 'Threshold - back to first', 'Tiered with Thresholds', 'Balanced/Unbalanced (Linear rate)']"
             placeholder="Select Model"
             v-model="service.pricingModel"
           />
@@ -65,12 +65,27 @@
           </v-col>
         </row>
       </div>
-      <div v-if="service.pricingModel === 'Normal'">
+      <div v-if="service.pricingModel === 'Flat rate'">
         <row label="Rate">
-          <rating-plan-input v-model="service.rate" />
+          <rating-plan-input v-model="service.rate" disable-thresholds="true" disable-linear="true"/>
         </row>
       </div>
-      <div v-if="service.pricingModel === 'Balanced/Unbalanced'">
+      <div v-if="service.pricingModel === 'Linear rate'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.rate" disable-thresholds="true" disable-fixed="true"/>
+        </row>
+      </div>
+      <div v-if="service.pricingModel === 'Threshold - back to first'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.rate"/>
+        </row>
+      </div>
+      <div v-if="service.pricingModel === 'Tiered with Thresholds'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.rate"/>
+        </row>
+      </div>
+      <div v-if="service.pricingModel === 'Balanced/Unbalanced (Linear rate)'">
         <row label="Balanced Rate">
           <rating-plan-input
             v-model="service.balancedRate"

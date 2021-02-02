@@ -12,7 +12,7 @@
         <v-col v-if="!disableFixed">
           <v-currency-field v-model="tier.fixedPrice" label="Fixed Price" />
         </v-col>
-        <v-col>
+        <v-col v-if="!disableLinear">
           <v-currency-field v-model="tier.linearPrice" label="Linear Price" />
         </v-col>
         <v-col
@@ -61,7 +61,7 @@ export default {
     OverallRevenueCommitment,
     DiscountPicker,*/
   },
-  props: ['value', 'disableThresholds', 'disableFixed'],
+  props: ['value', 'disableThresholds', 'disableFixed', 'disableLinear'],
   data() {
     return {
       tiers: [
