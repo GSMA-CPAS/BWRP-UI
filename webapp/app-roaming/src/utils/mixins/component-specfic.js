@@ -98,44 +98,7 @@ export {timelineMixin};
 
 const validationMixin = {
   methods: {
-    twoFormsValidate(key) {
-      if (this.activeValidation) {
-        let valid = false;
-        const data = {};
-        for (const key in this.$refs) {
-          if (Object.prototype.hasOwnProperty.call(this.$refs, key)) {
-            const {$v, _data} = this.$refs[key];
-            data[key] = key === 'signatures' ? _data.signatures : _data;
-            const {$touch, $invalid} = $v;
-            $touch();
-            valid = !$invalid;
-          }
-        }
-        valid &&
-          this.nextStep({
-            key,
-            data,
-          });
-      }
-      this.nextStep();
-    },
-    validate(key) {
-      if (this.activeValidation) {
-        const {$touch, $invalid} = this.$v;
-        $touch();
-        const valid = !$invalid;
-        valid &&
-          delete this._data.active &&
-          this.nextStep({
-            key,
-            data: this._data,
-          });
-      }
-      this.nextStep();
-    },
-
     ...mapActions('app-state', ['loadError']),
-    ...mapActions('document/new', ['nextStep', 'previousStep']),
     requiredError(field) {
       const errors = [];
       if (!this.$v[field].$dirty) return errors;

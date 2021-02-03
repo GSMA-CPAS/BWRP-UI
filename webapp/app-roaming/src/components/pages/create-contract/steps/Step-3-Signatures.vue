@@ -8,14 +8,6 @@
         <signature-form :ref="msps.partner" v-model="partnerSignatures" />
       </v-row>
     </form-container>
-    <div class="float-right mt-3">
-      <app-button label="previous" text @button-pressed="previousStep" />
-      <app-button
-        label="next"
-        @button-pressed="twoFormsValidate('signatures')"
-        @keydown="twoFormsValidate('signatures')"
-      />
-    </div>
   </fragment>
 </template>
 <script>
