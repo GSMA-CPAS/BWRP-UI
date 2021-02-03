@@ -1,16 +1,17 @@
 <template>
   <div>
-    <v-row>
+    <v-row class="mb-1">
       <v-col align-self="center" class="text--disabled">GROUPS</v-col>
-      <v-col align-self="center" class="text-end">
+      <v-col align-self="center" class="text-end pr-0">
         <app-dialog label="Add Group" title="New Group">
           <template #content>
             <v-text-field v-model="group" label="New Group"></v-text-field>
           </template>
           <template #actions="{cancel}">
             <app-button
+              :disabled="group === null"
               @button-pressed="
-                addGroup(group);
+                onAddGroup();
                 cancel();
               "
               label="Confirm"
@@ -30,67 +31,88 @@
           hide-details
         />
       </v-card-title>
-      <v-data-table :search="search" :items="groups" :headers="headers">
-        <template v-slot:[`item.actions`]="{item}">
-          <dialog-popup
-            title="Add"
-            @on-confirm="addCodes({id: item.id, codes: codesToBeAdded})"
-            :icon="icons.add"
+      <v-data-table
+        :search="search"
+        :items="groups"
+        item-key="name"
+        :headers="headers"
+        single-expand
+        show-expand
+      >
+        <template #item="{item, expand, isExpanded}">
+          <tr
+            tabindex="0"
+            @click.stop="
+              expand(!isExpanded);
+              loadGroupCodes(item.id);
+            "
           >
-            <template #content>
-              <v-select
-                multiple
-                label="All Available Codes"
-                :items="allCodes"
-                item-value="id"
-                item-text="code"
-                v-model="codesToBeAdded"
-              />
-            </template>
-          </dialog-popup>
-          <dialog-popup
-            title="Remove"
-            @on-open="loadGroupCodes(item.id)"
-            @on-confirm="removeCodes({id: item.id, codes: codesToBeRemoved})"
-            :icon="icons.minus"
-            margin="mr-4"
-          >
-            <template #content>
-              <v-select
-                multiple
-                label="Codes of Group"
+            <td>{{ item.name }}</td>
+            <td class="text-end">
+              <dialog-popup
+                title="Add Codes"
+                @on-open="loadGroupCodes(item.id)"
+                :disabled="codesToBeAdded === null"
+                @on-confirm="onCodesAdded(item.id)"
+                :icon="icons.add"
+              >
+                <template #content>
+                  <v-select
+                    multiple
+                    label="All Available Codes"
+                    :items="allCodesMinusGroupCodes"
+                    item-value="id"
+                    item-text="code"
+                    v-model="codesToBeAdded"
+                  />
+                </template>
+              </dialog-popup>
+              <dialog-popup
+                title="Remove Codes"
+                @on-open="loadGroupCodes(item.id)"
+                :disabled="codesToBeRemoved === null"
+                @on-confirm="onCodesRemoval(item.id)"
+                :icon="icons.minus"
+                margin="mr-4"
+              >
+                <template #content>
+                  <v-select
+                    multiple
+                    label="Codes of Group"
+                    :items="groupCodes"
+                    item-value="tadig_code_id"
+                    item-text="code"
+                    v-model="codesToBeRemoved"
+                  />
+                </template>
+              </dialog-popup>
+              <dialog-popup
+                title="Delete Group"
+                @on-confirm="deleteGroup(item.id)"
+                :icon="icons.remove"
+              >
+                <template #content> Are you sure? </template>
+              </dialog-popup>
+            </td>
+            <td colspan="headers.length">
+              <v-icon>
+                {{ `mdi-chevron-${!isExpanded ? 'down' : 'up'}` }}</v-icon
+              >
+            </td>
+          </tr>
+        </template>
+        <template v-slot:expanded-item="{}">
+          <td :colspan="headers.length">
+            <v-container>
+              <v-data-table
+                v-if="groupCodes.length > 0"
+                :headers="groupHeaders"
                 :items="groupCodes"
-                item-value="tadig_code_id"
-                item-text="code"
-                v-model="codesToBeRemoved"
+                hide-default-footer
               />
-            </template>
-          </dialog-popup>
-
-          <dialog-popup
-            @on-open="loadGroupCodes(item.id)"
-            title="All Codes of Group"
-            :icon="icons.view"
-          >
-            <template #content>
-              <v-list>
-                <v-list-item-group>
-                  <v-list-item v-for="({code}, i) in groupCodes" :key="i">
-                    <v-list-item-content>
-                      <v-list-item-title v-text="code"></v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </template>
-          </dialog-popup>
-          <tooltip tooltip-text="Delete Group">
-            <template v-slot:activator="{on}">
-              <v-icon v-on="on" @click="deleteGroup(item.id)" small>
-                mdi-delete
-              </v-icon>
-            </template>
-          </tooltip>
+              <v-row v-else class="font-italic"><v-col>No Codes</v-col></v-row>
+            </v-container>
+          </td>
         </template>
       </v-data-table>
     </v-card>
@@ -114,6 +136,18 @@ export default {
   props: {},
   watch: {},
   methods: {
+    onAddGroup() {
+      this.addGroup(this.group);
+      this.group = null;
+    },
+    onCodesAdded(groupid) {
+      this.addCodes({id: groupid, codes: this.codesToBeAdded});
+      this.codesToBeAdded = null;
+    },
+    onCodesRemoval(groupid) {
+      this.removeCodes({id: groupid, codes: this.codesToBeRemoved});
+      this.codesToBeRemoved = null;
+    },
     ...mapActions('workspace-config/tadig-groups', [
       'loadGroups',
       'addGroup',
@@ -129,11 +163,30 @@ export default {
       allCodes: (state) => state.codes,
     }),
     ...mapState('workspace-config/tadig-groups', ['groups', 'groupCodes']),
+    allCodesMinusGroupCodes() {
+      const filteredCodes = this.allCodes.map((code) => ({
+        disabled: this.groupCodes
+          .map(({tadig_code_id: id}) => id)
+          .includes(code.id),
+        ...code,
+      }));
+      return filteredCodes;
+    },
     headers() {
       return [
-        {text: 'ID', value: 'id'},
         {text: 'Name', value: 'name'},
         {text: 'Actions', value: 'actions', sortable: false, align: 'end'},
+        {text: '', value: 'data-table-expand'},
+      ];
+    },
+    groupHeaders() {
+      return [
+        {text: 'Code', value: 'code'},
+        {text: 'Operator', value: 'operator'},
+        {text: 'Country', value: 'country'},
+        {text: 'Region', value: 'region'},
+        {text: 'Group', value: 'op_group'},
+        {text: 'MCC/MNC', value: 'mcc_mnc'},
       ];
     },
   },

@@ -11,7 +11,7 @@ const partnersModule = {
   },
   actions: {
     loadPartners({commit, dispatch, rootGetters, getters, rootState, state}) {
-      Vue.axios
+      Vue.axios.commonAdapter
           .get('/discovery/msps', {withCredentials: true})
           .then((data) => {
             const parsedData = data;

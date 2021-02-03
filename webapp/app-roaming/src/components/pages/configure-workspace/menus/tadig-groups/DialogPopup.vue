@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="component">
+  <v-dialog width="50vw" v-model="component">
     <template v-slot:activator="{on}">
       <v-icon :class="margin" v-on="on" @click="$emit('on-open')" small>
         mdi-{{ icon }}
@@ -9,7 +9,7 @@
       <v-card-title class="headline">
         {{ title }}
         <v-spacer />
-        <app-button color="dark" @button-pressed="hide" icon svg="close" />
+        <v-icon color="dark" @click="hide">mdi-close</v-icon>
       </v-card-title>
       <div class="pa-5">
         <v-card-text>
@@ -21,6 +21,7 @@
         <v-spacer />
         <app-button
           label="Confirm"
+          :disabled="disabled"
           @button-pressed="
             $emit('on-confirm');
             hide();
@@ -42,6 +43,7 @@ export default {
     title: {type: String},
     icon: String,
     margin: {type: String, default: 'ma-2'},
+    disabled: {type: Boolean},
   },
   watch: {},
   methods: {},

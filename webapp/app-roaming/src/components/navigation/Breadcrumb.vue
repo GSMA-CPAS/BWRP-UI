@@ -1,6 +1,6 @@
 <template>
   <v-app-bar clipped-left app>
-    <v-col>
+    <v-col class="pl-0">
       <v-breadcrumbs large :items="items"></v-breadcrumbs>
     </v-col>
     <!-- <v-col align-self="center" class="text-center" cols="2">
@@ -25,7 +25,7 @@
       </v-menu>
     </v-col> -->
 
-    <v-col cols="4" align-self="center" class="text-end">
+    <v-col cols="4" class="text-end pr-0">
       <app-button
         v-if="refreshActive"
         icon-size="20"
@@ -33,10 +33,10 @@
         svg="refresh"
         outlined
         @button-pressed="refreshPage"
-        class="ma-2"
       />
 
       <app-button
+        class="ml-1"
         label="Workspace"
         :to="toWorkspace"
         outlined
@@ -106,9 +106,9 @@ export default {
       name === 'contracts-overview' && this.removeLastBreacrumb();
       // this.addBreadcrumb(params.cid, path) :
       if (from.name === 'contracts-overview') {
-        to.name === 'timeline-page' ?
-          this.addBreadcrumb(to.query.d, path) :
-          this.addBreadcrumb(meta.text, path);
+        to.name === 'timeline-page'
+          ? this.addBreadcrumb(to.query.d, path)
+          : this.addBreadcrumb(meta.text, path);
       }
     },
   },
@@ -122,3 +122,8 @@ export default {
   },
 };
 </script>
+<style>
+.v-toolbar .v-toolbar__content {
+  padding: 4px 12px !important;
+}
+</style>

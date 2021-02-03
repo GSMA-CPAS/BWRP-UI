@@ -1,11 +1,7 @@
-import axios from 'axios';
-
+/* eslint-disable indent */
+/* eslint-disable no-unused-vars */
 import tadigGroups from './workspace/tadig-groups.js';
 import tadigCodes from './workspace/tadig-codes.js';
-
-const appAPI = axios.create({
-  baseURL: '/api/app-roaming/',
-});
 
 const namespaced = true;
 const workspaceModule = {
@@ -17,4 +13,3 @@ const workspaceModule = {
   modules: {'tadig-groups': tadigGroups, 'tadig-codes': tadigCodes},
 };
 export default workspaceModule;
-export {appAPI};

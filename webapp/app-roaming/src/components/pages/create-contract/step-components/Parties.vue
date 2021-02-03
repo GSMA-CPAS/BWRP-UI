@@ -3,13 +3,9 @@
     <row type="primary" :label="label" />
     <v-divider />
     <v-row>
-      <v-col>
-        <row type="primary" :label="msps.user" />
-      </v-col>
-      <v-divider vertical></v-divider>
-      <v-col>
-        <row type="primary" :label="msps.partner" />
-      </v-col>
+      <row type="primary" :label="msps.user" />
+      <v-divider class="ml-1" vertical />
+      <row type="primary" :label="msps.partner" />
     </v-row>
   </fragment>
 </template>

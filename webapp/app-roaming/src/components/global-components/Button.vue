@@ -20,6 +20,7 @@ export default {
     },
     height: String,
     width: String,
+    minWidth: {type: String, default: '180'},
     iconSize: String,
     loading: {
       type: Boolean,

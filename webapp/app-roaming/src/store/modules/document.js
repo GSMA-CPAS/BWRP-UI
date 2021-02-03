@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable no-unused-vars */
 import Vue from 'vue';
 import newDocumentModule from './document-submodules/NewDocument';
@@ -5,7 +6,7 @@ const {log} = console;
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({document: null, signatures: null}),
+  state: () => ({document: null, signatures: []}),
   mutations: {
     UPDATE_DOCUMENT: (state, document) => {
       log(document);
@@ -17,73 +18,73 @@ const documentModule = {
   },
   actions: {
     signDocument({commit, dispatch, rootGetters, getters, rootState, state}) {
-      Vue.axios
-          .put(
-              // `/signatures/` + state.document.documentId,
-              `/signatures/` + state.document.id,
-              {},
-              {
-                signing: true,
-                withCredentials: true,
-              },
-          )
-          .then((res) => {
-            dispatch('app-state/signing', false, {root: true});
-            // dispatch('getSignatures', state.document.documentId);
-            dispatch('getSignatures', state.document.id);
-          })
-          .catch((err) => {
-            log(err);
-          });
+      Vue.axios.commonAdapter
+        .put(
+          // `/signatures/` + state.document.documentId,
+          `/signatures/` + state.document.id,
+          {},
+          {
+            signing: true,
+            withCredentials: true,
+          },
+        )
+        .then((res) => {
+          dispatch('app-state/signing', false, {root: true});
+          // dispatch('getSignatures', state.document.documentId);
+          dispatch('getSignatures', state.document.id);
+        })
+        .catch((err) => {
+          log(err);
+        });
     },
     async getDocument(
-        {commit, dispatch, rootGetters, getters, rootState, state},
-        documentID,
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      documentID,
     ) {
-      await Vue.axios
-          .get(`/documents/${documentID}`, {withCredentials: true})
-          .then((document) => {
-            const {id, documentId, data, fromMSP, toMSP} = document;
-            const documentData = JSON.parse(data);
-            commit('UPDATE_DOCUMENT', {
-              id,
-              documentId,
-              data: documentData.body,
-              header: documentData.header,
-              fromMSP,
-              toMSP,
-            });
-          })
-          .catch((err) => {
-          // dispatch(["app-state/loadError"], err);
+      await Vue.axios.commonAdapter
+        .get(`/documents/${documentID}`, {withCredentials: true})
+        .then((document) => {
+          const {id, documentId, data, fromMSP, toMSP} = document;
+          const documentData = JSON.parse(data);
+          commit('UPDATE_DOCUMENT', {
+            id,
+            documentId,
+            data: documentData.body,
+            header: documentData.header,
+            fromMSP,
+            toMSP,
           });
+        })
+        .catch((err) => {
+          // dispatch(["app-state/loadError"], err);
+        });
     },
     async getSignatures(
-        {commit, dispatch, rootGetters, getters, rootState, state},
-        documentID,
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      documentID,
     ) {
       const {fromMSP, toMSP} = state.document;
       const url = '' + `/signatures/${documentID}/`;
-      // const fromMSPRequest = Vue.axios.get(url + fromMSP);
-      // const toMSPRequest = Vue.axios.get(url + toMSP);
+      // const fromMSPRequest = Vue.axios.commonAdapter.get(url + fromMSP);
+      // const toMSPRequest = Vue.axios.commonAdapter.get(url + toMSP);
       // to temporary fix path. we do not need /all
-      const signatures = Vue.axios.get(url);
-      await Vue.axios
-          // .all([fromMSPRequest, toMSPRequest], {
-          .all([signatures], {
-            withCredentials: true,
-          })
-          .then((data) => {
-            commit('UPDATE_SIGNATURES', data);
-            dispatch('app-state/setOverlay', false, {root: true});
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+      // const signatures = Vue.axios.commonAdapter.get(url);
+      await Vue.axios.commonAdapter
+        // .all([fromMSPRequest, toMSPRequest], {
+        .get(url, {
+          withCredentials: true,
+        })
+        .then((data) => {
+          commit('UPDATE_SIGNATURES', data);
+          dispatch('app-state/setOverlay', false, {root: true});
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async loadData(
-        {commit, dispatch, rootGetters, getters, rootState, state},
-        documentID,
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      documentID,
     ) {
       await dispatch('getDocument', documentID);
       await dispatch('getSignatures', documentID);
@@ -97,13 +98,13 @@ const documentModule = {
       const minSignaturesToMSP =
         state.document?.header.msps[toMSP].minSignatures;
       const totalSignatures =
-        getters.signatures.length > 0 &&
-        getters.signatures.reduce(
-            (acc, curVal) => {
-              acc[curVal.from]++;
-              return acc;
-            },
-            {[getters.fromMSP]: 0, [toMSP]: 0},
+        state.signatures.length > 0 &&
+        state.signatures.reduce(
+          (acc, curVal) => {
+            acc[curVal.from]++;
+            return acc;
+          },
+          {[getters.fromMSP]: 0, [toMSP]: 0},
         );
       const isSigned =
         minSignaturesFromMSP <= totalSignatures[fromMSP] &&
@@ -118,28 +119,6 @@ const documentModule = {
     },
     exists: (state) => (key) => {
       return state.document[key] ? true : false;
-    },
-    signatures: (state) => {
-      const combinedSignatures = state.signatures?.map((signatures, index) => {
-        const response = [];
-        for (const key in signatures) {
-          if (Object.prototype.hasOwnProperty.call(signatures, key)) {
-            response.push(
-                {
-                  signature: signatures[key].signature,
-                  // from: index === 0 ? state.document.fromMSP : state.document.toMSP,
-                  from: signatures[key].msp,
-                }
-                //   `${signatures[key].signature} from ${
-                //   index === 0 ? state.document.fromMSP : state.document.toMSP
-                // }`
-            );
-          }
-        }
-        return response;
-      });
-
-      return Vue.lodash.flatten(combinedSignatures);
     },
     parties: (state) => {
       const {fromMSP, toMSP} = state.document;

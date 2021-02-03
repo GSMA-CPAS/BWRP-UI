@@ -2,13 +2,12 @@
 <template>
   <v-data-table :items="documents" :headers="headers" :search="search">
     <template v-slot:top>
-      <v-row>
+      <v-row class="mb-2">
         <!-- <v-col>
           <filters :onClear="clearFilters"> </filters>
         </v-col> -->
         <v-col cols="6">
           <v-text-field
-            outlined
             v-model="search"
             append-icon="mdi-magnify"
             label="Search for document"

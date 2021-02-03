@@ -1,5 +1,6 @@
 /* eslint-disable indent */
-import {appAPI} from '../workspace';
+/* eslint-disable no-unused-vars */
+import Vue from 'vue';
 
 const namespaced = true;
 const withCredentials = true;
@@ -16,7 +17,7 @@ const tadigCodesModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       code,
     ) {
-      await appAPI
+      await Vue.axios.local
         .post('/tadig/codes', {code}, {withCredentials})
         .then((res) => {
           dispatch('loadCodes');
@@ -31,10 +32,10 @@ const tadigCodesModule = {
       rootState,
       state,
     }) {
-      await appAPI
+      await Vue.axios.local
         .get('/tadig/codes', {withCredentials})
         .then((codes) => {
-          commit('UPDATE_CODES', codes.data);
+          commit('UPDATE_CODES', codes);
         })
         .catch((e) => {});
     },
@@ -42,10 +43,10 @@ const tadigCodesModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       id,
     ) {
-      await appAPI
+      await Vue.axios.local
         .delete(`/tadig/codes/${id}/`)
-        .then(({status}) => {
-          if (status === 200) {
+        .then(({success}) => {
+          if (success) {
             dispatch('loadCodes');
           }
         })

@@ -3,24 +3,40 @@
     <fragment v-for="(tier, index) in tiers" :key="tier.id">
       <v-row>
         <v-col v-if="!disableThresholds">
-          <v-text-field :disabled="index === 0" v-model="tier.threshold" label="Threshold"/>
+          <v-text-field
+            :disabled="index === 0"
+            v-model="tier.threshold"
+            label="Threshold"
+          />
         </v-col>
         <v-col v-if="!disableFixed">
-          <v-text-field v-model="tier.fixedPrice" label="Fixed Price"/>
+          <v-text-field v-model="tier.fixedPrice" label="Fixed Price" />
         </v-col>
         <v-col>
           <v-text-field v-model="tier.linearPrice" label="Linear Price" />
         </v-col>
-        <v-col align-self="center" class="mr-3" cols="1"  v-if="!disableThresholds">
-          <app-button
+        <v-col
+          align-self="center"
+          class="mr-3"
+          cols="1"
+          v-if="!disableThresholds"
+        >
+          <v-icon
             :disabled="isDisabled || index === 0"
-            @button-pressed="removeTier(index)"
-            :svg="icons.remove"
-            icon
-          />
+            @click="removeTier(index)"
+          >
+            {{ `mdi-${icons.remove}` }}
+          </v-icon>
         </v-col>
-        <v-col align-self="center" class="mr-3" cols="1" v-if="!disableThresholds">
-          <app-button @button-pressed="addTier" :svg="icons.add" icon :disabled="disableThresholds"/>
+        <v-col
+          align-self="center"
+          class="mr-3"
+          cols="1"
+          v-if="!disableThresholds"
+        >
+          <v-icon :disabled="disableThresholds" @click="addTier">
+            {{ `mdi-${icons.add}` }}
+          </v-icon>
         </v-col>
       </v-row>
     </fragment>
@@ -73,7 +89,7 @@ export default {
     },
     removeTier(index) {
       this.tiers.splice(index, 1);
-    }
+    },
   },
   computed: {
     isDisabled() {
@@ -81,7 +97,7 @@ export default {
     },
   },
   beforeMount() {
-    if ( this.value ) {
+    if (this.value) {
       this.tiers = this.value;
     }
   },

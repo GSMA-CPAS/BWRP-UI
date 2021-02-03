@@ -2,10 +2,14 @@
   <fragment class="text-center">
     <v-row>
       <v-col>
-        <row no-divider label="Name">{{ documentData.metadata.name | isNil }}</row>
+        <row no-divider label="Name">{{
+          documentData.metadata.name | isNil
+        }}</row>
       </v-col>
       <v-col>
-        <row no-divider label="Type">{{ documentData.metadata.type | isNil }}</row>
+        <row no-divider label="Type">{{
+          documentData.metadata.type | isNil
+        }}</row>
       </v-col>
     </v-row>
     <v-row>
@@ -35,7 +39,9 @@
       </v-col>
       <v-col>
         <row no-divider label="Taxes">
-          <div v-if="documentData.framework.payment.taxesIncluded">Included</div>
+          <div v-if="documentData.framework.payment.taxesIncluded">
+            Included
+          </div>
           <div v-else>Excluded</div>
         </row>
       </v-col>
@@ -43,7 +49,7 @@
     <v-row>
       <v-col>
         <row label="Authors" no-divider>
-          <v-col>{{ documentData.metadata.authors | isNil }}</v-col>
+          <div>{{ documentData.metadata.authors | isNil }}</div>
         </row>
       </v-col>
       <v-col />
@@ -64,10 +70,17 @@
     <row label="TADIG Codes">
       <v-col>
         <div>
-          {{ documentData.framework.partyInformation[fromMSP].defaultTadigCodes.join(', ') }}
+          {{
+            documentData.framework.partyInformation[
+              fromMSP
+            ].defaultTadigCodes.join(', ')
+          }}
         </div>
         <template
-          v-if="documentData.framework.partyInformation[fromMSP].includeContractParty"
+          v-if="
+            documentData.framework.partyInformation[fromMSP]
+              .includeContractParty
+          "
         >
           Include contract party
           <v-icon color="primary"> mdi-checkbox-marked-outline </v-icon>
@@ -76,10 +89,17 @@
       <v-divider vertical />
       <v-col>
         <div>
-          {{ documentData.framework.partyInformation[toMSP].defaultTadigCodes.join(', ') }}
+          {{
+            documentData.framework.partyInformation[
+              toMSP
+            ].defaultTadigCodes.join(', ')
+          }}
         </div>
         <template
-          v-if="documentData.framework.partyInformation[fromMSP].includeContractParty"
+          v-if="
+            documentData.framework.partyInformation[fromMSP]
+              .includeContractParty
+          "
         >
           Include contract party
           <v-icon color="primary"> mdi-checkbox-marked-outline </v-icon>

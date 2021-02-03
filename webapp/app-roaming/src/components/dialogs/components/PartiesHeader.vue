@@ -10,6 +10,7 @@
             <app-button
               label="Switch Party"
               outlined
+              min-width="50"
               @button-pressed="switchPartner"
             />
           </v-col>
@@ -25,10 +26,8 @@
       <v-col cols="3" />
       <v-divider vertical></v-divider>
       <fragment v-for="(name, index) in parties" :key="name">
-        <v-col>
-          <row type="primary" :label="name" />
-        </v-col>
-        <v-divider v-if="index === 0" vertical></v-divider>
+        <row type="primary" :label="name" />
+        <v-divider class="pl-1" v-if="index === 0" vertical></v-divider>
       </fragment>
     </v-row>
     <v-divider />
@@ -47,7 +46,11 @@ export default {
   methods: {
     switchPartner() {
       this.currentParty = this.currentParty === 0 ? 1 : 0;
-      this.$emit('party-switch', this.currentParty, this.parties[this.currentParty]);
+      this.$emit(
+        'party-switch',
+        this.currentParty,
+        this.parties[this.currentParty],
+      );
     },
   },
 };

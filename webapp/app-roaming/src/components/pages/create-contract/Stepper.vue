@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <v-stepper vertical v-model="step">
@@ -11,20 +12,20 @@
         >
         <v-stepper-items>
           <v-stepper-content :step="index">
-            <component :is="content" />
+            <component :ref="index" :is="content" />
           </v-stepper-content>
         </v-stepper-items>
       </div>
       <v-row class="mt-5">
         <app-button
-          class="ml-5"
+          class="ml-8"
           label="Export Draft"
           @button-pressed="downloadDocument"
         />
         <v-spacer />
         <app-button
           @click="doSaveContract"
-          class="mr-5"
+          class="mr-8"
           label="Save & Propose To Partner"
         />
       </v-row>
@@ -52,27 +53,31 @@ export default {
       link.click();
     },
     doSaveContract() {
+      // TODO: Make validation more legible
+      this.$refs[1][0].$v.$touch();
+
       this.saveContract().catch((e) => {
         this.$store.dispatch('app-state/loadError', {
           title: 'Error saving contract',
-          body: 'Could not save contract - the contract information may be incomplete or filled incorrectly'
+          body:
+            'Could not save contract - the contract information may be incomplete or filled incorrectly',
         });
       });
-    }
+    },
   },
   computed: {
     ...mapGetters('document/new', ['contract']),
     ...mapState('document/new', ['step']),
     steps() {
       const components = require.context(
-          './steps/',
-          false,
-          /(Step-).*.(vue|js)$/,
+        './steps/',
+        false,
+        /(Step-).*.(vue|js)$/,
       );
       let i = 1;
       const steps = components
-          .keys()
-          .map((x) => ({content: components(x).default, index: i++}));
+        .keys()
+        .map((x) => ({content: components(x).default, index: i++}));
       return steps;
     },
   },

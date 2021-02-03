@@ -29,12 +29,9 @@
       </v-col>
       <revenue-commitment-checkbox v-model="baseline.revenueCommitment" />
       <v-col cols="1" class="mr-1">
-        <app-button
-          icon
-          :svg="icons.add"
-          @button-pressed="addBaseline"
-          alt="Add new entry"
-        />
+        <v-icon alt="Add new entry" @click="addBaseline">
+          {{ `mdi-${icons.add}` }}
+        </v-icon>
       </v-col>
     </v-row>
   </div>

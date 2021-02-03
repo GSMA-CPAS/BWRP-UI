@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-row>
+    <v-row class="mb-1">
       <v-col align-self="center" class="text--disabled">CODES</v-col>
-      <v-col align-self="center" class="text-end">
+      <v-col align-self="center" class="text-end pr-0">
         <app-dialog label="Add Code" title="New Code">
           <template #content>
             <v-text-field v-model="code" label="New Code"></v-text-field>
@@ -11,7 +11,7 @@
             <app-button
               :disabled="code === null"
               @button-pressed="
-                addCode(code);
+                onConfirm();
                 cancel();
               "
               label="Confirm"
@@ -32,23 +32,37 @@
       </v-card-title>
       <v-data-table :search="search" :items="codes" :headers="headers">
         <template v-slot:[`item.actions`]="{item}">
-          <v-icon small @click="deleteCode(item.id)"> mdi-delete </v-icon>
+          <dialog-popup
+            title="Delete Group"
+            @on-confirm="deleteCode(item.id)"
+            :icon="icons.remove"
+          >
+            <template #content> Are you sure? </template>
+          </dialog-popup>
         </template>
       </v-data-table>
     </v-card>
   </div>
 </template>
 <script>
+import {duplicateMixin} from '@/utils/mixins/component-specfic';
 import {mapActions, mapState} from 'vuex';
+import DialogPopup from './tadig-groups/DialogPopup.vue';
 export default {
   name: 'tadig-codes',
   description: 'Codes',
-  mixins: [],
+  mixins: [duplicateMixin],
   data: () => ({code: null, search: ''}),
-  components: {},
+  components: {
+    DialogPopup,
+  },
   props: {},
   watch: {},
   methods: {
+    async onConfirm() {
+      await this.addCode(this.code);
+      this.code = null;
+    },
     ...mapActions('workspace-config/tadig-codes', [
       'loadCodes',
       'addCode',
@@ -59,8 +73,12 @@ export default {
     ...mapState('workspace-config/tadig-codes', ['codes']),
     headers() {
       return [
-        {text: 'ID', value: 'id'},
         {text: 'Code', value: 'code'},
+        {text: 'Operator', value: 'operator'},
+        {text: 'Country', value: 'country'},
+        {text: 'Region', value: 'region'},
+        {text: 'Group', value: 'op_group'},
+        {text: 'MCC/MNC', value: 'mcc_mnc'},
         {text: 'Actions', value: 'actions', sortable: false, align: 'end'},
       ];
     },

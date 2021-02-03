@@ -7,7 +7,8 @@ const {
   VUE_APP_PATH_CONTRACT_TIMELINE: contractTimeline,
   VUE_APP_PATH_EDIT_WORKSPACE: editWorkspace,
   // CONFIG
-  VUE_APP_API_BASE_URL: apiBaseURL,
+  VUE_APP_COMMON_ADAPTER_BASE_URL: commonAdapterBaseURL,
+  VUE_APP_LOCAL_API_BASE_URL: localApiBaseUrl,
 } = process.env;
 
 const PATHS = Object.freeze({
@@ -15,10 +16,9 @@ const PATHS = Object.freeze({
   contracts,
   createContract,
   contractPreview,
-  contractTimeline, editWorkspace
+  contractTimeline,
+  editWorkspace,
 });
 
-const CONFIG = Object.freeze({
-  apiBaseURL,
-});
+const CONFIG = Object.freeze({commonAdapterBaseURL, localApiBaseUrl});
 export {PATHS, CONFIG};

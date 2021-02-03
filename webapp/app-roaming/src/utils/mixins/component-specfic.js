@@ -76,15 +76,15 @@ const timelineMixin = {
   },
   computed: {
     cardTextStyle() {
-      return {'ml-4': true};
+      return {'ma-5': true};
     },
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
       documentData: (state) => state.document.data,
+      signatures: (state) => state.signatures,
     }),
     ...mapGetters('document', [
       'bankDetails',
-      'signatures',
       'parties',
       'name',
       'isSigned',

@@ -22,28 +22,36 @@
         </v-col> -->
       </row>
       <row label="Start Date and End Date">
-        <date-picker v-model="startDate" label="Start Date" />
-        <date-picker
-          v-model="endDate"
-          :min="startDate"
-          :disabled="endDateDisabled"
-          label="End Date"
-        />
+        <v-col>
+          <date-picker v-model="startDate" label="Start Date" />
+        </v-col>
+        <v-col>
+          <date-picker
+            v-model="endDate"
+            :min="startDate"
+            :disabled="endDateDisabled"
+            label="End Date"
+          />
+        </v-col>
       </row>
       <row label="Agreement Period and Prolongation Length">
         <v-col>
           <v-row>
-            <v-text-field
-              label="Agreement Period"
-              suffix="months"
-              :disabled="true"
-              :value="agreementPeriod"
-            />
-            <help-tooltip
-              padding="pa-2 pb-8"
-              x-small
-              text="Computes automatically"
-            />
+            <v-col>
+              <v-text-field
+                label="Agreement Period"
+                suffix="months"
+                :disabled="true"
+                :value="agreementPeriod"
+              />
+            </v-col>
+            <v-col cols="1">
+              <help-tooltip
+                padding="pa-2 pb-8"
+                x-small
+                text="Computes automatically"
+              />
+            </v-col>
           </v-row>
         </v-col>
         <v-col>
@@ -56,7 +64,7 @@
                 suffix="months"
               />
             </v-col>
-            <v-col cols="2">
+            <v-col cols="1">
               <v-checkbox v-model="active" />
             </v-col>
           </v-row>
@@ -135,9 +143,9 @@ export default {
   },
   watch: {
     active(isActive) {
-      isActive ?
-        (this.prolongationLength = 12) :
-        (this.prolongationLength = null);
+      isActive
+        ? (this.prolongationLength = 12)
+        : (this.prolongationLength = null);
     },
   },
   computed: {
@@ -188,7 +196,7 @@ export default {
     prolongationLength: {
       get() {
         return this.$store.state.document.new.generalInformation
-            .prolongationLength;
+          .prolongationLength;
       },
       set(value) {
         this.$store.commit('document/new/updateGeneralInformation', {
