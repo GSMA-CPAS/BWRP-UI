@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :width="width" v-model="component">
+  <v-dialog scrollable :width="width" v-model="component">
     <template v-slot:activator="{on}">
       <app-button
         :loading="loading"
@@ -18,9 +18,9 @@
           <v-icon color="dark" @click="hide">mdi-close</v-icon>
         </fragment>
       </v-card-title>
-      <div v-if="$scopedSlots['content']" class="pa-5">
+      <v-card-text v-if="$scopedSlots['content']" class="pa-5">
         <slot name="content" />
-      </div>
+      </v-card-text>
       <fragment v-if="$scopedSlots['actions']">
         <v-divider />
         <v-card-actions>
