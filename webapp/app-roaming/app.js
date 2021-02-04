@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use strict';
 
 const fs = require('fs');
@@ -8,12 +9,14 @@ exports.init = async (app, router, database, logger, config) => {
   // curl -X GET http://localhost:3000/api/app-roaming/tadig/codes
   router.get('/tadig/codes', async (req, res) => {
     try {
-      const result = await database.query('SELECT * FROM tadig_codes ORDER BY code');
+      const result = await database.query(
+        'SELECT * FROM tadig_codes ORDER BY code',
+      );
       res.json(result);
     } catch (error) {
       logger.error(
-          '[app-roaming::GET/tadig/codes] failed to query tadig codes - %s',
-          error.message,
+        '[app-roaming::GET/tadig/codes] failed to query tadig codes - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -24,15 +27,17 @@ exports.init = async (app, router, database, logger, config) => {
   });
   //  curl -X POST http://localhost:3000/api/app-roaming/tadig/codes -d '{"code":"AEE"}' -H "Content-Type: application/json"
   router.post('/tadig/codes', async (req, res) => {
+    const {code, operator, country, region, op_group, mcc_mnc} = req.body;
     try {
-      await database.query('INSERT INTO tadig_codes SET code=?', [
-        req.body.code,
-      ]);
+      await database.query(
+        'INSERT INTO tadig_codes SET code=?, operator=?, country=?,region=?, op_group=?, mcc_mnc=?',
+        [code, operator, country, region, op_group, mcc_mnc],
+      );
       res.json({success: true});
     } catch (error) {
       logger.error(
-          '[app-roaming::POST/tadig/codes] failed to insert tadig code - %s',
-          error.message,
+        '[app-roaming::POST/tadig/codes] failed to insert tadig code - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -49,8 +54,8 @@ exports.init = async (app, router, database, logger, config) => {
       res.json({success: true});
     } catch (error) {
       logger.error(
-          '[app-roaming::POST/tadig/codes] failed to delete tadig code - %s',
-          error.message,
+        '[app-roaming::POST/tadig/codes] failed to delete tadig code - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -62,12 +67,14 @@ exports.init = async (app, router, database, logger, config) => {
   // curl -X GET http://localhost:3000/api/app-roaming/tadig/groups
   router.get('/tadig/groups', async (req, res) => {
     try {
-      const result = await database.query('SELECT * FROM tadig_groups ORDER BY name');
+      const result = await database.query(
+        'SELECT * FROM tadig_groups ORDER BY name',
+      );
       res.json(result);
     } catch (error) {
       logger.error(
-          '[app-roaming::GET/tadig/groups] failed to query tadig groups - %s',
-          error.message,
+        '[app-roaming::GET/tadig/groups] failed to query tadig groups - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -81,14 +88,14 @@ exports.init = async (app, router, database, logger, config) => {
     const tadigGroupId = req.params.id;
     try {
       const result = await database.query(
-          'SELECT tc.code, tc.operator, tc.country, tc.region, tc.op_group, tc.mcc_mnc, tgr.tadig_code_id FROM tadig_groups_relation tgr INNER JOIN tadig_codes tc ON tgr.tadig_code_id=tc.id WHERE tgr.tadig_group_id=?',
-          [tadigGroupId],
+        'SELECT tc.code, tc.operator, tc.country, tc.region, tc.op_group, tc.mcc_mnc, tgr.tadig_code_id FROM tadig_groups_relation tgr INNER JOIN tadig_codes tc ON tgr.tadig_code_id=tc.id WHERE tgr.tadig_group_id=?',
+        [tadigGroupId],
       );
       res.json(result);
     } catch (error) {
       logger.error(
-          '[app-roaming::GET/tadig/groups] failed to query tadig groups - %s',
-          error.message,
+        '[app-roaming::GET/tadig/groups] failed to query tadig groups - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -106,8 +113,8 @@ exports.init = async (app, router, database, logger, config) => {
       res.json({success: true});
     } catch (error) {
       logger.error(
-          '[app-roaming::POST/tadig/groups] failed to insert tadig group - %s',
-          error.message,
+        '[app-roaming::POST/tadig/groups] failed to insert tadig group - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -126,14 +133,14 @@ exports.init = async (app, router, database, logger, config) => {
     }
     try {
       await database.query(
-          'INSERT INTO tadig_groups_relation (tadig_group_id, tadig_code_id) VALUES ?',
-          [values],
+        'INSERT INTO tadig_groups_relation (tadig_group_id, tadig_code_id) VALUES ?',
+        [values],
       );
       res.json({success: true});
     } catch (error) {
       logger.error(
-          '[app-roaming::POST/tadig/groups] failed to insert tadig group code relation - %s',
-          error.message,
+        '[app-roaming::POST/tadig/groups] failed to insert tadig group code relation - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -152,14 +159,14 @@ exports.init = async (app, router, database, logger, config) => {
     }
     try {
       await database.query(
-          'DELETE FROM tadig_groups_relation WHERE tadig_group_id=? AND tadig_code_id IN (?)',
-          [tadigGroupId, values],
+        'DELETE FROM tadig_groups_relation WHERE tadig_group_id=? AND tadig_code_id IN (?)',
+        [tadigGroupId, values],
       );
       res.json({success: true});
     } catch (error) {
       logger.error(
-          '[app-roaming::POST/tadig/groups] failed to insert tadig group code relation - %s',
-          error.message,
+        '[app-roaming::POST/tadig/groups] failed to insert tadig group code relation - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -176,8 +183,8 @@ exports.init = async (app, router, database, logger, config) => {
       res.json({success: true});
     } catch (error) {
       logger.error(
-          '[app-roaming::POST/tadig/groups] failed to delete tadig group - %s',
-          error.message,
+        '[app-roaming::POST/tadig/groups] failed to delete tadig group - %s',
+        error.message,
       );
       res.status(500).json({
         status: 500,
@@ -195,22 +202,40 @@ exports.init = async (app, router, database, logger, config) => {
 const importTadigCodes = (database, logger) => {
   const csvData = [];
   fs.createReadStream(path.resolve(__dirname, 'tadig_codes.csv'))
-  .pipe(csv.parse({
-    headers: true
-  }))
-  .on('error', (error) => {
-    logger.error('[app-roaming::init] Failed to parse tadig_codes.csv - ' + error.message);
-  })
-  .on('data', (row) => {
-    csvData.push(Object.values(row));
-  })
-  .on('end', (rowCount) => {
-    database.query('INSERT INTO tadig_codes (code, operator, country, region, op_group, mcc_mnc) VALUES ?', [csvData]).then((result) => {
-      logger.info('[app-roaming::init] tadig codes have been imported successfully!');
-    }, (error) => {
-      logger.error('[app-roaming::init] Failed to import tadig codes - ' + error.message());
+    .pipe(
+      csv.parse({
+        headers: true,
+      }),
+    )
+    .on('error', (error) => {
+      logger.error(
+        '[app-roaming::init] Failed to parse tadig_codes.csv - ' +
+          error.message,
+      );
+    })
+    .on('data', (row) => {
+      csvData.push(Object.values(row));
+    })
+    .on('end', (rowCount) => {
+      database
+        .query(
+          'INSERT INTO tadig_codes (code, operator, country, region, op_group, mcc_mnc) VALUES ?',
+          [csvData],
+        )
+        .then(
+          (result) => {
+            logger.info(
+              '[app-roaming::init] tadig codes have been imported successfully!',
+            );
+          },
+          (error) => {
+            logger.error(
+              '[app-roaming::init] Failed to import tadig codes - ' +
+                error.message(),
+            );
+          },
+        );
     });
-  });
 };
 
 const initTableTadigCodes = async (database, logger) => {
@@ -222,7 +247,7 @@ const initTableTadigCodes = async (database, logger) => {
     if (error.errno === 1146) {
       try {
         await database.query(
-            'CREATE TABLE IF NOT EXISTS ' +
+          'CREATE TABLE IF NOT EXISTS ' +
             tableName +
             ' (' +
             '`id` INT AUTO_INCREMENT, ' +
@@ -236,21 +261,21 @@ const initTableTadigCodes = async (database, logger) => {
             'CONSTRAINT uc_code UNIQUE (code))',
         );
         logger.info(
-            '[app-roaming::init] table %s has been created successfully!',
-            tableName,
+          '[app-roaming::init] table %s has been created successfully!',
+          tableName,
         );
         importTadigCodes(database, logger);
       } catch (error) {
         logger.error(
-            '[app-roaming::init] failed to create %s table - %s ',
-            tableName,
-            JSON.stringify(error),
+          '[app-roaming::init] failed to create %s table - %s ',
+          tableName,
+          JSON.stringify(error),
         );
       }
     } else {
       logger.error(
-          '[app-roaming::init] Error checking database - %s ',
-          JSON.stringify(error),
+        '[app-roaming::init] Error checking database - %s ',
+        JSON.stringify(error),
       );
     }
   }
@@ -265,7 +290,7 @@ const initTableTadigGroups = async (database, logger) => {
     if (error.errno === 1146) {
       try {
         await database.query(
-            'CREATE TABLE IF NOT EXISTS ' +
+          'CREATE TABLE IF NOT EXISTS ' +
             tableName +
             ' (' +
             '`id` INT AUTO_INCREMENT, ' +
@@ -274,20 +299,20 @@ const initTableTadigGroups = async (database, logger) => {
             'CONSTRAINT uc_name UNIQUE (name))',
         );
         logger.info(
-            '[app-roaming::init] table %s has been created successfully!',
-            tableName,
+          '[app-roaming::init] table %s has been created successfully!',
+          tableName,
         );
       } catch (error) {
         logger.error(
-            '[app-roaming::init] failed to create %s table - %s ',
-            tableName,
-            JSON.stringify(error),
+          '[app-roaming::init] failed to create %s table - %s ',
+          tableName,
+          JSON.stringify(error),
         );
       }
     } else {
       logger.error(
-          '[app-roaming::init] Error checking database - %s ',
-          JSON.stringify(error),
+        '[app-roaming::init] Error checking database - %s ',
+        JSON.stringify(error),
       );
     }
   }
@@ -302,7 +327,7 @@ const initTableTadigGroupsRelation = async (database, logger) => {
     if (error.errno === 1146) {
       try {
         await database.query(
-            'CREATE TABLE IF NOT EXISTS ' +
+          'CREATE TABLE IF NOT EXISTS ' +
             tableName +
             ' (' +
             '`tadig_code_id` INT, ' +
@@ -312,20 +337,20 @@ const initTableTadigGroupsRelation = async (database, logger) => {
             'FOREIGN KEY (tadig_group_id) REFERENCES tadig_groups(id) ON DELETE CASCADE ON UPDATE CASCADE)',
         );
         logger.info(
-            '[app-roaming::init] table %s has been created successfully!',
-            tableName,
+          '[app-roaming::init] table %s has been created successfully!',
+          tableName,
         );
       } catch (error) {
         logger.error(
-            '[app-roaming::init] failed to create %s table - %s ',
-            tableName,
-            JSON.stringify(error),
+          '[app-roaming::init] failed to create %s table - %s ',
+          tableName,
+          JSON.stringify(error),
         );
       }
     } else {
       logger.error(
-          '[app-roaming::init] Error checking database - %s ',
-          JSON.stringify(error),
+        '[app-roaming::init] Error checking database - %s ',
+        JSON.stringify(error),
       );
     }
   }
