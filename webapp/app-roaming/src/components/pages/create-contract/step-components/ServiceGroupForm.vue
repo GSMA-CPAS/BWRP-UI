@@ -7,7 +7,7 @@
         <v-autocomplete
           v-model="homeTadigs"
           multiple
-          :items="$props.homeTadigOptions"
+          :items="$props.homeTadigOptions || []"
           label="TADIGs"
           placeholder="All (Default)"
         />
@@ -18,7 +18,7 @@
         <v-autocomplete
           v-model="visitorTadigs"
           multiple
-          :items="$props.visitorTadigOptions"
+          :items="$props.visitorTadigOptions || []"
           label="TADIGs"
           placeholder="All (Default)"
         />
