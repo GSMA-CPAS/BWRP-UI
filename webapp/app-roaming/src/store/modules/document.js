@@ -39,20 +39,22 @@ const documentModule = {
     },
     async getDocument(
       {commit, dispatch, rootGetters, getters, rootState, state},
-      documentID,
+      referenceId,
     ) {
       await Vue.axios.commonAdapter
-        .get(`/documents/${documentID}`, {withCredentials: true})
+        .get(`/documents/${referenceId}`, {withCredentials: true})
         .then((document) => {
-          const {id, documentId, data, fromMSP, toMSP} = document;
+          const {contractId, referenceId, creationDate, data, partnerMsp} = document;
           const documentData = JSON.parse(data);
           commit('UPDATE_DOCUMENT', {
-            id,
-            documentId,
+            contractId,
+            referenceId,
+            creationDate,
             data: documentData.body,
             header: documentData.header,
-            fromMSP,
-            toMSP,
+            partnerMsp,
+            fromMSP: 'DTAG',
+            toMSP: 'TMUS',
           });
         })
         .catch((err) => {
@@ -61,10 +63,10 @@ const documentModule = {
     },
     async getSignatures(
       {commit, dispatch, rootGetters, getters, rootState, state},
-      documentID,
+      referenceId,
     ) {
       const {fromMSP, toMSP} = state.document;
-      const url = '' + `/signatures/${documentID}/`;
+      const url = '' + `/signatures/${referenceId}/`;
       // const fromMSPRequest = Vue.axios.commonAdapter.get(url + fromMSP);
       // const toMSPRequest = Vue.axios.commonAdapter.get(url + toMSP);
       // to temporary fix path. we do not need /all
@@ -84,10 +86,10 @@ const documentModule = {
     },
     async loadData(
       {commit, dispatch, rootGetters, getters, rootState, state},
-      documentID,
+      referenceId,
     ) {
-      await dispatch('getDocument', documentID);
-      await dispatch('getSignatures', documentID);
+      await dispatch('getDocument', referenceId);
+      await dispatch('getSignatures', referenceId);
     },
   },
   getters: {
@@ -124,8 +126,11 @@ const documentModule = {
       const {fromMSP, toMSP} = state.document;
       return [fromMSP, toMSP];
     },
-    name: (state) => {
-      return state.document?.id;
+    contractId: (state) => {
+      return state.document?.contractId;
+    },
+    creationDate: (state) => {
+      return state.document?.creationDate;
     },
   },
   modules: {

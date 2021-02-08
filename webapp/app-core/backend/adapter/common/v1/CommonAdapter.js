@@ -1,6 +1,7 @@
 'use strict';
 
 const got = require('got');
+const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
 const crypto = require('crypto');
@@ -8,6 +9,16 @@ const crypto = require('crypto');
 class CommonAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {
     super(adapterName, adapterConfig, database);
+    this.mspid = config.organization.mspid;
+  }
+
+  getPartnerMsp(msps) {
+    for (const [key] of Object.entries(msps)) {
+      if (key !== this.mspid) {
+        return key;
+      }
+    }
+    return 'Unknown';
   }
 
   // TODO: support for query parameter to search for contracts.
@@ -20,14 +31,15 @@ class CommonAdapter extends AbstractAdapter {
         if (item.referenceId !== undefined) {
           processed.push({
             contractId: item.contractId,
-            documentId: item.referenceId,
             referenceId: item.referenceId,
-            msps: item.header.msps,
+            partnerMsp: this.getPartnerMsp(item.header.msps),
             state: item.state,
             lastModification: item.lastModificationDate,
-            ts: item.lastModificationDate,
+            startDate: item.body.framework.term && item.body.framework.term.start,
+            endDate: item.body.framework.term && item.body.framework.term.end,
+            authors: item.body.metadata.authors,
             type: item.header.type,
-            name: item.header.name,
+            name: item.body.metadata.name,
             version: item.header.version});
         }
       }
@@ -60,13 +72,13 @@ class CommonAdapter extends AbstractAdapter {
       // header.msps[item.header.fromMsp.mspId] = {minSignatures: item.header.fromMsp.signatures.length};
       // header.msps[item.header.toMsp.mspId] = {minSignatures: item.header.toMsp.signatures.length};
       return {
-        id: item.contractId,
-        documentId: item.referenceId,
+        contractId: item.contractId,
         referenceId: item.referenceId,
-        msps: item.header.msps,
+        partnerMsp: this.getPartnerMsp(item.header.msps),
         data: JSON.stringify({body: item.body, header: header}),
         state: 'sent',
-        ts: item.lastModificationDate,
+        creationDate: item.creationDate,
+        lastModificationDate: item.lastModificationDate,
         fromStorageKey: fromSk,
         toStorageKey: toSk};
     } catch (error) {
@@ -124,7 +136,7 @@ class CommonAdapter extends AbstractAdapter {
       //  }
       // }
 
-      const check = true
+      const check = true;
       for (const msp in data.header.msps) {
         // escape eslint check
         if (check == true) {

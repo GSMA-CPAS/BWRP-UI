@@ -80,6 +80,7 @@ export default new Vuex.Store({
       Vue.axios.commonAdapter
           .get('/documents', {withCredentials: true})
           .then((res) => {
+            console.log(res);
             commit('LOAD_DOCUMENTS', res);
           })
           .catch((err) => {

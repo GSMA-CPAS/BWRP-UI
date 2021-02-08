@@ -1,8 +1,8 @@
 
 <template>
   <v-container v-if="$store.state.document">
-    <app-headline :title="`Contract ${name}`" />
-    <v-divider />
+    <!--<app-headline :title="`Contract ${name}`" />
+    <v-divider />-->
     <v-timeline>
       <Item-1-ContractView />
       <Item-2-Signatures />

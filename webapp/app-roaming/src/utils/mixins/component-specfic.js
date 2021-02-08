@@ -86,10 +86,12 @@ const timelineMixin = {
     ...mapGetters('document', [
       'bankDetails',
       'parties',
-      'name',
+      'contractId',
+      'creationDate',
       'isSigned',
+      'partnerMsp',
       'fromMSP',
-      'toMSP',
+      'toMSP'
     ]),
     ...mapGetters('partners', ['list']),
   },

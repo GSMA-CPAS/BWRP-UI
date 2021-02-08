@@ -19,25 +19,24 @@
     </template>
     <template #item="{item}">
       <tr
-        @click="to(item.contractId + '?d=' + item.documentId)"
-        @keypress.enter="to(item.contractId + '?d=' + item.documentId)"
+        @click="to(item.contractId + '?d=' + item.referenceId)"
+        @keypress.enter="to(item.contractId + '?d=' + item.referenceId)"
         tabindex="0"
       >
-        <td>someReferenceID</td>
         <td class="pa-6">
           {{
-            `${item.documentId.substring(0, 5)}...${item.documentId.substring(
-              item.documentId.length - 5,
-              item.documentId.length,
+            `${item.referenceId.substring(0, 5)}...${item.referenceId.substring(
+              item.referenceId.length - 5,
+              item.referenceId.length,
             )}`
           }}
         </td>
-        <td>{{ item.toMSP }}</td>
+        <td>{{ item.partnerMsp }}</td>
         <td>{{ item.name }}</td>
-        <td>someAuthor</td>
+        <td>{{ item.authors }}</td>
         <td>{{ item.lastModification }}</td>
-        <td>startDate</td>
-        <td>endDate</td>
+        <td>{{ item.startDate }}</td>
+        <td>{{ item.endDate }}</td>
         <td>{{ item.state }}</td>
         <!-- <td @click.stop>
           <v-menu offset-y>
@@ -113,8 +112,7 @@ export default {
   computed: {
     headers() {
       return [
-        {text: 'Internal Reference', value: 'referenceID'},
-        {text: 'Document ID', value: 'documentId'},
+        {text: 'Reference ID', value: 'referenceId'},
         {text: 'Partner', value: 'toMSP'},
         {text: 'Name', value: 'contractName'},
         {text: 'Author', value: 'author'},
