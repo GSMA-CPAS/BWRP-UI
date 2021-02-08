@@ -60,11 +60,13 @@
     <parties-header />
     <row label="Currency for all discounts">
       <v-col>
-        {{ documentData.framework.partyInformation[fromMSP].contractCurrency }}
+        {{ documentData.framework.partyInformation[selfMsp].contractCurrency }}
       </v-col>
       <v-divider vertical />
       <v-col>
-        {{ documentData.framework.partyInformation[toMSP].contractCurrency }}
+        {{
+          documentData.framework.partyInformation[partnerMsp].contractCurrency
+        }}
       </v-col>
     </row>
     <row label="TADIG Codes">
@@ -72,13 +74,13 @@
         <div>
           {{
             documentData.framework.partyInformation[
-              fromMSP
+              selfMsp
             ].defaultTadigCodes.join(', ')
           }}
         </div>
         <template
           v-if="
-            documentData.framework.partyInformation[fromMSP]
+            documentData.framework.partyInformation[selfMsp]
               .includeContractParty
           "
         >
@@ -91,13 +93,13 @@
         <div>
           {{
             documentData.framework.partyInformation[
-              toMSP
+              partnerMsp
             ].defaultTadigCodes.join(', ')
           }}
         </div>
         <template
           v-if="
-            documentData.framework.partyInformation[fromMSP]
+            documentData.framework.partyInformation[selfMsp]
               .includeContractParty
           "
         >

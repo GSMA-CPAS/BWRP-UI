@@ -113,7 +113,7 @@ export default {
     headers() {
       return [
         {text: 'Reference ID', value: 'referenceId'},
-        {text: 'Partner', value: 'toMSP'},
+        {text: 'Partner', value: 'partnerMsp'},
         {text: 'Name', value: 'contractName'},
         {text: 'Author', value: 'author'},
         {text: 'Last Modification', value: 'lastModification'},
@@ -121,7 +121,7 @@ export default {
         {text: 'End Date', value: 'endDate'},
         {text: 'State', value: 'state'},
         // {text: 'Actions', value: 'action'},
-        // {text: 'To MSP', value: 'toMSP'},
+        // {text: 'To MSP', value: 'partnerMsp'},
       ];
     },
     items() {

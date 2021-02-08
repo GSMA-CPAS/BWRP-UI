@@ -9,14 +9,7 @@ const userModule = {
   },
   actions: {
     // initialize user
-    initializeUser({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
+    initializeUser({commit, dispatch, rootGetters, getters, rootState, state}) {
       const user = localStorage.getItem('appContext');
       if (user) {
         try {

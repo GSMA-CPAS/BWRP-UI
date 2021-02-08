@@ -209,17 +209,17 @@ const newDocumentModule = {
               },
               body: getters.contract,
             };
-            const toMSP = getters.msps.partner;
+            const partnerMsp = getters.msps.partner;
             const user = getters.msps.user;
             data.header.msps[getters.msps.user] = {minSignatures: 2};
-            data.header.msps[toMSP] = {minSignatures: 2};
+            data.header.msps[partnerMsp] = {minSignatures: 2};
             data.body = convertModelsModule.convertUiModelToJsonModel(
               user,
-              toMSP,
+              partnerMsp,
               data.body,
             );
             Vue.axios.commonAdapter
-              .post('/documents', {toMSP, data}, {withCredentials: true})
+              .post('/documents', {partnerMsp, data}, {withCredentials: true})
               .then((res) => {
                 log(
                   `%c Successfully added new contract!`,

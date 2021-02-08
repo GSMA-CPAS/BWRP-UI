@@ -3,8 +3,8 @@
     <parties-header />
     <row
       v-for="i in longestArray([
-        documentData.framework.signers[fromMSP],
-        documentData.framework.signers[toMSP],
+        documentData.framework.signers[selfMsp],
+        documentData.framework.signers[partnerMsp],
       ])"
       :label="`Signature ${i}`"
       :key="i"

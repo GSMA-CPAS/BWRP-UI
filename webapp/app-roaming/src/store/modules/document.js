@@ -21,7 +21,7 @@ const documentModule = {
       Vue.axios.commonAdapter
         .put(
           // `/signatures/` + state.document.documentId,
-          `/signatures/` + state.document.id,
+          `/signatures/` + state.document.contractId,
           {},
           {
             signing: true,
@@ -30,10 +30,10 @@ const documentModule = {
         )
         .then((res) => {
           dispatch('app-state/signing', false, {root: true});
-          // dispatch('getSignatures', state.document.documentId);
-          dispatch('getSignatures', state.document.id);
+          dispatch('getSignatures', state.document.documentId);
         })
         .catch((err) => {
+          dispatch('app-state/signing', false, {root: true});
           log(err);
         });
     },
@@ -44,7 +44,13 @@ const documentModule = {
       await Vue.axios.commonAdapter
         .get(`/documents/${referenceId}`, {withCredentials: true})
         .then((document) => {
-          const {contractId, referenceId, creationDate, data, partnerMsp} = document;
+          const {
+            contractId,
+            referenceId,
+            creationDate,
+            data,
+            partnerMsp,
+          } = document;
           const documentData = JSON.parse(data);
           commit('UPDATE_DOCUMENT', {
             contractId,
@@ -53,8 +59,6 @@ const documentModule = {
             data: documentData.body,
             header: documentData.header,
             partnerMsp,
-            fromMSP: 'DTAG',
-            toMSP: 'TMUS',
           });
         })
         .catch((err) => {
@@ -65,14 +69,14 @@ const documentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       referenceId,
     ) {
-      const {fromMSP, toMSP} = state.document;
+      const {selfMsp, partnerMsp} = state.document;
       const url = '' + `/signatures/${referenceId}/`;
-      // const fromMSPRequest = Vue.axios.commonAdapter.get(url + fromMSP);
-      // const toMSPRequest = Vue.axios.commonAdapter.get(url + toMSP);
+      // const selfMspRequest = Vue.axios.commonAdapter.get(url + selfMsp);
+      // const partnerMspRequest = Vue.axios.commonAdapter.get(url + partnerMsp);
       // to temporary fix path. we do not need /all
       // const signatures = Vue.axios.commonAdapter.get(url);
       await Vue.axios.commonAdapter
-        // .all([fromMSPRequest, toMSPRequest], {
+        // .all([selfMspRequest, partnerMspRequest], {
         .get(url, {
           withCredentials: true,
         })
@@ -94,11 +98,11 @@ const documentModule = {
   },
   getters: {
     isSigned: (state, getters) => {
-      const {fromMSP, toMSP} = getters;
+      const {selfMsp, partnerMsp} = getters;
       const minSignaturesFromMSP =
-        state.document?.header.msps[fromMSP].minSignatures;
+        state.document?.header.msps[selfMsp].minSignatures;
       const minSignaturesToMSP =
-        state.document?.header.msps[toMSP].minSignatures;
+        state.document?.header.msps[partnerMsp].minSignatures;
       const totalSignatures =
         state.signatures.length > 0 &&
         state.signatures.reduce(
@@ -106,25 +110,27 @@ const documentModule = {
             acc[curVal.from]++;
             return acc;
           },
-          {[getters.fromMSP]: 0, [toMSP]: 0},
+          {[getters.selfMsp]: 0, [partnerMsp]: 0},
         );
       const isSigned =
-        minSignaturesFromMSP <= totalSignatures[fromMSP] &&
-        minSignaturesToMSP <= totalSignatures[toMSP];
+        minSignaturesFromMSP <= totalSignatures[selfMsp] &&
+        minSignaturesToMSP <= totalSignatures[partnerMsp];
       return isSigned;
     },
-    fromMSP: (state) => {
-      return state.document?.fromMSP;
+    selfMsp: (state, getters, rootState, rootGetters) => {
+      const selfMsp = rootGetters['user/organizationMSPID'];
+      return selfMsp;
     },
-    toMSP: (state) => {
-      return state.document?.toMSP;
+    partnerMsp: (state) => {
+      return state.document?.partnerMsp;
     },
     exists: (state) => (key) => {
       return state.document[key] ? true : false;
     },
-    parties: (state) => {
-      const {fromMSP, toMSP} = state.document;
-      return [fromMSP, toMSP];
+    parties: (state, getters, rootState, rootGetters) => {
+      const selfMsp = rootGetters['user/organizationMSPID'];
+      const {partnerMsp} = state.document;
+      return [selfMsp, partnerMsp];
     },
     contractId: (state) => {
       return state.document?.contractId;

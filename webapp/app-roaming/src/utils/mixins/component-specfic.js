@@ -90,8 +90,8 @@ const timelineMixin = {
       'creationDate',
       'isSigned',
       'partnerMsp',
-      'fromMSP',
-      'toMSP'
+      'selfMsp',
+      'partnerMsp',
     ]),
     ...mapGetters('partners', ['list']),
   },
