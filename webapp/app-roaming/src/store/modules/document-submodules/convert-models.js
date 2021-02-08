@@ -66,7 +66,7 @@ function convertUiLinearRateToJsonModel(uiLinearRatePlan) {
     ratingPlan: {
       kind: uiLinearRatePlan.pricingModel,
       rate: {
-        linearPRice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0]).linearPrice
+        linearPrice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0]).linearPrice
       }
     }
   };

@@ -34,14 +34,18 @@
           <v-col>
             <template v-if="service.usagePricing">
               <v-row>
-                <normal-model-template v-if="service.usagePricing.ratingPlan.kind === 'Normal'" :data="service.usagePricing" model-type="Usage"/>
-                <balanced-unbalanced-model-template v-if="service.usagePricing.ratingPlan.kind === 'Balanced/Unbalanced'" :data="service.usagePricing" model-type="Usage"/>
+                <simple-model-template v-if="service.usagePricing.ratingPlan.kind === 'Linear rate'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
+                <simple-model-template v-if="service.usagePricing.ratingPlan.kind === 'Flat rate'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
+                <tiered-model-template v-if="service.usagePricing.ratingPlan.kind === 'Threshold - back to first'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
+                <tiered-model-template v-if="service.usagePricing.ratingPlan.kind === 'Tiered with Thresholds'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
+                <balanced-unbalanced-model-template v-if="service.usagePricing.ratingPlan.kind === 'Balanced/Unbalanced (Linear rate)'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
               </v-row>
             </template>
 
             <template v-if="service.accessPricing">
               <v-row>
-                <normal-model-template v-if="service.accessPricing.ratingPlan.kind === 'Normal'" :data="service.accessPricing" model-type="Access"/>
+                <tiered-model-template v-if="service.accessPricing.ratingPlan.kind === 'Threshold - back to first'" :data="service.accessPricing" :in-commitment="service.includedInCommitment" model-type="Access"/>
+                <tiered-model-template v-if="service.accessPricing.ratingPlan.kind === 'Tiered with Thresholds'" :data="service.accessPricing" :in-commitment="service.includedInCommitment" model-type="Access"/>
               </v-row>
             </template>
           </v-col>
@@ -65,7 +69,9 @@
           <v-col>{{ discountData.condition.kind }}</v-col>
           <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.currency : '' }}</v-col>
           <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.value : '' }}</v-col>
-          <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.includingTaxes : '' }}</v-col>
+          <v-col><v-icon v-if="discountData.condition.commitment && discountData.condition.commitment.includingTaxes" color="primary">
+            mdi-checkbox-marked-outline
+          </v-icon></v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -76,8 +82,9 @@ import PartiesHeader from '../components/PartiesHeader.vue';
 import {utilsMixin} from '@/utils/mixins/handle-data';
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import {mapGetters} from 'vuex';
-import NormalModelTemplate from './models/NormalModelTemplate.vue';
+import TieredModelTemplate from './models/TieredModelTemplate.vue';
 import BalancedUnbalancedModelTemplate from './models/BalancedUnbalancedModelTemplate.vue';
+import SimpleModelTemplate from './models/SimpleModelTemplate';
 export default {
   name: 'tab-4',
   label: 'Discount Models',
@@ -86,7 +93,8 @@ export default {
   mixins: [utilsMixin, timelineMixin],
   components: {
     PartiesHeader,
-    NormalModelTemplate,
+    TieredModelTemplate,
+    SimpleModelTemplate,
     BalancedUnbalancedModelTemplate
   },
   data() {
