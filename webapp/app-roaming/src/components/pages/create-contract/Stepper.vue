@@ -1,15 +1,16 @@
 
 <template>
   <div>
-    <v-stepper vertical v-model="step">
+    <v-stepper vertical :value="step">
       <div v-for="{content, index} in steps" :key="index">
         <v-stepper-step
           editable
-          @click="setStep(index)"
+          @click.native="setStep({index, totalSteps: steps.length})"
           :complete="step > index"
           :step="index"
-          >{{ content.description }}</v-stepper-step
         >
+          {{ content.description }}
+        </v-stepper-step>
         <v-stepper-items>
           <v-stepper-content :step="index">
             <component :ref="index" :is="content" />

@@ -6,7 +6,7 @@
       <v-col>
         <v-row class="primary--text text-uppercase">
           <v-col>{{ parties[currentParty] }}</v-col>
-          <v-col class="text-center" cols="2">
+          <v-col class="text-end pr-0">
             <app-button
               label="Switch Party"
               outlined

@@ -102,12 +102,6 @@ const newDocumentModule = {
       const {key, value} = payload;
       Object.assign(state[key].discountModels, value);
     },
-    DECREMENT_STEP(state) {
-      state.step--;
-    },
-    INCREMENT_STEP(state) {
-      state.step++;
-    },
     SET_STEP(state, step) {
       state.step = step;
     },
@@ -192,14 +186,15 @@ const newDocumentModule = {
       commit('READ_JSON', loadedJson);
       commit('SET_PARTNER', partner);
     },
-    nextStep({commit, dispatch, rootGetters, getters, rootState, state}) {
-      commit('INCREMENT_STEP');
-    },
-    previousStep({commit, dispatch, rootGetters, getters, rootState, state}) {
-      commit('DECREMENT_STEP');
-    },
-    setStep({commit, dispatch, rootGetters, getters, rootState, state}, step) {
-      commit('SET_STEP', step);
+    setStep(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      {index, totalSteps},
+    ) {
+      if (index === state.step) {
+        commit('SET_STEP', totalSteps + 1);
+      } else {
+        commit('SET_STEP', index);
+      }
     },
     saveContract({commit, dispatch, rootGetters, getters, rootState, state}) {
       return new Promise((resolve, reject) => {
@@ -226,7 +221,7 @@ const newDocumentModule = {
             Vue.axios.commonAdapter
               .post('/documents', {toMSP, data}, {withCredentials: true})
               .then((res) => {
-                console.log(
+                log(
                   `%c Successfully added new contract!`,
                   'color:#5cb85c; font-weight:800',
                 );
@@ -235,7 +230,7 @@ const newDocumentModule = {
                 router.push(PATHS.contracts);
               })
               .catch((err) => {
-                console.log(err);
+                log(err);
                 reject(err);
                 router.push(PATHS.contracts);
               });

@@ -5,11 +5,41 @@
       <v-col align-self="center" class="text-end pr-0">
         <app-dialog label="Add Code" title="New Code">
           <template #content>
-            <v-text-field v-model="code" label="New Code"></v-text-field>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="code" label="New Code" />
+              </v-col>
+              <v-col>
+                <v-text-field v-model="operator" label="Operator" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="country" label="Country" />
+              </v-col>
+              <v-col>
+                <v-text-field v-model="region" label="Region" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field v-model="op_group" label="Group" />
+              </v-col>
+              <v-col>
+                <v-text-field v-model="mcc_mnc" label="MCC/MNC" />
+              </v-col>
+            </v-row>
           </template>
           <template #actions="{cancel}">
             <app-button
-              :disabled="code === null"
+              :disabled="
+                code === null ||
+                operator === null ||
+                country === null ||
+                region === null ||
+                op_group === null ||
+                mcc_mnc === null
+              "
               @button-pressed="
                 onConfirm();
                 cancel();
@@ -52,7 +82,15 @@ export default {
   name: 'tadig-codes',
   description: 'Codes',
   mixins: [duplicateMixin],
-  data: () => ({code: null, search: ''}),
+  data: () => ({
+    code: null,
+    operator: null,
+    country: null,
+    region: null,
+    op_group: null,
+    mcc_mnc: null,
+    search: '',
+  }),
   components: {
     DialogPopup,
   },
@@ -60,8 +98,20 @@ export default {
   watch: {},
   methods: {
     async onConfirm() {
-      await this.addCode(this.code);
+      await this.addCode({
+        code: this.code,
+        operator: this.operator,
+        country: this.country,
+        region: this.region,
+        op_group: this.op_group,
+        mcc_mnc: this.mcc_mnc,
+      });
       this.code = null;
+      this.operator = null;
+      this.country = null;
+      this.region = null;
+      this.op_group = null;
+      this.mcc_mnc = null;
     },
     ...mapActions('workspace-config/tadig-codes', [
       'loadCodes',

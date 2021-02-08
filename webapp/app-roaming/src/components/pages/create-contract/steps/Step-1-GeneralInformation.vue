@@ -95,13 +95,6 @@
         <v-col><general-information-party-form v-model="partnerData" /></v-col>
       </v-row>
     </form-container>
-    <div class="float-right mt-3">
-      <app-button
-        label="next"
-        @button-pressed="validate('generalInformation')"
-        @keydown.tab="validate('generalInformation')"
-      />
-    </div>
   </div>
 </template>
 

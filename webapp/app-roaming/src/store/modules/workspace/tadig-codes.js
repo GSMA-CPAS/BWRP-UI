@@ -18,7 +18,7 @@ const tadigCodesModule = {
       code,
     ) {
       await Vue.axios.local
-        .post('/tadig/codes', {code}, {withCredentials})
+        .post('/tadig/codes', code, {withCredentials})
         .then((res) => {
           dispatch('loadCodes');
         })
