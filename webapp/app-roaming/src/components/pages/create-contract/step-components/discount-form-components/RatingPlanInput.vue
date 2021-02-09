@@ -1,19 +1,19 @@
 <template>
   <v-col>
-    <fragment v-for="(tier, index) in tiers" :key="tier.id">
+    <fragment v-for="(tier, index) in (disableThresholds ? tiers.slice(0,1) : tiers)" :key="tier.id">
       <v-row>
         <v-col v-if="!disableThresholds">
-          <v-text-field
+          <v-currency-field
             :disabled="index === 0"
             v-model="tier.threshold"
             label="Threshold"
           />
         </v-col>
         <v-col v-if="!disableFixed">
-          <v-text-field v-model="tier.fixedPrice" label="Fixed Price" />
+          <v-currency-field v-model="tier.fixedPrice" label="Fixed Price" />
         </v-col>
-        <v-col>
-          <v-text-field v-model="tier.linearPrice" label="Linear Price" />
+        <v-col v-if="!disableLinear">
+          <v-currency-field v-model="tier.linearPrice" label="Linear Price" />
         </v-col>
         <v-col
           align-self="center"
@@ -61,7 +61,7 @@ export default {
     OverallRevenueCommitment,
     DiscountPicker,*/
   },
-  props: ['value', 'disableThresholds', 'disableFixed'],
+  props: ['value', 'disableThresholds', 'disableFixed', 'disableLinear'],
   data() {
     return {
       tiers: [

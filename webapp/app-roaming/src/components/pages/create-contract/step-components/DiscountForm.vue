@@ -2,7 +2,7 @@
   <v-col>
     <row type="primary" label="Condition" />
     <v-divider />
-    <condition-picker v-model="condition" />
+    <condition-picker v-model="condition" :default-currency="defaultCurrency"/>
     <v-row> <br /><br /> </v-row>
     <row type="primary" label="Service Groups" />
     <v-divider />
@@ -32,6 +32,11 @@
       />
       <v-divider />
     </fragment>
+    <v-row> <br /><br /> </v-row>
+    <v-row><app-button
+          @click="doCopyOtherSide"
+          label="Copy to other side"
+        /></v-row>
   </v-col>
 </template>
 <script>
@@ -43,7 +48,7 @@ export default {
   name: 'discount-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['homeTadigs', 'visitorTadigs', 'value'],
+  props: ['homeTadigs', 'visitorTadigs', 'value', 'defaultCurrency'],
   components: {
     ConditionPicker,
     ServiceGroupForm,
@@ -80,6 +85,9 @@ export default {
     },
     removeServiceGroup(index) {
       this.serviceGroups.splice(index, 1);
+    },
+    doCopyOtherSide() {
+      this.$emit('copy-other-side', this.$data);
     },
   },
   computed: {

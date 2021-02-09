@@ -58,6 +58,7 @@ export default {
       this.$refs[1][0].$v.$touch();
 
       this.saveContract().catch((e) => {
+        console.error('Error saving contract:', e);
         this.$store.dispatch('app-state/loadError', {
           title: 'Error saving contract',
           body:

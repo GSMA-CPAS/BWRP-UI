@@ -13,6 +13,7 @@
       v-if="!disabledModel"
       :is="condition"
       v-model="selectedCondition"
+      :default-currency="defaultCurrency"
     />
   </fragment>
 </template>
@@ -24,7 +25,7 @@ export default {
     return {selectedConditionName: null, selectedCondition: null};
   },
   components: {},
-  props: ['service', 'value'],
+  props: ['service', 'value', 'defaultCurrency'],
   watch: {
     selectedCondition: {
       handler() {
@@ -64,7 +65,7 @@ export default {
       return [
         'Unconditional',
         'Contract Revenue Commitment',
-        'Contract Revenue Commitment',
+        'Deal Revenue Commitment',
       ];
     },
   },

@@ -2,23 +2,61 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import allModules from './modules/all-modules';
+
 Vue.use(Vuex);
+
+const SERVICE_CONFIGURATION = {
+  'MOC Back Home': {unit: 'Min', access: false},
+  'MOC Local': {unit: 'Min', access: false},
+  'MOC International': {unit: 'Min', access: false},
+  'MOC EU': {unit: 'Min', access: false},
+  'MOC EEA': {unit: 'Min', access: false},
+  'MOC RoW': {unit: 'Min', access: false},
+  'MOC Premium': {unit: 'Min', access: false},
+  'MOC Satellite': {unit: 'Min', access: false},
+  'MOC Video Telephony': {unit: 'Min', access: false},
+  'MOC Special Destinations': {unit: 'Min', access: false},
+  'MTC': {unit: 'Min', access: false},
+  'SMSMO': {unit: 'SMS', access: false},
+  'SMSMT': {unit: 'SMS', access: false},
+  'M2M': {unit: 'MB', access: true, accessUnit: 'IMSI'},
+  'NB-IoT': {unit: 'MB', access: true, accessUnit: 'IMSI'},
+  'LTE-M': {unit: 'MB', access: true, accessUnit: 'IMSI'},
+  'VoLTE': {unit: 'MB', access: false},
+  'ViLTE': {unit: 'MB', access: false},
+  'IMS Signalling': {unit: 'MB', access: false},
+  'GPRS': {unit: 'MB', access: false},
+  'Network Access': {unit: 'IMSI', access: false},
+};
+
+const SERVICE_ORDER = [
+  'MOC Back Home',
+  'MOC Local',
+  'MOC International',
+  'MOC EU',
+  'MOC EEA',
+  'MOC RoW',
+  'MOC Premium',
+  'MOC Satellite',
+  'MOC Video Telephony',
+  'MOC Special Destinations',
+  'MTC',
+  'SMSMO',
+  'SMSMT',
+  'M2M',
+  'NB-IoT',
+  'LTE-M',
+  'VoLTE',
+  'ViLTE',
+  'IMS Signalling',
+  'GPRS',
+  'Network Access',
+];
 
 export default new Vuex.Store({
   state: {
-    // TEST DATA
-    documents: [],
-    services: [
-      'MOC Back Home',
-      'MOC Local',
-      'MTC',
-      'SMS MO',
-      'M2M',
-      'NB-IoT',
-      'LTE-M',
-      'VoLTE',
-      'DATA',
-    ],
+    serviceConfiguration: SERVICE_CONFIGURATION,
+    services: SERVICE_ORDER,
   },
   mutations: {
     LOAD_DOCUMENTS: (state, documents) => {

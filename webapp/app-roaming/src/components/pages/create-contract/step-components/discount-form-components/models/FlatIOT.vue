@@ -4,7 +4,7 @@
       <disabled-condition placeholder="Unconditional" />
       <disabled-threshold />
       <v-col>
-        <v-text-field v-model="rate" label="Rate" placeholder="0" />
+        <v-currency-field v-model="rate" label="Rate" placeholder="0" />
       </v-col>
       <revenue-commitment-checkbox v-model="revenueCommitment" />
     </v-row>

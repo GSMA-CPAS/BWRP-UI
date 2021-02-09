@@ -8,7 +8,7 @@ function convertUiSignaturesToJsonModel(uiSignatures) {
 function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
   return {
     contractCurrency: uiPartyGeneralData.currencyForAllDiscounts,
-    defaultTadigCodes: uiPartyGeneralData.tadigCodes.codes.split(','),
+    defaultTadigCodes: uiPartyGeneralData.tadigCodes.codes,
     tadigGroups: {}
   };
 }
@@ -21,7 +21,7 @@ function convertUiThresholdsToJsonModel(uiRateThresholds) {
   };
 }
 
-function convertUiNormalRatePlanToJsonModel(uiNormalRatePlan) {
+function convertUiTieredRatePlanToJsonModel(uiNormalRatePlan) {
   return {
     unit: uiNormalRatePlan.unit,
     ratingPlan: {
@@ -33,26 +33,54 @@ function convertUiNormalRatePlanToJsonModel(uiNormalRatePlan) {
   };
 }
 
-function convertUiBalancedUnbalancedRatePlanToJsonModel(uiBalancedUnbalancedRatePlan) {
+function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(uiBalancedUnbalancedRatePlan) {
   return {
     unit: uiBalancedUnbalancedRatePlan.unit,
     ratingPlan: {
       kind: uiBalancedUnbalancedRatePlan.pricingModel,
       balancedRate: {
-        thresholds: uiBalancedUnbalancedRatePlan.balancedRate.map(convertUiThresholdsToJsonModel)
+        linearPrice: convertUiThresholdsToJsonModel(uiBalancedUnbalancedRatePlan.balancedRate[0]).linearPrice
       },
       unbalancedRate: {
-        thresholds: uiBalancedUnbalancedRatePlan.unbalancedRate.map(convertUiThresholdsToJsonModel)
+        linearPrice: convertUiThresholdsToJsonModel(uiBalancedUnbalancedRatePlan.unbalancedRate[0]).linearPrice
+      }
+    }
+  };
+}
+
+function convertUiFlatRateToJsonModel(uiFlatRatePlan) {
+  return {
+    unit: uiFlatRatePlan.unit,
+    ratingPlan: {
+      kind: uiFlatRatePlan.pricingModel,
+      rate: {
+        fixedPrice: convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0]).fixedPrice
+      }
+    }
+  };
+}
+
+function convertUiLinearRateToJsonModel(uiLinearRatePlan) {
+  return {
+    unit: uiLinearRatePlan.unit,
+    ratingPlan: {
+      kind: uiLinearRatePlan.pricingModel,
+      rate: {
+        linearPrice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0]).linearPrice
       }
     }
   };
 }
 
 function convertUiRatePlanToJsonModel(uiRatingPlan) {
-  if (uiRatingPlan.pricingModel === 'Normal') {
-    return convertUiNormalRatePlanToJsonModel(uiRatingPlan);
-  } else if (uiRatingPlan.pricingModel === 'Balanced/Unbalanced') {
-    return convertUiBalancedUnbalancedRatePlanToJsonModel(uiRatingPlan);
+  if (uiRatingPlan.pricingModel === 'Threshold - back to first' || uiRatingPlan.pricingModel === 'Tiered with Thresholds') {
+    return convertUiTieredRatePlanToJsonModel(uiRatingPlan);
+  } else if (uiRatingPlan.pricingModel === 'Balanced/Unbalanced (Linear rate)') {
+    return convertUiBalancedUnbalancedLinearRatePlanToJsonModel(uiRatingPlan);
+  } else if (uiRatingPlan.pricingModel === 'Flat rate') {
+    return convertUiFlatRateToJsonModel(uiRatingPlan);
+  } else if (uiRatingPlan.pricingModel === 'Linear rate') {
+    return convertUiLinearRateToJsonModel(uiRatingPlan);
   } else if (uiRatingPlan.pricingModel === 'Not Charged') {
     return undefined;
   } else {
@@ -63,12 +91,13 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
 function convertUiServiceToJsonModel(uiService) {
   return {
     service: uiService.name,
+    includedInCommitment: uiService.includedInCommitment,
     usagePricing: convertUiRatePlanToJsonModel(uiService),
-    accessPricing: convertUiRatePlanToJsonModel({
+    accessPricing: uiService.accessPricingModel ? convertUiRatePlanToJsonModel({
       pricingModel: uiService.accessPricingModel,
       unit: uiService.accessPricingUnit,
       rate: uiService.accessPricingRate
-    })
+    }) : undefined,
   };
 }
 

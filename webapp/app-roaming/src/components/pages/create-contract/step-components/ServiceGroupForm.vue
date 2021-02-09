@@ -7,7 +7,7 @@
         <v-autocomplete
           v-model="homeTadigs"
           multiple
-          :items="$props.homeTadigOptions"
+          :items="$props.homeTadigOptions || []"
           label="TADIGs"
           placeholder="All (Default)"
         />
@@ -18,7 +18,7 @@
         <v-autocomplete
           v-model="visitorTadigs"
           multiple
-          :items="$props.visitorTadigOptions"
+          :items="$props.visitorTadigOptions || []"
           label="TADIGs"
           placeholder="All (Default)"
         />
@@ -46,10 +46,13 @@
           </v-icon>
         </v-col>
       </v-row>
+      <row label="Included in commitment?">
+        <v-col><v-checkbox v-model="service.includedInCommitment"></v-checkbox></v-col>
+      </row>
       <row label="Usage Pricing Model">
         <v-col>
           <v-select
-            :items="['Not Charged', 'Normal', 'Balanced/Unbalanced']"
+            :items="['Not Charged', 'Flat rate', 'Linear rate', 'Threshold - back to first', 'Tiered with Thresholds', 'Balanced/Unbalanced (Linear rate)']"
             placeholder="Select Model"
             v-model="service.pricingModel"
           />
@@ -65,12 +68,27 @@
           </v-col>
         </row>
       </div>
-      <div v-if="service.pricingModel === 'Normal'">
+      <div v-if="service.pricingModel === 'Flat rate'">
         <row label="Rate">
-          <rating-plan-input v-model="service.rate" />
+          <rating-plan-input v-model="service.rate" disable-thresholds="true" disable-linear="true"/>
         </row>
       </div>
-      <div v-if="service.pricingModel === 'Balanced/Unbalanced'">
+      <div v-if="service.pricingModel === 'Linear rate'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.rate" disable-thresholds="true" disable-fixed="true"/>
+        </row>
+      </div>
+      <div v-if="service.pricingModel === 'Threshold - back to first'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.rate"/>
+        </row>
+      </div>
+      <div v-if="service.pricingModel === 'Tiered with Thresholds'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.rate"/>
+        </row>
+      </div>
+      <div v-if="service.pricingModel === 'Balanced/Unbalanced (Linear rate)'">
         <row label="Balanced Rate">
           <rating-plan-input
             v-model="service.balancedRate"
@@ -86,16 +104,16 @@
           />
         </row>
       </div>
-      <row label="Access Pricing Model">
+      <row v-if="serviceConfiguration[service.name] && serviceConfiguration[service.name].access" label="Access Pricing Model">
         <v-col>
           <v-select
-            :items="['Not Charged', 'Normal']"
+            :items="['Not Charged', 'Threshold - back to first', 'Tiered with Thresholds']"
             placeholder="Select Model"
             v-model="service.accessPricingModel"
           />
         </v-col>
       </row>
-      <div v-if="service.accessPricingModel !== 'Not Charged'">
+      <div v-if="service.accessPricingModel && service.accessPricingModel !== 'Not Charged'">
         <row label="Unit">
           <v-col>
             <v-text-field
@@ -105,9 +123,14 @@
           </v-col>
         </row>
       </div>
-      <div v-if="service.accessPricingModel === 'Normal'">
+      <div v-if="service.accessPricingModel === 'Threshold - back to first'">
         <row label="Rate">
-          <rating-plan-input v-model="service.accessPricingRate" />
+          <rating-plan-input v-model="service.accessPricingRate"/>
+        </row>
+      </div>
+      <div v-if="service.accessPricingModel === 'Tiered with Thresholds'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.accessPricingRate"/>
         </row>
       </div>
     </fragment>
@@ -117,6 +140,7 @@
 import {mapState} from 'vuex';
 import {duplicateMixin} from '../../../../utils/mixins/component-specfic';
 import RatingPlanInput from './discount-form-components/RatingPlanInput';
+import Vue from 'vue';
 
 export default {
   name: 'service-group-form',
@@ -139,9 +163,12 @@ export default {
           balancedRate: null,
           unbalancedRate: null,
           pricingModel: 'Normal',
-          accessPricingModel: 'Not Charged',
+          accessPricingModel: null,
           accessPricingUnit: null,
           accessPricingRate: null,
+          prevDefaultUnit: null,
+          prevDefaultAccessUnit: null,
+          includedInCommitment: true,
         },
       ],
     };
@@ -149,6 +176,33 @@ export default {
   watch: {
     chosenServices: {
       handler() {
+        // Set default units if missing
+        for ( const s of this.chosenServices ) {
+          if ( this.serviceConfiguration[s.name] ) {
+            if ( this.serviceConfiguration[s.name].unit &&
+                s.unit !== this.serviceConfiguration[s.name].unit &&
+                ( s.unit === '' || s.unit === undefined || s.unit === null || s.unit === s.prevDefaultUnit ) ) {
+              Vue.nextTick(() => {
+                s.unit = this.serviceConfiguration[s.name].unit;
+                this.$forceUpdate();
+              });
+            }
+            s.prevDefaultUnit = this.serviceConfiguration[s.name].unit;
+          }
+
+          if ( this.serviceConfiguration[s.name] && this.serviceConfiguration[s.name].access ) {
+            if ( this.serviceConfiguration[s.name].accessUnit &&
+                s.accessPricingUnit !== this.serviceConfiguration[s.name].accessUnit &&
+                ( s.accessPricingUnit === '' || s.accessPricingUnit === undefined || s.accessPricingUnit === null || s.accessPricingUnit === s.prevDefaultAccessUnit ) ) {
+              Vue.nextTick(() => {
+                s.accessPricingUnit = this.serviceConfiguration[s.name].accessUnit;
+                this.$forceUpdate();
+              });
+            }
+            s.prevDefaultAccessUnit = this.serviceConfiguration[s.name].accessUnit;
+          }
+        }
+
         this.$emit('input', this.$data);
       },
       deep: true,
@@ -177,6 +231,7 @@ export default {
       this.chosenServices.push({
         id: `service-${this.chosenServices.length}`,
         name: null,
+        includedInCommitment: true,
       });
     },
     removeService(index) {
@@ -184,7 +239,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['services']),
+    ...mapState(['services', 'serviceConfiguration']),
     isDisabled() {
       return this.chosenServices.length === 1;
     },
@@ -210,6 +265,7 @@ export default {
           accessPricingModel: 'Not Charged',
           accessPricingUnit: null,
           accessPricingRate: null,
+          includedInCommitment: true,
         },
       ];
     }

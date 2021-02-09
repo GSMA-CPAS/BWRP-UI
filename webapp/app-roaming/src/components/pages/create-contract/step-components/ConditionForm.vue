@@ -1,6 +1,6 @@
 <template>
   <v-col>
-      <condition-picker v-model="condition" />
+      <condition-picker v-model="condition" :default-currency="defaultCurrency"/>
   </v-col>
 </template>
 <script>
@@ -11,7 +11,7 @@ export default {
   components: {
     ConditionPicker,
   },
-  props: ['value'],
+  props: ['value', 'defaultCurrency'],
   data() {
     return {
       condition: null,

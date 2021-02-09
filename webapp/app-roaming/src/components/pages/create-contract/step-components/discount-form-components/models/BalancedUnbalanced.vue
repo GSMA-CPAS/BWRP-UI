@@ -4,7 +4,7 @@
       <disabled-condition :placeholder="index | startCase" />
       <disabled-threshold />
       <v-col>
-        <v-text-field label="Rate" v-model="condition.rate" placeholder="0" />
+        <v-currency-field label="Rate" v-model="condition.rate" placeholder="0" />
       </v-col>
       <revenue-commitment-checkbox v-model="condition.revenueCommitment" />
     </v-row>
