@@ -10,14 +10,20 @@
     "TMUS": {
       "currencyForAllDiscounts": "USD",
       "tadigCodes": {
-        "codes": "xyz",
+        "codes": [
+          "ALBVF",
+          "AAZTD"
+        ],
         "includeContractParty": false
       }
     },
     "DTAG": {
       "currencyForAllDiscounts": "EUR",
       "tadigCodes": {
-        "codes": "abc",
+        "codes": [
+          "AUSVF",
+          "ALBVF"
+        ],
         "includeContractParty": false
       }
     }
@@ -38,10 +44,12 @@
       "serviceGroups": [
         {
           "homeTadigs": [
-            "xyz"
+            "xyz",
+            "ALBVF"
           ],
           "visitorTadigs": [
-            "abc"
+            "abc",
+            "AUSVF"
           ],
           "chosenServices": [
             {
@@ -55,13 +63,14 @@
                   "linearPrice": "2"
                 }
               ],
-              "unit": "",
+              "unit": "Min",
               "balancedRate": null,
               "unbalancedRate": null,
-              "pricingModel": "Normal",
+              "pricingModel": "Flat rate",
               "accessPricingModel": "Not Charged",
               "accessPricingUnit": null,
-              "accessPricingRate": null
+              "accessPricingRate": null,
+              "prevDefaultUnit": "Min"
             }
           ]
         }
@@ -84,10 +93,12 @@
       "serviceGroups": [
         {
           "homeTadigs": [
-            "abc"
+            "abc",
+            "AUSVF"
           ],
           "visitorTadigs": [
-            "xyz"
+            "xyz",
+            "AAZTD"
           ],
           "chosenServices": [
             {
@@ -101,13 +112,14 @@
                   "linearPrice": "2"
                 }
               ],
-              "unit": "",
+              "unit": "Min",
               "balancedRate": null,
               "unbalancedRate": null,
-              "pricingModel": "Normal",
+              "pricingModel": "Flat rate",
               "accessPricingModel": "Not Charged",
               "accessPricingUnit": null,
-              "accessPricingRate": null
+              "accessPricingRate": null,
+              "prevDefaultUnit": "Min"
             }
           ]
         }
