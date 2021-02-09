@@ -38,3 +38,15 @@ a {
 a:hover {
   filter: brightness(175%);
 }
+
+.col.striped-column-container {
+  padding: 0px;
+}
+
+.col.striped-column:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+.col.striped-column:nth-child(even) {
+
+}

@@ -9,29 +9,29 @@
       />
       <v-divider />
       <row cols="2" label="TADIGs">
-        <v-col>
+        <v-col class="striped-column-container">
           <v-row>
-            <v-col><b>Home</b></v-col>
-            <v-col>{{ serviceGroup.homeTadigs && serviceGroup.homeTadigs.length > 0 ? serviceGroup.homeTadigs.join(', ') : 'Default' }}</v-col>
-            <v-col></v-col>
-            <v-col></v-col>
-            <v-col></v-col>
-            <v-col></v-col>
+            <v-col class="striped-column"><b>Home</b></v-col>
+            <v-col class="striped-column">{{ serviceGroup.homeTadigs && serviceGroup.homeTadigs.length > 0 ? serviceGroup.homeTadigs.join(', ') : 'Default' }}</v-col>
+            <v-col class="striped-column"></v-col>
+            <v-col class="striped-column"></v-col>
+            <v-col class="striped-column"></v-col>
+            <v-col class="striped-column"></v-col>
           </v-row>
           <v-row>
-            <v-col><b>Visitor</b></v-col>
-            <v-col>{{ serviceGroup.visitorTadigs && serviceGroup.visitorTadigs.length > 0 ? serviceGroup.visitorTadigs.join(', ') : 'Default' }}</v-col>
-            <v-col></v-col>
-            <v-col></v-col>
-            <v-col></v-col>
-            <v-col></v-col>
+            <v-col class="striped-column"><b>Visitor</b></v-col>
+            <v-col class="striped-column">{{ serviceGroup.visitorTadigs && serviceGroup.visitorTadigs.length > 0 ? serviceGroup.visitorTadigs.join(', ') : 'Default' }}</v-col>
+            <v-col class="striped-column"></v-col>
+            <v-col class="striped-column"></v-col>
+            <v-col class="striped-column"></v-col>
+            <v-col class="striped-column"></v-col>
           </v-row>
         </v-col>
       </row>
       <v-divider />
       <fragment v-for="(service, index) in serviceGroup.services" :key="`party-${partyId}-sg-${sgIndex}-row-${index}`">
         <row cols="2" :label="service.service">
-          <v-col>
+          <v-col class="striped-column-container">
             <template v-if="service.usagePricing">
               <v-row>
                 <simple-model-template v-if="service.usagePricing.ratingPlan.kind === 'Linear rate'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
