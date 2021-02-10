@@ -51,16 +51,21 @@
             <td class="text-end">
               <dialog-popup
                 title="Add Codes"
-                @on-open="loadGroupCodes(item.id)"
+                @on-open="
+                  loadGroupCodes(item.id);
+                  codesToBeAdded = null;
+                "
                 :disabled="codesToBeAdded === null"
                 @on-confirm="onCodesAdded(item.id)"
                 :icon="icons.add"
               >
                 <template #content>
-                  <v-select
+                  <v-combobox
+                    @change="removeSearchTerm"
                     multiple
                     label="All Available Codes"
                     :items="allCodesMinusGroupCodes"
+                    :search-input.sync="groupCodeSearchTerm"
                     item-value="id"
                     item-text="code"
                     v-model="codesToBeAdded"
@@ -69,17 +74,22 @@
               </dialog-popup>
               <dialog-popup
                 title="Remove Codes"
-                @on-open="loadGroupCodes(item.id)"
+                @on-open="
+                  loadGroupCodes(item.id);
+                  codesToBeRemoved = null;
+                "
                 :disabled="codesToBeRemoved === null"
                 @on-confirm="onCodesRemoval(item.id)"
                 :icon="icons.minus"
                 margin="mr-4"
               >
                 <template #content>
-                  <v-select
+                  <v-combobox
+                    @change="removeSearchTerm"
                     multiple
                     label="Codes of Group"
                     :items="groupCodes"
+                    :search-input.sync="groupCodeRemovalSearchTerm"
                     item-value="tadig_code_id"
                     item-text="code"
                     v-model="codesToBeRemoved"
@@ -131,21 +141,32 @@ export default {
     codesToBeAdded: null,
     codesToBeRemoved: null,
     search: '',
+    groupCodeSearchTerm: null,
+    groupCodeRemovalSearchTerm: null,
   }),
   components: {DialogPopup},
   props: {},
   watch: {},
   methods: {
+    removeSearchTerm(e) {
+      this.groupCodeSearchTerm = null;
+      this.groupCodeRemovalSearchTerm = null;
+    },
     onAddGroup() {
       this.addGroup(this.group);
       this.group = null;
     },
     onCodesAdded(groupid) {
-      this.addCodes({id: groupid, codes: this.codesToBeAdded});
+      const codes = this.codesToBeAdded.map(({id}) => id);
+      this.addCodes({id: groupid, codes});
       this.codesToBeAdded = null;
     },
     onCodesRemoval(groupid) {
-      this.removeCodes({id: groupid, codes: this.codesToBeRemoved});
+      const codes = this.codesToBeRemoved.map(
+        // eslint-disable-next-line camelcase
+        ({tadig_code_id}) => tadig_code_id,
+      );
+      this.removeCodes({id: groupid, codes});
       this.codesToBeRemoved = null;
     },
     ...mapActions('workspace-config/tadig-groups', [
