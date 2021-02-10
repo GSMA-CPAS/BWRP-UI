@@ -4,24 +4,12 @@
     <b>TADIGs</b>
     <row label="Home TADIGs">
       <v-col>
-        <v-autocomplete
-          v-model="homeTadigs"
-          multiple
-          :items="$props.homeTadigOptions || []"
-          label="TADIGs"
-          placeholder="All (Default)"
-        />
+        <tadig-codes v-model="homeTadigs"/>
       </v-col>
     </row>
     <row label="Visitor TADIGs">
       <v-col>
-        <v-autocomplete
-          v-model="visitorTadigs"
-          multiple
-          :items="$props.visitorTadigOptions || []"
-          label="TADIGs"
-          placeholder="All (Default)"
-        />
+        <tadig-codes v-model="visitorTadigs"/>
       </v-col>
     </row>
     <br />
@@ -141,6 +129,7 @@ import {mapState} from 'vuex';
 import {duplicateMixin} from '../../../../utils/mixins/component-specfic';
 import RatingPlanInput from './discount-form-components/RatingPlanInput';
 import Vue from 'vue';
+import TadigCodes from '@/components/pages/create-contract/step-components/general-information/TadigCodes';
 
 export default {
   name: 'service-group-form',
@@ -149,11 +138,12 @@ export default {
   props: ['homeTadigOptions', 'visitorTadigOptions', 'value'],
   components: {
     RatingPlanInput,
+    TadigCodes
   },
   data() {
     return {
-      homeTadigs: [],
-      visitorTadigs: [],
+      homeTadigs: {codes: []},
+      visitorTadigs: {codes: []},
       chosenServices: [
         {
           id: 'service-0',

@@ -103,8 +103,8 @@ function convertUiServiceToJsonModel(uiService) {
 
 function convertUiServiceGroupToJsonModel(uiServiceGroup) {
   return {
-    homeTadigs: uiServiceGroup.homeTadigs,
-    visitorTadigs: uiServiceGroup.visitorTadigs,
+    homeTadigs: uiServiceGroup.homeTadigs.codes,
+    visitorTadigs: uiServiceGroup.visitorTadigs.codes,
     services: uiServiceGroup.chosenServices.map(convertUiServiceToJsonModel),
   };
 }

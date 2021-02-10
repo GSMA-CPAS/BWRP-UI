@@ -62,8 +62,8 @@ const defaultDiscountModelsState = () => ({
   serviceGroups: [
     {
       id: 'service-group-0',
-      homeTadigs: [],
-      visitorTadigs: [],
+      homeTadigs: {codes: []},
+      visitorTadigs: {codes: []},
       chosenServices: [
         {
           id: 'service-0',
