@@ -136,12 +136,8 @@ class CommonService extends AbstractService {
         const document = await this.getBackendAdapter('common').getRawContractById(contractId);
         const signature = cryptoUtils.createSignature(privateKey, document.data);
         const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
-        await this.getBackendAdapter('common').signContract(contractId, '', this.mspid, certificate, signatureAlgo, signature);
-        return res.json({
-          signature: signature,
-          algorithm: signatureAlgo,
-          certificate: certificate,
-        });
+        const response = await this.getBackendAdapter('common').signContract(contractId, certificate, signatureAlgo, signature);
+        return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_SIGNATURE,
@@ -151,29 +147,19 @@ class CommonService extends AbstractService {
     });
 
     /**
-     *  curl -X PUT http://{host}:{port}/api/v1/common/signatures/{contractId}/{signatureId}
+     *  curl -X GET http://{host}:{port}/api/v1/common/signatures/{contractId}/{signatureId}
      */
-    this.getRouter().put('/signatures/:contractId/:signatureId', ensureAuthenticated, async (req, res) => {
+    this.getRouter().get('/signatures/:contractId/:signatureId', ensureAuthenticated, async (req, res) => {
       const contractId = req.params.contractId;
       const signatureId = req.params.signatureId;
       try {
-        const identity = await this.getBackendAdapter('wallet').getIdentity(req.user.enrollmentId);
-        const privateKey = identity.credentials.privateKey;
-        const certificate = identity.credentials.certificate;
-        const document = await this.getBackendAdapter('common').getRawContractById(contractId);
-        const signature = cryptoUtils.createSignature(privateKey, document.data);
-        const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
-        await this.getBackendAdapter('common').signContract(contractId, signatureId, this.mspid, certificate, signatureAlgo, signature);
-        return res.json({
-          signature: signature,
-          algorithm: signatureAlgo,
-          certificate: certificate,
-        });
+        const response = await this.getBackendAdapter('common').getSignaturesById(contractId, signatureId);
+        return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to store signature',
-        })), 'PUT /:contractId/:signatureId');
+          message: 'Failed to get signature',
+        })), 'GET /:contractId/:signatureId');
       }
     });
 
