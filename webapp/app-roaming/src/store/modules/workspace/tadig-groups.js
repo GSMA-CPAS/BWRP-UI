@@ -93,21 +93,21 @@ const tadigGroupsModule = {
         })
         .catch((e) => {});
     },
-    async editGroup({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
+    async editGroup(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      {id, groupName},
+    ) {
       // TODO:
       await Vue.axios.local
-        .get('/tadig/groups', {withCredentials})
-        .then((groups) => {
-          commit('UPDATE_GROUPS', groups.data);
+        .put(`/tadig/groups/${id}`, {name: groupName}, {withCredentials})
+        .then(({success}) => {
+          if (success) {
+            dispatch('loadGroups');
+          }
         })
-        .catch((e) => {});
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
 

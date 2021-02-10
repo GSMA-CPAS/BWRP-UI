@@ -5,11 +5,11 @@
       <v-col align-self="center" class="text-end pr-0">
         <app-dialog label="Add Group" title="New Group">
           <template #content>
-            <v-text-field v-model="group" label="New Group"></v-text-field>
+            <v-text-field v-model="groupName" label="New Group" />
           </template>
           <template #actions="{cancel}">
             <app-button
-              :disabled="group === null"
+              :disabled="groupName === null"
               @button-pressed="
                 onAddGroup();
                 cancel();
@@ -97,6 +97,18 @@
                 </template>
               </dialog-popup>
               <dialog-popup
+                title="Edit Group"
+                @on-confirm="
+                  editGroup({id: item.id, groupName});
+                  groupName = null;
+                "
+                :icon="icons.edit"
+              >
+                <template #content>
+                  <v-text-field v-model="groupName" label="New name" />
+                </template>
+              </dialog-popup>
+              <dialog-popup
                 title="Delete Group"
                 @on-confirm="deleteGroup(item.id)"
                 :icon="icons.remove"
@@ -137,7 +149,7 @@ export default {
   description: 'Groups',
   mixins: [duplicateMixin],
   data: () => ({
-    group: null,
+    groupName: null,
     codesToBeAdded: null,
     codesToBeRemoved: null,
     search: '',
@@ -153,8 +165,8 @@ export default {
       this.groupCodeRemovalSearchTerm = null;
     },
     onAddGroup() {
-      this.addGroup(this.group);
-      this.group = null;
+      this.addGroup(this.groupName);
+      this.groupName = null;
     },
     onCodesAdded(groupid) {
       const codes = this.codesToBeAdded.map(({id}) => id);
@@ -172,6 +184,7 @@ export default {
     ...mapActions('workspace-config/tadig-groups', [
       'loadGroups',
       'addGroup',
+      'editGroup',
       'deleteGroup',
       'addCodes',
       'loadGroupCodes',

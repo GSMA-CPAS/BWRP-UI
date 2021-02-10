@@ -41,7 +41,7 @@
                 mcc_mnc === null
               "
               @button-pressed="
-                onConfirm();
+                onAdd();
                 cancel();
               "
               label="Confirm"
@@ -62,6 +62,39 @@
       </v-card-title>
       <v-data-table :search="search" :items="codes" :headers="headers">
         <template v-slot:[`item.actions`]="{item}">
+          <dialog-popup
+            title="Edit Group"
+            @on-open="setItem(item)"
+            @on-confirm="onEdit(item.id)"
+            :icon="icons.edit"
+          >
+            <template #content>
+              <v-row>
+                <v-col>
+                  <v-text-field v-model="code" label="New Code" />
+                </v-col>
+                <v-col>
+                  <v-text-field v-model="operator" label="Operator" />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field v-model="country" label="Country" />
+                </v-col>
+                <v-col>
+                  <v-text-field v-model="region" label="Region" />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field v-model="op_group" label="Group" />
+                </v-col>
+                <v-col>
+                  <v-text-field v-model="mcc_mnc" label="MCC/MNC" />
+                </v-col>
+              </v-row>
+            </template>
+          </dialog-popup>
           <dialog-popup
             title="Delete Group"
             @on-confirm="deleteCode(item.id)"
@@ -97,7 +130,7 @@ export default {
   props: {},
   watch: {},
   methods: {
-    async onConfirm() {
+    async onAdd() {
       await this.addCode({
         code: this.code,
         operator: this.operator,
@@ -113,9 +146,41 @@ export default {
       this.op_group = null;
       this.mcc_mnc = null;
     },
+    setItem(item) {
+      // eslint-disable-next-line camelcase
+      const {code, operator, country, region, op_group, mcc_mnc} = item;
+      this.code = code;
+      this.operator = operator;
+      this.country = country;
+      this.region = region;
+      // eslint-disable-next-line camelcase
+      this.op_group = op_group;
+      // eslint-disable-next-line camelcase
+      this.mcc_mnc = mcc_mnc;
+    },
+    async onEdit(id) {
+      await this.editCode({
+        id,
+        data: {
+          code: this.code,
+          operator: this.operator,
+          country: this.country,
+          region: this.region,
+          op_group: this.op_group,
+          mcc_mnc: this.mcc_mnc,
+        },
+      });
+      this.code = null;
+      this.operator = null;
+      this.country = null;
+      this.region = null;
+      this.op_group = null;
+      this.mcc_mnc = null;
+    },
     ...mapActions('workspace-config/tadig-codes', [
       'loadCodes',
       'addCode',
+      'editCode',
       'deleteCode',
     ]),
   },

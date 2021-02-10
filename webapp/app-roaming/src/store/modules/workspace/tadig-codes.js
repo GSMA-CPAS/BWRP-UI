@@ -39,6 +39,22 @@ const tadigCodesModule = {
         })
         .catch((e) => {});
     },
+    async editCode(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      {id, data},
+    ) {
+      // TODO:
+      await Vue.axios.local
+        .put(`/tadig/codes/${id}`, data, {withCredentials})
+        .then(({success}) => {
+          if (success) {
+            dispatch('loadCodes');
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     async deleteCode(
       {commit, dispatch, rootGetters, getters, rootState, state},
       id,
