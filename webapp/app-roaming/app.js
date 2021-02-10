@@ -6,7 +6,7 @@ const path = require('path');
 const csv = require('fast-csv');
 
 exports.init = async (app, router, database, logger, config) => {
-  // curl -X GET http://localhost:3000/api/app-roaming/tadig/codes
+  // curl -X GET /api/app-roaming/tadig/codes
   router.get('/tadig/codes', async (req, res) => {
     try {
       const result = await database.query(
@@ -25,7 +25,7 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  //  curl -X POST http://localhost:3000/api/app-roaming/tadig/codes -d '{"code":"AEE"}' -H "Content-Type: application/json"
+  // curl -X POST /api/app-roaming/tadig/codes -d '{"code":"myCode","operator":"myOperator","country":"myCountry","region":"myRegion","op_group":"myGroup","mcc_mnc":"myMCCMNC"}' -H "Content-Type: application/json"
   router.post('/tadig/codes', async (req, res) => {
     const {code, operator, country, region, op_group, mcc_mnc} = req.body;
     try {
@@ -46,7 +46,26 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  //  curl -X DELETE http://localhost:3000/api/app-roaming/tadig/codes/1
+  // curl -X PUT /api/app-roaming/tadig/codes/1 -d '{"code":"myCode","operator":"myOperator","country":"myCountry","region":"myRegion","op_group":"myGroup","mcc_mnc":"myMCCMNC"}' -H "Content-Type: application/json"
+  router.put('/tadig/codes/:id', async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    try {
+      await database.query('UPDATE tadig_codes SET ? WHERE id=?', [data, id]);
+      res.json({success: true});
+    } catch (error) {
+      logger.error(
+          '[app-roaming::PUT/tadig/codes/:id] failed to update tadig code - %s',
+          error.message,
+      );
+      res.status(500).json({
+        status: 500,
+        code: 'ERR_INTERNAL_SERVER_ERROR',
+        message: 'Internal Server Error',
+      });
+    }
+  });
+  // curl -X DELETE /api/app-roaming/tadig/codes/1
   router.delete('/tadig/codes/:id', async (req, res) => {
     const id = req.params.id;
     try {
@@ -64,7 +83,7 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  // curl -X GET http://localhost:3000/api/app-roaming/tadig/groups
+  // curl -X GET /api/app-roaming/tadig/groups
   router.get('/tadig/groups', async (req, res) => {
     try {
       const result = await database.query(
@@ -83,7 +102,7 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  // curl -X GET http://localhost:3000/api/app-roaming/tadig/groups/1
+  // curl -X GET /api/app-roaming/tadig/groups/1
   router.get('/tadig/groups/:id', async (req, res) => {
     const tadigGroupId = req.params.id;
     try {
@@ -104,7 +123,7 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  //  curl -X POST http://localhost:3000/api/app-roaming/tadig/groups -d '{"name":"Europe"}' -H "Content-Type: application/json"
+  //  curl -X POST /api/app-roaming/tadig/groups -d '{"name":"Europe"}' -H "Content-Type: application/json"
   router.post('/tadig/groups', async (req, res) => {
     try {
       await database.query('INSERT INTO tadig_groups SET name=?', [
@@ -123,7 +142,26 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  //  curl -X POST http://localhost:3000/api/app-roaming/tadig/groups/1/codes -d '[1,2]' -H "Content-Type: application/json"
+  // curl -X PUT /api/app-roaming/tadig/groups/1 -d '{"name":"myName"}' -H "Content-Type: application/json"
+  router.put('/tadig/groups/:id', async (req, res) => {
+    const id = req.params.id;
+    const name = req.body.name;
+    try {
+      await database.query('UPDATE tadig_groups SET name=? WHERE id=?', [name, id]);
+      res.json({success: true});
+    } catch (error) {
+      logger.error(
+          '[app-roaming::PUT/tadig/groups/:id] failed to update tadig group - %s',
+          error.message,
+      );
+      res.status(500).json({
+        status: 500,
+        code: 'ERR_INTERNAL_SERVER_ERROR',
+        message: 'Internal Server Error',
+      });
+    }
+  });
+  // curl -X POST /api/app-roaming/tadig/groups/1/codes -d '[1,2]' -H "Content-Type: application/json"
   router.post('/tadig/groups/:id/codes', async (req, res) => {
     const tadigGroupId = req.params.id;
     const tadigCodeIds = req.body;
@@ -149,7 +187,7 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  //  curl -X DELETE http://localhost:3000/api/app-roaming/tadig/groups/1/codes -d '[3,4]' -H "Content-Type: application/json"
+  //  curl -X DELETE /api/app-roaming/tadig/groups/1/codes -d '[3,4]' -H "Content-Type: application/json"
   router.delete('/tadig/groups/:id/codes', async (req, res) => {
     const tadigGroupId = req.params.id;
     const tadigCodeIds = req.body;
@@ -175,7 +213,7 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  //  curl -X DELETE http://localhost:3000/api/app-roaming/tadig/groups/1
+  //  curl -X DELETE /api/app-roaming/tadig/groups/1
   router.delete('/tadig/groups/:id', async (req, res) => {
     const id = req.params.id;
     try {
