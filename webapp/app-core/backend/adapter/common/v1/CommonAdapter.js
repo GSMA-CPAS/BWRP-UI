@@ -21,6 +21,21 @@ class CommonAdapter extends AbstractAdapter {
     return 'Unknown';
   }
 
+  getTadigCodes(body) {
+    const tadigCodes = [];
+    for (const [key] of Object.entries(body.framework.partyInformation)) {
+      const defaultTadigCodes = body.framework.partyInformation[key].defaultTadigCodes;
+      if (defaultTadigCodes) {
+        for (const code of defaultTadigCodes) {
+          if (!tadigCodes.includes(code)) {
+            tadigCodes.push(code);
+          }
+        }
+      }
+    }
+    return tadigCodes;
+  }
+
   // TODO: support for query parameter to search for contracts.
   async getContracts(query) {
     try {
@@ -40,6 +55,7 @@ class CommonAdapter extends AbstractAdapter {
             authors: item.body.metadata.authors,
             type: item.header.type,
             name: item.body.metadata.name,
+            tadigCodes: this.getTadigCodes(item.body),
             version: item.header.version});
         }
       }
