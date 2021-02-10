@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 /* eslint-disable no-unused-vars */
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -16,16 +17,16 @@ const SERVICE_CONFIGURATION = {
   'MOC Satellite': {unit: 'Min', access: false},
   'MOC Video Telephony': {unit: 'Min', access: false},
   'MOC Special Destinations': {unit: 'Min', access: false},
-  'MTC': {unit: 'Min', access: false},
-  'SMSMO': {unit: 'SMS', access: false},
-  'SMSMT': {unit: 'SMS', access: false},
-  'M2M': {unit: 'MB', access: true, accessUnit: 'IMSI'},
+  MTC: {unit: 'Min', access: false},
+  SMSMO: {unit: 'SMS', access: false},
+  SMSMT: {unit: 'SMS', access: false},
+  M2M: {unit: 'MB', access: true, accessUnit: 'IMSI'},
   'NB-IoT': {unit: 'MB', access: true, accessUnit: 'IMSI'},
   'LTE-M': {unit: 'MB', access: true, accessUnit: 'IMSI'},
-  'VoLTE': {unit: 'MB', access: false},
-  'ViLTE': {unit: 'MB', access: false},
+  VoLTE: {unit: 'MB', access: false},
+  ViLTE: {unit: 'MB', access: false},
   'IMS Signalling': {unit: 'MB', access: false},
-  'GPRS': {unit: 'MB', access: false},
+  GPRS: {unit: 'MB', access: false},
   'Network Access': {unit: 'IMSI', access: false},
 };
 
@@ -55,6 +56,7 @@ const SERVICE_ORDER = [
 
 export default new Vuex.Store({
   state: {
+    documents: [],
     serviceConfiguration: SERVICE_CONFIGURATION,
     services: SERVICE_ORDER,
   },
