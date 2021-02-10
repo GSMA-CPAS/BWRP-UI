@@ -1,6 +1,6 @@
 
 <template>
-    <v-data-table :items="documents" :headers="headers" :search="search">
+  <v-data-table :items="documents" :headers="headers" :search="search">
     <template v-slot:top>
       <v-row class="mb-2">
         <!-- <v-col>
@@ -10,7 +10,7 @@
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
-            label="Search for document"
+            label="Search for contract"
             single-line
             hide-details
           />

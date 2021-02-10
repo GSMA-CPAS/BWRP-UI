@@ -1,17 +1,20 @@
 {
   "generalInformation": {
-    "name": "test",
-    "type": "Normal",
-    "startDate": "2021-01-01T00:00:00.000Z",
-    "endDate": "2021-12-01T00:00:00.000Z",
+    "name": "1234Hi",
+    "type": null,
+    "startDate": "2021-02-10T00:00:00.000Z",
+    "endDate": "2021-04-07T00:00:00.000Z",
     "prolongationLength": null,
-    "taxesIncluded": false,
-    "authors": "paul",
+    "taxesIncluded": true,
+    "authors": "Author",
     "TMUS": {
       "currencyForAllDiscounts": "USD",
       "tadigCodes": {
         "codes": [
-          "ALBVF",
+          "CZECM",
+          "CODVC",
+          "AUTMM",
+          "CZERM",
           "AAZTD"
         ],
         "includeContractParty": false
@@ -21,8 +24,8 @@
       "currencyForAllDiscounts": "EUR",
       "tadigCodes": {
         "codes": [
-          "AUSVF",
-          "ALBVF"
+          "AAZVF",
+          "AAZTD"
         ],
         "includeContractParty": false
       }
@@ -32,25 +35,36 @@
     "signatures": [
       {
         "id": "signature-0",
-        "name": "bob",
-        "role": "law"
+        "name": "3",
+        "role": "4"
       }
     ],
     "discountModels": {
       "condition": {
-        "selectedConditionName": "Unconditional",
-        "selectedCondition": null
+        "selectedConditionName": "Deal Revenue Commitment",
+        "selectedCondition": {
+          "includingTaxes": false,
+          "commitmentValue": 1254,
+          "currency": "USD"
+        }
       },
       "serviceGroups": [
         {
-          "homeTadigs": [
-            "xyz",
-            "ALBVF"
-          ],
-          "visitorTadigs": [
-            "abc",
-            "AUSVF"
-          ],
+          "homeTadigs": {
+            "codes": [
+              "CZECM",
+              "CODVC",
+              "AUTMM",
+              "CZERM",
+              "AAZTD"
+            ]
+          },
+          "visitorTadigs": {
+            "codes": [
+              "AAZVF",
+              "AAZTD"
+            ]
+          },
           "chosenServices": [
             {
               "id": "service-0",
@@ -59,14 +73,13 @@
                 {
                   "id": "tier-0",
                   "threshold": 0,
-                  "fixedPrice": "1",
-                  "linearPrice": "2"
+                  "fixedPrice": 10
                 }
               ],
               "unit": "Min",
               "balancedRate": null,
               "unbalancedRate": null,
-              "pricingModel": "Flat rate",
+              "pricingModel": "Threshold - back to first",
               "accessPricingModel": "Not Charged",
               "accessPricingUnit": null,
               "accessPricingRate": null,
@@ -81,37 +94,38 @@
     "signatures": [
       {
         "id": "signature-0",
-        "name": "hans",
-        "role": "law"
+        "name": "1",
+        "role": "2"
       }
     ],
     "discountModels": {
       "condition": {
-        "selectedConditionName": "Unconditional",
-        "selectedCondition": null
+        "selectedConditionName": "Contract Revenue Commitment",
+        "selectedCondition": {
+          "includingTaxes": false,
+          "commitmentValue": 211233,
+          "currency": "EUR"
+        }
       },
       "serviceGroups": [
         {
-          "homeTadigs": [
-            "abc",
-            "AUSVF"
-          ],
-          "visitorTadigs": [
-            "xyz",
-            "AAZTD"
-          ],
+          "homeTadigs": {
+            "codes": [
+              "AAZVF",
+              "AAZTD"
+            ]
+          },
+          "visitorTadigs": {
+            "codes": [
+              "AAZOR",
+              "AAZVF"
+            ]
+          },
           "chosenServices": [
             {
               "id": "service-0",
-              "name": "MOC Back Home",
-              "rate": [
-                {
-                  "id": "tier-0",
-                  "threshold": 0,
-                  "fixedPrice": "1",
-                  "linearPrice": "2"
-                }
-              ],
+              "name": "MOC Local",
+              "rate": null,
               "unit": "Min",
               "balancedRate": null,
               "unbalancedRate": null,
