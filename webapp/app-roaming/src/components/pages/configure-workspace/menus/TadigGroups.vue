@@ -98,6 +98,7 @@
               </dialog-popup>
               <dialog-popup
                 title="Edit Group"
+                @on-open="groupName = item.name"
                 @on-confirm="
                   editGroup({id: item.id, groupName});
                   groupName = null;

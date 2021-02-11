@@ -1,11 +1,8 @@
 
 <template>
-  <v-data-table :items="documents" :headers="headers" :search="search">
+  <v-data-table :items="filteredItems" :headers="headers" :search="search">
     <template v-slot:top>
       <v-row class="mb-2">
-        <!-- <v-col>
-          <filters :onClear="clearFilters"> </filters>
-        </v-col> -->
         <v-col cols="6">
           <v-text-field
             v-model="search"
@@ -13,6 +10,13 @@
             label="Search for contract"
             single-line
             hide-details
+          />
+        </v-col>
+        <v-col>
+          <filters
+            :documents="documents"
+            @on-select="applyFilters"
+            @on-remove="removeFilter"
           />
         </v-col>
       </v-row>
@@ -34,9 +38,9 @@
         <td>{{ item.partnerMsp }}</td>
         <td>{{ item.name }}</td>
         <td>{{ item.authors }}</td>
-        <td>{{ item.lastModification }}</td>
-        <td>{{ item.startDate }}</td>
-        <td>{{ item.endDate }}</td>
+        <td>{{ item.lastModification | parseDate }}</td>
+        <td>{{ item.startDate | parseDate }}</td>
+        <td>{{ item.endDate | parseDate }}</td>
         <td>{{ item.state }}</td>
         <!-- <td @click.stop>
           <v-menu offset-y>
@@ -75,23 +79,33 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-// import Filters from '@/components/other/Filters.vue';
+import Filters from '@/components/other/Filters.vue';
 export default {
   name: 'contracts-table',
   description: 'In this table, the documents are displayed.',
   data() {
     return {
       search: '',
+      filters: [],
     };
   },
   components: {
-    // Filters,
+    Filters,
   },
   methods: {
-    clearFilters() {
-      this.selectFilters.forEach((filter) => {
-        filter.value = [];
-      });
+    applyFilters(f) {
+      const filter = this.filters.find(({type}) => type === f.type);
+
+      if (filter) {
+        filter.data = f.data;
+      } else {
+        this.filters.push(f);
+      }
+    },
+    removeFilter(filterToBeRemoved) {
+      this.filters = this.filters.filter(
+        ({type}) => type !== filterToBeRemoved,
+      );
     },
     to(cid) {
       this.$router.push(`/contract-timeline/${cid}`);
@@ -114,8 +128,8 @@ export default {
       return [
         {text: 'Reference ID', value: 'referenceId'},
         {text: 'Partner', value: 'partnerMsp'},
-        {text: 'Name', value: 'contractName'},
-        {text: 'Author', value: 'author'},
+        {text: 'Name', value: 'name'},
+        {text: 'Author', value: 'authors'},
         {text: 'Last Modification', value: 'lastModification'},
         {text: 'Start Date', value: 'startDate'},
         {text: 'End Date', value: 'endDate'},
@@ -139,6 +153,22 @@ export default {
           action: this.onDelete,
         },
       ];
+    },
+    filteredItems() {
+      return this.documents.filter((document) => {
+        return this.filters.length === 0
+          ? true
+          : this.filters.reduce((result, filter) => {
+              switch (filter.type) {
+                case 'tadig-select':
+                  return filter.data.every((tadig) =>
+                    document.tadigCodes.includes(tadig),
+                  );
+                default:
+                  return result;
+              }
+            }, true);
+      });
     },
     ...mapState(['documents']),
   },
