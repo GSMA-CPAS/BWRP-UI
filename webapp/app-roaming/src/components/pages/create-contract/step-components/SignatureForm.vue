@@ -101,7 +101,6 @@ export default {
   computed: {
     predefinedRoles() {
       return [
-        'CEO',
         'User',
         'Admin',
         'Viewer',
