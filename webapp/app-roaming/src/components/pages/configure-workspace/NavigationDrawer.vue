@@ -28,7 +28,7 @@ export default {
     return {
       currentItem: 0,
       items: [
-        {title: 'TADIG Codes', icon: 'alpha-t'},
+        {title: 'TADIG Codes', icon: 'alpha-t-circle-outline'},
         {title: 'TADIG Groups', icon: 'alpha-t-circle-outline'},
       ],
     };

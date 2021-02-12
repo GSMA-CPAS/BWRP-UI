@@ -32,6 +32,7 @@
         label="Refresh"
         svg="refresh"
         outlined
+        color="black"
         @button-pressed="refreshPage"
       />
 
@@ -40,6 +41,7 @@
         label="Workspace"
         :to="toWorkspace"
         outlined
+        color="black"
         icon-size="20"
         svg="cog-outline"
       />

@@ -1,7 +1,7 @@
 <template>
   <v-app-bar color="black" dark height="100" elevation="0" clipped-left app>
     <div class="logo" @click="clickLogo">
-      <img src="@/assets/images/company-logo.svg" alt="" height="38px"/>
+      <img src="@/assets/images/company-logo.svg" height="38px"/>
     </div>
     <v-spacer/>
     <v-btn v-if="isAdmin" text to="/settings/users">
@@ -82,6 +82,7 @@ export default {
 
 .logo {
   cursor: pointer;
+  margin-left: 10px;
 }
 
 </style>

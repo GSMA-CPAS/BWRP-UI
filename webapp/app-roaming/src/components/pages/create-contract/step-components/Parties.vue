@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <row type="primary" :label="label" :labelExtraClasses="labelExtraClasses"/>
+    <row type="secondary" :label="label" :labelExtraClasses="labelExtraClasses"/>
     <v-divider />
     <v-row>
       <row type="primary" :label="msps.user"/>

@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <row type="primary" label="Condition" />
+    <row type="secondary" label="Condition" />
     <v-divider />
     <condition-picker v-model="condition" :default-currency="defaultCurrency"/>
     <v-row> <br /><br /> </v-row>
