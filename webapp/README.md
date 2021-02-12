@@ -14,11 +14,9 @@ App for roaming contract, signing, usage data upload and settlement. Will be loa
 <pre>
 $ cd webapp/app-roaming
 $ npm install
-$ NODE_ENV=production npm run build
+$ npm run build
 $ npm link
 </pre>
-
-``NODE_ENV=production`` with ``npm run build`` important for setting correct ``publicPath`` (see webapp/app-roaming/vue.config.js)
 
 **Install app-core**
 
