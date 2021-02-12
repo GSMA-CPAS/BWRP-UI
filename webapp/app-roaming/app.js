@@ -167,13 +167,17 @@ exports.init = async (app, router, database, logger, config) => {
     const tadigCodeIds = req.body;
     const values = [];
     for (const tadigCodeId of tadigCodeIds) {
-      values.push([tadigGroupId, tadigCodeId]);
+      if (tadigCodeId != null) {
+        values.push([tadigGroupId, tadigCodeId]);
+      }
     }
     try {
-      await database.query(
-        'INSERT INTO tadig_groups_relation (tadig_group_id, tadig_code_id) VALUES ?',
-        [values],
-      );
+      if (values.length > 0) {
+        await database.query(
+            'INSERT INTO tadig_groups_relation (tadig_group_id, tadig_code_id) VALUES ?',
+            [values],
+        );
+      }
       res.json({success: true});
     } catch (error) {
       logger.error(
@@ -193,13 +197,17 @@ exports.init = async (app, router, database, logger, config) => {
     const tadigCodeIds = req.body;
     const values = [];
     for (const tadigCodeId of tadigCodeIds) {
-      values.push([tadigCodeId]);
+      if (tadigCodeId != null) {
+        values.push([tadigCodeId]);
+      }
     }
     try {
-      await database.query(
-        'DELETE FROM tadig_groups_relation WHERE tadig_group_id=? AND tadig_code_id IN (?)',
-        [tadigGroupId, values],
-      );
+      if (values.length > 0) {
+        await database.query(
+            'DELETE FROM tadig_groups_relation WHERE tadig_group_id=? AND tadig_code_id IN (?)',
+            [tadigGroupId, values],
+        );
+      }
       res.json({success: true});
     } catch (error) {
       logger.error(
