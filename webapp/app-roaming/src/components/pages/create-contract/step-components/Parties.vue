@@ -1,11 +1,15 @@
 <template>
   <fragment>
-    <row type="secondary" :label="label" :labelExtraClasses="labelExtraClasses"/>
+    <row
+      type="secondary"
+      :label="label"
+      :labelExtraClasses="labelExtraClasses"
+    />
     <v-divider />
     <v-row>
-      <row type="primary" :label="msps.user"/>
+      <row type="primary" :label="msps.user" />
       <v-divider class="ml-1" vertical />
-      <row type="primary" :label="msps.partner"/>
+      <row type="primary" :label="msps.partner" />
     </v-row>
   </fragment>
 </template>

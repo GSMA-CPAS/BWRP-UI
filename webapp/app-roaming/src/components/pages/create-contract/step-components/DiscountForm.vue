@@ -2,9 +2,9 @@
   <v-col>
     <row type="secondary" label="Condition" />
     <v-divider />
-    <condition-picker v-model="condition" :default-currency="defaultCurrency"/>
+    <condition-picker v-model="condition" :default-currency="defaultCurrency" />
     <v-row> <br /><br /> </v-row>
-    <row type="primary" label="Service Groups" />
+    <row type="secondary" label="Service Groups" />
     <v-divider />
     <fragment
       v-for="(serviceGroup, index) in serviceGroups"
@@ -33,10 +33,9 @@
       <v-divider />
     </fragment>
     <v-row> <br /><br /> </v-row>
-    <v-row><app-button
-          @click="doCopyOtherSide"
-          label="Copy to other side"
-        /></v-row>
+    <v-row
+      ><app-button @click="doCopyOtherSide" label="Copy to other side"
+    /></v-row>
   </v-col>
 </template>
 <script>

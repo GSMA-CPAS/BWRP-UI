@@ -10,7 +10,7 @@
     </v-row>
     <div
       v-else-if="type === 'secondary'"
-      class="secondary--text font-weight-medium h1 mt-2 mb-2"
+      class="font-weight-medium h1 mt-2 mb-2"
     >
       {{ label }}
     </div>

@@ -1,7 +1,7 @@
 <template>
   <fragment>
     <form-container>
-      <parties label="signatures" />
+      <parties label="Signatures" />
       <v-row>
         <signature-form :ref="msps.user" v-model="userSignatures" />
         <v-divider vertical />
