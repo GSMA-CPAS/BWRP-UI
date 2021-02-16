@@ -7,6 +7,7 @@ const Database = require('mysqlw');
 
 global.GLOBAL_ROOT = path.resolve(__dirname);
 global.GLOBAL_BACKEND_ROOT = path.resolve(__dirname, './backend');
+const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
 
 const createAdapterInstance = (adapterName, database) => {
   const adapterPath = 'backendAdapters.' + adapterName;
@@ -62,7 +63,7 @@ const setup = async () => {
   try {
     await sessionManagementAdapter.initialize();
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
     throw error;
   }
 
@@ -78,7 +79,7 @@ const setup = async () => {
       await userManagementAdapter.createAdmin();
     }
   } catch (error) {
-    console.error(error.message);
+    logger.error(error.message);
     throw error;
   }
 
@@ -89,7 +90,7 @@ const setup = async () => {
     try {
       await blockchainAdapter.initialize();
     } catch (error) {
-      console.error(error.message);
+      logger.error(error.message);
       throw error;
     }
   }
@@ -101,8 +102,22 @@ const setup = async () => {
     try {
       await localStorageAdapter.initialize();
     } catch (error) {
-      console.error(error.message);
+      logger.error(error.message);
       throw error;
+    }
+  }
+
+  // initialize apps
+
+  const moduleApps = config.get('apps');
+  for (const moduleAppName in moduleApps) {
+    if (!Object.prototype.hasOwnProperty.call(moduleApps, moduleAppName)) continue;
+    const appConfig = config.get('apps.' + moduleAppName);
+    if (appConfig.enabled) {
+      const packageName = appConfig.packageName;
+      if (typeof require(packageName).postInit === 'function') {
+        await require(packageName).postInit(database, logger, appConfig.config);
+      }
     }
   }
 
@@ -110,14 +125,14 @@ const setup = async () => {
 
   database.close((error) => {
     if (error) {
-      console.error(error);
+      logger.error(error);
     }
   });
 };
 
 setup().then(() => {
-  console.log('[Setup] Setup completed!');
+  logger.info('[Setup] Setup completed!');
 }).catch((error) => {
-  console.error('[Setup] ' + error.message);
+  logger.error('[Setup] ' + error.message);
   process.exit(1);
 });
