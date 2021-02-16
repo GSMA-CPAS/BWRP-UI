@@ -2,7 +2,7 @@
 
 const got = require('got');
 const config = require('config');
-const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
+// const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
 const crypto = require('crypto');
 
@@ -193,27 +193,26 @@ class CommonAdapter extends AbstractAdapter {
     }
   }
 
-  // need support for "signatureId"
-  async signContract(contractId, signatureId, selfMsp, certificate, signatureAlgo, signature) {
+  async getSignaturesById(contractId, signatureId) {
     try {
-      const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/').json();
-      this.getLogger().debug('[CommonAdapter::signContract] get all signatures of contracts: - %s', JSON.stringify(lists));
-      for (const item of lists) {
-        if (item.msp === selfMsp && item.state === 'UNSIGNED') {
-          const payload = {
-            certificate: certificate,
-            algorithm: signatureAlgo,
-            signature: signature
-          };
-          this.getLogger().debug('[CommonAdapter::signContract] sigining contracts: - %s', JSON.stringify(payload));
-          return await got.put(this.adapterConfig.url + '/api/v1/contracts/' + item.contractId + '/signatures/' + item.signatureId, {json: payload, responseType: 'json'});
-        }
-      }
-      // new error code is required
-      throw new Error(JSON.stringify({
-        code: ErrorCodes.ERR_FORBIDDEN,
-        message: 'Contract has already been signed',
-      }));
+      const response = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/' + signatureId).json();
+      return response;
+    } catch (error) {
+      this.getLogger().error('[CommonAdapter::getSignatures] failed to get all signatures - %s', error.message);
+      throw error;
+    }
+  }
+
+  async signContract(contractId, certificate, signatureAlgo, signature) {
+    try {
+      const payload = {
+        certificate: certificate,
+        algorithm: signatureAlgo,
+        signature: signature
+      };
+      this.getLogger().debug('[CommonAdapter::signContract] sigining contracts: - %s', JSON.stringify(payload));
+      const response = await got.post(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/', {json: payload, responseType: 'json'});
+      return response.body;
     } catch (error) {
       this.getLogger().error('[CommonAdapter::signContract] failed to sign contracts - %s', error.message);
       throw error;

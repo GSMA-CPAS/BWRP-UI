@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const csv = require('fast-csv');
 
+/* called when app is loaded by core app */
 exports.init = async (app, router, database, logger, config) => {
   // curl -X GET /api/app-roaming/tadig/codes
   router.get('/tadig/codes', async (req, res) => {
@@ -239,7 +240,10 @@ exports.init = async (app, router, database, logger, config) => {
       });
     }
   });
-  // initialize tadig tables
+};
+
+/* called by setup */
+exports.postInit = async (database, logger, config) => {
   await initTableTadigCodes(database, logger);
   await initTableTadigGroups(database, logger);
   await initTableTadigGroupsRelation(database, logger);
@@ -255,7 +259,7 @@ const importTadigCodes = (database, logger) => {
     )
     .on('error', (error) => {
       logger.error(
-        '[app-roaming::init] Failed to parse tadig_codes.csv - ' +
+        '[app-roaming] Failed to parse tadig_codes.csv - ' +
           error.message,
       );
     })
@@ -271,12 +275,12 @@ const importTadigCodes = (database, logger) => {
         .then(
           (result) => {
             logger.info(
-              '[app-roaming::init] tadig codes have been imported successfully!',
+              '[app-roaming] tadig codes have been imported successfully!',
             );
           },
           (error) => {
             logger.error(
-              '[app-roaming::init] Failed to import tadig codes - ' +
+              '[app-roaming] Failed to import tadig codes - ' +
                 error.message(),
             );
           },
@@ -307,20 +311,20 @@ const initTableTadigCodes = async (database, logger) => {
             'CONSTRAINT uc_code UNIQUE (code))',
         );
         logger.info(
-          '[app-roaming::init] table %s has been created successfully!',
+          '[app-roaming] table %s has been created successfully!',
           tableName,
         );
         importTadigCodes(database, logger);
       } catch (error) {
         logger.error(
-          '[app-roaming::init] failed to create %s table - %s ',
+          '[app-roaming] failed to create %s table - %s ',
           tableName,
           JSON.stringify(error),
         );
       }
     } else {
       logger.error(
-        '[app-roaming::init] Error checking database - %s ',
+        '[app-roaming] Error checking database - %s ',
         JSON.stringify(error),
       );
     }
@@ -345,19 +349,19 @@ const initTableTadigGroups = async (database, logger) => {
             'CONSTRAINT uc_name UNIQUE (name))',
         );
         logger.info(
-          '[app-roaming::init] table %s has been created successfully!',
+          '[app-roaming] table %s has been created successfully!',
           tableName,
         );
       } catch (error) {
         logger.error(
-          '[app-roaming::init] failed to create %s table - %s ',
+          '[app-roaming] failed to create %s table - %s ',
           tableName,
           JSON.stringify(error),
         );
       }
     } else {
       logger.error(
-        '[app-roaming::init] Error checking database - %s ',
+        '[app-roaming] Error checking database - %s ',
         JSON.stringify(error),
       );
     }
@@ -383,19 +387,19 @@ const initTableTadigGroupsRelation = async (database, logger) => {
             'FOREIGN KEY (tadig_group_id) REFERENCES tadig_groups(id) ON DELETE CASCADE ON UPDATE CASCADE)',
         );
         logger.info(
-          '[app-roaming::init] table %s has been created successfully!',
+          '[app-roaming] table %s has been created successfully!',
           tableName,
         );
       } catch (error) {
         logger.error(
-          '[app-roaming::init] failed to create %s table - %s ',
+          '[app-roaming] failed to create %s table - %s ',
           tableName,
           JSON.stringify(error),
         );
       }
     } else {
       logger.error(
-        '[app-roaming::init] Error checking database - %s ',
+        '[app-roaming] Error checking database - %s ',
         JSON.stringify(error),
       );
     }

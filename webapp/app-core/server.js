@@ -163,9 +163,14 @@ if (sessionConfig.cookie.secure === true) {
     const appConfig = config.get('apps.' + moduleAppName);
     if (appConfig.enabled) {
       try {
-        const router = new express.Router();
-        await require(appConfig.packageName).init(app, router, database, logger, appConfig.config);
-        app.use('/api/' + appConfig.packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, router);
+        const packageName = appConfig.packageName;
+        if (typeof require(packageName).init === 'function') {
+          const router = new express.Router();
+          await require(packageName).init(app, router, database, logger, appConfig.config);
+          app.use('/api/' + packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, router);
+        } else {
+          logger.warn('[%s] app.js is missing init function', packageName);
+        }
         app.use('/app/' + appConfig.packageName, express.static(path.join(__dirname, '/node_modules/' + appConfig.packageName + '/dist')));
         logger.info('[%s] app successfully loaded', appConfig.packageName);
       } catch (error) {

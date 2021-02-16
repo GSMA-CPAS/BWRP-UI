@@ -30,7 +30,7 @@ const documentModule = {
         )
         .then((res) => {
           dispatch('app-state/signing', false, {root: true});
-          dispatch('getSignatures', state.document.documentId);
+          dispatch('getSignatures', state.document.contractId);
         })
         .catch((err) => {
           dispatch('app-state/signing', false, {root: true});
