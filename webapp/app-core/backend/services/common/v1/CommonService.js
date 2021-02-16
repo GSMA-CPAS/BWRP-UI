@@ -139,10 +139,22 @@ class CommonService extends AbstractService {
         const response = await this.getBackendAdapter('common').signContract(contractId, certificate, signatureAlgo, signature);
         return res.json(response);
       } catch (error) {
-        this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to store signature',
-        })), 'PUT /:contractId');
+        if (error.message.startsWith('Cannot read property')) {
+          this.handleError(res, new Error(JSON.stringify({
+            code: ErrorCodes.ERR_MISSING_PARAMETER,
+            message: 'Certificate missing',
+          })), 'PUT /:contractId');
+        } else if (error.response.statusCode === 422) {
+          this.handleError(res, new Error(JSON.stringify({
+            code: ErrorCodes.ERR_MISSING_PARAMETER,
+            message: 'Contract has already been signed',
+          })), 'PUT /:contractId');
+        } else {
+          this.handleError(res, new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: 'Failed to store signature',
+          })), 'PUT /:contractId');
+        }
       }
     });
 

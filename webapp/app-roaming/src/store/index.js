@@ -105,7 +105,7 @@ export default new Vuex.Store({
               }
               dispatch('app-state/loadError', {
                 title: error.response.statusText,
-                body: `Status code ${error.response.status}`,
+                body: `Status code ${error.response.status}|message ${error.response.data.message}`,
               });
               return Promise.reject(error);
             },
