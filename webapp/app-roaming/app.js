@@ -6,7 +6,7 @@ const path = require('path');
 const csv = require('fast-csv');
 
 /* called when app is loaded by core app */
-exports.init = async (app, router, database, logger, config) => {
+exports.onLoad = async (app, router, database, logger, config) => {
   // curl -X GET /api/app-roaming/tadig/codes
   router.get('/tadig/codes', async (req, res) => {
     try {
@@ -242,8 +242,9 @@ exports.init = async (app, router, database, logger, config) => {
   });
 };
 
-/* called by setup */
-exports.postInit = async (database, logger, config) => {
+/* called by app core setup */
+exports.onSetup = async (database, logger, config) => {
+  // create tadig tables
   await initTableTadigCodes(database, logger);
   await initTableTadigGroups(database, logger);
   await initTableTadigGroupsRelation(database, logger);

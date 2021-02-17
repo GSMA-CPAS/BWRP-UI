@@ -115,8 +115,8 @@ const setup = async () => {
     const appConfig = config.get('apps.' + moduleAppName);
     if (appConfig.enabled) {
       const packageName = appConfig.packageName;
-      if (typeof require(packageName).postInit === 'function') {
-        await require(packageName).postInit(database, logger, appConfig.config);
+      if (typeof require(packageName).onSetup === 'function') {
+        await require(packageName).onSetup(database, logger, appConfig.config);
       }
     }
   }
