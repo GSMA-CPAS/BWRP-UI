@@ -49,13 +49,17 @@ const defaultBankDetailsState = () => ({
   bankAccountName: null,
 });
 
-const defaultSignaturesState = () => [
+const defaultSignaturesState = () => ({
+  minSignatures: 2,
+});
+/* Old state
+[
   {
     id: 'signature-0',
     name: null,
     role: null,
   },
-];
+]; */
 
 const defaultDiscountModelsState = () => ({
   condition: null,
@@ -96,7 +100,8 @@ const newDocumentModule = {
     },
     updateSignatures(state, payload) {
       const {key, value} = payload;
-      Object.assign(state[key].signatures, value);
+      // object: Object.assign(state[key].signatures.minSignatures, value);
+      state[key].signatures.minSignatures = value;
     },
     updateDiscountModels(state, payload) {
       const {key, value} = payload;
@@ -200,24 +205,29 @@ const newDocumentModule = {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           try {
-            // const data = getters.contract;
+            const partnerMsp = getters.msps.partner;
+            const user = getters.msps.user;
+
             const data = {
               header: {
                 version: '1.0',
                 type: 'contract',
-                msps: {},
+                msps: {
+                  [user]: {
+                    minSignatures: state.userData.signatures.minSignatures,
+                  },
+                  [partnerMsp]: {
+                    minSignatures: state.partnerData.signatures.minSignatures,
+                  },
+                },
               },
-              body: getters.contract,
+              body: convertModelsModule.convertUiModelToJsonModel(
+                user,
+                partnerMsp,
+                getters.contract,
+              ),
             };
-            const partnerMsp = getters.msps.partner;
-            const user = getters.msps.user;
-            data.header.msps[getters.msps.user] = {minSignatures: 2};
-            data.header.msps[partnerMsp] = {minSignatures: 2};
-            data.body = convertModelsModule.convertUiModelToJsonModel(
-              user,
-              partnerMsp,
-              data.body,
-            );
+
             Vue.axios.commonAdapter
               .post('/documents', {partnerMsp, data}, {withCredentials: true})
               .then((res) => {

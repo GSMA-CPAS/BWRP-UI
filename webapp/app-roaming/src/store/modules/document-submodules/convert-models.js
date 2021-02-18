@@ -1,15 +1,14 @@
-function convertUiSignaturesToJsonModel(uiSignatures) {
-  return uiSignatures.map((x) => {
-    return {name: x.name, role: x.role};
-  });
-}
-
+// function convertUiSignaturesToJsonModel(uiSignatures) {
+//   return uiSignatures.map((x) => {
+//     return {name: x.name, role: x.role};
+//   });
+// }
 
 function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
   return {
     contractCurrency: uiPartyGeneralData.currencyForAllDiscounts,
     defaultTadigCodes: uiPartyGeneralData.tadigCodes.codes,
-    tadigGroups: {}
+    tadigGroups: {},
   };
 }
 
@@ -27,24 +26,30 @@ function convertUiTieredRatePlanToJsonModel(uiNormalRatePlan) {
     ratingPlan: {
       kind: uiNormalRatePlan.pricingModel,
       rate: {
-        thresholds: uiNormalRatePlan.rate.map(convertUiThresholdsToJsonModel)
-      }
-    }
+        thresholds: uiNormalRatePlan.rate.map(convertUiThresholdsToJsonModel),
+      },
+    },
   };
 }
 
-function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(uiBalancedUnbalancedRatePlan) {
+function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(
+  uiBalancedUnbalancedRatePlan,
+) {
   return {
     unit: uiBalancedUnbalancedRatePlan.unit,
     ratingPlan: {
       kind: uiBalancedUnbalancedRatePlan.pricingModel,
       balancedRate: {
-        linearPrice: convertUiThresholdsToJsonModel(uiBalancedUnbalancedRatePlan.balancedRate[0]).linearPrice
+        linearPrice: convertUiThresholdsToJsonModel(
+          uiBalancedUnbalancedRatePlan.balancedRate[0],
+        ).linearPrice,
       },
       unbalancedRate: {
-        linearPrice: convertUiThresholdsToJsonModel(uiBalancedUnbalancedRatePlan.unbalancedRate[0]).linearPrice
-      }
-    }
+        linearPrice: convertUiThresholdsToJsonModel(
+          uiBalancedUnbalancedRatePlan.unbalancedRate[0],
+        ).linearPrice,
+      },
+    },
   };
 }
 
@@ -54,9 +59,10 @@ function convertUiFlatRateToJsonModel(uiFlatRatePlan) {
     ratingPlan: {
       kind: uiFlatRatePlan.pricingModel,
       rate: {
-        fixedPrice: convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0]).fixedPrice
-      }
-    }
+        fixedPrice: convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0])
+          .fixedPrice,
+      },
+    },
   };
 }
 
@@ -66,16 +72,22 @@ function convertUiLinearRateToJsonModel(uiLinearRatePlan) {
     ratingPlan: {
       kind: uiLinearRatePlan.pricingModel,
       rate: {
-        linearPrice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0]).linearPrice
-      }
-    }
+        linearPrice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0])
+          .linearPrice,
+      },
+    },
   };
 }
 
 function convertUiRatePlanToJsonModel(uiRatingPlan) {
-  if (uiRatingPlan.pricingModel === 'Threshold - back to first' || uiRatingPlan.pricingModel === 'Tiered with Thresholds') {
+  if (
+    uiRatingPlan.pricingModel === 'Threshold - back to first' ||
+    uiRatingPlan.pricingModel === 'Tiered with Thresholds'
+  ) {
     return convertUiTieredRatePlanToJsonModel(uiRatingPlan);
-  } else if (uiRatingPlan.pricingModel === 'Balanced/Unbalanced (Linear rate)') {
+  } else if (
+    uiRatingPlan.pricingModel === 'Balanced/Unbalanced (Linear rate)'
+  ) {
     return convertUiBalancedUnbalancedLinearRatePlanToJsonModel(uiRatingPlan);
   } else if (uiRatingPlan.pricingModel === 'Flat rate') {
     return convertUiFlatRateToJsonModel(uiRatingPlan);
@@ -84,7 +96,9 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
   } else if (uiRatingPlan.pricingModel === 'Not Charged') {
     return undefined;
   } else {
-    throw Error('Unsupported rate plan model "' + uiRatingPlan.pricingModel + '" passed.');
+    throw Error(
+      'Unsupported rate plan model "' + uiRatingPlan.pricingModel + '" passed.',
+    );
   }
 }
 
@@ -93,11 +107,13 @@ function convertUiServiceToJsonModel(uiService) {
     service: uiService.name,
     includedInCommitment: uiService.includedInCommitment,
     usagePricing: convertUiRatePlanToJsonModel(uiService),
-    accessPricing: uiService.accessPricingModel ? convertUiRatePlanToJsonModel({
-      pricingModel: uiService.accessPricingModel,
-      unit: uiService.accessPricingUnit,
-      rate: uiService.accessPricingRate
-    }) : undefined,
+    accessPricing: uiService.accessPricingModel
+      ? convertUiRatePlanToJsonModel({
+          pricingModel: uiService.accessPricingModel,
+          unit: uiService.accessPricingUnit,
+          rate: uiService.accessPricingRate,
+        })
+      : undefined,
   };
 }
 
@@ -115,14 +131,17 @@ function convertUiDiscountsModelsToJsonModel(uiDiscountModels) {
       kind: uiDiscountModels.condition.selectedConditionName,
     },
 
-    serviceGroups: uiDiscountModels.serviceGroups.map(convertUiServiceGroupToJsonModel)
+    serviceGroups: uiDiscountModels.serviceGroups.map(
+      convertUiServiceGroupToJsonModel,
+    ),
   };
 
   if (uiDiscountModels.condition.selectedCondition) {
     model.condition.commitment = {
       value: uiDiscountModels.condition.selectedCondition.commitmentValue,
       currency: uiDiscountModels.condition.selectedCondition.currency,
-      includingTaxes: uiDiscountModels.condition.selectedCondition.includingTaxes,
+      includingTaxes:
+        uiDiscountModels.condition.selectedCondition.includingTaxes,
     };
   }
 
@@ -149,28 +168,63 @@ const convertModelsModule = {
         payment: {
           taxesIncluded: uiModel.generalInformation.taxesIncluded,
         },
-        signers: {
-          [userCode]: convertUiSignaturesToJsonModel(uiModel[userCode].signatures),
-          [partnerCode]: convertUiSignaturesToJsonModel(uiModel[partnerCode].signatures),
-        },
+        // signers: {
+        //   [userCode]: [
+        //     {
+        //       id: 'signature-0',
+        //       name: 'Hans',
+        //       role: 'Finance',
+        //     },
+        //     {
+        //       id: 'signature-0',
+        //       name: 'Hans',
+        //       role: 'Finance',
+        //     },
+        //   ],
+        //   // /* convertUiSignaturesToJsonModel( */ uiModel[userCode]
+        //   //   .signatures /* ) */,
+        //   [partnerCode]: [
+        //     {
+        //       id: 'signature-0',
+        //       name: 'Hans',
+        //       role: 'Finance',
+        //     },
+        //     {
+        //       id: 'signature-0',
+        //       name: 'Hans',
+        //       role: 'Finance',
+        //     },
+        //   ],
+        //   // /* convertUiSignaturesToJsonModel( */ uiModel[partnerCode]
+        //   //   .signatures /* ) */,
+        // },
         partyInformation: {
-          [userCode]: convertUiPartyInformationToJsonModel(uiModel.generalInformation[userCode]),
-          [partnerCode]: convertUiPartyInformationToJsonModel(uiModel.generalInformation[partnerCode]),
+          [userCode]: convertUiPartyInformationToJsonModel(
+            uiModel.generalInformation[userCode],
+          ),
+          [partnerCode]: convertUiPartyInformationToJsonModel(
+            uiModel.generalInformation[partnerCode],
+          ),
         },
       },
 
       discounts: {
-        [userCode]: convertUiDiscountsModelsToJsonModel(uiModel[userCode].discountModels),
-        [partnerCode]: convertUiDiscountsModelsToJsonModel(uiModel[partnerCode].discountModels)
-      }
+        [userCode]: convertUiDiscountsModelsToJsonModel(
+          uiModel[userCode].discountModels,
+        ),
+        [partnerCode]: convertUiDiscountsModelsToJsonModel(
+          uiModel[partnerCode].discountModels,
+        ),
+      },
     };
 
     if (uiModel.generalInformation.prolongationLength) {
-      model.framework.term.prolongation = uiModel.generalInformation.prolongationLength;
+      model.framework.term.prolongation =
+        uiModel.generalInformation.prolongationLength;
     }
 
     return model;
-  }
+  },
 };
 
 export default convertModelsModule;

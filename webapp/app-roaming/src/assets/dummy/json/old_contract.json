@@ -1,0 +1,143 @@
+{
+    "generalInformation": {
+        "name": "Dummy Contract",
+        "type": null,
+        "startDate": "2021-02-01T00:00:00.000Z",
+        "endDate": "2021-12-31T00:00:00.000Z",
+        "prolongationLength": null,
+        "taxesIncluded": false,
+        "authors": null,
+        "TMUS": {
+            "currencyForAllDiscounts": "USD",
+            "tadigCodes": {
+                "codes": [
+                    "ZAFVC",
+                    "USAX1",
+                    "USAW5",
+                    "USAW6"
+                ],
+                "includeContractParty": false
+            }
+        },
+        "DTAG": {
+            "currencyForAllDiscounts": "EUR",
+            "tadigCodes": {
+                "codes": [
+                    "ALBVF",
+                    "AUSVF",
+                    "EGYMS",
+                    "ESPAT"
+                ],
+                "includeContractParty": false
+            }
+        }
+    },
+    "TMUS": {
+        "signatures": [
+            {
+                "id": "signature-0",
+                "name": "Bob",
+                "role": "Finance"
+            }
+        ],
+        "discountModels": {
+            "condition": {
+                "selectedConditionName": "Contract Revenue Commitment",
+                "selectedCondition": {
+                    "includingTaxes": false,
+                    "commitmentValue": 1000,
+                    "currency": "USD"
+                }
+            },
+            "serviceGroups": [
+                {
+                    "homeTadigs": {
+                        "codes": [
+                            "ZAFVC",
+                            "USAX1",
+                            "USAW5",
+                            "USAW6"
+                        ]
+                    },
+                    "visitorTadigs": {
+                        "codes": [
+                            "ZAFVC",
+                            "USAX1",
+                            "USAW5",
+                            "USAW6"
+                        ]
+                    },
+                    "chosenServices": [
+                        {
+                            "id": "service-0",
+                            "name": "MOC Back Home",
+                            "rate": null,
+                            "unit": "Min",
+                            "balancedRate": null,
+                            "unbalancedRate": null,
+                            "pricingModel": "Not Charged",
+                            "accessPricingModel": "Not Charged",
+                            "accessPricingUnit": null,
+                            "accessPricingRate": null,
+                            "prevDefaultUnit": "Min"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "DTAG": {
+        "signatures": [
+            {
+                "id": "signature-0",
+                "name": "Hans",
+                "role": "Finance"
+            }
+        ],
+        "discountModels": {
+            "condition": {
+                "selectedConditionName": "Contract Revenue Commitment",
+                "selectedCondition": {
+                    "includingTaxes": false,
+                    "commitmentValue": 1000,
+                    "currency": "EUR"
+                }
+            },
+            "serviceGroups": [
+                {
+                    "homeTadigs": {
+                        "codes": [
+                            "ALBVF",
+                            "AUSVF",
+                            "EGYMS",
+                            "ESPAT"
+                        ]
+                    },
+                    "visitorTadigs": {
+                        "codes": [
+                            "ALBVF",
+                            "AUSVF",
+                            "EGYMS",
+                            "ESPAT"
+                        ]
+                    },
+                    "chosenServices": [
+                        {
+                            "id": "service-0",
+                            "name": "MOC Back Home",
+                            "rate": null,
+                            "unit": "Min",
+                            "balancedRate": null,
+                            "unbalancedRate": null,
+                            "pricingModel": "Not Charged",
+                            "accessPricingModel": "Not Charged",
+                            "accessPricingUnit": null,
+                            "accessPricingRate": null,
+                            "prevDefaultUnit": "Min"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

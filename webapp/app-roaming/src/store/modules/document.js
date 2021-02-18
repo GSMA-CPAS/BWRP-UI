@@ -99,22 +99,28 @@ const documentModule = {
   getters: {
     isSigned: (state, getters) => {
       const {selfMsp, partnerMsp} = getters;
-      const minSignaturesFromMSP =
+      const minSignaturesSelf =
         state.document?.header.msps[selfMsp].minSignatures;
-      const minSignaturesToMSP =
+      const minSignaturesPartner =
         state.document?.header.msps[partnerMsp].minSignatures;
+
       const totalSignatures =
         state.signatures.length > 0 &&
         state.signatures.reduce(
-          (acc, curVal) => {
-            acc[curVal.from]++;
+          (acc, {msp, state}) => {
+            if (msp === selfMsp && state === 'SIGNED') {
+              acc[selfMsp]++;
+            } else if (msp === partnerMsp && state === 'SIGNED') {
+              acc[partnerMsp]++;
+            }
             return acc;
           },
-          {[getters.selfMsp]: 0, [partnerMsp]: 0},
+          {[selfMsp]: 0, [partnerMsp]: 0},
         );
+
       const isSigned =
-        minSignaturesFromMSP <= totalSignatures[selfMsp] &&
-        minSignaturesToMSP <= totalSignatures[partnerMsp];
+        minSignaturesSelf <= totalSignatures[selfMsp] &&
+        minSignaturesPartner <= totalSignatures[partnerMsp];
       return isSigned;
     },
     selfMsp: (state, getters, rootState, rootGetters) => {

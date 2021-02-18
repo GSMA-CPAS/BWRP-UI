@@ -32,13 +32,9 @@
     }
   },
   "TMUS": {
-    "signatures": [
-      {
-        "id": "signature-0",
-        "name": "3",
-        "role": "4"
-      }
-    ],
+    "signatures": {
+      "minSignatures": 2
+    },
     "discountModels": {
       "condition": {
         "selectedConditionName": "Deal Revenue Commitment",
@@ -91,13 +87,9 @@
     }
   },
   "DTAG": {
-    "signatures": [
-      {
-        "id": "signature-0",
-        "name": "1",
-        "role": "2"
-      }
-    ],
+    "signatures": {
+      "minSignatures": 4
+    },
     "discountModels": {
       "condition": {
         "selectedConditionName": "Contract Revenue Commitment",
@@ -125,7 +117,13 @@
             {
               "id": "service-0",
               "name": "MOC Local",
-              "rate": null,
+              "rate": [
+                {
+                  "id": "tier-0",
+                  "threshold": 0,
+                  "fixedPrice": 2
+                }
+              ],
               "unit": "Min",
               "balancedRate": null,
               "unbalancedRate": null,
