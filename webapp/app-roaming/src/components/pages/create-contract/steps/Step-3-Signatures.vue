@@ -3,29 +3,34 @@
     <form-container>
       <parties label="Signatures" />
       <v-row>
-        <signature-form :ref="msps.user" v-model="userSignatures" />
+        <signature-form-v2 v-model="userSignatures" />
+        <!-- <signature-form :ref="msps.user" v-model="userSignatures" /> -->
         <v-divider vertical />
-        <signature-form :ref="msps.partner" v-model="partnerSignatures" />
+        <signature-form-v2 v-model="partnerSignatures" />
+        <!-- <signature-form :ref="msps.partner" v-model="partnerSignatures" /> -->
       </v-row>
     </form-container>
   </fragment>
 </template>
 <script>
 import Parties from '../step-components/Parties.vue';
-import SignatureForm from '../step-components/SignatureForm.vue';
-import {validationMixin} from '@/utils/mixins/component-specfic';
+import SignatureFormV2 from '../step-components/signature-forms/SignatureFormV2.vue';
+import {
+  duplicateMixin,
+  validationMixin,
+} from '@/utils/mixins/component-specfic';
 export default {
   name: 'step-3',
   description: 'Signatures',
-  mixins: [validationMixin],
+  mixins: [validationMixin, duplicateMixin],
   components: {
-    SignatureForm,
+    SignatureFormV2,
     Parties,
   },
   computed: {
     userSignatures: {
       get() {
-        return this.$store.state.document.new.userData.signatures;
+        return this.$store.state.document.new.userData.signatures.minSignatures;
       },
       set(value) {
         this.$store.commit('document/new/updateSignatures', {
@@ -36,7 +41,8 @@ export default {
     },
     partnerSignatures: {
       get() {
-        return this.$store.state.document.new.partnerData.signatures;
+        return this.$store.state.document.new.partnerData.signatures
+          .minSignatures;
       },
       set(value) {
         this.$store.commit('document/new/updateSignatures', {

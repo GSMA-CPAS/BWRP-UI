@@ -81,6 +81,7 @@ const timelineMixin = {
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
       documentData: (state) => state.document.data,
+      headerData: (state) => state.document.header,
       signatures: (state) => state.signatures,
     }),
     ...mapGetters('document', [

@@ -55,7 +55,7 @@
       <v-col />
     </v-row>
     <v-divider></v-divider>
-    <row type="secondary" label="Additional Information"> </row>
+    <row type="secondary" label="Additional Information" />
     <v-divider></v-divider>
     <parties-header />
     <row label="Currency for all discounts">
@@ -106,6 +106,19 @@
           Include contract party
           <v-icon color="primary"> mdi-checkbox-marked-outline </v-icon>
         </template>
+      </v-col>
+    </row>
+    <row label="Required Signatures (minimum)">
+      <v-col>
+        <div>
+          {{ headerData.msps[selfMsp].minSignatures }}
+        </div>
+      </v-col>
+      <v-divider vertical />
+      <v-col>
+        <div>
+          {{ headerData.msps[partnerMsp].minSignatures }}
+        </div>
       </v-col>
     </row>
   </fragment>

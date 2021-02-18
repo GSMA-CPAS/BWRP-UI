@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card class="ml-12" color="#fafafa">
+      <v-card class="ml-15" color="#fafafa">
         <v-card-text>
           <div>DATA UPLOADED...</div>
           <br />
