@@ -14,7 +14,7 @@
       </template>
       <template #actions="{cancel}">
         <v-spacer />
-        <app-button text label="Cancel" @button-pressed="cancel" />
+        <app-button plain label="Cancel" @button-pressed="cancel" />
         <app-button
           @button-pressed="
             active = false;

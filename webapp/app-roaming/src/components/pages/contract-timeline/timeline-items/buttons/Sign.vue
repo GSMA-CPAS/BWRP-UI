@@ -13,7 +13,7 @@
       :loading="signing"
     >
       <template #actions="{cancel}">
-        <app-button @button-pressed="cancel" outlined label="Cancel" />
+        <app-button @button-pressed="cancel" plain label="Cancel" />
         <app-button
           @button-pressed="
             onSign();

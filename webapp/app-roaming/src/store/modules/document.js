@@ -47,6 +47,7 @@ const documentModule = {
           const {
             contractId,
             referenceId,
+            blockchainRef,
             creationDate,
             data,
             partnerMsp,
@@ -59,6 +60,7 @@ const documentModule = {
             data: documentData.body,
             header: documentData.header,
             partnerMsp,
+            blockchainRef,
           });
         })
         .catch((err) => {
@@ -98,15 +100,21 @@ const documentModule = {
   },
   getters: {
     isSigned: (state, getters) => {
-      const {selfMsp, partnerMsp} = getters;
+      const {selfMsp, totalSignatures, partnerMsp} = getters;
       const minSignaturesSelf =
         state.document?.header.msps[selfMsp].minSignatures;
       const minSignaturesPartner =
         state.document?.header.msps[partnerMsp].minSignatures;
-
+      const isSigned =
+        minSignaturesSelf <= totalSignatures[selfMsp] &&
+        minSignaturesPartner <= totalSignatures[partnerMsp];
+      return isSigned;
+    },
+    totalSignatures: (state, getters) => {
+      const {selfMsp, partnerMsp} = getters;
       const totalSignatures =
-        state.signatures.length > 0 &&
-        state.signatures.reduce(
+        state.signatures?.length > 0 &&
+        state.signatures?.reduce(
           (acc, {msp, state}) => {
             if (msp === selfMsp && state === 'SIGNED') {
               acc[selfMsp]++;
@@ -115,13 +123,12 @@ const documentModule = {
             }
             return acc;
           },
-          {[selfMsp]: 0, [partnerMsp]: 0},
+          {
+            [selfMsp]: 0,
+            [partnerMsp]: 0,
+          },
         );
-
-      const isSigned =
-        minSignaturesSelf <= totalSignatures[selfMsp] &&
-        minSignaturesPartner <= totalSignatures[partnerMsp];
-      return isSigned;
+      return totalSignatures;
     },
     selfMsp: (state, getters, rootState, rootGetters) => {
       const selfMsp = rootGetters['user/organizationMSPID'];

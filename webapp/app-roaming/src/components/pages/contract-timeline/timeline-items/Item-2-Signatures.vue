@@ -3,7 +3,15 @@
     <template #content>
       <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>
-          {{ `Signed ${signatures.length} times.` }}
+          <b class="text-uppercase">Signatures</b>
+          <v-row>
+            {{ `Signed ${totalSignatures[selfMsp]} times by ${selfMsp}` }}
+          </v-row>
+          <v-row>
+            {{
+              `Signed ${totalSignatures[partnerMsp]} times by ${partnerMsp}`
+            }}</v-row
+          >
         </v-card-text>
         <v-card-actions>
           <v-spacer />

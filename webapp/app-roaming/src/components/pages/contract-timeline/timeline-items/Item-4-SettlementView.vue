@@ -3,14 +3,14 @@
     <template #content>
       <v-card class="ml-15" color="#fafafa">
         <v-card-text>
-          <div>DATA UPLOADED...</div>
+          <b>DATA UPLOADED</b>
           <br />
           <div>
-            ...by {Party} at {date}
+            Uploaded at {date} by {Party}
             <v-icon color="success">mdi-check-circle-outline</v-icon>
           </div>
           <div>
-            ...by {Party} at {date}
+            Uploaded at {date} by {Party}
             <v-icon color="success">mdi-check-circle-outline</v-icon>
           </div>
         </v-card-text>

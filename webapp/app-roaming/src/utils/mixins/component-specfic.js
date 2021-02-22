@@ -66,9 +66,6 @@ export {appStateMixin};
 const timelineMixin = {
   mixins: [utilsMixin],
   methods: {
-    parseSignature(signature) {
-      return `${signature?.name}, ${signature?.role}`;
-    },
     ...mapActions('document/new', ['startContract']),
     ...mapActions('partners', ['loadPartners']),
     ...mapActions('document', ['loadData', 'signDocument']),
@@ -80,9 +77,12 @@ const timelineMixin = {
     },
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
+      referenceId: (state) => state.document.referenceId,
+      blockchainTxId: (state) => state.document.blockchainRef.txId,
       documentData: (state) => state.document.data,
       headerData: (state) => state.document.header,
       signatures: (state) => state.signatures,
+      creationDate: (state) => state.creationDate,
     }),
     ...mapGetters('document', [
       'bankDetails',
@@ -90,6 +90,7 @@ const timelineMixin = {
       'contractId',
       'creationDate',
       'isSigned',
+      'totalSignatures',
       'partnerMsp',
       'selfMsp',
       'partnerMsp',
