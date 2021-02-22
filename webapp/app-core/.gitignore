@@ -8,3 +8,4 @@ config/production-*.json
 logs/
 dist/
 wallet/
+.prettierrc
