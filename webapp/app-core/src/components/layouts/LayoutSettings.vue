@@ -10,6 +10,14 @@
             <v-list-item-title>User Management</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item to="/settings/identities">
+          <v-list-item-icon>
+            <v-icon>{{ $vuetify.icons.values.identityManagement }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Identity Management</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <app-header/>

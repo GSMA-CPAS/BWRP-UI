@@ -16,6 +16,7 @@
               Changing your password will sign you out. You will need to enter your new password to login again.
             </v-card-text>
             <v-card-actions class="pa-4">
+              <v-spacer></v-spacer>
               <v-btn color="primary" tile to="/account/security/password">Change Password</v-btn>
             </v-card-actions>
           </v-card>
@@ -31,6 +32,7 @@
               {{ twoFactorMainText }}
             </v-card-text>
             <v-card-actions class="pa-4">
+              <v-spacer></v-spacer>
               <v-btn color="primary" tile @click="toggleTwoFactor">{{ twoFactorButtonText }}</v-btn>
             </v-card-actions>
           </v-card>

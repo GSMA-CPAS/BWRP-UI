@@ -5,14 +5,14 @@ const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/Abstract
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 const ensureAuthenticatedWithPassword = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticatedWithPassword;
 const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
-// const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
+const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 
 class UserManagementService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
     this.requiredAdapterType('userManagement');
-    // this.requiredAdapterType('wallet');
-    // this.requiredAdapterType('certAuth');
+    this.requiredAdapterType('wallet');
+    this.requiredAdapterType('certAuth');
     this.sessionName = config.get('session').name;
     this.registerRequestHandler();
   }
@@ -34,21 +34,14 @@ class UserManagementService extends AbstractService {
      * GET USER BY ID - ADMIN ONLY
      */
     this.getRouter().get('/:userId', ensureAdminAuthenticated, async (req, res) => {
-      const userId = req.params.userId;
       try {
-        const result = await this.getBackendAdapter('userManagement').getUserById(userId);
-        const identities = await this.getBackendAdapter('userManagement').getUserIdentities(userId);
-        if (identities) {
-          result['identities'] = identities;
-        } else {
-          result['identities'] = [];
-        }
-        /* const identity = await this.getBackendAdapter('wallet').getIdentity(result.enrollmentId);
+        const result = await this.getBackendAdapter('userManagement').getUserById(req.params.userId);
+        const identity = await this.getBackendAdapter('wallet').getIdentity(result.enrollmentId);
         if (identity) {
           const certificate = identity.credentials.certificate;
           result['certificate'] = certificate;
           result['certificateData'] = cryptoUtils.parseCert(certificate);
-        }*/
+        }
         res.json(result);
       } catch (error) {
         this.handleError(res, error, 'GET /:userId');
@@ -60,12 +53,6 @@ class UserManagementService extends AbstractService {
      */
     this.getRouter().post('/', ensureAdminAuthenticated, async (req, res) => {
       try {
-        await this.getBackendAdapter('userManagement').createUser(req.user, req.body);
-        res.json({success: true});
-      } catch (error) {
-        this.handleError(res, error, 'POST /');
-      }
-      /* try {
         const enrollmentId = req.body.username;
         req.body['enrollmentId'] = enrollmentId;
         if (await this.getBackendAdapter('userManagement').createUser(req.user, req.body)) {
@@ -78,7 +65,7 @@ class UserManagementService extends AbstractService {
         }
       } catch (error) {
         this.handleError(res, error, 'POST /');
-      }*/
+      }
     });
 
     /**
@@ -94,45 +81,9 @@ class UserManagementService extends AbstractService {
     });
 
     /**
-     * GET IDENTITIES - ADMIN ONLY
-     */
-    this.getRouter().get('/:userId/identities', ensureAdminAuthenticated, async (req, res) => {
-      try {
-        const result = await this.getBackendAdapter('userManagement').getUserIdentities(req.params.userId);
-        res.json(result);
-      } catch (error) {
-        this.handleError(res, error, 'GET /:userId/identities');
-      }
-    });
-
-    /**
-     * ADD IDENTITIES - ADMIN ONLY
-     */
-    this.getRouter().post('/:userId/identities', ensureAdminAuthenticated, async (req, res) => {
-      try {
-        await this.getBackendAdapter('userManagement').addIdentities(req.params.userId, req.body);
-        res.json({success: true});
-      } catch (error) {
-        this.handleError(res, error, 'POST /:userId/identities');
-      }
-    });
-
-    /**
-     * REMOVE IDENTITIES - ADMIN ONLY
-     */
-    this.getRouter().delete('/:userId/identities', ensureAdminAuthenticated, async (req, res) => {
-      try {
-        await this.getBackendAdapter('userManagement').removeIdentities(req.params.userId, req.body);
-        res.json({success: true});
-      } catch (error) {
-        this.handleError(res, error, 'POST /:userId/identities');
-      }
-    });
-
-    /**
      * ENROLL USER - ADMIN ONLY
      */
-    /* this.getRouter().post('/enroll', ensureAuthenticated, async (req, res) => {
+    this.getRouter().post('/enroll', ensureAuthenticated, async (req, res) => {
       try {
         const enrollmentId = req.body.enrollmentId;
         const userIdentity = await this.getBackendAdapter('certAuth').enrollUser(enrollmentId);
@@ -141,7 +92,7 @@ class UserManagementService extends AbstractService {
       } catch (error) {
         this.handleError(res, error, 'POST /enroll');
       }
-    });*/
+    });
 
     /**
      * CHANGE PASSWORD

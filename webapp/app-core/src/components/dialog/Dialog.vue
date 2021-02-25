@@ -29,7 +29,7 @@ export default {
       persistent: true,
       title: '',
       message: '',
-      buttonTextClose: 'Chancel',
+      buttonTextClose: 'Cancel',
       buttonTextOk: 'OK',
       callbackClose: null,
       callbackOk: null,

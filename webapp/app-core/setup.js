@@ -67,17 +67,40 @@ const setup = async () => {
     throw error;
   }
 
-  // initialize FabricUserManagementAdapter
+  // initialize UserManagementAdapter
+
+  const userManagementAdapter = createAdapterInstance('UserManagementAdapter', database);
+  try {
+    await userManagementAdapter.initialize();
+  } catch (error) {
+    logger.error(error.message);
+    throw error;
+  }
+
+  // create admin user / enroll admin identity
 
   const walletAdapter = createAdapterInstance('WalletAdapter', database);
   const certAuthAdapter = createAdapterInstance('CertAuthAdapter', database);
-  const userManagementAdapter = createAdapterInstance('UserManagementAdapter', database);
   try {
-    if (await userManagementAdapter.initialize()) {
-      const adminIdentity = await certAuthAdapter.enrollAdmin();
-      await walletAdapter.putIdentity('admin', adminIdentity);
+    if (!await userManagementAdapter.existsUser('admin')) {
       await userManagementAdapter.createAdmin();
     }
+    const adminEnrollmentId = certAuthAdapter.getAdminEnrollmentId();
+    const adminIdentity = await walletAdapter.getIdentity(adminEnrollmentId);
+    if (!adminIdentity) {
+      const adminIdentity = await certAuthAdapter.enrollAdmin();
+      await walletAdapter.putIdentity(adminEnrollmentId, adminIdentity);
+    }
+  } catch (error) {
+    logger.error(error.message);
+    throw error;
+  }
+
+  // initialize IdentityAdapter
+
+  const identityAdapter = createAdapterInstance('IdentityAdapter', database);
+  try {
+    await identityAdapter.initialize();
   } catch (error) {
     logger.error(error.message);
     throw error;

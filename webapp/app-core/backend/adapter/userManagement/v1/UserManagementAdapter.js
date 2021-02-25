@@ -16,7 +16,7 @@ class UserManagementAdapter extends AbstractAdapter {
 
   async getUsers() {
     try {
-      return await this.getDatabase().query('SELECT id, username, enrollmentId, forename, surname, email, canSignDocument, active, isAdmin FROM users');
+      return await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, isAdmin FROM users');
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUsers] failed to query users - %s', error.message);
       throw error;
@@ -25,9 +25,8 @@ class UserManagementAdapter extends AbstractAdapter {
 
   async getUserById(userId) {
     let rows;
-
     try {
-      rows = await this.getDatabase().query('SELECT * FROM users WHERE id=?', [userId]);
+      rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin, twoFactorSecret FROM users WHERE id=?', [userId]);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUserById] failed to query user with id %s - %s', userId, error.message);
       throw error;
@@ -344,13 +343,54 @@ class UserManagementAdapter extends AbstractAdapter {
     }
   }
 
+  async getUserIdentities(userId) {
+    try {
+      return await this.getDatabase().query('SELECT ui.id, ui.name FROM users_identities_relation uir INNER JOIN users_identities ui ON uir.identity_id=ui.id WHERE uir.user_id=?', [userId]);
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::getIdentities] failed to query user identities %s', error.message);
+      throw error;
+    }
+  }
+
+  async addIdentities(userId, arrIdentityIds) {
+    const values = [];
+    for (const identityId of arrIdentityIds) {
+      if (identityId != null) {
+        values.push([userId, identityId]);
+      }
+    }
+    try {
+      if (values.length > 0) {
+        await this.getDatabase().query('INSERT INTO users_identities_relation (user_id, identity_id) VALUES ?', [values]);
+      }
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::addIdentities] failed to add identities - %s', error.message,);
+      throw error;
+    }
+  }
+
+  async removeIdentities(userId, arrIdentityIds) {
+    const values = [];
+    for (const identityId of arrIdentityIds) {
+      if (identityId != null) {
+        values.push([identityId]);
+      }
+    }
+    try {
+      if (values.length > 0) {
+        await this.getDatabase().query('DELETE FROM users_identities_relation WHERE user_id=? AND identity_id IN (?)', [userId, values]);
+      }
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::removeIdentities] failed to remove identities - %s', error.message,);
+      throw error;
+    }
+  }
+
   async createAdmin() {
     let adminUser;
-
     try {
       const pwdKeys = await this.createPasswordHashAndEncKeys('admin');
       adminUser = {
-        enrollmentId: 'admin',
         username: 'admin',
         password: pwdKeys.passwordHash,
         encKey: pwdKeys.encKey,
@@ -454,7 +494,6 @@ class UserManagementAdapter extends AbstractAdapter {
           await this.database.query(
               'CREATE TABLE IF NOT EXISTS users (' +
               'id INT AUTO_INCREMENT, ' +
-              'enrollmentId VARCHAR(100) NOT NULL, ' +
               'username VARCHAR(100) NOT NULL, ' +
               'password VARCHAR(255) NOT NULL, ' +
               'forename VARCHAR(255) NULL, ' +
@@ -468,7 +507,7 @@ class UserManagementAdapter extends AbstractAdapter {
               'isAdmin TINYINT NULL DEFAULT 0, ' +
               'twoFactorSecret VARCHAR(255) NULL, ' +
               'PRIMARY KEY (id), ' +
-              'CONSTRAINT uc_user UNIQUE (enrollmentId, username))');
+              'CONSTRAINT uc_user UNIQUE (username))');
           this.getLogger().info('[UserManagementAdapter::initialize] table users has been created successfully!');
           return true;
         } catch (error) {

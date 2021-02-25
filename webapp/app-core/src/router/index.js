@@ -16,6 +16,9 @@ const AccountSecurityTwoFactor = () => import('@/components/pages/account/TwoFac
 const SettingsUserList = () => import('@/components/pages/settings/users/UserList.vue');
 const SettingsUserCreate = () => import('@/components/pages/settings/users/UserCreate.vue');
 const SettingsUserDetails = () => import('@/components/pages/settings/users/UserDetails.vue');
+const SettingsIdentityList = () => import('@/components/pages/settings/identities/IdentityList.vue');
+const SettingsIdentityCreate = () => import('@/components/pages/settings/identities/IdentityCreate.vue');
+const SettingsIdentityDetails = () => import('@/components/pages/settings/identities/IdentityDetails.vue');
 const NotFound = () => import('@/components/NotFound.vue');
 
 export default new VueRouter({
@@ -114,6 +117,33 @@ export default new VueRouter({
       name: 'SettingsUserDetails',
       path: '/settings/users/:id',
       component: SettingsUserDetails,
+      meta: {
+        requiresAuth: true,
+        isAdmin: true
+      }
+    },
+    {
+      name: 'SettingsIdentityList',
+      path: '/settings/identities',
+      component: SettingsIdentityList,
+      meta: {
+        requiresAuth: true,
+        isAdmin: true
+      }
+    },
+    {
+      name: 'SettingsIdentityCreate',
+      path: '/settings/identities/create',
+      component: SettingsIdentityCreate,
+      meta: {
+        requiresAuth: true,
+        isAdmin: true
+      }
+    },
+    {
+      name: 'SettingsIdentityDetails',
+      path: '/settings/identities/:id',
+      component: SettingsIdentityDetails,
       meta: {
         requiresAuth: true,
         isAdmin: true

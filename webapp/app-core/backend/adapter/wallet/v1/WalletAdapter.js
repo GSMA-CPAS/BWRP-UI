@@ -14,9 +14,9 @@ class WalletAdapter extends AbstractAdapter {
 
   async getIdentity(enrollmentId) {
     const identity = await this.wallet.get(enrollmentId);
-    if (!identity) {
+    /* if (!identity) {
       this.getLogger().error('[WalletAdapter::getIdentity] failed to get identity %s from wallet', enrollmentId);
-    }
+    }*/
     return identity;
   }
 
@@ -25,6 +25,17 @@ class WalletAdapter extends AbstractAdapter {
       await this.wallet.put(enrollmentId, identity);
     } catch (error) {
       this.getLogger().error('[WalletAdapter::putIdentity] failed to put identity %s - %s', enrollmentId, error.message);
+      throw error;
+    }
+  }
+
+  async removeIdentity(enrollmentId) {
+    try {
+      if (await this.wallet.get(enrollmentId)) {
+        await this.wallet.remove(enrollmentId);
+      }
+    } catch (error) {
+      this.getLogger().error('[WalletAdapter::removeIdentity] failed to remove identity %s - %s', enrollmentId, error.message);
       throw error;
     }
   }

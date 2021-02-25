@@ -19,6 +19,7 @@
                               :rules="[rules.required, rules.password]"></v-text-field>
               </v-card-text>
               <v-card-actions class="pa-4">
+                <v-spacer></v-spacer>
                 <v-btn type="submit" color="primary" tile>Change Password</v-btn>
               </v-card-actions>
             </v-form>

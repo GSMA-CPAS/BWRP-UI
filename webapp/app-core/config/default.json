@@ -61,9 +61,18 @@
       "route": "/api/v1/users",
       "csrfProtectionEnabled": false,
       "useBackendAdapters": [
+        {"type": "userManagement", "name": "UserManagementAdapter"}
+      ]
+    },
+    "IdentityService": {
+      "enabled": true,
+      "classPath": "/identity/v1/IdentityService",
+      "route": "/api/v1/identities",
+      "csrfProtectionEnabled": false,
+      "useBackendAdapters": [
         {"type": "wallet", "name": "WalletAdapter"},
         {"type": "certAuth", "name": "CertAuthAdapter"},
-        {"type": "userManagement", "name": "UserManagementAdapter"}
+        {"type": "identity", "name": "IdentityAdapter"}
       ]
     },
     "AppService": {
@@ -124,6 +133,11 @@
           "parallelism": 1,
           "saltLength": 32
         }
+      }
+    },
+    "IdentityAdapter": {
+      "classPath": "/adapter/identity/v1/IdentityAdapter",
+      "config": {
       }
     },
     "WalletAdapter": {
