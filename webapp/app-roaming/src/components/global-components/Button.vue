@@ -35,6 +35,10 @@ export default {
       type: Boolean,
       default: false,
     },
+  ripple: {
+      type: Boolean,
+      default: true,
+    },
     fab: {
       type: Boolean,
       default: false,

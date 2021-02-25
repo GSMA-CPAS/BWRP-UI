@@ -6,8 +6,11 @@ const {log} = console;
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({document: null, signatures: []}),
+  state: () => ({rawData: null, document: null, signatures: []}),
   mutations: {
+    UPDATE_RAW_DATA: (state, rawData) => {
+      state.rawData = rawData;
+    },
     UPDATE_DOCUMENT: (state, document) => {
       log(document);
       state.document = document;
@@ -17,7 +20,14 @@ const documentModule = {
     },
   },
   actions: {
-    signDocument({commit, dispatch, rootGetters, getters, rootState, state}) {
+    async signDocument({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
       Vue.axios.commonAdapter
         .put(
           // `/signatures/` + state.document.documentId,
@@ -39,10 +49,10 @@ const documentModule = {
     },
     async getDocument(
       {commit, dispatch, rootGetters, getters, rootState, state},
-      referenceId,
+      contractId,
     ) {
       await Vue.axios.commonAdapter
-        .get(`/documents/${referenceId}`, {withCredentials: true})
+        .get(`/documents/${contractId}`, {withCredentials: true})
         .then((document) => {
           const {
             contractId,
@@ -64,15 +74,23 @@ const documentModule = {
           });
         })
         .catch((err) => {
-          // dispatch(["app-state/loadError"], err);
+          dispatch(['app-state/loadError'], err);
+        });
+      await Vue.axios.commonAdapter
+        .get(`/documents/${contractId}/?format=RAW`, {withCredentials: true})
+        .then((document) => {
+          commit('UPDATE_RAW_DATA', document);
+        })
+        .catch((err) => {
+          dispatch(['app-state/loadError'], err);
         });
     },
     async getSignatures(
       {commit, dispatch, rootGetters, getters, rootState, state},
-      referenceId,
+      contractId,
     ) {
       const {selfMsp, partnerMsp} = state.document;
-      const url = '' + `/signatures/${referenceId}/`;
+      const url = '' + `/signatures/${contractId}/`;
       // const selfMspRequest = Vue.axios.commonAdapter.get(url + selfMsp);
       // const partnerMspRequest = Vue.axios.commonAdapter.get(url + partnerMsp);
       // to temporary fix path. we do not need /all
@@ -92,19 +110,27 @@ const documentModule = {
     },
     async loadData(
       {commit, dispatch, rootGetters, getters, rootState, state},
-      referenceId,
+      contractId,
     ) {
-      await dispatch('getDocument', referenceId);
-      await dispatch('getSignatures', referenceId);
+      await dispatch('getDocument', contractId);
+      await dispatch('getSignatures', contractId);
     },
   },
   getters: {
+    minSignaturesSelf: (state, getters) => {
+      return state.document?.header.msps[getters.selfMsp].minSignatures;
+    },
+    minSignaturesPartner: (state, getters) => {
+      return state.document?.header.msps[getters.partnerMsp].minSignatures;
+    },
     isSigned: (state, getters) => {
-      const {selfMsp, totalSignatures, partnerMsp} = getters;
-      const minSignaturesSelf =
-        state.document?.header.msps[selfMsp].minSignatures;
-      const minSignaturesPartner =
-        state.document?.header.msps[partnerMsp].minSignatures;
+      const {
+        selfMsp,
+        totalSignatures,
+        partnerMsp,
+        minSignaturesSelf,
+        minSignaturesPartner,
+      } = getters;
       const isSigned =
         minSignaturesSelf <= totalSignatures[selfMsp] &&
         minSignaturesPartner <= totalSignatures[partnerMsp];
@@ -113,21 +139,25 @@ const documentModule = {
     totalSignatures: (state, getters) => {
       const {selfMsp, partnerMsp} = getters;
       const totalSignatures =
-        state.signatures?.length > 0 &&
-        state.signatures?.reduce(
-          (acc, {msp, state}) => {
-            if (msp === selfMsp && state === 'SIGNED') {
-              acc[selfMsp]++;
-            } else if (msp === partnerMsp && state === 'SIGNED') {
-              acc[partnerMsp]++;
-            }
-            return acc;
-          },
-          {
-            [selfMsp]: 0,
-            [partnerMsp]: 0,
-          },
-        );
+        state.signatures?.length > 0
+          ? state.signatures?.reduce(
+              (acc, {msp, state}) => {
+                if (msp === selfMsp && state === 'SIGNED') {
+                  acc[selfMsp]++;
+                } else if (msp === partnerMsp && state === 'SIGNED') {
+                  acc[partnerMsp]++;
+                }
+                return acc;
+              },
+              {
+                [selfMsp]: 0,
+                [partnerMsp]: 0,
+              },
+            )
+          : {
+              [selfMsp]: 0,
+              [partnerMsp]: 0,
+            };
       return totalSignatures;
     },
     selfMsp: (state, getters, rootState, rootGetters) => {

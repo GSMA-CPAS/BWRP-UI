@@ -19,15 +19,7 @@
       </v-col>
       <v-col>
         <v-row>
-          <vue-json-pretty
-            show-length
-            :deep="3"
-            :data="{header: headerData, data: documentData}"
-          />
-        </v-row>
-        <v-row>
-          <v-spacer />
-          <app-button label="Export JSON" />
+          <vue-json-pretty show-length :deep="4" :data="rawConvertedToJson" />
         </v-row>
       </v-col>
     </v-row>
@@ -45,5 +37,10 @@ export default {
     'In this tab the detals of a contract are displayed. The tab is found in the contract timeline when clicking on "View Contract"',
   components: {VueJsonPretty},
   mixins: [timelineMixin],
+  computed: {
+    rawConvertedToJson() {
+      return JSON.parse(atob(this.rawData));
+    },
+  },
 };
 </script>
