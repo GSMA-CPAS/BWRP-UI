@@ -3,15 +3,50 @@
     <template #content>
       <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>
-          <b class="text-uppercase">Signatures</b>
-          <v-row>
-            {{ `Signed ${totalSignatures[selfMsp]} times by ${selfMsp}` }}
+          <div class="font-weight-bold text-uppercase mb-2">Signatures</div>
+          <v-row class="mb-1">
+            <div>
+              {{
+                `Signed ${totalSignatures[selfMsp]} out of ${minSignaturesSelf} times by ${selfMsp}`
+              }}
+            </div>
+            <v-spacer />
+            <v-icon
+              v-if="totalSignatures[selfMsp] === minSignaturesSelf"
+              color="success"
+            >
+              mdi-check-circle-outline
+            </v-icon>
+            <v-progress-circular
+              size="23"
+              v-else-if="totalSignatures[selfMsp] !== 0"
+              :value="(totalSignatures[selfMsp] / minSignaturesSelf) * 100"
+              color="success"
+            />
           </v-row>
           <v-row>
-            {{
-              `Signed ${totalSignatures[partnerMsp]} times by ${partnerMsp}`
-            }}</v-row
-          >
+            <div>
+              {{
+                `Signed ${totalSignatures[partnerMsp]} out of ${minSignaturesPartner}  times by ${partnerMsp}`
+              }}
+            </div>
+            <v-spacer />
+            <v-icon
+              v-if="totalSignatures[partnerMsp] === minSignaturesPartner"
+              color="success"
+            >
+              mdi-check-circle-outline
+            </v-icon>
+
+            <v-progress-circular
+              size="23"
+              v-else-if="totalSignatures[partnerMsp] !== 0"
+              :value="
+                (totalSignatures[partnerMsp] / minSignaturesPartner) * 100
+              "
+              color="success"
+            />
+          </v-row>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
