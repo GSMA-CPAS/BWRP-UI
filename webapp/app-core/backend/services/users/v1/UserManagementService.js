@@ -5,14 +5,11 @@ const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/Abstract
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 const ensureAuthenticatedWithPassword = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticatedWithPassword;
 const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
-// const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 
 class UserManagementService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
     this.requiredAdapterType('userManagement');
-    // this.requiredAdapterType('wallet');
-    // this.requiredAdapterType('certAuth');
     this.sessionName = config.get('session').name;
     this.registerRequestHandler();
   }
@@ -43,12 +40,6 @@ class UserManagementService extends AbstractService {
         } else {
           result['identities'] = [];
         }
-        /* const identity = await this.getBackendAdapter('wallet').getIdentity(result.enrollmentId);
-        if (identity) {
-          const certificate = identity.credentials.certificate;
-          result['certificate'] = certificate;
-          result['certificateData'] = cryptoUtils.parseCert(certificate);
-        }*/
         res.json(result);
       } catch (error) {
         this.handleError(res, error, 'GET /:userId');
@@ -65,20 +56,6 @@ class UserManagementService extends AbstractService {
       } catch (error) {
         this.handleError(res, error, 'POST /');
       }
-      /* try {
-        const enrollmentId = req.body.username;
-        req.body['enrollmentId'] = enrollmentId;
-        if (await this.getBackendAdapter('userManagement').createUser(req.user, req.body)) {
-          const canSignDocument = req.body.canSignDocument;
-          const registrar = await this.getBackendAdapter('wallet').getUserContext('admin');
-          await this.getBackendAdapter('certAuth').registerUser(enrollmentId, registrar, canSignDocument);
-          const userIdentity = await this.getBackendAdapter('certAuth').enrollUser(enrollmentId);
-          await this.getBackendAdapter('wallet').putIdentity(enrollmentId, userIdentity);
-          res.json({success: true});
-        }
-      } catch (error) {
-        this.handleError(res, error, 'POST /');
-      }*/
     });
 
     /**
@@ -90,6 +67,19 @@ class UserManagementService extends AbstractService {
         res.json({success: true});
       } catch (error) {
         this.handleError(res, error, 'PUT /:userId');
+      }
+    });
+
+    /**
+     * DELETE USER - ADMIN ONLY
+     */
+    this.getRouter().delete('/:userId', ensureAdminAuthenticated, async (req, res) => {
+      const userId = req.params.userId;
+      try {
+        await this.getBackendAdapter('userManagement').deleteUser(req.user, parseInt(userId));
+        res.json({success: true});
+      } catch (error) {
+        this.handleError(res, error, 'DELETE /:userId');
       }
     });
 

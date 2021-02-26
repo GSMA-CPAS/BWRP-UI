@@ -40,6 +40,7 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
+              <v-btn type="submit" color="primary" tile>Renew Certificate</v-btn>
               <v-btn type="submit" color="primary" tile>Export Certificate</v-btn>
             </v-card-actions>
           </v-card>

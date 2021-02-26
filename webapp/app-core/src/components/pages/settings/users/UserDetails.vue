@@ -64,35 +64,6 @@
           </v-card>
         </v-col>
       </v-row>
-      <!--<v-spacer></v-spacer>
-      <v-row>
-        <v-col cols="12" lg="6">
-          <v-card>
-            <v-card-title>
-              User Certificate
-            </v-card-title>
-            <v-card-actions class="pa-4">
-              <v-btn color="primary" tile @click="showCertificateDialog = true">Show certificate</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>-->
-      <!--<v-spacer></v-spacer>
-      <v-row>
-        <v-col cols="12" lg="6">
-          <v-card>
-            <v-card-title>
-              Enroll User
-            </v-card-title>
-            <v-card-text>
-              Enroll registered user to create new signed certificate.
-            </v-card-text>
-            <v-card-actions class="pa-4">
-              <v-btn color="primary" tile @click="enroll">Enroll user</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>-->
       <v-spacer></v-spacer>
       <v-row v-if="loggedInUser !== user.username">
         <v-col cols="12" lg="6">
@@ -116,18 +87,23 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-spacer></v-spacer>
+      <v-row v-if="loggedInUser !== user.username">
+        <v-col cols="12" lg="6">
+          <v-card>
+            <v-card-title>
+              Delete User
+            </v-card-title>
+            <!--<v-card-text>
+            </v-card-text>-->
+            <v-card-actions class="pa-4">
+              <v-spacer></v-spacer>
+              <v-btn color="primary" tile @click="deleteUser">Delete user</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
-    <!--<v-dialog v-model="showCertificateDialog" persistent width="640">
-      <v-card>
-        <v-card-title class="headline">Certificate</v-card-title>
-        <v-card-text>
-          <span v-html="certificateHtml"></span>
-        </v-card-text>
-        <v-card-actions class="pa-4">
-          <v-btn color="primary" tile @click="showCertificateDialog = false">CLOSE</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>-->
     <v-dialog v-model="showAddIdentityDialog" persistent width="640">
       <v-card>
         <v-card-title class="headline">Add Identity</v-card-title>
@@ -139,9 +115,6 @@
               item-value="id"
               label="Select identities"
               multiple>
-            <!--<template v-slot:label="{index, item}">
-              {{item.name}}
-            </template>-->
             <template v-slot:selection="{index, item}">
               {{item.name}}
             </template>
@@ -194,16 +167,7 @@ export default {
     identities: [],
     myArray: [],
     identitiesSelected: [],
-    /* certificateData: {
-      notBefore: '',
-      notAfter: '',
-      issuer: {},
-      subject: {},
-      attributes: {},
-    },
-    certificateHtml: '',*/
     newPasswordReset: '',
-    // showCertificateDialog: false,
     showAddIdentityDialog: false,
     valid: true,
     rules: validationRules,
@@ -228,14 +192,6 @@ export default {
         this.loading = false;
         this.user = response.data;
         this.breadcrumbItems[1].text = this.user.username.toUpperCase();
-        /* if (this.user.certificate) {
-          this.certificateHtml = this.user.certificate.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-          if (this.user.certificateData) {
-            console.log(this.user.certificateData);
-          }
-        } else {
-          this.$modal.error({message: 'Failed to load user certificate'});
-        }*/
       }).catch((error) => {
         this.loading = false;
         this.$modal.error(error);
@@ -270,10 +226,6 @@ export default {
       }
     },
 
-    /* showCertificate() {
-      this.$modal.info({message: 'info'});
-    },*/
-
     resetPassword() {
       if (this.$refs.formResetPassword.validate()) {
         const data = {
@@ -305,21 +257,22 @@ export default {
       }
     },
 
-    /* enroll() {
+    deleteUser() {
       this.$modal.confirm({
-        title: 'Enroll user', message: 'Are you sure?',
+        title: 'Delete user', message: 'Are you sure?',
         callbackOk: () => {
           this.loading = true;
           this.$http({
-            method: 'post',
-            url: '/api/v1/users/enroll',
-            withCredentials: true,
-            data: {name: this.user.username},
-          }).then((response) => {
-            this.fetchUser();
+            method: 'delete',
+            url: '/api/v1/users/' + this.userId,
+            withCredentials: true
+          }).then((/* response*/) => {
             this.$modal.info({
               title: 'Success',
-              message: 'User has been enrolled successfully!',
+              message: 'User has been deleted successfully!',
+              callbackOk: () => {
+                this.$router.push('/settings/users');
+              }
             });
           }).catch((error) => {
             this.loading = false;
@@ -327,7 +280,7 @@ export default {
           });
         },
       });
-    },*/
+    },
 
     openAddIdentityDialog() {
       this.identitiesSelected = [];
