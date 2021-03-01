@@ -19,7 +19,11 @@
       </v-col>
       <v-col>
         <v-row>
-          <vue-json-pretty show-length :deep="4" :data="rawConvertedToJson" />
+          <vue-json-pretty
+            show-length
+            :deep="4"
+            :data="convertRawToJSON(rawData)"
+          />
         </v-row>
       </v-col>
     </v-row>
@@ -29,6 +33,7 @@
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
+import {converterMixin} from '@/utils/mixins/handle-data';
 
 export default {
   name: 'tab-3',
@@ -36,11 +41,6 @@ export default {
   description:
     'In this tab the detals of a contract are displayed. The tab is found in the contract timeline when clicking on "View Contract"',
   components: {VueJsonPretty},
-  mixins: [timelineMixin],
-  computed: {
-    rawConvertedToJson() {
-      return JSON.parse(atob(this.rawData));
-    },
-  },
+  mixins: [timelineMixin, converterMixin],
 };
 </script>

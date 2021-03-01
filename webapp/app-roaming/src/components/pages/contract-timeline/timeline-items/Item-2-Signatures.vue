@@ -19,7 +19,7 @@
             </v-icon>
             <v-progress-circular
               size="23"
-              v-else-if="totalSignatures[selfMsp] !== 0"
+              v-else
               :value="(totalSignatures[selfMsp] / minSignaturesSelf) * 100"
               color="success"
             />
@@ -40,7 +40,7 @@
 
             <v-progress-circular
               size="23"
-              v-else-if="totalSignatures[partnerMsp] !== 0"
+              v-else
               :value="
                 (totalSignatures[partnerMsp] / minSignaturesPartner) * 100
               "
