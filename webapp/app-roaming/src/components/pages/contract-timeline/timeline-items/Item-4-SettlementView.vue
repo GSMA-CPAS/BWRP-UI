@@ -3,16 +3,17 @@
     <template #content>
       <v-card class="ml-15" color="#fafafa">
         <v-card-text>
-          <b>DATA UPLOADED</b>
-          <br />
-          <div>
-            Uploaded at {date} by {Party}
+          <div class="font-weight-bold text-uppercase mb-3">Data Uploaded</div>
+          <v-row class="mb-1">
+            <div>Uploaded at {date} by {Party}</div>
+            <v-spacer />
             <v-icon color="success">mdi-check-circle-outline</v-icon>
-          </div>
-          <div>
-            Uploaded at {date} by {Party}
+          </v-row>
+          <v-row class="mb-1">
+            <div>Uploaded at {date} by {Party}</div>
+            <v-spacer />
             <v-icon color="success">mdi-check-circle-outline</v-icon>
-          </div>
+          </v-row>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

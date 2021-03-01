@@ -3,7 +3,7 @@
     <template #content>
       <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>
-          <div class="font-weight-bold text-uppercase mb-2">Signatures</div>
+          <div class="font-weight-bold text-uppercase mb-3">Signatures</div>
           <v-row class="mb-1">
             <div>
               {{
