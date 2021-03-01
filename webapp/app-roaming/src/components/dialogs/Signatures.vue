@@ -58,8 +58,8 @@ export default {
 };
 </script>
 
-<style >
-table {
+<style scoped>
+/deep/ table {
   table-layout: fixed;
 }
 
@@ -68,5 +68,8 @@ table td {
 }
 table tr td:nth-child(2) {
   width: 80%;
+}
+table tr:hover {
+  background-color: transparent !important;
 }
 </style>

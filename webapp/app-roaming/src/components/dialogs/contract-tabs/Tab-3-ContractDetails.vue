@@ -2,23 +2,23 @@
   <div>
     <v-row>
       <v-col>
-        <v-row class="pa-2">
+        <v-row>
           <v-col cols="12" class="font-weight-medium">Reference ID</v-col>
           <v-col class="subtitle-2">{{ referenceId }}</v-col>
         </v-row>
         <v-divider />
-        <v-row class="pa-2">
+        <v-row>
           <v-col cols="12" class="font-weight-medium">Transaction ID</v-col>
           <v-col class="subtitle-2">{{ blockchainTxId }}</v-col>
         </v-row>
         <v-divider />
-        <v-row class="pa-2">
+        <v-row>
           <v-col cols="12" class="font-weight-medium">Created</v-col>
           <v-col class="subtitle-2">{{ creationDate }}</v-col>
         </v-row>
       </v-col>
       <v-col>
-        <v-row>
+        <v-row class="pa-2 background">
           <vue-json-pretty
             show-length
             :deep="4"
