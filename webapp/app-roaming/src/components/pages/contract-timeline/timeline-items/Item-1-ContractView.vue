@@ -40,7 +40,6 @@ export default {
   methods: {
     exportRawData() {
       const data = 'data:text/plain;charset=utf-8,' + this.rawData;
-      console.log(data);
       const link = document.createElement('a');
       link.href = data;
       link.download = `${this.referenceId}.base64`;
