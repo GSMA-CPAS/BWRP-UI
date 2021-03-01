@@ -15,7 +15,7 @@
     </template>
     <template #actions="{cancel}">
       <app-button
-        text
+        plain
         label="Cancel"
         @button-pressed="
           resetData();

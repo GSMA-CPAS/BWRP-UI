@@ -10,9 +10,11 @@
       :key="i"
     >
       <fragment v-for="(msp, index) in parties" :key="msp">
-        <v-col>{{
-          parseSignature(documentData.framework.signers[msp][i - 1]) | isNil
-        }}</v-col>
+        <v-col>
+          {{
+            parseSignature(documentData.framework.signers[msp][i - 1]) | isNil
+          }}
+        </v-col>
         <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </row>

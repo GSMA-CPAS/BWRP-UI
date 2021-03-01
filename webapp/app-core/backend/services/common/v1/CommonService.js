@@ -27,11 +27,11 @@ class CommonService extends AbstractService {
     this.getLogger().debug('[CommonService::processDocument] documentDataJson %s ', JSON.stringify(documentDataJson));
 
     const privateDocument = {
-      'documentId': document.id,
-      'fromMSP': document.fromMSP,
-      'toMSP': document.toMSP,
-      'data': documentData,
-      'state': Enums.documentState.SENT,
+      documentId: document.id,
+      fromMSP: document.fromMSP,
+      toMSP: document.toMSP,
+      data: documentData,
+      state: Enums.documentState.SENT,
     };
 
     return privateDocument;
@@ -73,19 +73,28 @@ class CommonService extends AbstractService {
     });
 
     /**
-     * curl -X GET http://{host}:{port}/api/v1/common/documents/{contractId}
+     * curl -X GET http://{host}:{port}/api/v1/common/documents/{contractId}[/?format=RAW]
      */
     this.getRouter().get('/documents/:contractId', ensureAuthenticated, async (req, res) => {
       const contractId = req.params.contractId;
+      const requireRaw = req.query.format === 'RAW';
       try {
         // currently passing self mspid for some Payload convertion. Require some cleanup.
-        const response = await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
+        const response = requireRaw ?
+            await this.getBackendAdapter('common').getRawContractById(contractId) :
+            await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
         return res.json(response);
       } catch (error) {
-        this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get document',
-        })), 'GET /:contractId');
+        this.handleError(
+          res,
+          new Error(
+            JSON.stringify({
+              code: ErrorCodes.ERR_PRIVATE_DATA,
+              message: 'Failed to get document',
+            }),
+          ),
+          'GET /:contractId',
+        );
       }
     });
 

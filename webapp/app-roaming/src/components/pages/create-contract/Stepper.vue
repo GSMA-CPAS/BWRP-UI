@@ -19,14 +19,14 @@
       </div>
       <v-row class="mt-5">
         <app-button
-          class="ml-8"
+          class="ml-6"
           label="Export Draft"
           @button-pressed="downloadDocument"
         />
         <v-spacer />
         <app-button
           @click="doSaveContract"
-          class="mr-8"
+          class="mr-6"
           label="Save & Propose To Partner"
         />
       </v-row>

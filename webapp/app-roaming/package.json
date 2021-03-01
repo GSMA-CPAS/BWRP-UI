@@ -19,6 +19,7 @@
     "vue-axios": "^2.1.5",
     "vue-file-agent": "^1.7.0-beta.1",
     "vue-fragment": "^1.5.1",
+    "vue-json-pretty": "1.7.1",
     "vue-lodash": "^2.1.2",
     "vue-router": "^3.5.1",
     "vuelidate": "^0.7.6",
