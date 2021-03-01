@@ -241,11 +241,11 @@ const newDocumentModule = {
               })
               .catch((err) => {
                 log(err);
-                reject(err);
-                router.push(PATHS.contracts);
+                // reject(err);
               });
           } catch (err) {
-            reject(err);
+            const error = {title: 'Missing values', body: err};
+            reject(error);
           }
         }, 50);
       });

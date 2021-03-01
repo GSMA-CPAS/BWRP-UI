@@ -58,11 +58,11 @@ export default {
       this.$refs[1][0].$v.$touch();
 
       this.saveContract().catch((e) => {
-        console.error('Error saving contract:', e);
+        const {title, body} = e;
+        // console.error('Error saving contract:', e);
         this.$store.dispatch('app-state/loadError', {
-          title: 'Error saving contract',
-          body:
-            'Could not save contract - the contract information may be incomplete or filled incorrectly',
+          title,
+          body,
         });
       });
     },
