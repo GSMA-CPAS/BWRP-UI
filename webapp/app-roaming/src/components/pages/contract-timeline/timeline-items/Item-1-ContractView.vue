@@ -21,7 +21,6 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <!-- <app-button @click="exportRawData()" :ripple="false" label="Export" /> -->
           <div class="mr-2" />
           <contract />
         </v-card-actions>
@@ -40,7 +39,8 @@ export default {
   components: {Contract},
   methods: {
     exportRawData() {
-      const data = 'data:text/plain;base64,' + encodeURIComponent(this.rawData);
+      const data = 'data:text/plain;charset=utf-8,' + this.rawData;
+      console.log(data);
       const link = document.createElement('a');
       link.href = data;
       link.download = `${this.referenceId}.base64`;
@@ -48,9 +48,7 @@ export default {
       link.click();
     },
     exportToJSON() {
-      const data =
-        'data:application/json;charset=utf-8,' +
-        encodeURIComponent(JSON.stringify(this.convertRawToJSON(this.rawData)));
+      const data = 'data:application/json;base64,' + this.rawData;
       const link = document.createElement('a');
       link.href = data;
       link.download = `${this.referenceId}.json`;
@@ -61,8 +59,8 @@ export default {
   computed: {
     items() {
       return [
-        {title: 'To JSON', icon: 'mdi-download', onClick: this.exportToJSON},
         {title: 'Raw Data', icon: 'mdi-download', onClick: this.exportRawData},
+        {title: 'To JSON', icon: 'mdi-download', onClick: this.exportToJSON},
       ];
     },
   },
