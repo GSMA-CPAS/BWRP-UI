@@ -2,9 +2,9 @@
 
 const got = require('got');
 const config = require('config');
-// const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT +
-   '/adapter/AbstractAdapter');
+const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
+const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const crypto = require('crypto');
 
 class CommonAdapter extends AbstractAdapter {
@@ -41,13 +41,8 @@ class CommonAdapter extends AbstractAdapter {
    // TODO: support for query parameter to search for contracts.
    async getContracts(query) {
       try {
-         const lists = await got(
-            this.adapterConfig.url + '/api/v1/contracts/',
-         ).json();
-         this.getLogger().debug(
-            '[CommonAdapter::getContracts] get all contracts: - %s',
-            JSON.stringify(lists),
-         );
+         const lists = await got(this.adapterConfig.url + '/api/v1/contracts/').json();
+         this.getLogger().debug('[CommonAdapter::getContracts] get all contracts: - %s', JSON.stringify(lists));
          const processed = [];
          for (const item of lists) {
             if (item.referenceId !== undefined) {
@@ -57,10 +52,8 @@ class CommonAdapter extends AbstractAdapter {
                   partnerMsp: this.getPartnerMsp(item.header.msps),
                   state: item.state,
                   lastModification: item.lastModificationDate,
-                  startDate:
-                     item.body.framework.term && item.body.framework.term.start,
-                  endDate:
-                     item.body.framework.term && item.body.framework.term.end,
+                  startDate: item.body.framework.term && item.body.framework.term.start,
+                  endDate: item.body.framework.term && item.body.framework.term.end,
                   authors: item.body.metadata.authors,
                   type: item.header.type,
                   name: item.body.metadata.name,
@@ -71,11 +64,11 @@ class CommonAdapter extends AbstractAdapter {
          }
          return processed;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getContracts] failed to get contracts - %s',
-            error.message,
-         );
-         throw error;
+         this.getLogger().error('[CommonAdapter::getContracts] failed to get contracts - %s', error.message);
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_PRIVATE_DATA,
+            message: 'Failed to get contracts',
+         }));
       }
    }
 
@@ -147,7 +140,7 @@ class CommonAdapter extends AbstractAdapter {
                contractId +
                '/?format=RAW',
          ).json();
-         item.data = item.raw;
+         // item.data = item.raw;
          this.getLogger().debug(
             '[CommonAdapter::getContractById] get contract in RAW: - %s',
             JSON.stringify(item),
@@ -170,128 +163,71 @@ class CommonAdapter extends AbstractAdapter {
             version: data.header.version,
             msps: data.header.msps,
          };
-         // for (const msp in data.header.msps) {
-         //  if (msp === toMsp) {
-         //    // header.toMsp = {mspId: msp, signatures: data.body[msp].signatures};
-         //    // todo: hardcoded
-         //    header.toMsp = {mspId: msp, signatures: [
-         //      {
-         //        'id': 'id',
-         //        'name': 'name',
-         //        'role': 'role'
-         //      },
-         //      {
-         //        'id': 'id',
-         //        'name': 'name',
-         //        'role': 'role'
-         //      }
-         //    ]};
-         //  } else {
-         //    // header.fromMsp = {mspId: msp, signatures: data.body[msp].signatures};
-         //    // todo: hardcoded
-         //    header.fromMsp = {mspId: msp, signatures: [
-         //      {
-         //        'id': 'id',
-         //        'name': 'name',
-         //        'role': 'role'
-         //      },
-         //      {
-         //        'id': 'id',
-         //        'name': 'name',
-         //        'role': 'role'
-         //      }
-         //    ]};
-         //  }
-         // }
-
-         /* const check = true;
-      for (const msp in data.header.msps) {
-        // escape eslint check
-        if (check == true) {
-          data.header.msps[msp].minSignatures = data.body.framework.signers[msp].length;
-        }
-      }*/
          const payload = {header: header, body: data.body};
          const contract = await got.post(
             this.adapterConfig.url + '/api/v1/contracts/',
             {
                json: payload,
                responseType: 'json',
-            },
+            }
          );
-
          const response = await got.put(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contract.body.contractId +
-               '/send/',
-            {responseType: 'json'},
+            this.adapterConfig.url + '/api/v1/contracts/' + contract.body.contractId + '/send/',
+            {
+               responseType: 'json'
+            }
          );
-         this.getLogger().debug(
-            '[CommonAdapter::createContract] create new contract: - %s',
-            JSON.stringify(response.body),
-         );
+         this.getLogger().debug('[CommonAdapter::createContract] create new contract: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::createContract] failed to create contract - %s',
-            error.message,
-         );
-         throw error;
+         this.getLogger().error('[CommonAdapter::createContract] failed to create contract - %s', error.message);
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_PRIVATE_DATA,
+            message: 'Failed to store and send contract',
+         }));
       }
    }
 
-   async getSignatures(contractId) {
+   async getSignatures(contractId, addIdentities = false) {
       try {
-         const lists = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/signatures/',
-         ).json();
-         this.getLogger().debug(
-            '[CommonAdapter::getSignatures] get all signatures of contracts: - %s',
-            JSON.stringify(lists),
-         );
+         const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/').json();
+         this.getLogger().debug('[CommonAdapter::getSignatures] get all signatures of contracts: - %s', JSON.stringify(lists));
          const processed = [];
          for (const item of lists) {
             if (item.state === 'SIGNED') {
-               const result = await got(
-                  this.adapterConfig.url +
-                     '/api/v1/contracts/' +
-                     item.contractId +
-                     '/signatures/' +
-                     item.signatureId,
-               ).json();
+               // const result = await got(this.adapterConfig.url + '/api/v1/contracts/' + item.contractId + '/signatures/' + item.signatureId).json();
+               const result = await this.getSignaturesById(item.contractId, item.signatureId, addIdentities);
                processed.push(result);
             }
          }
          return processed;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getSignatures] failed to get all signatures - %s',
-            error.message,
-         );
-         throw error;
+         this.getLogger().error('[CommonAdapter::getSignatures] failed to get all signatures - %s', error.message);
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: 'Failed to get all signatures',
+         }));
       }
    }
 
-   async getSignaturesById(contractId, signatureId) {
+   async getSignaturesById(contractId, signatureId, addIdentity = false) {
       try {
-         const response = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/signatures/' +
-               signatureId,
-         ).json();
-         return response;
+         const signature = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/' + signatureId).json();
+         if (addIdentity) {
+            if (signature.certificate) {
+               const x509 = cryptoUtils.parseCert(signature.certificate);
+               const identity = x509.subject.str;
+               signature['identity'] = (identity) ? identity : 'Unknown';
+               // const identity = x509.subject.find((x) => x.type === 'CN').value;
+            }
+         }
+         return signature;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getSignatures] failed to get all signatures - %s',
-            error.message,
-         );
-         throw error;
+         this.getLogger().error('[CommonAdapter::getSignatures] failed to get all signatures - %s', error.message);
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: 'Failed to get signature',
+         }));
       }
    }
 
@@ -302,24 +238,25 @@ class CommonAdapter extends AbstractAdapter {
             algorithm: signatureAlgo,
             signature: signature,
          };
-         this.getLogger().debug(
-            '[CommonAdapter::signContract] sigining contracts: - %s',
-            JSON.stringify(payload),
-         );
-         const response = await got.post(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/signatures/',
-            {json: payload, responseType: 'json'},
+         this.getLogger().debug('[CommonAdapter::signContract] signing contracts: - %s', JSON.stringify(payload));
+         const response = await got.post(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/signatures/',
+            {
+               json: payload,
+               responseType: 'json'
+            }
          );
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::signContract] failed to sign contracts - %s',
-            error.message,
-         );
-         throw error;
+         this.getLogger().error('[CommonAdapter::signContract] failed to sign contract - %s', error.message);
+         let errorMessage = 'Failed to sign contract';
+         // TODO common adapter -> not clear if already signed or other error
+         if (error.response && error.response.statusCode === 422) {
+            errorMessage = 'Already signed or missing parameter';
+         }
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: errorMessage,
+         }));
       }
    }
 

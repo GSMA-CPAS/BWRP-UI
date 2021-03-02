@@ -98,6 +98,7 @@
       "route": "/api/v1/common",
       "csrfProtectionEnabled": false,
       "useBackendAdapters": [
+        {"type": "user", "name": "UserManagementAdapter"},
         {"type": "wallet", "name": "WalletAdapter"},
         {"type": "common", "name": "CommonAdapter"}      
       ]

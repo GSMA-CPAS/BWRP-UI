@@ -20,19 +20,12 @@ const documentModule = {
     },
   },
   actions: {
-    async signDocument({
-      commit,
-      dispatch,
-      rootGetters,
-      getters,
-      rootState,
-      state,
-    }) {
+    async signDocument({commit, dispatch, rootGetters, getters, rootState, state}, identity) {
       Vue.axios.commonAdapter
         .put(
           // `/signatures/` + state.document.documentId,
           `/signatures/` + state.document.contractId,
-          {},
+          {'identity': identity},
           {
             signing: true,
             withCredentials: true,

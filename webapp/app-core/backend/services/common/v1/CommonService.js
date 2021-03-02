@@ -10,8 +10,9 @@ const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewa
 class CommonService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
-    this.requiredAdapterType('common');
+    this.requiredAdapterType('user');
     this.requiredAdapterType('wallet');
+    this.requiredAdapterType('common');
     this.registerRequestHandler();
     this.mspid = config.organization.mspid;
   }
@@ -19,7 +20,7 @@ class CommonService extends AbstractService {
   /*
    * convert a document(offchain) to a privateDocument(local)
    */
-  converToPrivateDocument(document) {
+  /* converToPrivateDocument(document) {
     const documentData = Buffer.from(document.data, 'base64').toString();
     this.getLogger().debug('[CommonService::processDocument] documentData %s ', documentData);
 
@@ -33,14 +34,13 @@ class CommonService extends AbstractService {
       data: documentData,
       state: Enums.documentState.SENT,
     };
-
     return privateDocument;
-  }
+  }*/
 
   /*
    * process a private document and store/update it
    */
-  async processPrivateDocument(privateDocument) {
+  /* async processPrivateDocument(privateDocument) {
     this.getLogger().debug('[CommonService::processDocument] processing documentId %s ', privateDocument.documentId);
 
     if (await this.getBackendAdapter('localStorage').existsDocument(privateDocument.documentId)) {
@@ -52,7 +52,7 @@ class CommonService extends AbstractService {
       await this.getBackendAdapter('localStorage').storeDocument(privateDocument.documentId, privateDocument);
       this.getLogger().info('[CommonService::privateDocument] Stored document with id %s successfully', privateDocument.documentId);
     }
-  }
+  }*/
 
   registerRequestHandler() {
     /**
@@ -65,10 +65,7 @@ class CommonService extends AbstractService {
         const response = await this.getBackendAdapter('common').getContracts(req.query);
         return res.json(response);
       } catch (error) {
-        this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get private documents',
-        })), 'GET /');
+        this.handleError(res, error, 'GET /documents');
       }
     });
 
@@ -79,22 +76,19 @@ class CommonService extends AbstractService {
       const contractId = req.params.contractId;
       const requireRaw = req.query.format === 'RAW';
       try {
-        // currently passing self mspid for some Payload convertion. Require some cleanup.
-        const response = requireRaw ?
-            await this.getBackendAdapter('common').getRawContractById(contractId) :
-            await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
+        let response = {};
+        if (requireRaw) {
+          response = await this.getBackendAdapter('common').getRawContractById(contractId);
+        } else {
+          // currently passing self mspid for some Payload convertion. Require some cleanup
+          response = await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
+        }
         return res.json(response);
       } catch (error) {
-        this.handleError(
-          res,
-          new Error(
-            JSON.stringify({
-              code: ErrorCodes.ERR_PRIVATE_DATA,
-              message: 'Failed to get document',
-            }),
-          ),
-          'GET /:contractId',
-        );
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get document'
+        })), 'GET /:contractId');
       }
     });
 
@@ -110,10 +104,7 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.getLogger().error('[CommonService::/] Failed to store document - %s', error.message);
-        this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to store document',
-        })), 'POST /');
+        this.handleError(res, error, 'POST /documents');
       }
     });
 
@@ -123,7 +114,7 @@ class CommonService extends AbstractService {
     this.getRouter().get('/signatures/:contractId', ensureAuthenticated, async (req, res) => {
       const contractId = req.params.contractId;
       try {
-        const response = await this.getBackendAdapter('common').getSignatures(contractId);
+        const response = await this.getBackendAdapter('common').getSignatures(contractId, true);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
@@ -138,6 +129,42 @@ class CommonService extends AbstractService {
      */
     this.getRouter().put('/signatures/:contractId', ensureAuthenticated, async (req, res) => {
       const contractId = req.params.contractId;
+      const identity = req.body.identity;
+      if (!identity) {
+        return this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_MISSING_PARAMETER,
+          message: 'Missing parameter: identity',
+        })), 'PUT /signatures/:contractId');
+      }
+      try {
+        const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
+        const hasIdentity = userIdentities.some((item) => item.name === identity);
+        if (hasIdentity) {
+          const walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity);
+          if (walletIdentity) {
+            const privateKey = walletIdentity.credentials.privateKey;
+            const certificate = walletIdentity.credentials.certificate;
+            const document = await this.getBackendAdapter('common').getRawContractById(contractId);
+            const signature = cryptoUtils.createSignature(privateKey, document.raw);
+            const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
+            const response = await this.getBackendAdapter('common').signContract(contractId, certificate, signatureAlgo, signature);
+            return res.json(response);
+          } else {
+            return this.handleError(res, new Error(JSON.stringify({
+              code: ErrorCodes.ERR_VALIDATION,
+              message: 'Failed to get wallet identity: ' + identity,
+            })), 'PUT /signatures/:contractId');
+          }
+        } else {
+          return this.handleError(res, new Error(JSON.stringify({
+            code: ErrorCodes.ERR_VALIDATION,
+            message: 'Wrong user identity: ' + identity,
+          })), 'PUT /signatures/:contractId');
+        }
+      } catch (error) {
+        this.handleError(res, error, 'PUT /signatures/:contractId');
+      }
+      /*
       try {
         const identity = await this.getBackendAdapter('wallet').getIdentity(req.user.enrollmentId);
         const privateKey = identity.credentials.privateKey;
@@ -165,6 +192,7 @@ class CommonService extends AbstractService {
           })), 'PUT /:contractId');
         }
       }
+     */
     });
 
     /**

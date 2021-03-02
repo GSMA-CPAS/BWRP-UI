@@ -7,7 +7,7 @@
     <template v-if="signatures" #content>
       <v-simple-table
         v-for="(
-          {signature, msp, blockchainRef, state}, signatureIndex
+          {signature, msp, identity, blockchainRef, state}, signatureIndex
         ) in signatures"
         :key="signatureIndex"
         class="pb-10 respect"
@@ -20,6 +20,10 @@
             <td />
           </tr>
           <tr>
+            <td class="font-weight-medium pa-2">State</td>
+            <td class="pa-2">{{ state }}</td>
+          </tr>
+          <tr>
             <td class="font-weight-medium pa-2">Transaction ID</td>
             <td class="pa-2">{{ blockchainRef.txId }}</td>
           </tr>
@@ -28,14 +32,14 @@
             <td class="pa-2">{{ msp }}</td>
           </tr>
           <tr>
+            <td class="font-weight-medium pa-2">Identity</td>
+            <td class="pa-2">{{ identity }}</td>
+          </tr>
+          <tr>
             <td class="font-weight-medium pa-2">Signature</td>
             <td class="pa-2">
               {{ signature }}
             </td>
-          </tr>
-          <tr>
-            <td class="font-weight-medium pa-2">State</td>
-            <td class="pa-2">{{ state }}</td>
           </tr>
         </tbody>
         <!-- <v-row>

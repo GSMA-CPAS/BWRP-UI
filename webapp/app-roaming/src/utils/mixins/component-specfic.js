@@ -69,12 +69,14 @@ const timelineMixin = {
     ...mapActions('document/new', ['startContract']),
     ...mapActions('partners', ['loadPartners']),
     ...mapActions('document', ['loadData', 'signDocument']),
+    ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
   },
   computed: {
     cardTextStyle() {
       return {'ma-5': true};
     },
+    ...mapState('user', ['identities']),
     ...mapState('app-state', ['signing']),
     ...mapState('document', {
       referenceId: (state) => state.document.referenceId,
@@ -98,7 +100,7 @@ const timelineMixin = {
       'minSignaturesSelf',
       'minSignaturesPartner',
     ]),
-    ...mapGetters('partners', ['list']),
+    ...mapGetters('partners', ['list'])
   },
 };
 export {timelineMixin};

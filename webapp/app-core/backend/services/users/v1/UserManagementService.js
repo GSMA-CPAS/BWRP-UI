@@ -84,7 +84,19 @@ class UserManagementService extends AbstractService {
     });
 
     /**
-     * GET IDENTITIES - ADMIN ONLY
+     * GET IDENTITIES
+     */
+    this.getRouter().get('/self/identities', ensureAuthenticated, async (req, res) => {
+      try {
+        const result = await this.getBackendAdapter('userManagement').getUserIdentities(req.user.id);
+        res.json(result);
+      } catch (error) {
+        this.handleError(res, error, 'GET /self/identities');
+      }
+    });
+
+    /**
+     * GET IDENTITIES BY USER ID - ADMIN ONLY
      */
     this.getRouter().get('/:userId/identities', ensureAdminAuthenticated, async (req, res) => {
       try {

@@ -4,6 +4,7 @@
       <app-button
         :loading="loading"
         :outlined="outlined"
+        @click="$emit('on-open')"
         v-on="on"
         :label="label"
         :svg="svg"
