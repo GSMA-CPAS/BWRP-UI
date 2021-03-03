@@ -9,7 +9,9 @@ import {
   mdiAccount,
   mdiExitToApp,
   mdiMenuDown,
-  mdiAccountSupervisor
+  mdiAccountSupervisor,
+  mdiSim,
+  mdiTrashCan
 } from '@mdi/js';
 
 const opts = {
@@ -31,7 +33,9 @@ const opts = {
       password: mdiShieldKey,
       security: mdiSecurity,
       menuDown: mdiMenuDown,
-      userManagement: mdiAccountSupervisor
+      userManagement: mdiAccountSupervisor,
+      identityManagement: mdiSim,
+      trashCan: mdiTrashCan
     }
   }
 };

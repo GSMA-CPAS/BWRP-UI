@@ -28,6 +28,7 @@
                 <v-text-field v-model="twoFactor.token" label="Enter Code" :rules="[rules.required]"></v-text-field>
               </v-card-text>
               <v-card-actions class="pa-4">
+                <v-spacer></v-spacer>
                 <v-btn type="submit" color="primary" tile>Activate</v-btn>
               </v-card-actions>
             </v-form>

@@ -8,8 +8,8 @@ const parseCert = (certificate) => {
   return {
     issuer: x509.getIssuer(),
     subject: x509.getSubject(),
-    notBefore: x509.getNotBefore(),
-    notAfter: x509.getNotAfter(),
+    notBefore: jsrsa.zulutosec(x509.getNotBefore()),
+    notAfter: jsrsa.zulutosec(x509.getNotAfter())
   };
 };
 

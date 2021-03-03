@@ -17,7 +17,7 @@ class LoginService extends AbstractService {
         async (username, password, done) => {
           let user;
           try {
-            user = await this.getBackendAdapter('userManagement').getUserByName(username);
+            user = await this.getBackendAdapter('userManagement').getUserByName(username, true);
           } catch (error) {
             this.getLogger().error('[LoginService] failed to get user %s - %s', username, error.message);
             return done(error);
@@ -61,9 +61,8 @@ class LoginService extends AbstractService {
             if (user.active && !user.isAdmin) {
               const loginAttempts = user.loginAttempts + 1;
               if (loginAttempts >= this.maxLoginAttempts) {
-                const data = {active: false, loginAttempts: 0};
                 try {
-                  await this.getBackendAdapter('userManagement').updateUser(user.id, data);
+                  await this.getBackendAdapter('userManagement').deactivateUser(user);
                   this.getLogger().warn('[LoginService] user %s suspended - max login attempts (%s) exceeded', username, this.maxLoginAttempts);
                 } catch (error) {
                   this.getLogger().error('[LoginService] failed to update user - %s', error.message);
@@ -91,7 +90,7 @@ class LoginService extends AbstractService {
       const userId = user.id;
       const kek = user.kek;
       try {
-        user = await this.getBackendAdapter('userManagement').getUserById(userId, false);
+        user = await this.getBackendAdapter('userManagement').getUserById(userId);
       } catch (error) {
         this.getLogger().error('[LoginService::deserializeUser] failed to get user with id %s - %s', userId, error.message);
         return done(null, false);

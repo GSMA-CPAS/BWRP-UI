@@ -36,6 +36,9 @@ const errorHandler = (res, error, errorMessagePrefix = '') => {
         case ErrorCodes.ERR_PRIVATE_DATA:
           status = 500;
           break;
+        case ErrorCodes.ERR_SIGNATURE:
+          status = 500;
+          break;
         case ErrorCodes.ERR_CA_USER_ENROLLMENT:
           status = 500;
           break;

@@ -17,12 +17,12 @@
                 <v-text-field v-model="user.username" color="secondary" disabled></v-text-field>
                 <v-text-field v-model="user.forename" label="First name" color="secondary"></v-text-field>
                 <v-text-field v-model="user.surname" label="Last name" color="secondary"></v-text-field>
-                <v-text-field v-model="user.email" label="E-Mail" color="secondary"
-                              :rules="[rules.email]"></v-text-field>
+                <v-text-field v-model="user.email" label="E-Mail" color="secondary" :rules="[rules.email]"></v-text-field>
                 <v-checkbox v-model="user.active" label="Active"></v-checkbox>
                 <v-checkbox v-model="user.isAdmin" label="Administrator"></v-checkbox>
               </v-card-text>
               <v-card-actions class="pa-4">
+                <v-spacer></v-spacer>
                 <v-btn type="submit" color="primary" tile>Update User</v-btn>
               </v-card-actions>
             </v-form>
@@ -34,26 +34,32 @@
         <v-col cols="12" lg="6">
           <v-card>
             <v-card-title>
-              User Certificate
-            </v-card-title>
-            <v-card-actions class="pa-4">
-              <v-btn color="primary" tile @click="showCertificateDialog = true">Show certificate</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-spacer></v-spacer>
-      <v-row>
-        <v-col cols="12" lg="6">
-          <v-card>
-            <v-card-title>
-              Enroll User
+              Signing Identities
             </v-card-title>
             <v-card-text>
-              Enroll registered user to create new signed certificate.
+              <v-simple-table v-if="user.identities.length > 0">
+                <template v-slot:default>
+                  <thead>
+                  <tr>
+                    <th class="text-left">Name</th>
+                    <th class="text-left"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="item in user.identities" :key="item.name">
+                    <td class="text-left">{{item.name}}</td>
+                    <td class="text-right"><v-icon small @click="removeIdentity(item)">{{$vuetify.icons.values.trashCan}}</v-icon></td>
+                  </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+              <div v-else>
+                Here you can add one or more identities for signing
+              </div>
             </v-card-text>
             <v-card-actions class="pa-4">
-              <v-btn color="primary" tile @click="enroll">Enroll user</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" tile @click="openAddIdentityDialog">Add Identity</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -63,10 +69,10 @@
         <v-col cols="12" lg="6">
           <v-card>
             <v-card-title>
-              Reset User Password
+              Reset Password
             </v-card-title>
             <v-card-text>
-              User password will be changed to the new password. User certificate will not be renewed. User must change password after first login.
+              User password will be changed to the new password. User must change password after first login.
             </v-card-text>
             <v-form ref="formResetPassword" v-model="valid" lazy-validation @submit.prevent="resetPassword">
               <v-card-text>
@@ -74,21 +80,50 @@
                               :rules="[rules.required, rules.password]"></v-text-field>
               </v-card-text>
               <v-card-actions class="pa-4">
+                <v-spacer></v-spacer>
                 <v-btn type="submit" color="primary" tile>Reset password</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-col>
       </v-row>
+      <v-spacer></v-spacer>
+      <v-row v-if="loggedInUser !== user.username">
+        <v-col cols="12" lg="6">
+          <v-card>
+            <v-card-title>
+              Delete User
+            </v-card-title>
+            <!--<v-card-text>
+            </v-card-text>-->
+            <v-card-actions class="pa-4">
+              <v-spacer></v-spacer>
+              <v-btn color="primary" tile @click="deleteUser">Delete user</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
-    <v-dialog v-model="showCertificateDialog" persistent width="640">
+    <v-dialog v-model="showAddIdentityDialog" persistent width="640">
       <v-card>
-        <v-card-title class="headline">Certificate</v-card-title>
+        <v-card-title class="headline">Add Identity</v-card-title>
         <v-card-text>
-          <span v-html="certificateHtml"></span>
+          <v-combobox
+              v-model="identitiesSelected"
+              :items="identities"
+              item-text="name"
+              item-value="id"
+              label="Select identities"
+              multiple>
+            <template v-slot:selection="{index, item}">
+              {{item.name}}
+            </template>
+          </v-combobox>
         </v-card-text>
         <v-card-actions class="pa-4">
-          <v-btn color="primary" tile @click="showCertificateDialog = false">CLOSE</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn tile @click="showAddIdentityDialog = false">Cancel</v-btn>
+          <v-btn color="primary" tile @click="addIdentities">Add</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -127,17 +162,13 @@ export default {
       email: '',
       active: false,
       isAdmin: false,
+      identities: []
     },
-    certificateData: {
-      notBefore: '',
-      notAfter: '',
-      issuer: {},
-      subject: {},
-      attributes: {},
-    },
-    certificateHtml: '',
+    identities: [],
+    myArray: [],
+    identitiesSelected: [],
     newPasswordReset: '',
-    showCertificateDialog: false,
+    showAddIdentityDialog: false,
     valid: true,
     rules: validationRules,
   }),
@@ -160,14 +191,7 @@ export default {
       this.$http({method: 'get', url: '/api/v1/users/' + this.userId, withCredentials: true}).then((response) => {
         this.loading = false;
         this.user = response.data;
-        if (this.user.certificate) {
-          this.certificateHtml = this.user.certificate.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-          /* if (this.user.certificateData) {
-            console.log(this.user.certificateData);
-          }*/
-        } else {
-          this.$modal.error({message: 'Failed to load user certificate'});
-        }
+        this.breadcrumbItems[1].text = this.user.username.toUpperCase();
       }).catch((error) => {
         this.loading = false;
         this.$modal.error(error);
@@ -202,10 +226,6 @@ export default {
       }
     },
 
-    showCertificate() {
-      this.$modal.info({message: 'info'});
-    },
-
     resetPassword() {
       if (this.$refs.formResetPassword.validate()) {
         const data = {
@@ -237,21 +257,22 @@ export default {
       }
     },
 
-    enroll() {
+    deleteUser() {
       this.$modal.confirm({
-        title: 'Enroll user', message: 'Are you sure?',
+        title: 'Delete user', message: 'Are you sure?',
         callbackOk: () => {
           this.loading = true;
           this.$http({
-            method: 'post',
-            url: '/api/v1/users/enroll',
-            withCredentials: true,
-            data: {enrollmentId: this.user.username},
-          }).then((/* response */) => {
-            this.fetchUser();
+            method: 'delete',
+            url: '/api/v1/users/' + this.userId,
+            withCredentials: true
+          }).then((/* response*/) => {
             this.$modal.info({
               title: 'Success',
-              message: 'User has been enrolled successfully!',
+              message: 'User has been deleted successfully!',
+              callbackOk: () => {
+                this.$router.push('/settings/users');
+              }
             });
           }).catch((error) => {
             this.loading = false;
@@ -260,6 +281,78 @@ export default {
         },
       });
     },
+
+    openAddIdentityDialog() {
+      this.identitiesSelected = [];
+      this.$http({
+        method: 'get',
+        url: '/api/v1/identities',
+        withCredentials: true
+      }).then((response) => {
+        this.loading = false;
+        this.identities = response.data;
+        this.identities = this.identities.map((identity) => ({
+          disabled: this.user.identities.map(({id: id}) => id).includes(identity.id), ...identity
+        }));
+        this.showAddIdentityDialog = true;
+      }).catch((error) => {
+        this.loading = false;
+        this.$modal.error(error);
+      });
+    },
+
+    addIdentities() {
+      const identityIds = [];
+      for (const identity of this.identitiesSelected) {
+        identityIds.push(identity.id);
+      }
+      this.$http({
+        method: 'post',
+        url: '/api/v1/users/' + this.userId + '/identities',
+        withCredentials: true,
+        data: identityIds,
+      }).then((/* response*/) => {
+        this.loading = false;
+        this.showAddIdentityDialog = false;
+        /* this.$modal.info({
+          title: 'Success',
+          message: (identityIds.length > 1) ? 'Identities have been added successfully' : 'Identity has been added successfully',
+        });*/
+        for (const identity of this.identitiesSelected) {
+          this.user.identities.push(identity);
+        }
+      }).catch((error) => {
+        this.loading = false;
+        this.showAddIdentityDialog = false;
+        this.$modal.error(error);
+      });
+    },
+
+    removeIdentity(item) {
+      this.$modal.confirm({
+        title: 'Remove Identity', message: 'Are you sure you want to remove identity "' + item.name + '"?',
+        callbackOk: () => {
+          this.loading = false;
+          this.$http({
+            method: 'delete',
+            url: '/api/v1/users/' + this.userId + '/identities',
+            withCredentials: true,
+            data: [item.id],
+          }).then((/* response*/) => {
+            this.loading = false;
+            const index = this.user.identities.indexOf(item);
+            this.user.identities.splice(index, 1);
+            /* this.$modal.info({
+              title: 'Success',
+              message: 'Identity has been removed successfully!',
+            });*/
+          }).catch((error) => {
+            this.loading = false;
+            this.$modal.error(error);
+          });
+        },
+      });
+    }
   },
 
   components: {

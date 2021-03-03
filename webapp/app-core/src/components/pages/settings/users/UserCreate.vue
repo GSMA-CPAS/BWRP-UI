@@ -18,7 +18,7 @@
                 <v-text-field v-model="newUser.forename" label="First name"></v-text-field>
                 <v-text-field v-model="newUser.surname" label="Last name"></v-text-field>
                 <v-text-field v-model="newUser.email" label="E-Mail" :rules="[rules.email]"></v-text-field>
-                <v-checkbox v-model="newUser.canSignDocument" label="Can sign documents"></v-checkbox>
+                <!-- <v-checkbox v-model="newUser.canSignDocument" label="Can sign documents"></v-checkbox>-->
                 <v-checkbox v-model="newUser.isAdmin" label="Administrator"></v-checkbox>
               </v-card-text>
               <v-card-actions class="pa-4">
@@ -61,7 +61,7 @@ export default {
       forename: '',
       surname: '',
       email: '',
-      canSignDocument: true,
+      canSignDocument: false,
       isAdmin: false
     },
     valid: true,
@@ -80,13 +80,14 @@ export default {
           data: this.newUser,
         }).then((/* response */) => {
           this.loading = false;
-          this.$modal.info({
+          this.$router.push('/settings/users');
+          /* this.$modal.info({
             title: 'Success',
             message: 'User "' + this.newUser.username + '" has been created successfully!',
             callbackOk: () => {
               this.$router.push('/settings/users');
             },
-          });
+          });*/
         }).catch((error) => {
           this.loading = false;
           this.$modal.error(error);

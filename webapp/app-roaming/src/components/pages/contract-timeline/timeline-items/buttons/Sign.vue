@@ -11,10 +11,22 @@
       label="Sign"
       label-min-width="90"
       :loading="signing"
+      @on-open="loadIdentities"
     >
+      <template #content>
+        <v-select
+            v-model="selectedIdentity"
+            :items="identities"
+            item-text="name"
+            item-value="name"
+            label="Select identity"
+            outlined
+            no-data-text="No signing identity"
+        ></v-select>
+      </template>
       <template #actions="{cancel}">
         <app-button @button-pressed="cancel" plain label="Cancel" />
-        <app-button
+        <app-button :disabled="selectedIdentity === null"
           @button-pressed="
             onSign();
             cancel();
@@ -30,10 +42,17 @@ import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
   name: 'sign-button',
   description: 'description',
+  data() {
+    return {
+      selectedIdentity: null
+    };
+  },
   mixins: [timelineMixin],
   methods: {
     async onSign() {
-      await this.signDocument();
+      if (this.selectedIdentity) {
+        await this.signDocument(this.selectedIdentity);
+      }
     },
   },
 };

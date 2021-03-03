@@ -16,61 +16,59 @@ class UserManagementAdapter extends AbstractAdapter {
 
   async getUsers() {
     try {
-      return await this.getDatabase().query('SELECT id, username, enrollmentId, forename, surname, email, canSignDocument, active, isAdmin FROM users');
+      return await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, isAdmin FROM users');
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUsers] failed to query users - %s', error.message);
       throw error;
     }
   }
 
-  async getUserById(userId) {
+  async getUserById(userId, withSecrets = false) {
     let rows;
-
     try {
-      rows = await this.getDatabase().query('SELECT * FROM users WHERE id=?', [userId]);
+      if (withSecrets) {
+        rows = await this.getDatabase().query('SELECT * FROM users WHERE id=?', [userId]);
+      } else {
+        rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin, twoFactorSecret FROM users WHERE id=?', [userId]);
+      }
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUserById] failed to query user with id %s - %s', userId, error.message);
       throw error;
     }
-
     if (rows.length <= 0) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_NOT_FOUND,
         message: 'User not found',
       }));
     }
-
     return rows[0];
   }
 
-  async getUserByName(username) {
+  async getUserByName(username, withSecrets = false) {
     let rows;
-
     try {
-      rows = await this.getDatabase().query('SELECT * FROM users WHERE username=?', [username]);
+      if (withSecrets) {
+        rows = await this.getDatabase().query('SELECT * FROM users WHERE username=?', [username]);
+      } else {
+        rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin, twoFactorSecret FROM users WHERE username=?', [username]);
+      }
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUserByName] failed to query username %s - %s', username, error.message);
       throw error;
     }
-
     if (rows.length <= 0) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_NOT_FOUND,
         message: 'Username not found',
       }));
     }
-
     return rows[0];
   }
 
   async existsUser(username) {
     try {
-      const rows = await this.getDatabase().query('SELECT * FROM users WHERE username=?', [username]);
-      if (rows.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
+      const rows = await this.getDatabase().query('SELECT id FROM users WHERE username=?', [username]);
+      return (rows.length > 0);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::existsUser] failed to query username %s - %s', username, error.message);
       return false;
@@ -92,6 +90,15 @@ class UserManagementAdapter extends AbstractAdapter {
       this.getLogger().info('[UserManagementAdapter] set failed login attempts for user %s to %s', user.username, attempts);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::setLoginAttempts] failed to set failed login attempts for user %s to %s - %s', user.username, attempts, error.message);
+    }
+  }
+
+  async deactivateUser(user) {
+    try {
+      await this.getDatabase().query('UPDATE users SET active=0, loginAttempts=0 WHERE id=?', user.id);
+      this.getLogger().info('[UserManagementAdapter::deactivateUser] deactivate user %s', user.username);
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::deactivateUser] failed to deactivate user %s - %s', user.username, error.message);
     }
   }
 
@@ -171,38 +178,52 @@ class UserManagementAdapter extends AbstractAdapter {
   }
 
   async updateUser(userId, data) {
-    if (data.username) {
+    if (data.forename === undefined) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_VALIDATION,
-        message: 'Username can not be updated',
+        message: 'Missing parameter: forename',
       }));
     }
 
-    if (data.password) {
+    if (data.surname === undefined) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_VALIDATION,
-        message: 'Password can not be updated',
+        message: 'Missing parameter: surname',
       }));
     }
 
-    if (data.privateKey) {
+    if (data.email === undefined) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_VALIDATION,
-        message: 'Private key can not be updated',
+        message: 'Missing parameter: email',
       }));
     }
 
-    if (data.canSignDocument) {
+    if (data.active === undefined) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_VALIDATION,
-        message: 'CanSignDocument can not be updated',
+        message: 'Missing parameter: active',
       }));
     }
+
+    if (data.isAdmin === undefined) {
+      throw new Error(JSON.stringify({
+        code: ErrorCodes.ERR_VALIDATION,
+        message: 'Missing parameter: isAdmin',
+      }));
+    }
+
+    const newData = {};
+    newData.forename = data.forename;
+    newData.surname = data.surname;
+    newData.email = data.email;
+    newData.active = data.active;
+    newData.isAdmin = data.isAdmin;
 
     let affectedRows = 0;
 
     try {
-      const result = await this.getDatabase().query('UPDATE users SET ? WHERE id=?', [data, userId]);
+      const result = await this.getDatabase().query('UPDATE users SET ? WHERE id=?', [newData, userId]);
       affectedRows = result.affectedRows;
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::updateUser] failed to update user with id %s - %s', userId, error.message);
@@ -258,6 +279,9 @@ class UserManagementAdapter extends AbstractAdapter {
       }));
     }
 
+    const userWithSecrets = await this.getUserById(user.id, true);
+    user['password'] = userWithSecrets.password;
+    user['encKey'] = userWithSecrets.encKey;
     const isPasswordCorrect = await this.comparePassword(user, password);
 
     if (!isPasswordCorrect) {
@@ -269,28 +293,30 @@ class UserManagementAdapter extends AbstractAdapter {
     }
 
     try {
-      const pwdEncKey = await this.updatePasswordAndEncKeys(user, password,
-          newPassword);
-      await this.getDatabase().
-          query('UPDATE users SET password=?, encKey=?, mustChangePassword=0 WHERE id=?',
-              [
-                pwdEncKey.passwordHash,
-                pwdEncKey.encKey,
-                user.id,
-              ]);
+      const pwdEncKey = await this.updatePasswordAndEncKeys(user, password, newPassword);
+      await this.getDatabase().query('UPDATE users SET password=?, encKey=?, mustChangePassword=0 WHERE id=?',
+          [
+            pwdEncKey.passwordHash,
+            pwdEncKey.encKey,
+            user.id,
+          ]);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::updatePassword] failed to update password for user %s - %s', user.username, error.message);
       throw error;
     }
   }
 
-  async deleteUser(username) {
+  async deleteUser(adminUser, userId) {
+    if (adminUser.id === userId) {
+      throw new Error(JSON.stringify({
+        code: ErrorCodes.ERR_VALIDATION,
+        message: 'User cannot delete himself',
+      }));
+    }
     try {
-      await this.getDatabase().query('Delete from users WHERE username=?', [
-        username,
-      ]);
+      await this.getDatabase().query('DELETE FROM users WHERE id=?', [userId]);
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::deleteUser] failed to delete user %s - %s', username, error.message);
+      this.getLogger().error('[UserManagementAdapter::deleteUser] failed to delete user with id %s - %s', userId, error.message);
       throw error;
     }
   }
@@ -298,6 +324,13 @@ class UserManagementAdapter extends AbstractAdapter {
   async resetPassword(adminUser, data) {
     const userId = data.userId;
     const newPassword = data.newPassword;
+
+    if (adminUser.id === userId) {
+      throw new Error(JSON.stringify({
+        code: ErrorCodes.ERR_VALIDATION,
+        message: 'User cannot reset own password',
+      }));
+    }
 
     if (!userId) {
       throw new Error(JSON.stringify({
@@ -344,13 +377,54 @@ class UserManagementAdapter extends AbstractAdapter {
     }
   }
 
+  async getUserIdentities(userId) {
+    try {
+      return await this.getDatabase().query('SELECT ui.id, ui.name FROM users_identities_relation uir INNER JOIN users_identities ui ON uir.identity_id=ui.id WHERE uir.user_id=?', [userId]);
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::getIdentities] failed to query user identities %s', error.message);
+      throw error;
+    }
+  }
+
+  async addIdentities(userId, arrIdentityIds) {
+    const values = [];
+    for (const identityId of arrIdentityIds) {
+      if (identityId != null) {
+        values.push([userId, identityId]);
+      }
+    }
+    try {
+      if (values.length > 0) {
+        await this.getDatabase().query('INSERT INTO users_identities_relation (user_id, identity_id) VALUES ?', [values]);
+      }
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::addIdentities] failed to add identities - %s', error.message,);
+      throw error;
+    }
+  }
+
+  async removeIdentities(userId, arrIdentityIds) {
+    const values = [];
+    for (const identityId of arrIdentityIds) {
+      if (identityId != null) {
+        values.push([identityId]);
+      }
+    }
+    try {
+      if (values.length > 0) {
+        await this.getDatabase().query('DELETE FROM users_identities_relation WHERE user_id=? AND identity_id IN (?)', [userId, values]);
+      }
+    } catch (error) {
+      this.getLogger().error('[UserManagementAdapter::removeIdentities] failed to remove identities - %s', error.message,);
+      throw error;
+    }
+  }
+
   async createAdmin() {
     let adminUser;
-
     try {
       const pwdKeys = await this.createPasswordHashAndEncKeys('admin');
       adminUser = {
-        enrollmentId: 'admin',
         username: 'admin',
         password: pwdKeys.passwordHash,
         encKey: pwdKeys.encKey,
@@ -454,7 +528,6 @@ class UserManagementAdapter extends AbstractAdapter {
           await this.database.query(
               'CREATE TABLE IF NOT EXISTS users (' +
               'id INT AUTO_INCREMENT, ' +
-              'enrollmentId VARCHAR(100) NOT NULL, ' +
               'username VARCHAR(100) NOT NULL, ' +
               'password VARCHAR(255) NOT NULL, ' +
               'forename VARCHAR(255) NULL, ' +
@@ -468,7 +541,7 @@ class UserManagementAdapter extends AbstractAdapter {
               'isAdmin TINYINT NULL DEFAULT 0, ' +
               'twoFactorSecret VARCHAR(255) NULL, ' +
               'PRIMARY KEY (id), ' +
-              'CONSTRAINT uc_user UNIQUE (enrollmentId, username))');
+              'CONSTRAINT uc_user UNIQUE (username))');
           this.getLogger().info('[UserManagementAdapter::initialize] table users has been created successfully!');
           return true;
         } catch (error) {

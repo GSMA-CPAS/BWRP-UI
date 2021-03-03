@@ -28,6 +28,7 @@
     "http-proxy-middleware": "1.0.6",
     "jquery": "3.5.1",
     "jsrsasign": "10.0.4",
+    "moment": "2.29.1",
     "mysqlw": "0.13.6",
     "otplib": "12.0.1",
     "passport": "0.4.1",

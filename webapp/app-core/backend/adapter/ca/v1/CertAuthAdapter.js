@@ -11,6 +11,7 @@ class CertAuthAdapter extends AbstractAdapter {
     this.mspid = config.organization.mspid;
     this.url = this.getAdapterConfig().get('url');
     this.caName = this.getAdapterConfig().get('caName');
+    this.adminEnrollmentId = this.getAdapterConfig().get('adminEnrollmentId');
     this.adminEnrollmentSecret = this.getAdapterConfig().get('adminEnrollmentSecret');
     this.userEnrollmentSecret = this.getAdapterConfig().get('userEnrollmentSecret');
     this.userEnrollmentRole = this.getAdapterConfig().get('userEnrollmentRole');
@@ -19,7 +20,7 @@ class CertAuthAdapter extends AbstractAdapter {
     this.ca = new FabricCAServices(this.url, {trustedRoots: [], verify: false}, this.caName);
   }
 
-  async registerUser(enrollmentId, registrar, canSignDocument = false) {
+  async registerUser(enrollmentId, registrar, canSign = false) {
     try {
       const registerRequest = {
         enrollmentID: enrollmentId,
@@ -28,9 +29,9 @@ class CertAuthAdapter extends AbstractAdapter {
         maxEnrollments: this.userEnrollmentMax,
         role: this.userEnrollmentRole,
       };
-      if (canSignDocument === true) {
+      if (canSign === true) {
         registerRequest['attrs'] = [
-          {name: 'CanSignDocument', value: 'yes', ecert: true},
+          {name: 'CanSign', value: 'yes', ecert: true},
         ];
       }
       return await this.ca.register(registerRequest, registrar);
@@ -78,9 +79,10 @@ class CertAuthAdapter extends AbstractAdapter {
 
   async enrollAdmin() {
     const enrollment = await this.ca.enroll({
-      enrollmentID: 'admin',
+      enrollmentID: this.adminEnrollmentId,
       enrollmentSecret: this.adminEnrollmentSecret,
     });
+    this.getLogger().info('[CertAuthAdapter::enrollAdmin] %s has been enrolled successfully!', this.adminEnrollmentId);
     return {
       credentials: {
         certificate: enrollment.certificate,
@@ -89,6 +91,10 @@ class CertAuthAdapter extends AbstractAdapter {
       mspId: this.mspid,
       type: 'X.509',
     };
+  }
+
+  getAdminEnrollmentId() {
+    return this.adminEnrollmentId;
   }
 }
 

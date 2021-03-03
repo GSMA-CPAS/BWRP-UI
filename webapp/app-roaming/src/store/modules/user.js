@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
+import Vue from 'vue';
 const userModule = {
   namespaced: true,
-  state: () => ({}),
+  state: () => ({identities: []}),
   mutations: {
     SET_USER(state, user) {
       Object.assign(state, user);
     },
+    SET_IDENTITIES(state, identities) {
+      state.identities = identities;
+    }
   },
   actions: {
     // initialize user
@@ -19,6 +23,18 @@ const userModule = {
         }
       }
     },
+    async loadIdentities({commit, dispatch, rootGetters, getters, rootState, state}) {
+      await Vue.axios.core
+          .get('/users/self/identities', {
+            withCredentials: true,
+          })
+          .then((data) => {
+            commit('SET_IDENTITIES', data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+    }
   },
   getters: {
     organizationMSPID: (state) => {
@@ -29,7 +45,7 @@ const userModule = {
     },
     isAdmin(state) {
       // TODO:
-    },
-  },
+    }
+  }
 };
 export default userModule;

@@ -16,6 +16,10 @@
       "description": ""
     },
     {
+      "name": "identities",
+      "description": ""
+    },
+    {
       "name": "blockchain",
       "description": ""
     }
@@ -157,7 +161,7 @@
         "tags": [
           "users"
         ],
-        "summary": "Find user by id (admin only)",
+        "summary": "Get user by id (admin only)",
         "description": "",
         "parameters": [
           {
@@ -249,14 +253,22 @@
         }
       }
     },
-    "/users/enroll": {
-      "post": {
+    "/users/{userId}/identities": {
+      "get": {
         "tags": [
           "users"
         ],
-        "summary": "Enroll user (admin only)",
+        "summary": "Get user identities (admin only)",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -267,8 +279,118 @@
           "403": {
             "description": "Forbidden"
           },
-          "404": {
-            "description": "Not Found"
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Add identities to user (admin only)",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Array of identity ids to add",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Remove user identities (admin only)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Array of identity ids to delete",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/self/identities": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get user identities",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "500": {
             "description": "Internal Server Error"
@@ -375,6 +497,140 @@
         }
       }
     },
+    "/identities": {
+      "get": {
+        "tags": [
+          "identities"
+        ],
+        "summary": "List all identities (admin only)",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "identities"
+        ],
+        "summary": "Create new identity (admin only)",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Identity object that needs to be added",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Duplicate Resource"
+          },
+          "422": {
+            "description": "Validation Error | Missing Parameter"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/identities/{identityId}": {
+      "get": {
+        "tags": [
+          "identities"
+        ],
+        "summary": "Get identity by id (admin only)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "identityId",
+            "in": "path",
+            "description": "Identity ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "identities"
+        ],
+        "summary": "Delete identity (admin only)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "identityId",
+            "in": "path",
+            "description": "Identity ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/blockchain/documents": {
       "get": {
         "tags": [
@@ -459,7 +715,7 @@
         "tags": [
           "blockchain"
         ],
-        "summary": "Find document by id",
+        "summary": "Get document by id",
         "description": "",
         "produces": [
           "application/json"
@@ -639,9 +895,6 @@
         },
         "email": {
           "type": "string"
-        },
-        "canSignDocument": {
-          "type": "boolean"
         }
       }
     }
