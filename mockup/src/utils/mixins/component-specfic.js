@@ -1,5 +1,6 @@
 import { mapActions, mapGetters } from "vuex";
 import { utilsMixin } from "./handle-data";
+import {CONTRACT_STATE, DISCREPANCIES_STATUS} from "@/utils/Enums";
 const bankFieldsMixin = {
   mixins: [utilsMixin],
   computed: {
@@ -94,3 +95,29 @@ const discountModelsMixin = {
   mounted() {},
 };
 export { discountModelsMixin };
+
+const timelineMixin = {
+  mixins: [utilsMixin],
+  methods: {
+    ...mapActions("contract", ["loadContract","signContract","onUsageReportUploaded","upgradeContractState","acceptDiscrepancies","declineDiscrepancies"]),
+    discrepanciesFlag: function (item){
+      if(Math.abs(item.delta_percentage) === 0) return 'green-flag'
+      else if(Math.abs(item.delta_percentage) <= 2) return 'yellow-flag'
+      else return Math.abs(item.delta_percentage) > 4 ? 'red-flag' : 'orange-flag'
+    }
+  },
+  data() {
+    return {
+      CONTRACT_STATE: CONTRACT_STATE,
+      DISCREPANCIES_STATUS: DISCREPANCIES_STATUS
+    }
+  },
+  computed: {
+    cardTextStyle() {
+      return {'ma-5': true};
+    },
+    ...mapGetters('document', ['exists']),
+    ...mapGetters('contract', ["isSigned","contractState","isUploaded","discrepanciesStatus"])
+  },
+};
+export {timelineMixin};

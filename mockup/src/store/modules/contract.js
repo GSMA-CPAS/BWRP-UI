@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { PATHS } from "../../utils/Enums";
+import {PATHS, CONTRACT_STATE, DISCREPANCIES_STATUS} from "../../utils/Enums";
 import Vue from "vue";
 import { v4 as uuidv4 } from "uuid";
 
@@ -12,6 +12,8 @@ const defaultNewContractState = () => {
     signatures: null,
     discountModels: null,
     taps: null,
+    contractStatus: CONTRACT_STATE.CONTRACT_NOT_SIGNED,
+    discrepanciesStatus: DISCREPANCIES_STATUS.UNDEFINED
   };
 };
 
@@ -26,6 +28,8 @@ const contractModule = {
     discountModels: {},
     taps: [],
     parties: [],
+    contractStatus: CONTRACT_STATE.CONTRACT_NOT_SIGNED,
+    discrepanciesStatus: DISCREPANCIES_STATUS.UNDEFINED
   }),
   mutations: {
     LOAD_CONTRACT: (state, contract) => {
@@ -34,6 +38,19 @@ const contractModule = {
         state[key] = element;
       }
     },
+    UPGRADE_CONTRACT_STATE: (state) => {
+      console.log(state.contractStatus)
+      state.contractStatus++;
+      console.log(state.contractStatus)
+    },
+    ACCEPT_DISCREPANCIES: (state) => {
+      state.discrepanciesStatus = DISCREPANCIES_STATUS.ACCEPTED;
+      console.log(state.discrepanciesStatus)
+    },
+    DECLINE_DISCREPANCIES: (state) => {
+      state.discrepanciesStatus = DISCREPANCIES_STATUS.DECLINED;
+    }
+
   },
   actions: {
     loadContract(
@@ -46,6 +63,43 @@ const contractModule = {
       );
       commit("LOAD_CONTRACT", contract);
     },
+    signContract(
+        { commit, dispatch, rootGetters, getters, rootState, state },
+        _cid
+    ) {
+      if(state.contractStatus === CONTRACT_STATE.CONTRACT_NOT_SIGNED){
+        commit("UPGRADE_CONTRACT_STATE")
+      }
+    },
+    onUsageReportUploaded(
+        { commit, dispatch, rootGetters, getters, rootState, state },
+        _cid
+    ) {
+      if(state.contractStatus === CONTRACT_STATE.USAGE_REPORT_NOT_UPLOADED){
+        commit("UPGRADE_CONTRACT_STATE")
+      }
+    },
+    upgradeContractState(
+        { commit, dispatch, rootGetters, getters, rootState, state },
+        _cid
+    ) {
+        commit("UPGRADE_CONTRACT_STATE")
+    },
+    acceptDiscrepancies(
+        { commit, dispatch, rootGetters, getters, rootState, state },
+        _cid
+    ) {
+      console.log('accepted')
+        commit("ACCEPT_DISCREPANCIES")
+    },
+    declineDiscrepancies(
+        { commit, dispatch, rootGetters, getters, rootState, state },
+        _cid
+    ) {
+      console.log('declined')
+
+      commit("DECLINE_DISCREPANCIES")
+    }
   },
   getters: {
     signatures: (state, getters) => {
@@ -62,6 +116,16 @@ const contractModule = {
     name: (state) => {
       return state.generalInformation.name;
     },
+    isSigned: (state) => {
+      // console.log(state)
+      return state.contractStatus >= CONTRACT_STATE.USAGE_REPORT_NOT_UPLOADED;
+    },
+    contractState: (state) => {
+      return state.contractStatus;
+    },
+    discrepanciesStatus: (state) => {
+      return state.discrepanciesStatus;
+    }
   },
   modules: {
     edit: {

@@ -1,22 +1,22 @@
 <template>
-  <app-dialog width="90vw" title="Settlement" label="View Settlement">
+  <app-dialog width="90vw" title="Settlement" :label=this.label>
     <template #content>
       <tabs :tabs="tabs" />
     </template>
   </app-dialog>
 </template>
 <script>
-import Tabs from "../global-components/Tabs.vue";
+import Tabs from "../../global-components/Tabs.vue";
 export default {
   components: {
     Tabs,
   },
-  name: "settlement",
+  name: "SettlementDiscrepancies",
   description: "This is the dialog to view the settlement.",
   computed: {
     tabs() {
       const components = require.context(
-        "./settlement-tabs/",
+        "./settlement-discrepancies-tabs/",
         false,
         /(Tab-)\d-\w*\.(vue|js)$/
       );
@@ -28,5 +28,11 @@ export default {
       return tabs;
     },
   },
+  props: { isHome: Boolean },
+  data(){
+    return {
+      label: this.isHome? 'View Home Settlement Discrepancy' : 'View Partner Settlement Discrepancy',
+    }
+  }
 };
 </script>

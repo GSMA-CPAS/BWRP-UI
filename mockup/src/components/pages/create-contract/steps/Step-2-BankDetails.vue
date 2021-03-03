@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     validate() {
-      var valid = false;
+      // var valid = false;
       var data = {};
       for (const key in this.$refs) {
         const { /* $v,  */ _data } = this.$refs[key];
