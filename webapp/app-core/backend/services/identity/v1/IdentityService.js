@@ -32,12 +32,18 @@ class IdentityService extends AbstractService {
         }
         res.json(identity);
       } catch (error) {
-        this.handleError(res, error, 'GET /');
+        this.handleError(res, error, 'GET /:id');
       }
     });
 
     this.getRouter().post('/', ensureAdminAuthenticated, async (req, res) => {
       const enrollmentId = req.body.name;
+      if (!enrollmentId) {
+        return this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_MISSING_PARAMETER,
+          message: 'Missing parameter: name',
+        })), 'POST /');
+      }
       if (enrollmentId === this.getBackendAdapter('certAuth').getAdminEnrollmentId()) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_VALIDATION,
