@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('config');
-const Enums = require(global.GLOBAL_BACKEND_ROOT + '/Enums');
+// const Enums = require(global.GLOBAL_BACKEND_ROOT + '/Enums');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
