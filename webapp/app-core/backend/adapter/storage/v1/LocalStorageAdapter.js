@@ -8,10 +8,10 @@ class LocalStorageAdapter extends AbstractAdapter {
     super(adapterName, adapterConfig, database);
   }
 
-  async storeDocument(documentId, data) {
+  async storeDocument(referenceId, data) {
     try {
       const documentData = {
-        'documentId': documentId,
+        'referenceId': referenceId,
         'fromMSP': data.fromMSP,
         'toMSP': data.toMSP,
         'data': data.data,
@@ -24,21 +24,21 @@ class LocalStorageAdapter extends AbstractAdapter {
     }
   }
 
-  async updateDocument(documentId, data) {
+  async updateDocument(referenceId, data) {
     try {
-      await this.getDatabase().query('UPDATE documents SET ? WHERE documentId=?', [data, documentId]);
+      await this.getDatabase().query('UPDATE documents SET ? WHERE referenceId=?', [data, referenceId]);
     } catch (error) {
-      this.getLogger().error('[LocalStorageAdapter::updateDocument] failed to update document with documentId %s - %s', documentId, error.message);
+      this.getLogger().error('[LocalStorageAdapter::updateDocument] failed to update document with referenceId %s - %s', referenceId, error.message);
       throw error;
     }
   }
 
-  async getDocument(documentId) {
+  async getDocument(referenceId) {
     let rows;
     try {
-      rows = await this.getDatabase().query('SELECT * FROM documents WHERE documentId=?', documentId);
+      rows = await this.getDatabase().query('SELECT * FROM documents WHERE referenceId=?', referenceId);
     } catch (error) {
-      this.getLogger().error('[LocalStorageAdapter::getDocument] failed to get document with id %s - %s', documentId, error.message);
+      this.getLogger().error('[LocalStorageAdapter::getDocument] failed to get document with id %s - %s', referenceId, error.message);
       throw error;
     }
     if (rows.length <= 0) {
@@ -53,9 +53,9 @@ class LocalStorageAdapter extends AbstractAdapter {
   async getDocumentIDFromStorageKey(storageKey) {
     let rows;
     try {
-      rows = await this.getDatabase().query('SELECT documentId FROM documents WHERE fromStorageKey=? or toStorageKey=?', [storageKey, storageKey]);
+      rows = await this.getDatabase().query('SELECT referenceId FROM documents WHERE fromStorageKey=? or toStorageKey=?', [storageKey, storageKey]);
     } catch (error) {
-      this.getLogger().error('[LocalStorageAdapter::getDocumentIDFromStorageKey] failed to get documentId from storageKey %s - %s', storageKey, error.message);
+      this.getLogger().error('[LocalStorageAdapter::getDocumentIDFromStorageKey] failed to get referenceId from storageKey %s - %s', storageKey, error.message);
       throw error;
     }
     if (rows.length <= 0) {
@@ -64,7 +64,7 @@ class LocalStorageAdapter extends AbstractAdapter {
         message: 'Document not found',
       }));
     }
-    return rows[0].documentId;
+    return rows[0].referenceId;
   }
 
   async getDocuments(query) {
@@ -90,7 +90,7 @@ class LocalStorageAdapter extends AbstractAdapter {
       }
     }
 
-    const sql = 'SELECT documentId, fromMSP, toMSP, state, ts' + extracts + ' FROM documents' + filters + ' ORDER BY ts DESC';
+    const sql = 'SELECT referenceId, fromMSP, toMSP, state, ts' + extracts + ' FROM documents' + filters + ' ORDER BY ts DESC';
     this.getLogger().debug('[LocalStorageAdapter::getDocuments] sql query - %s', sql);
 
     try {
@@ -101,9 +101,9 @@ class LocalStorageAdapter extends AbstractAdapter {
     }
   }
 
-  async existsDocument(documentId) {
+  async existsDocument(referenceId) {
     try {
-      const rows = await this.getDatabase().query('SELECT id FROM documents WHERE documentId = ?', documentId);
+      const rows = await this.getDatabase().query('SELECT id FROM documents WHERE referenceId = ?', referenceId);
       if (rows.length > 0) {
         return true;
       } else {
@@ -129,16 +129,16 @@ class LocalStorageAdapter extends AbstractAdapter {
           await this.database.query(
               'CREATE TABLE IF NOT EXISTS documents (' +
               '`id` INT AUTO_INCREMENT, ' +
-              '`documentId` VARCHAR(128) NOT NULL, ' +
+              '`referenceId` VARCHAR(128) NOT NULL, ' +
               '`fromMSP` VARCHAR(64) NOT NULL, ' +
               '`toMSP` VARCHAR(64) NOT NULL, ' +
               '`data` json NOT NULL, ' +
               '`state` VARCHAR(64) NOT NULL, ' +
               '`ts` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, ' +
-              '`fromStorageKey` VARCHAR(64) AS (SHA2(CONCAT(fromMSP, documentId), 256)) STORED NOT NULL, ' +
-              '`toStorageKey` VARCHAR(64) AS (SHA2(CONCAT(toMSP, documentId), 256)) STORED NOT NULL, ' +
+              '`fromStorageKey` VARCHAR(64) AS (SHA2(CONCAT(fromMSP, referenceId), 256)) STORED NOT NULL, ' +
+              '`toStorageKey` VARCHAR(64) AS (SHA2(CONCAT(toMSP, referenceId), 256)) STORED NOT NULL, ' +
               'PRIMARY KEY (id), ' +
-              'UNIQUE INDEX documentId (documentId))');
+              'UNIQUE INDEX referenceId (referenceId))');
           this.getLogger().info('[LocalStorageAdapter::createTableDocuments] table documents has been created successfully!');
           return true;
         } catch (error) {

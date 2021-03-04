@@ -710,7 +710,7 @@
         }
       }
     },
-    "/blockchain/documents/{documentId}": {
+    "/blockchain/documents/{referenceId}": {
       "get": {
         "tags": [
           "blockchain"
@@ -722,9 +722,9 @@
         ],
         "parameters": [
           {
-            "name": "documentId",
+            "name": "referenceId",
             "in": "path",
-            "description": "Document id",
+            "description": "Reference id",
             "required": true,
             "type": "string"
           }
@@ -742,7 +742,7 @@
         }
       }
     },
-    "/blockchain/signatures/{documentId}": {
+    "/blockchain/signatures/{referenceId}": {
       "put": {
         "tags": [
           "blockchain"
@@ -754,11 +754,25 @@
         ],
         "parameters": [
           {
-            "name": "documentId",
+            "name": "referenceId",
             "in": "path",
-            "description": "Document id",
+            "description": "Reference id",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User Identity for signing",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "identity": {
+                  "type": "string"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -774,21 +788,21 @@
         }
       }
     },
-    "/blockchain/signatures/{documentId}/{mspid}": {
+    "/blockchain/signatures/{referenceId}/{mspid}": {
       "get": {
         "tags": [
           "blockchain"
         ],
-        "summary": "Get all signature specified by documentId and mspid",
+        "summary": "Get all signature specified by referenceId and mspid",
         "description": "",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "documentId",
+            "name": "referenceId",
             "in": "path",
-            "description": "Document id",
+            "description": "Reference id",
             "required": true,
             "type": "string"
           },

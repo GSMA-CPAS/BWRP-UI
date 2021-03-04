@@ -12,6 +12,7 @@ class BlockchainService extends AbstractService {
     super(serviceName, serviceConfig, app, database);
     this.requiredAdapterType('blockchain');
     this.requiredAdapterType('localStorage');
+    this.requiredAdapterType('user');
     this.requiredAdapterType('wallet');
     this.registerRequestHandler();
     this.mspid = config.organization.mspid;
@@ -28,7 +29,7 @@ class BlockchainService extends AbstractService {
     this.getLogger().debug('[BlockchainService::processDocument] documentDataJson %s ', JSON.stringify(documentDataJson));
 
     const privateDocument = {
-      'documentId': document.id,
+      'referenceId': document.id,
       'fromMSP': document.fromMSP,
       'toMSP': document.toMSP,
       'data': documentData,
@@ -42,16 +43,16 @@ class BlockchainService extends AbstractService {
    * process a private document and store/update it
    */
   async processPrivateDocument(privateDocument) {
-    this.getLogger().debug('[BlockchainService::processDocument] processing documentId %s ', privateDocument.documentId);
+    this.getLogger().debug('[BlockchainService::processDocument] processing referenceId %s ', privateDocument.referenceId);
 
-    if (await this.getBackendAdapter('localStorage').existsDocument(privateDocument.documentId)) {
+    if (await this.getBackendAdapter('localStorage').existsDocument(privateDocument.referenceId)) {
       const data = {
         state: Enums.documentState.SENT,
       };
-      await this.getBackendAdapter('localStorage').updateDocument(privateDocument.documentId, data);
+      await this.getBackendAdapter('localStorage').updateDocument(privateDocument.referenceId, data);
     } else {
-      await this.getBackendAdapter('localStorage').storeDocument(privateDocument.documentId, privateDocument);
-      this.getLogger().info('[BlockchainService::privateDocument] Stored document with id %s successfully', privateDocument.documentId);
+      await this.getBackendAdapter('localStorage').storeDocument(privateDocument.referenceId, privateDocument);
+      this.getLogger().info('[BlockchainService::privateDocument] Stored document with id %s successfully', privateDocument.referenceId);
     }
   }
 
@@ -74,18 +75,18 @@ class BlockchainService extends AbstractService {
     });
 
     /**
-     * curl -X GET http://{host}:{port}/api/v1/blockchain/documents/{documentId}
+     * curl -X GET http://{host}:{port}/api/v1/blockchain/documents/{referenceId}
      */
-    this.getRouter().get('/documents/:documentId', ensureAuthenticated, async (req, res) => {
-      const documentId = req.params.documentId;
+    this.getRouter().get('/documents/:referenceId', ensureAuthenticated, async (req, res) => {
+      const referenceId = req.params.referenceId;
       try {
-        const response = await this.getBackendAdapter('localStorage').getDocument(documentId);
+        const response = await this.getBackendAdapter('localStorage').getDocument(referenceId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get document',
-        })), 'GET /:documentId');
+        })), 'GET /:referenceId');
       }
     });
 
@@ -98,14 +99,14 @@ class BlockchainService extends AbstractService {
         const data = req.body.data;
         const documentDataBase64 = Buffer.from(JSON.stringify(data)).toString('base64');
         const response = await this.getBackendAdapter('blockchain').uploadPrivateDocument(toMSP, documentDataBase64);
-        const documentId = response.documentID;
+        const referenceId = response.referenceID;
         const documentData = {
           'fromMSP': this.mspid,
           'toMSP': toMSP,
           'data': JSON.stringify(data),
           'state': Enums.documentState.PENDING,
         };
-        await this.getBackendAdapter('localStorage').storeDocument(documentId, documentData);
+        await this.getBackendAdapter('localStorage').storeDocument(referenceId, documentData);
         return res.json(response);
       } catch (error) {
         this.getLogger().error('[BlockchainService::/] Failed to store document - %s', error.message);
@@ -135,24 +136,24 @@ class BlockchainService extends AbstractService {
               if (document) {
                 const privateDocument = this.converToPrivateDocument(document);
                 await this.processPrivateDocument(privateDocument);
-                const documentIsStored = await this.getBackendAdapter('localStorage').existsDocument(privateDocument.documentId);
+                const documentIsStored = await this.getBackendAdapter('localStorage').existsDocument(privateDocument.referenceId);
                 if (documentIsStored) {
-                  await this.getBackendAdapter('blockchain').deletePrivateDocument(privateDocument.documentId);
-                  this.getLogger().info('[BlockchainService::/events] Deleted document with id %s successfully', privateDocument.documentId);
+                  await this.getBackendAdapter('blockchain').deletePrivateDocument(privateDocument.referenceId);
+                  this.getLogger().info('[BlockchainService::/events] Deleted document with id %s successfully', privateDocument.referenceId);
                 }
               }
             }
           }
 
-          const documentId = await this.getBackendAdapter('localStorage').getDocumentIDFromStorageKey(storageKey);
-          this.getLogger().debug('[BlockchainService::/events] documentId: %s', documentId);
-          const privateDocument = await this.getBackendAdapter('localStorage').getDocument(documentId);
+          const referenceId = await this.getBackendAdapter('localStorage').getDocumentIDFromStorageKey(storageKey);
+          this.getLogger().debug('[BlockchainService::/events] referenceId: %s', referenceId);
+          const privateDocument = await this.getBackendAdapter('localStorage').getDocument(referenceId);
 
           if (privateDocument) {
             await this.processPrivateDocument(privateDocument);
-            this.getLogger().info('[BlockchainService::/events] Stored document with id %s successfully', documentId);
+            this.getLogger().info('[BlockchainService::/events] Stored document with id %s successfully', referenceId);
           } else {
-            this.getLogger().error('[BlockchainService::/events] Failed to get private document with id - %s', documentId);
+            this.getLogger().error('[BlockchainService::/events] Failed to get private document with id - %s', referenceId);
           }
         } catch (error) {
           this.getLogger().error('[BlockchainService::/events] Failed to store document - %s', error.message);
@@ -161,45 +162,66 @@ class BlockchainService extends AbstractService {
     });
 
     /**
-     *  curl -X GET http://{host}:{port}/api/v1/blockchain/signatures/{documentId}/{msp}
+     *  curl -X GET http://{host}:{port}/api/v1/blockchain/signatures/{referenceId}/{msp}
      */
-    this.getRouter().get('/signatures/:documentId/:msp', ensureAuthenticated, async (req, res) => {
-      const documentId = req.params.documentId;
+    this.getRouter().get('/signatures/:referenceId/:msp', ensureAuthenticated, async (req, res) => {
+      const referenceId = req.params.referenceId;
       const msp = req.params.msp;
       try {
-        const response = await this.getBackendAdapter('blockchain').getSignatures(documentId, msp);
+        const response = await this.getBackendAdapter('blockchain').getSignatures(referenceId, msp);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_SIGNATURE,
           message: 'Failed to get signatures',
-        })), 'GET /:documentId/:msp');
+        })), 'GET /:referenceId/:msp');
       }
     });
 
     /**
-     *  curl -X PUT http://{host}:{port}/api/v1/blockchain/signatures/{documentId}
+     *  curl -X PUT http://{host}:{port}/api/v1/blockchain/signatures/{referenceId}
      */
-    this.getRouter().put('/signatures/:documentId', ensureAuthenticated, async (req, res) => {
-      const documentId = req.params.documentId;
+    this.getRouter().put('/signatures/:referenceId', ensureAuthenticated, async (req, res) => {
+      const referenceId = req.params.referenceId;
+      const identity = req.body.identity;
+      if (!identity) {
+        return this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_MISSING_PARAMETER,
+          message: 'Missing parameter: identity',
+        })), 'PUT /signatures/:referenceId');
+      }
       try {
-        const identity = await this.getBackendAdapter('wallet').getIdentity(req.user.enrollmentId);
-        const privateKey = identity.credentials.privateKey;
-        const certificate = identity.credentials.certificate;
-        const document = await this.getBackendAdapter('localStorage').getDocument(documentId);
-        const signature = cryptoUtils.createSignature(privateKey, document.data);
-        const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
-        await this.getBackendAdapter('blockchain').uploadSignature(documentId, certificate, signatureAlgo, signature);
-        return res.json({
-          signature: signature,
-          algorithm: signatureAlgo,
-          certificate: certificate,
-        });
+        const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
+        const hasIdentity = userIdentities.some((item) => item.name === identity);
+        if (hasIdentity) {
+          const walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity);
+          if (walletIdentity) {
+            const privateKey = walletIdentity.credentials.privateKey;
+            const certificate = walletIdentity.credentials.certificate;
+            const document = await this.getBackendAdapter('localStorage').getDocument(referenceId);
+            const signature = cryptoUtils.createSignature(privateKey, document.data);
+            const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
+            await this.getBackendAdapter('blockchain').uploadSignature(referenceId, certificate, signatureAlgo, signature);
+            return res.json({
+              signature: signature,
+              algorithm: signatureAlgo,
+              certificate: certificate,
+            });
+            // return res.json(response);
+          } else {
+            return this.handleError(res, new Error(JSON.stringify({
+              code: ErrorCodes.ERR_VALIDATION,
+              message: 'Failed to get wallet identity: ' + identity,
+            })), 'PUT /signatures/:referenceId');
+          }
+        } else {
+          return this.handleError(res, new Error(JSON.stringify({
+            code: ErrorCodes.ERR_VALIDATION,
+            message: 'Wrong user identity: ' + identity,
+          })), 'PUT /signatures/:referenceId');
+        }
       } catch (error) {
-        this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to store signature',
-        })), 'PUT /:documentId');
+        this.handleError(res, error, 'PUT /signatures/:referenceId');
       }
     });
 

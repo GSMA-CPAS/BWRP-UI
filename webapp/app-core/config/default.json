@@ -89,6 +89,7 @@
       "useBackendAdapters": [
         {"type": "blockchain", "name": "BlockchainAdapter"},
         {"type": "localStorage", "name": "LocalStorageAdapter"},
+        {"type": "user", "name": "UserManagementAdapter"},
         {"type": "wallet", "name": "WalletAdapter"}
       ]
     },
