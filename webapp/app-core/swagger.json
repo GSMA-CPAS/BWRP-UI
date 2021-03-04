@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "",
+    "description": "Webapp core endpoints",
     "version": "1.0.0",
     "title": "Webapp"
   },
@@ -9,19 +9,19 @@
   "tags": [
     {
       "name": "login",
-      "description": ""
+      "description": "Endpoints for signing in and out"
     },
     {
       "name": "users",
-      "description": ""
+      "description": "Endpoints for user management"
     },
     {
       "name": "identities",
-      "description": ""
+      "description": "Endpoints for managing signing identities"
     },
     {
       "name": "blockchain",
-      "description": ""
+      "description": "Endpoints for blockchain adapter communication. Disabled by default"
     }
   ],
   "schemes": [
@@ -595,6 +595,9 @@
           "403": {
             "description": "Forbidden"
           },
+          "404": {
+            "description": "Not Found"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -624,6 +627,47 @@
           },
           "403": {
             "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/identities/{identityId}/renew": {
+      "post": {
+        "tags": [
+          "identities"
+        ],
+        "summary": "Renew certificate of identity (admin only)",
+        "description": "",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "identityId",
+            "in": "path",
+            "description": "Identity ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
