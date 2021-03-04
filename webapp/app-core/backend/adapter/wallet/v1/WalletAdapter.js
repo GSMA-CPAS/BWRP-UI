@@ -13,11 +13,7 @@ class WalletAdapter extends AbstractAdapter {
   }
 
   async getIdentity(enrollmentId) {
-    const identity = await this.wallet.get(enrollmentId);
-    /* if (!identity) {
-      this.getLogger().error('[WalletAdapter::getIdentity] failed to get identity %s from wallet', enrollmentId);
-    }*/
-    return identity;
+    return await this.wallet.get(enrollmentId);
   }
 
   async putIdentity(enrollmentId, identity) {

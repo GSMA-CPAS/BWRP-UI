@@ -218,7 +218,6 @@ class CommonAdapter extends AbstractAdapter {
                const x509 = cryptoUtils.parseCert(signature.certificate);
                const identity = x509.subject.str;
                signature['identity'] = (identity) ? identity : 'Unknown';
-               // const identity = x509.subject.find((x) => x.type === 'CN').value;
             }
          }
          return signature;

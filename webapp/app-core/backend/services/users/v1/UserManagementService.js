@@ -132,20 +132,6 @@ class UserManagementService extends AbstractService {
     });
 
     /**
-     * ENROLL USER - ADMIN ONLY
-     */
-    /* this.getRouter().post('/enroll', ensureAuthenticated, async (req, res) => {
-      try {
-        const enrollmentId = req.body.enrollmentId;
-        const userIdentity = await this.getBackendAdapter('certAuth').enrollUser(enrollmentId);
-        await this.getBackendAdapter('wallet').putIdentity(enrollmentId, userIdentity);
-        res.json({success: true});
-      } catch (error) {
-        this.handleError(res, error, 'POST /enroll');
-      }
-    });*/
-
-    /**
      * CHANGE PASSWORD
      */
     this.getRouter().post('/password/change', ensureAuthenticatedWithPassword, async (req, res) => {

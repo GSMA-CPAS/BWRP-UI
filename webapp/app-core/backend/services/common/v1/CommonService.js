@@ -1,7 +1,6 @@
 'use strict';
 
 const config = require('config');
-// const Enums = require(global.GLOBAL_BACKEND_ROOT + '/Enums');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
@@ -16,43 +15,6 @@ class CommonService extends AbstractService {
     this.registerRequestHandler();
     this.mspid = config.organization.mspid;
   }
-
-  /*
-   * convert a document(offchain) to a privateDocument(local)
-   */
-  /* converToPrivateDocument(document) {
-    const documentData = Buffer.from(document.data, 'base64').toString();
-    this.getLogger().debug('[CommonService::processDocument] documentData %s ', documentData);
-
-    const documentDataJson = JSON.parse(documentData);
-    this.getLogger().debug('[CommonService::processDocument] documentDataJson %s ', JSON.stringify(documentDataJson));
-
-    const privateDocument = {
-      documentId: document.id,
-      fromMSP: document.fromMSP,
-      toMSP: document.toMSP,
-      data: documentData,
-      state: Enums.documentState.SENT,
-    };
-    return privateDocument;
-  }*/
-
-  /*
-   * process a private document and store/update it
-   */
-  /* async processPrivateDocument(privateDocument) {
-    this.getLogger().debug('[CommonService::processDocument] processing documentId %s ', privateDocument.documentId);
-
-    if (await this.getBackendAdapter('localStorage').existsDocument(privateDocument.documentId)) {
-      const data = {
-        state: Enums.documentState.SENT,
-      };
-      await this.getBackendAdapter('localStorage').updateDocument(privateDocument.documentId, data);
-    } else {
-      await this.getBackendAdapter('localStorage').storeDocument(privateDocument.documentId, privateDocument);
-      this.getLogger().info('[CommonService::privateDocument] Stored document with id %s successfully', privateDocument.documentId);
-    }
-  }*/
 
   registerRequestHandler() {
     /**
@@ -164,35 +126,6 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, error, 'PUT /signatures/:contractId');
       }
-      /*
-      try {
-        const identity = await this.getBackendAdapter('wallet').getIdentity(req.user.enrollmentId);
-        const privateKey = identity.credentials.privateKey;
-        const certificate = identity.credentials.certificate;
-        const document = await this.getBackendAdapter('common').getRawContractById(contractId);
-        const signature = cryptoUtils.createSignature(privateKey, document.data);
-        const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
-        const response = await this.getBackendAdapter('common').signContract(contractId, certificate, signatureAlgo, signature);
-        return res.json(response);
-      } catch (error) {
-        if (error.message.startsWith('Cannot read property')) {
-          this.handleError(res, new Error(JSON.stringify({
-            code: ErrorCodes.ERR_MISSING_PARAMETER,
-            message: 'Certificate missing',
-          })), 'PUT /:contractId');
-        } else if (error.response.statusCode === 422) {
-          this.handleError(res, new Error(JSON.stringify({
-            code: ErrorCodes.ERR_MISSING_PARAMETER,
-            message: 'Contract has already been signed',
-          })), 'PUT /:contractId');
-        } else {
-          this.handleError(res, new Error(JSON.stringify({
-            code: ErrorCodes.ERR_SIGNATURE,
-            message: 'Failed to store signature',
-          })), 'PUT /:contractId');
-        }
-      }
-     */
     });
 
     /**
