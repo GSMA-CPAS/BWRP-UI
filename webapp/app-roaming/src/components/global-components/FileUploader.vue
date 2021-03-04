@@ -2,6 +2,7 @@
   <VueFileAgent
     v-model="fileRecords"
     style="width: 100%"
+    @beforedelete="fileRecords = []"
     v-bind="$props"
     :accept="fileTypes"
     :errorText="{
@@ -33,8 +34,8 @@ export default {
   },
   watch: {
     fileRecords(input) {
-      const file = input.length > 0 ? input[0].file : null;
-      this.$emit('file-upload', file);
+      // const file =  ? input[0].file : null;
+      input.length > 0 && this.$emit('file-upload', input[0].file);
     },
   },
 };

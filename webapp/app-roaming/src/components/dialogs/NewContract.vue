@@ -10,7 +10,11 @@
         />
       </v-row>
       <v-row>
-        <file-uploader @file-upload="saveFile" file-types=".json" />
+        <file-uploader
+          ref="file-uploader"
+          @file-upload="saveFile"
+          file-types=".json"
+        />
       </v-row>
     </template>
     <template #actions="{cancel}">
@@ -19,6 +23,7 @@
         label="Cancel"
         @button-pressed="
           resetData();
+          $refs['file-uploader'].fileRecords = [];
           cancel();
         "
       />
