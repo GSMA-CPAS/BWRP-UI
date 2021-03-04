@@ -82,6 +82,17 @@ class IdentityService extends AbstractService {
         this.handleError(res, error, 'DELETE /:identityId');
       }
     });
+
+    this.getRouter().post('/:id/renew', ensureAdminAuthenticated, async (req, res) => {
+      try {
+        const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
+        const newIdentity = await this.getBackendAdapter('certAuth').enrollUser(identity.name);
+        await this.getBackendAdapter('wallet').putIdentity(identity.name, newIdentity);
+        return res.json({success: true});
+      } catch (error) {
+        this.handleError(res, error, 'DELETE /:identityId');
+      }
+    });
   }
 }
 
