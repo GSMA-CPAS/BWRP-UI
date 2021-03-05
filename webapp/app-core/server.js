@@ -66,6 +66,7 @@ app.use(
 );
 
 app.set('port', process.env.PORT || 3000);
+app.set('host', process.env.HOST || '127.0.0.1');
 app.use(express.static(path.join(__dirname, '/dist')));
 
 const csrfProtection = csrf({cookie: true});
@@ -207,7 +208,7 @@ if (sessionConfig.cookie.secure === true) {
   // HTTP SERVER
 
   let httpServer = app;
-  httpServer = httpServer.listen(app.get('port'), () => {
+  httpServer = httpServer.listen(app.get('port'), app.get('host'), () => {
     logger.info('[Server] server running in mode %s - %j', app.get('env'), httpServer.address() );
   });
 })();
