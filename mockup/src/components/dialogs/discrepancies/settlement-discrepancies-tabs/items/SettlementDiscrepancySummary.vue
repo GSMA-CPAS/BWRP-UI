@@ -27,6 +27,7 @@ import {timelineMixin} from "@/utils/mixins/component-specfic";
 export default {
   name: "DiscrepancySummary",
   mixins: [timelineMixin],
+  props: { isHome: Boolean },
   computed: {
     headers() {
       return [
@@ -41,11 +42,73 @@ export default {
       ];
     },
     items() {
-      return [
-        {bearer: 'Voice', unit: 'min',own_usage: '16703.125',partner_usage:'16207.138', discrepancy: '495.987',own_calculation_eur: '8351.56', partner_calculation_eur: '8103.569', delta_percentage: '2.969'},
-        {bearer: 'SMS', unit: '#',own_usage: '2728.420',partner_usage:'2755.704', discrepancy: '27.284',own_calculation_eur: '1364.210', partner_calculation_eur: '1377.852', delta_percentage: '1.0'},
-        {bearer: 'Data', unit: 'MB',own_usage: '334775.750',partner_usage:'334775.750', discrepancy: '-',own_calculation_eur: '167387.875', partner_calculation_eur: '167387.875', delta_percentage: '0'},
-      ];
+      if(this.isHome) {
+        return [
+          {
+            bearer: 'Voice',
+            unit: 'min',
+            own_usage: '16703.12',
+            partner_usage: '16207.13',
+            discrepancy: '495.98',
+            own_calculation_eur: '8351.56',
+            partner_calculation_eur: '8103.56',
+            delta_percentage: '2.96'
+          },
+          {
+            bearer: 'SMS',
+            unit: '#',
+            own_usage: '2728.42',
+            partner_usage: '2755.704',
+            discrepancy: '27.28',
+            own_calculation_eur: '1364.21',
+            partner_calculation_eur: '1377.85',
+            delta_percentage: '1.0'
+          },
+          {
+            bearer: 'Data',
+            unit: 'MB',
+            own_usage: '334775.75',
+            partner_usage: '334775.75',
+            discrepancy: '-',
+            own_calculation_eur: '167387.87',
+            partner_calculation_eur: '167387.87',
+            delta_percentage: '0'
+          },
+        ];
+      } else {
+        return [
+          {
+            bearer: 'Voice',
+            unit: 'min',
+            own_usage: '8353.12',
+            partner_usage: '8107.13',
+            discrepancy: '247.01',
+            own_calculation_eur: '4153.56',
+            partner_calculation_eur: '4051.56',
+            delta_percentage: '2.96'
+          },
+          {
+            bearer: 'SMS',
+            unit: '#',
+            own_usage: '5455.70',
+            partner_usage: '5428.42',
+            discrepancy: '27.28',
+            own_calculation_eur: '2737.85',
+            partner_calculation_eur: '2714.21',
+            delta_percentage: '1.0'
+          },
+          {
+            bearer: 'Data',
+            unit: 'MB',
+            own_usage: '224775.75',
+            partner_usage: '224775.75',
+            discrepancy: '-',
+            own_calculation_eur: '117387.87',
+            partner_calculation_eur: '117387.87',
+            delta_percentage: '0'
+          },
+        ];
+      }
     },
   }
 }

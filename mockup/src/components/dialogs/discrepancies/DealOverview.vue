@@ -57,13 +57,23 @@
 export default {
   name: 'discrepancies-deal-overview',
   description: 'Discrepancies Deal Overview',
+  props: { isHome: Boolean },
   data() {
-    return {
-      partner: 'TMPL',
-      ownTadigs: ['OWNT1', 'OWNT2', 'OWN3'],
-      partnerTadigs: ['PWNT1', 'PWNT2', 'PWN3'],
-      currency: 'EUR'
-    };
+    if(this.isHome){
+      return {
+        partner: 'TMPL',
+        ownTadigs: ['OWNT1', 'OWNT2', 'OWN3'],
+        partnerTadigs: ['PWNT1', 'PWNT2', 'PWN3'],
+        currency: 'EUR'
+      };
+    } else {
+      return {
+        partner: 'DTAG',
+        ownTadigs: ['PWNT1', 'PWNT2', 'PWN3'],
+        partnerTadigs: ['OWNT1', 'OWNT2', 'OWN3'],
+        currency: 'EUR'
+      };
+    }
   },
   computed: {
     contract: {},

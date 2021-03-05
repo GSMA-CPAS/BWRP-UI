@@ -48,7 +48,6 @@ export default {
         {text: 'VPMN', value: 'vpmn', align: 'center'},
         {text: 'MONTH', value: 'month', align: 'center'},
         {text: 'SERVICE', value: 'service', align: 'center'},
-        // {text: 'Direction', value: 'direction', align: 'center'},
         {text: 'Own usage', value: 'own_usage', align: 'center'},
         {text: 'Partner usage', value: 'partner_usage', align: 'center'},
         {text: 'Delta (abs)', value: 'delta_abs', align: 'center'},

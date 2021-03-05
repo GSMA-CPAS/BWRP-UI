@@ -2,7 +2,7 @@
   <fragment>
     <app-button v-if="active"
                 label="send"
-                @button-pressed="active=false;upgradeContractState();upgradeContractState();upgradeContractState();"/>
+                @button-pressed="active=false;sendUsage()"/>
     <v-icon v-else color="primary" x-large>mdi-check-circle-outline</v-icon>
   </fragment>
 </template>

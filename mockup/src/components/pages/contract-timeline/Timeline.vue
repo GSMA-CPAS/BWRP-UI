@@ -54,7 +54,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("contract", ["name","isSigned"]),
+    ...mapGetters("contract", ["name"]),
     timelineItemProps() {
       return {
         color: "transparent",
@@ -62,14 +62,6 @@ export default {
         large: true,
       };
     },
-    // timelineItems() {
-    //   const timelineItems = require.context(
-    //     "./timeline-items/",
-    //     true,
-    //     /(Item-)\d-*.*.(vue|js)$/
-    //   );
-    //   return timelineItems.keys().map((x) => timelineItems(x).default);
-    // },
   },
   mounted() {},
   beforeMount() {

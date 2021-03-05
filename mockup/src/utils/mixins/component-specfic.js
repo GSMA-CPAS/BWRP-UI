@@ -99,7 +99,7 @@ export { discountModelsMixin };
 const timelineMixin = {
   mixins: [utilsMixin],
   methods: {
-    ...mapActions("contract", ["loadContract","signContract","onUsageReportUploaded","upgradeContractState","acceptDiscrepancies","declineDiscrepancies"]),
+    ...mapActions("contract", ["loadContract","signContract","onUsageReportUploaded","upgradeContractState","acceptDiscrepancies","declineDiscrepancies","sendUsage"]),
     discrepanciesFlag: function (item){
       if(Math.abs(item.delta_percentage) === 0) return 'green-flag'
       else if(Math.abs(item.delta_percentage) <= 2) return 'yellow-flag'
@@ -115,6 +115,10 @@ const timelineMixin = {
   computed: {
     cardTextStyle() {
       return {'ma-5': true};
+    },
+    cardTextStyleWithButton() {
+      return {'mr-9': true,
+              'ml-5': true};
     },
     ...mapGetters('document', ['exists']),
     ...mapGetters('contract', ["isSigned","contractState","isUploaded","discrepanciesStatus"])

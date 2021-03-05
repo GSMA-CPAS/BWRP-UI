@@ -1,8 +1,8 @@
 <template>
   <fragment>
     <v-container>
-      <deal-overview/>
-      <settlement-discrepancy-summary/>
+      <deal-overview :isHome="isHome"/>
+      <settlement-discrepancy-summary :isHome="isHome"/>
     </v-container>
   </fragment>
 </template>
@@ -17,6 +17,7 @@ export default {
   components: {
     DealOverview, SettlementDiscrepancySummary
   },
+  props: { isHome: Boolean },
   computed: {
   },
 };

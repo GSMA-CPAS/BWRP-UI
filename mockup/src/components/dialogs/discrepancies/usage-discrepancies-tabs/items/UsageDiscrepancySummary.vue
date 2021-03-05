@@ -11,12 +11,10 @@
             ></v-text-field>
           </v-col>
           <v-col cols="5">
-
             <v-row justify="center" > Inbound</v-row>
             <v-row><v-divider/></v-row>
           </v-col>
           <v-col cols="5">
-
             <v-row justify="center"> Outbound</v-row>
             <v-row><v-divider/></v-row>
           </v-col>

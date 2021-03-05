@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card v-if="contractState >= CONTRACT_STATE.USAGE_REPORT_UPLOADED" color="#fafafa">
+      <v-card :class="isHome?cardTextStyleWithButton:cardTextStyle" v-if="contractState >= CONTRACT_STATE.USAGE_REPORT_UPLOADED" color="#fafafa">
         <v-card-text>
           <div v-if="isHome">DTAG</div>
           <div v-else>TMUS</div>
@@ -19,6 +19,7 @@
     <template #icon>
       <upload-usage-report v-if="contractState === CONTRACT_STATE.USAGE_REPORT_NOT_UPLOADED"/>
       <send-usage-report v-else-if="contractState === CONTRACT_STATE.USAGE_REPORT_UPLOADED"/>
+      <upload-usage-report v-else-if="CONTRACT_STATE.WAITING_FOR_PARTNER_USAGE_REPORT >= contractState < CONTRACT_STATE.CALCULATION_COMPLETED  && isHome"/>
       <v-icon v-else color="primary" x-large>mdi-check-circle-outline</v-icon>
     </template>
   </timeline-item>
@@ -241,7 +242,6 @@ export default {
           },
         },
       },
-
     };
   },
   components: {AppButton, UploadUsageReport, TimelineItem, SendUsageReport, UsageReport },

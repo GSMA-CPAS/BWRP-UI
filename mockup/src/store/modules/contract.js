@@ -39,16 +39,19 @@ const contractModule = {
       }
     },
     UPGRADE_CONTRACT_STATE: (state) => {
-      console.log(state.contractStatus)
       state.contractStatus++;
-      console.log(state.contractStatus)
+    },
+    UPLOAD_USAGE_REPORT: (state) => {
+      state.contractStatus = CONTRACT_STATE.USAGE_REPORT_UPLOADED;
     },
     ACCEPT_DISCREPANCIES: (state) => {
       state.discrepanciesStatus = DISCREPANCIES_STATUS.ACCEPTED;
-      console.log(state.discrepanciesStatus)
     },
     DECLINE_DISCREPANCIES: (state) => {
       state.discrepanciesStatus = DISCREPANCIES_STATUS.DECLINED;
+    },
+    SEND_USAGE: (state) => {
+      state.contractStatus = CONTRACT_STATE.READY_FOR_SETTLEMENT_CALCULATION;
     }
 
   },
@@ -75,8 +78,8 @@ const contractModule = {
         { commit, dispatch, rootGetters, getters, rootState, state },
         _cid
     ) {
-      if(state.contractStatus === CONTRACT_STATE.USAGE_REPORT_NOT_UPLOADED){
-        commit("UPGRADE_CONTRACT_STATE")
+      if(state.contractStatus < CONTRACT_STATE.CALCULATION_COMPLETED){
+        commit("UPLOAD_USAGE_REPORT")
       }
     },
     upgradeContractState(
@@ -89,16 +92,19 @@ const contractModule = {
         { commit, dispatch, rootGetters, getters, rootState, state },
         _cid
     ) {
-      console.log('accepted')
         commit("ACCEPT_DISCREPANCIES")
     },
     declineDiscrepancies(
         { commit, dispatch, rootGetters, getters, rootState, state },
         _cid
     ) {
-      console.log('declined')
-
       commit("DECLINE_DISCREPANCIES")
+    },
+    sendUsage(
+        { commit, dispatch, rootGetters, getters, rootState, state },
+        _cid
+    ) {
+      commit("SEND_USAGE")
     }
   },
   getters: {
@@ -117,7 +123,6 @@ const contractModule = {
       return state.generalInformation.name;
     },
     isSigned: (state) => {
-      // console.log(state)
       return state.contractStatus >= CONTRACT_STATE.USAGE_REPORT_NOT_UPLOADED;
     },
     contractState: (state) => {

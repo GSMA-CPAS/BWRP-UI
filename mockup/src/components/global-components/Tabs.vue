@@ -1,8 +1,8 @@
 <template>
   <v-tabs v-model="tab" centered grow>
-    <v-tab v-for="{ label, key } in tabs" :key="key" :href="`#${key}`">{{ label }}</v-tab>
-    <v-tab-item class="ma-2" v-for="{ key, component } in tabs" :key="key" :value="key">
-      <component :is="component"></component>
+    <v-tab v-for="{ label, key } in tabs" :key="key" :href="`#${key}`">{{ label }} {{isHome}}</v-tab>
+    <v-tab-item class="ma-2" v-for="{ key, component, isHome } in tabs" :key="key" :value="key">
+      <component :is="component" :isHome="isHome"></component>
     </v-tab-item>
   </v-tabs>
 </template>

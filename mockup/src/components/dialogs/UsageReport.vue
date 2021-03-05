@@ -3,9 +3,9 @@
     <app-dialog title="View Usage Report" label="view usage report">
       <template #content>
         Inbound
-        <v-data-table :headers="data.headers" :items="data.outbound.items" hide-default-footer>
+        <v-data-table :headers="data.headers" :items="data.outbound.items" >
         </v-data-table>Outbound
-        <v-data-table :headers="data.headers" :items="data.inbound.items" hide-default-footer>
+        <v-data-table :headers="data.headers" :items="data.inbound.items" >
         </v-data-table>
       </template>
     </app-dialog>

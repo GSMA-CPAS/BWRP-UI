@@ -1,5 +1,5 @@
 <template>
-  <app-dialog width="90vw" title="Settlement" :label=this.label>
+  <app-dialog width="90vw" :title=this.title :label=this.label>
     <template #content>
       <tabs :tabs="tabs" />
     </template>
@@ -13,6 +13,7 @@ export default {
   },
   name: "SettlementDiscrepancies",
   description: "This is the dialog to view the settlement.",
+  props: { isHome: Boolean },
   computed: {
     tabs() {
       const components = require.context(
@@ -23,14 +24,14 @@ export default {
       const tabs = components.keys().map((x) => {
         const component = components(x).default;
         const { label, name } = component;
-        return { key: name, label, component };
+        return { key: name, label, component, isHome:this.isHome };
       });
       return tabs;
     },
   },
-  props: { isHome: Boolean },
   data(){
     return {
+      title: this.isHome? 'Settlement Discrepancy - Home Perspective' : 'Settlement Discrepancy - Partner Perspective',
       label: this.isHome? 'View Home Settlement Discrepancy' : 'View Partner Settlement Discrepancy',
     }
   }
