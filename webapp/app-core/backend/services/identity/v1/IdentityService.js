@@ -24,12 +24,14 @@ class IdentityService extends AbstractService {
     this.getRouter().get('/:id', ensureAdminAuthenticated, async (req, res) => {
       try {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
-        const walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity.name);
-        if (walletIdentity && walletIdentity.credentials) {
-          const certificate = walletIdentity.credentials.certificate;
-          identity['x509'] = cryptoUtils.parseCert(certificate);
-          identity['certificate'] = certificate;
+        let walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity.name);
+        if (!walletIdentity) {
+          walletIdentity = await this.getBackendAdapter('certAuth').enrollUser(identity.name);
+          await this.getBackendAdapter('wallet').putIdentity(identity.name, walletIdentity);
         }
+        const certificate = walletIdentity.credentials.certificate;
+        identity['x509'] = cryptoUtils.parseCert(certificate);
+        identity['certificate'] = certificate;
         res.json(identity);
       } catch (error) {
         this.handleError(res, error, 'GET /:id');
@@ -37,37 +39,41 @@ class IdentityService extends AbstractService {
     });
 
     this.getRouter().post('/', ensureAdminAuthenticated, async (req, res) => {
-      const enrollmentId = req.body.name;
-      if (!enrollmentId) {
+      const identityName = req.body.name;
+      if (!identityName) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_MISSING_PARAMETER,
           message: 'Missing parameter: name',
         })), 'POST /');
       }
-      if (enrollmentId === this.getBackendAdapter('certAuth').getAdminEnrollmentId()) {
+      if (identityName === this.getBackendAdapter('certAuth').getAdminEnrollmentId()) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_VALIDATION,
-          message: enrollmentId + ' is reserved for admin identity',
+          message: identityName + ' is reserved for admin identity',
         })), 'POST /');
       }
+      let createdIdentityResult;
       try {
-        if (await this.getBackendAdapter('identity').existsIdentity(enrollmentId)) {
+        if (await this.getBackendAdapter('identity').existsIdentity(identityName)) {
           return this.handleError(res, new Error(JSON.stringify({
             code: ErrorCodes.ERR_DUPLICATE_ENTRY,
             message: 'Identity already exists',
           })), 'POST /');
         } else {
-          await this.getBackendAdapter('identity').createIdentity(req.body);
+          createdIdentityResult = await this.getBackendAdapter('identity').createIdentity(req.body);
           const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
           const registrar = await this.getBackendAdapter('wallet').getUserContext(adminEnrollmentId);
-          if (!await this.getBackendAdapter('certAuth').existsIdentity(enrollmentId, registrar)) {
-            await this.getBackendAdapter('certAuth').registerUser(enrollmentId, registrar, true);
+          if (!await this.getBackendAdapter('certAuth').existsIdentity(identityName, registrar)) {
+            await this.getBackendAdapter('certAuth').registerUser(identityName, registrar, true);
           }
-          const identity = await this.getBackendAdapter('certAuth').enrollUser(enrollmentId);
-          await this.getBackendAdapter('wallet').putIdentity(enrollmentId, identity);
+          const identity = await this.getBackendAdapter('certAuth').enrollUser(identityName);
+          await this.getBackendAdapter('wallet').putIdentity(identityName, identity);
           return res.json({success: true});
         }
       } catch (error) {
+        if (createdIdentityResult && createdIdentityResult.insertId > 0) {
+          await this.getBackendAdapter('identity').deleteIdentity(createdIdentityResult.insertId);
+        }
         this.handleError(res, error, 'POST /');
       }
     });

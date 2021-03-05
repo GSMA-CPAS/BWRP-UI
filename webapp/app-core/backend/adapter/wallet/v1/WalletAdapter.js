@@ -2,6 +2,7 @@
 
 const {Wallets} = require('fabric-network');
 const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
+const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 
 class WalletAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {
@@ -39,8 +40,15 @@ class WalletAdapter extends AbstractAdapter {
   async getUserContext(enrollmentId) {
     try {
       const identity = await this.getIdentity(enrollmentId);
-      const provider = this.wallet.getProviderRegistry().getProvider(identity.type);
-      return await provider.getUserContext(identity, enrollmentId);
+      if (identity) {
+        const provider = this.wallet.getProviderRegistry().getProvider(identity.type);
+        return await provider.getUserContext(identity, enrollmentId);
+      } else {
+        return Promise.reject(new Error(JSON.stringify({
+          code: ErrorCodes.ERR_NOT_FOUND,
+          message: 'Identity ' + enrollmentId + ' not found in wallet!'
+        })));
+      }
     } catch (error) {
       this.getLogger().error('[WalletAdapter::getUserContext] failed to get user context for %s - %s', enrollmentId, error.message);
       throw error;

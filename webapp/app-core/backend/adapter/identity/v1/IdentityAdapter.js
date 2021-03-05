@@ -70,9 +70,9 @@ class IdentityAdapter extends AbstractAdapter {
       }));
     }
     try {
-      await this.getDatabase().query('INSERT INTO users_identities SET ?', newIdentity);
+      const result = await this.getDatabase().query('INSERT INTO users_identities SET ?', newIdentity);
       this.getLogger().info('[IdentityAdapter::createIdentity] identity %s has been created successfully!', name);
-      return true;
+      return result;
     } catch (error) {
       this.getLogger().error('[IdentityAdapter::createIdentity] failed to insert new identity %s - %s', name, error.message);
       throw error;
