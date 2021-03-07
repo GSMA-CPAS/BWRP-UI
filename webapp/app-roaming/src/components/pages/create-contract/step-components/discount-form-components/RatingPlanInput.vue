@@ -99,6 +99,8 @@ export default {
   beforeMount() {
     if (this.value) {
       this.tiers = this.value;
+    } else {
+      this.$emit('input', this.tiers);
     }
   },
 };
