@@ -1,6 +1,15 @@
 <template>
   <fragment>
-    <v-combobox :items="codeNames" multiple v-model="value.codes" rows="2" auto-grow label="TADIG Codes" />
+    <v-combobox
+        :items="codeNames"
+        multiple
+        v-model="value.codes"
+        rows="2"
+        auto-grow
+        label="TADIG Codes"
+        @change="removeSearchTerm"
+        :search-input.sync="groupCodeSearchTerm"
+    />
     <!-- <v-checkbox
       v-model="value.includeContractParty"
       auto-grow
@@ -18,13 +27,20 @@ export default {
   props: {
     value: Object,
   },
+  data: () => ({
+    groupCodeSearchTerm: null,
+  }),
   methods: {
     ...mapActions('workspace-config/tadig-codes', [
       'loadCodes',
     ]),
     ...mapActions('workspace-config/tadig-groups', [
         'loadGroups', 'loadGroupCodes'
-    ])
+    ]),
+    removeSearchTerm(e) {
+      this.groupCodeSearchTerm = null;
+      this.groupCodeRemovalSearchTerm = null;
+    },
   },
   watch: {
     value: {
