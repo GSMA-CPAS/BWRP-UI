@@ -20,49 +20,50 @@ class CertAuthAdapter extends AbstractAdapter {
     this.ca = new FabricCAServices(this.url, {trustedRoots: [], verify: false}, this.caName);
   }
 
-  async registerUser(enrollmentId, registrar, canSign = false) {
+  async register(enrollmentId, registrar, canSign = false) {
     try {
       const registerRequest = {
         enrollmentID: enrollmentId,
         enrollmentSecret: this.userEnrollmentSecret,
         affiliation: this.userEnrollmentAffiliation,
         maxEnrollments: this.userEnrollmentMax,
-        role: this.userEnrollmentRole,
+        role: this.userEnrollmentRole
       };
       if (canSign === true) {
         registerRequest['attrs'] = [
-          {name: 'CanSign', value: 'yes', ecert: true},
+          {name: 'CanSign', value: 'yes', ecert: true}
         ];
       }
       return await this.ca.register(registerRequest, registrar);
     } catch (error) {
-      this.getLogger().error('[CertAuthAdapter::registerUser] failed to register identity %s - %s', enrollmentId, error.message);
+      this.getLogger().error('[CertAuthAdapter::register] failed to register identity %s - %s', enrollmentId, error.message);
       throw new Error(JSON.stringify({
-        code: ErrorCodes.ERR_CA_USER_REGISTRATION,
-        message: 'failed to register identity ' + enrollmentId + ' - ' + error.message,
+        code: ErrorCodes.ERR_CA_IDENTITY,
+        message: 'Failed to register identity ' + enrollmentId
       }));
     }
   }
 
-  async enrollUser(enrollmentId) {
+  async enroll(enrollmentId) {
     try {
       const enrollment = await this.ca.enroll({
         enrollmentID: enrollmentId,
         enrollmentSecret: this.userEnrollmentSecret,
       });
+      this.getLogger().info('[CertAuthAdapter::enroll] identity %s has been enrolled successfully!', enrollmentId);
       return {
         credentials: {
           certificate: enrollment.certificate,
-          privateKey: enrollment.key.toBytes(),
+          privateKey: enrollment.key.toBytes()
         },
         mspId: this.mspid,
-        type: 'X.509',
+        type: 'X.509'
       };
     } catch (error) {
-      this.getLogger().error('[CertAuthAdapter::enrollUser] failed to enroll identity %s - %s', enrollmentId, error.message);
+      this.getLogger().error('[CertAuthAdapter::enroll] failed to enroll identity %s - %s', enrollmentId, error.message);
       throw new Error(JSON.stringify({
-        code: ErrorCodes.ERR_CA_USER_ENROLLMENT,
-        message: 'failed to enroll identity ' + enrollmentId + ' - ' + error.message,
+        code: ErrorCodes.ERR_CA_IDENTITY,
+        message: 'Failed to enroll identity ' + enrollmentId
       }));
     }
   }
@@ -89,7 +90,7 @@ class CertAuthAdapter extends AbstractAdapter {
         privateKey: enrollment.key.toBytes(),
       },
       mspId: this.mspid,
-      type: 'X.509',
+      type: 'X.509'
     };
   }
 

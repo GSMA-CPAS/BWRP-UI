@@ -26,7 +26,7 @@ class IdentityService extends AbstractService {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
         let walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity.name);
         if (!walletIdentity) {
-          walletIdentity = await this.getBackendAdapter('certAuth').enrollUser(identity.name);
+          walletIdentity = await this.getBackendAdapter('certAuth').enroll(identity.name);
           await this.getBackendAdapter('wallet').putIdentity(identity.name, walletIdentity);
         }
         const certificate = walletIdentity.credentials.certificate;
@@ -64,9 +64,9 @@ class IdentityService extends AbstractService {
           const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
           const registrar = await this.getBackendAdapter('wallet').getUserContext(adminEnrollmentId);
           if (!await this.getBackendAdapter('certAuth').existsIdentity(identityName, registrar)) {
-            await this.getBackendAdapter('certAuth').registerUser(identityName, registrar, true);
+            await this.getBackendAdapter('certAuth').register(identityName, registrar, true);
           }
-          const identity = await this.getBackendAdapter('certAuth').enrollUser(identityName);
+          const identity = await this.getBackendAdapter('certAuth').enroll(identityName);
           await this.getBackendAdapter('wallet').putIdentity(identityName, identity);
           return res.json({success: true});
         }
@@ -85,18 +85,18 @@ class IdentityService extends AbstractService {
         await this.getBackendAdapter('identity').deleteIdentity(req.params.id);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'DELETE /:identityId');
+        this.handleError(res, error, 'DELETE /:id');
       }
     });
 
     this.getRouter().post('/:id/renew', ensureAdminAuthenticated, async (req, res) => {
       try {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
-        const newIdentity = await this.getBackendAdapter('certAuth').enrollUser(identity.name);
+        const newIdentity = await this.getBackendAdapter('certAuth').enroll(identity.name);
         await this.getBackendAdapter('wallet').putIdentity(identity.name, newIdentity);
         return res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'DELETE /:identityId');
+        this.handleError(res, error, 'POST /:id/renew');
       }
     });
   }
