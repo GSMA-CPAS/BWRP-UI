@@ -33,9 +33,9 @@
       <v-divider />
     </fragment>
     <v-row> <br /><br /> </v-row>
-    <v-row
-      ><app-button @click="doCopyOtherSide" label="Copy to other side"
-    /></v-row>
+    <v-row>
+      <app-button @click="doCopyOtherSide" label="Copy to other side" />
+    </v-row>
   </v-col>
 </template>
 <script>

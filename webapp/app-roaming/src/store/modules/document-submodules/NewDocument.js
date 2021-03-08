@@ -34,7 +34,9 @@ const defaultState = () => ({
   },
 });
 
-const defaultBankDetailsState = () => ({
+/* deprecated
+
+  const defaultBankDetailsState = () => ({
   currency: null,
   contactNameAccounting: null,
   contactPhoneAccounting: null,
@@ -47,12 +49,12 @@ const defaultBankDetailsState = () => ({
   bankName: null,
   bankAddress: null,
   bankAccountName: null,
-});
+}); */
 
 const defaultSignaturesState = () => ({
   minSignatures: 2,
 });
-/* Old state
+/* Old signature state
 [
   {
     id: 'signature-0',

@@ -52,7 +52,7 @@ export default {
           break;
         default:
           path = this._.upperFirst(
-              this._.camelCase(this.selectedConditionName),
+            this._.camelCase(this.selectedConditionName),
           );
       }
       const models = require.context(`./conditions/`, false, /.(vue)$/);
@@ -69,7 +69,7 @@ export default {
       ];
     },
   },
-  beforeMount() {
+  mounted() {
     if (this.value) {
       this.selectedConditionName = this.value.selectedConditionName;
       this.selectedCondition = this.value.selectedCondition;
