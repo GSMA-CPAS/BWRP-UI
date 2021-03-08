@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <app-dialog v-if="active" outlined title="Upload Service Data" label="upload data">
+    <app-dialog v-if="active" title="Upload Service Data" label="upload data">
       <template #content>
         <file-uploader @file-upload="file=> loadFile(file)" file-types=".xlsx" />
       </template>
@@ -8,30 +8,36 @@
         <v-spacer />
         <app-button text label="Cancel" @button-pressed="cancel" />
         <app-button
-          @button-pressed="active = false;cancel()"
+          @button-pressed="active = false;onUpload();"
           label="Confirm"
-          :disabled="_.isNil(file)"
         />
       </template>
     </app-dialog>
-    <v-icon v-else color="success" x-large>mdi-check-circle-outline</v-icon>
+    <v-icon v-else color="primary" x-large>mdi-check-circle-outline</v-icon>
   </fragment>
 </template>
 <script>
 // import { mapActions } from "vuex";
 // import XLSX from "xlsx";
+import {timelineMixin} from "@/utils/mixins/component-specfic";
+import AppDialog from "@/components/global-components/Dialog";
+
 export default {
-  name: "upload-settlement",
+  name: "upload-usage-report",
   description: "description",
   data() {
     return { file: null, active: true };
   },
-  components: {},
+  mixins:[timelineMixin],
+  components: {AppDialog},
   props: { actionButtonProps: Object },
   methods: {
     // ...mapActions("contract/edit", ["uploadFile"]),
     loadFile(file) {
       this.file = file;
+    },
+    async onUpload(){
+      await this.onUsageReportUploaded();
     },
     convertFile() {
       //   var reader = new FileReader();

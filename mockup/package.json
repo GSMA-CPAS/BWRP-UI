@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "chart.js": "^2.9.4",
+    "chartjs-plugin-datalabels": "^0.7.0",
+    "chartjs-plugin-labels": "^1.1.0",
     "convert-excel-to-json": "^1.7.0",
     "core-js": "^3.6.4",
     "countdown": "^2.6.0",
@@ -19,6 +22,7 @@
     "uuid": "^8.0.0",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
+    "vue-chartjs": "^3.5.1",
     "vue-file-agent": "^1.7.0-beta.1",
     "vue-fragment": "^1.5.1",
     "vue-lodash": "^2.1.2",
