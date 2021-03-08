@@ -179,10 +179,7 @@ class LoginService extends AbstractService {
                           'username': user.username,
                           'isAdmin': user.isAdmin,
                         },
-                        'organization': {
-                          'mspid': config.get('organization').mspid,
-                          'title': config.get('organization').title,
-                        },
+                        'organization': config.get('organization')
                       },
                     });
                   }
