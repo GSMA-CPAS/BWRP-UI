@@ -66,7 +66,7 @@ app.use(
 );
 
 app.set('port', process.env.PORT || 3000);
-app.set('host', process.env.HOST || '127.0.0.1');
+app.set('host', process.env.HOST || '');
 app.use(express.static(path.join(__dirname, '/dist')));
 
 const csrfProtection = csrf({cookie: true});
