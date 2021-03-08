@@ -242,6 +242,19 @@ export default {
       this.chosenServices = this.value.chosenServices;
     }
 
+    // Initialize the tadigs so we don't get undefined errors
+    if ( this.homeTadigs === undefined ) {
+      this.homeTadigs = {
+        codes: []
+      };
+    }
+
+    if ( this.visitorTadigs === undefined ) {
+      this.visitorTadigs = {
+        codes: []
+      };
+    }
+
     if (!this.chosenServices || this.chosenServices.length === 0) {
       this.chosenServices = [
         {
