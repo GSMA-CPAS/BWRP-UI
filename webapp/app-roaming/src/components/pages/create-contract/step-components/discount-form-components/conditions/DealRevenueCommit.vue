@@ -1,12 +1,12 @@
 <template>
-  <fragment>
+  <div>
     <v-row>
       <v-col>
         Discounts will be active if the calculated contract charges will be at least as high as the value below.
       </v-col>
     </v-row>
     <revenue-commitment-input v-model="revenueCommitment" :default-currency="defaultCurrency"/>
-  </fragment>
+  </div>
 </template>
 
 <script>

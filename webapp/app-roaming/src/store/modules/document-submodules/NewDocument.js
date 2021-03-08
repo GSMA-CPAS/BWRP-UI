@@ -107,7 +107,8 @@ const newDocumentModule = {
     },
     updateDiscountModels(state, payload) {
       const {key, value} = payload;
-      Object.assign(state[key].discountModels, value);
+      // Object.assign(state[key].discountModels, value);
+      state[key].discountModels = value;
     },
     SET_STEP(state, step) {
       state.step = step;

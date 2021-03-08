@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-row>
       <v-col>
         <v-select
@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
     <component v-if="!disabledModel" :is="model" />
-  </fragment>
+  </div>
 </template>
 <script>
 import BalancedUnbalanced from './models/BalancedUnbalanced.vue';

@@ -6,7 +6,7 @@
     <v-row> <br /><br /> </v-row>
     <row type="secondary" label="Service Groups" />
     <v-divider />
-    <fragment
+    <div
       v-for="(serviceGroup, index) in serviceGroups"
       :key="serviceGroup.id"
     >
@@ -31,7 +31,7 @@
         :visitor-tadig-options="visitorTadigs"
       />
       <v-divider />
-    </fragment>
+    </div>
     <v-row> <br /><br /> </v-row>
     <v-row>
       <app-button @click="doCopyOtherSide" label="Copy to other side" />

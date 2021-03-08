@@ -1,7 +1,7 @@
 <template>
-  <fragment>
+  <div>
     Discounts will be applicable at settlement. (No conditions are required for their applicability).
-  </fragment>
+  </div>
 </template>
 
 <script>

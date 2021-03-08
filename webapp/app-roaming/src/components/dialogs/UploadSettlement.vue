@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <app-dialog
       v-if="active"
       outlined
@@ -26,7 +26,7 @@
       </template>
     </app-dialog>
     <v-icon v-else color="success" x-large>mdi-check-circle-outline</v-icon>
-  </fragment>
+  </div>
 </template>
 <script>
 /*

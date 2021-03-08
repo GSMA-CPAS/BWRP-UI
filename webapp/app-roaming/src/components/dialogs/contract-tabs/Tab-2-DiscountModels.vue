@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <parties-header single :sub-row-labels="labels" v-on:party-switch="partySwitch"/>
     <div v-for="(serviceGroup, sgIndex) in discountData.serviceGroups" :key="`party-${partyId}-sg-${sgIndex}`">
       <row
@@ -29,7 +29,7 @@
         </v-col>
       </row>
       <v-divider />
-      <fragment v-for="(service, index) in serviceGroup.services" :key="`party-${partyId}-sg-${sgIndex}-row-${index}`">
+      <div v-for="(service, index) in serviceGroup.services" :key="`party-${partyId}-sg-${sgIndex}-row-${index}`">
         <row cols="2" :label="service.service">
           <v-col class="striped-column-container">
             <template v-if="service.usagePricing">
@@ -51,7 +51,7 @@
           </v-col>
         </row>
         <v-divider />
-      </fragment>
+      </div>
     </div>
     <row type="secondary" class="pa-4" label="Other information" />
     <v-divider />
@@ -75,7 +75,7 @@
         </v-row>
       </v-col>
     </v-row>
-  </fragment>
+  </div>
 </template>
 <script>
 import PartiesHeader from '../components/PartiesHeader.vue';

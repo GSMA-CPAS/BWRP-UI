@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-row>
       <v-col>
         <v-select
@@ -15,7 +15,7 @@
       v-model="selectedCondition"
       :default-currency="defaultCurrency"
     />
-  </fragment>
+  </div>
 </template>
 <script>
 export default {

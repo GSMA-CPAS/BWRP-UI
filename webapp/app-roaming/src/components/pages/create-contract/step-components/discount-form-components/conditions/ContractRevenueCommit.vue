@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <v-row>
       <v-col>
         Discounts will be active if the TAP charges will be at least as high as
@@ -7,7 +7,7 @@
       </v-col>
     </v-row>
     <revenue-commitment-input v-model="revenueCommitment" :default-currency="defaultCurrency"/>
-  </fragment>
+  </div>
 </template>
 
 <script>
@@ -32,7 +32,9 @@ export default {
     RevenueCommitmentInput,
   },
   beforeMount() {
-    this.revenueCommitment = this.value;
+    if (this.value) {
+      this.revenueCommitment = this.value;
+    }
   },
 };
 </script>

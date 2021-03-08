@@ -14,7 +14,7 @@
     </row>
     <br />
     <b>Services</b>
-    <fragment v-for="(service, index) in chosenServices" :key="service.id">
+    <div v-for="(service, index) in chosenServices" :key="service.id">
       <v-row>
         <v-col>
           <v-select
@@ -121,7 +121,7 @@
           <rating-plan-input v-model="service.accessPricingRate"/>
         </row>
       </div>
-    </fragment>
+    </div>
     <v-col>
       <v-row @click="addService" style="cursor: pointer" class="no-gutters">
         <v-col cols="1"><v-icon>{{ `mdi-${icons.add}` }}</v-icon></v-col><v-col>Add additional service</v-col>
