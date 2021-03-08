@@ -122,6 +122,11 @@
         </row>
       </div>
     </fragment>
+    <v-col>
+      <v-row @click="addService" style="cursor: pointer" class="no-gutters">
+        <v-col cols="1"><v-icon>{{ `mdi-${icons.add}` }}</v-icon></v-col><v-col>Add additional service</v-col>
+      </v-row>
+    </v-col>
   </v-col>
 </template>
 <script>
