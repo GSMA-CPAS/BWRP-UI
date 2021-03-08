@@ -116,8 +116,8 @@ export default new Vuex.Store({
       dispatch('user/initializeUser');
       dispatch('loadDocuments');
     },
-    loadDocuments({commit, dispatch, rootGetters, getters, rootState, state}) {
-      Vue.axios.commonAdapter
+    async loadDocuments({commit, dispatch, rootGetters, getters, rootState, state}) {
+      await Vue.axios.commonAdapter
         .get('/documents', {withCredentials: true})
         .then((res) => {
           commit('LOAD_DOCUMENTS', res);

@@ -39,20 +39,42 @@ export default {
   components: {Contract},
   methods: {
     exportRawData() {
-      const data = 'data:text/plain;charset=utf-8,' + this.rawData;
-      const link = document.createElement('a');
-      link.href = data;
-      link.download = `${this.referenceId}.base64`;
-      document.body.appendChild(link);
-      link.click();
+      const data = new Blob([this.rawData], {
+        type: 'data:text/plain',
+      });
+      const fileName = `${this.referenceId}.base64`;
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        // ie11
+        window.navigator.msSaveOrOpenBlob(data, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
     },
     exportToJSON() {
-      const data = 'data:application/json;base64,' + this.rawData;
-      const link = document.createElement('a');
-      link.href = data;
-      link.download = `${this.referenceId}.json`;
-      document.body.appendChild(link);
-      link.click();
+      const data = new Blob([atob(this.rawData)], {
+        type: 'data:application/json',
+      });
+      const fileName = `${this.referenceId}.json`;
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        // ie11
+        window.navigator.msSaveOrOpenBlob(data, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
     },
   },
   computed: {

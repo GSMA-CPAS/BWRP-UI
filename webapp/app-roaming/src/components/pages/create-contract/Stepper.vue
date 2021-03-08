@@ -21,7 +21,7 @@
         <app-button
           class="ml-6"
           label="Export Draft"
-          @button-pressed="downloadDocument"
+          @button-pressed="exportDraft"
         />
         <v-spacer />
         <app-button
@@ -41,17 +41,26 @@ export default {
   methods: {
     ...mapActions('document/new', ['saveContract', 'setStep']),
     ...mapMutations('document/new', ['resetState']),
-    downloadDocument() {
+    exportDraft() {
       const contract = this.contract;
       delete contract.step;
-      const data =
-        'data:text/json;charset=utf-8,' +
-        encodeURIComponent(JSON.stringify(contract));
-      const link = document.createElement('a');
-      link.href = data;
-      link.setAttribute('download', 'contract.json');
-      document.body.appendChild(link);
-      link.click();
+      const data = new Blob([JSON.stringify(this.contract)], {
+        type: 'data:application/json',
+      });
+      const fileName = `contract-draft.json`;
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        // ie11
+        window.navigator.msSaveOrOpenBlob(data, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
     },
     doSaveContract() {
       // TODO: Make validation more legible
