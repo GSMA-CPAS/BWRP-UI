@@ -37,8 +37,8 @@ export default {
       }
     },
   },
-  async created() {
-    await this.setup();
+  created() {
+    this.setup();
   },
 };
 </script>
