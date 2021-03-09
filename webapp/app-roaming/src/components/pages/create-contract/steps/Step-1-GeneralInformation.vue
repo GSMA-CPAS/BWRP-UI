@@ -141,6 +141,11 @@ export default {
         : (this.prolongationLength = null);
     },
   },
+  methods: {
+    resetEndDate() {
+      this.endDate = null;
+    },
+  },
   computed: {
     name: {
       get() {
@@ -247,7 +252,7 @@ export default {
     },
     agreementPeriod() {
       const diff = computeDateDifference(this.startDate, this.endDate);
-      return diff ? diff : null;
+      return diff > 0 ? diff : this.resetEndDate();
     },
     contractTypes() {
       return ['Normal', 'Special'];
