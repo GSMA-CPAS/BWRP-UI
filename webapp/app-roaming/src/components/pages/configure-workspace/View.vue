@@ -4,6 +4,7 @@
 <script>
 export default {
   name: 'workspace-view',
+  title: 'Workspace',
   description: 'Displays current picked menu',
   mixins: [],
   data: () => ({}),

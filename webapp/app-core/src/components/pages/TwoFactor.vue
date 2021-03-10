@@ -28,6 +28,7 @@ import {validationRules} from '@/utils/ValidationRules';
 export default {
 
   name: 'TwoFactor',
+  title: 'Two Factor Authentication',
 
   data: () => ({
     loading: false,

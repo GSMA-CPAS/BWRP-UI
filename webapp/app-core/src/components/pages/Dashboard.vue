@@ -24,6 +24,7 @@ import Layout from '@/components/layouts/Layout';
 export default {
 
   name: 'ContractList',
+  title: 'Dashboard',
 
   data: () => ({
     loading: true,

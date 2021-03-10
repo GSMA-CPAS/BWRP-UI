@@ -37,6 +37,7 @@
 import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
 export default {
   name: 'stepper',
+  title: 'Create Contract',
   description: 'Stepper used for contract-creation.',
   methods: {
     ...mapActions('document/new', ['saveContract', 'setStep']),

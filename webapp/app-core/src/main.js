@@ -5,6 +5,9 @@ import Axios from 'axios';
 import router from './router';
 import store from './store/index';
 
+import titleMixin from './utils/mixins/page-title';
+Vue.mixin(titleMixin);
+
 import Modal from '@/components/dialog/Plugin';
 Vue.use(Modal);
 
