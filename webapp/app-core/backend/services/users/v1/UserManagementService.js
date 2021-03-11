@@ -223,10 +223,7 @@ class UserManagementService extends AbstractService {
                 'username': req.user.username,
                 'isAdmin': req.user.isAdmin
               },
-              'organization': {
-                'mspid': config.get('organization').mspid,
-                'title': config.get('organization').title
-              }
+              'organization': config.get('organization')
             }
           });
         } else {
