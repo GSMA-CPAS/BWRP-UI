@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
@@ -13,7 +12,6 @@ class CommonService extends AbstractService {
     this.requiredAdapterType('wallet');
     this.requiredAdapterType('common');
     this.registerRequestHandler();
-    this.mspid = config.organization.mspid;
   }
 
   registerRequestHandler() {
@@ -42,8 +40,7 @@ class CommonService extends AbstractService {
         if (requireRaw) {
           response = await this.getBackendAdapter('common').getRawContractById(contractId);
         } else {
-          // currently passing self mspid for some Payload convertion. Require some cleanup
-          response = await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
+          response = await this.getBackendAdapter('common').getContractById(contractId);
         }
         return res.json(response);
       } catch (error) {
@@ -61,7 +58,6 @@ class CommonService extends AbstractService {
       try {
         const toMSP = req.body.toMSP;
         const data = req.body.data;
-        // TODO: sync payload requirement with common adapter. currently some Pre processing is needed in the Adapter code.
         const response = await this.getBackendAdapter('common').createContract(toMSP, data);
         return res.json(response);
       } catch (error) {
@@ -212,7 +208,7 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
+          code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to update usages'
         })));
       }
@@ -230,7 +226,7 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
+          code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to delete usages'
         })));
       }
@@ -248,7 +244,7 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
+          code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to generate settlements'
         })));
       }
@@ -299,7 +295,7 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
+          code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to send settlements'
         })));
       }
