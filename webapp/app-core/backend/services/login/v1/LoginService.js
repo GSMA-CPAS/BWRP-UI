@@ -141,15 +141,15 @@ class LoginService extends AbstractService {
             if (error) {
               return this.handleError(res, new Error(JSON.stringify({
                 code: ErrorCodes.ERR_FORBIDDEN,
-                message: 'Forbidden',
-              })), 'POST /login');
+                message: 'Forbidden'
+              })));
             }
 
             if (!user) {
               return this.handleError(res, new Error(JSON.stringify({
                 code: ErrorCodes.ERR_FORBIDDEN,
-                message: 'Forbidden',
-              })), 'POST /login');
+                message: 'Forbidden'
+              })));
             }
 
             if (user.active || user.isAdmin) {
@@ -192,8 +192,8 @@ class LoginService extends AbstractService {
                 res.clearCookie(this.sessionName);
                 return this.handleError(res, new Error(JSON.stringify({
                   code: ErrorCodes.ERR_FORBIDDEN,
-                  message: 'Forbidden',
-                })), 'POST /login');
+                  message: 'Forbidden'
+                })));
               });
             }
           })(req, res, next);
