@@ -4,7 +4,7 @@
       <parties label="Discount Models" label-extra-classes="grey--text" />
       <v-row>
         <discount-form
-          :ref="msps.user"
+          :from="msps.user"
           v-model="userDiscountModels"
           :home-tadigs="userTadigs"
           :visitor-tadigs="partnerTadigs"
@@ -14,7 +14,7 @@
         />
         <v-divider vertical />
         <discount-form
-          :ref="msps.partner"
+          :from="msps.partner"
           v-model="partnerDiscountModels"
           :home-tadigs="partnerTadigs"
           :visitor-tadigs="userTadigs"

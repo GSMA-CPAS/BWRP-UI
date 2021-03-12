@@ -3,7 +3,7 @@ import router from '@/router';
 import {PATHS} from '@/utils/Enums';
 import Vue from 'vue';
 import convertModelsModule from './convert-models';
-
+import {service} from '@/components/pages/create-contract/step-components/discount-form-components/Service.vue';
 const {log} = console;
 const namespaced = true;
 
@@ -14,6 +14,7 @@ function parseISOString(s) {
 
 const defaultState = () => ({
   step: 1,
+  validation: [],
   partner: null,
   generalInformation: {
     name: null,
@@ -72,16 +73,7 @@ const defaultDiscountModelsState = () => ({
       visitorTadigs: {codes: []},
       chosenServices: [
         {
-          id: 'service-0',
-          name: null,
-          rate: null,
-          unit: null,
-          balancedRate: null,
-          unbalancedRate: null,
-          pricingModel: 'Normal',
-          accessPricingModel: 'Not Charged',
-          accessPricingUnit: null,
-          accessPricingRate: null,
+          ...service,
         },
       ],
     },
@@ -109,6 +101,9 @@ const newDocumentModule = {
       const {key, value} = payload;
       // Object.assign(state[key].discountModels, value);
       state[key].discountModels = value;
+    },
+    ADD_VALIDATION: (state, validation) => {
+      state.validation.push(validation);
     },
     SET_STEP(state, step) {
       state.step = step;
@@ -144,6 +139,12 @@ const newDocumentModule = {
     },
   },
   actions: {
+    addValidation(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      validation,
+    ) {
+      commit('ADD_VALIDATION', validation);
+    },
     startContract(
       {commit, dispatch, rootGetters, getters, rootState, state},
       payload,
@@ -205,9 +206,19 @@ const newDocumentModule = {
       }
     },
     saveContract({commit, dispatch, rootGetters, getters, rootState, state}) {
+      const errorMessages= [];
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           try {
+            state.validation.forEach(({from, isInvalid, message, validate}) => {
+              if (isInvalid) {
+                errorMessages.push({from, message: `${message}`});
+                validate();
+              }
+            });
+            if (errorMessages.length > 0) {
+              throw new Error();
+            }
             const partnerMsp = getters.msps.partner;
             const user = getters.msps.user;
 
@@ -247,7 +258,7 @@ const newDocumentModule = {
                 // reject(err);
               });
           } catch (err) {
-            const error = {title: 'Missing values', body: err};
+            const error = {title: 'Missing values', body: errorMessages};
             reject(error);
           }
         }, 50);

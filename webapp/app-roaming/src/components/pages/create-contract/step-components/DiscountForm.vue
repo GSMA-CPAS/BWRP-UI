@@ -2,14 +2,15 @@
   <v-col>
     <row type="secondary" label="Condition" />
     <v-divider />
-    <condition-picker v-model="condition" :default-currency="defaultCurrency" />
+    <condition-picker
+      :from="from"
+      v-model="condition"
+      :default-currency="defaultCurrency"
+    />
     <v-row> <br /><br /> </v-row>
     <row type="secondary" label="Service Groups" />
     <v-divider />
-    <div
-      v-for="(serviceGroup, index) in serviceGroups"
-      :key="serviceGroup.id"
-    >
+    <div v-for="(serviceGroup, index) in serviceGroups" :key="serviceGroup.id">
       <v-row>
         <v-col>
           <b>Group {{ index + 1 }}</b>
@@ -27,6 +28,7 @@
       </v-row>
       <service-group-form
         v-model="serviceGroups[index]"
+        :from="from"
         :home-tadig-options="homeTadigs"
         :visitor-tadig-options="visitorTadigs"
       />
@@ -47,7 +49,7 @@ export default {
   name: 'discount-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['homeTadigs', 'visitorTadigs', 'value', 'defaultCurrency'],
+  props: ['from', 'homeTadigs', 'visitorTadigs', 'value', 'defaultCurrency'],
   components: {
     ConditionPicker,
     ServiceGroupForm,

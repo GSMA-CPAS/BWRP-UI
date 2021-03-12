@@ -6,7 +6,6 @@
         <v-col>
           <v-text-field
             label="Contract Name"
-            v-on="inputListeners('name')"
             :error-messages="requiredError('name')"
             v-model="name"
           />
@@ -99,13 +98,13 @@
 </template>
 
 <script>
-import {required, minValue, maxValue} from 'vuelidate/lib/validators';
-import moment from 'moment';
 import {validationMixin} from '@/utils/mixins/component-specfic';
 import HelpTooltip from '@/components/other/HelpTooltip.vue';
 import {computeDateDifference} from '@/utils/Utils';
 import Parties from '../step-components/Parties.vue';
 import GeneralInformationPartyForm from '../step-components/discount-form-components/GeneralInformationPartyForm.vue';
+import {mapActions} from 'vuex';
+import GeneralInformationValidation from '@validation/GeneralInformation';
 
 export default {
   name: 'step-1',
@@ -119,16 +118,7 @@ export default {
     };
   },
   mixins: [validationMixin],
-  validations: {
-    name: {required},
-    type: {required},
-    startDate: {required, minValue: minValue(moment()._d)},
-    endDate: {
-      required,
-      minValue: minValue(moment().add(1, 'months')._d),
-      maxValue: maxValue(moment().add(25, 'years')._d),
-    },
-  },
+  ...GeneralInformationValidation,
   components: {
     Parties,
     HelpTooltip,
@@ -142,6 +132,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('document/new', ['addValidation']),
     resetEndDate() {
       this.endDate = null;
     },
@@ -257,6 +248,23 @@ export default {
     contractTypes() {
       return ['Normal', 'Special'];
     },
+  },
+  mounted() {
+    this.addValidation({
+      isInvalid: this.$v.name.$invalid,
+      message: `[General Information] Contract name is missing`,
+      validate: this.$v.name.$touch,
+    });
+    this.addValidation({
+      isInvalid: this.$v.startDate.$invalid,
+      message: `[General Information] Start date is missing`,
+      validate: this.$v.startDate.$touch,
+    });
+    this.addValidation({
+      isInvalid: this.$v.endDate.$invalid,
+      message: `[General Information] End date is missing`,
+      validate: this.$v.endDate.$touch,
+    });
   },
 };
 </script>

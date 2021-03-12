@@ -65,7 +65,6 @@ export default {
     },
     doSaveContract() {
       // TODO: Make validation more legible
-      this.$refs[1][0].$v.$touch();
 
       this.saveContract().catch((e) => {
         const {title, body} = e;

@@ -8,9 +8,15 @@
           mdi-close
         </v-icon>
       </v-card-title>
-      <v-card-text class="title error--text">{{
-        `${errorResponse.body}`
-      }}</v-card-text>
+      <v-card-text class="subtitle-1">
+        <div v-if="!isObject">{{ `${errorResponse.body}` }}</div>
+        <div v-else v-for="({message, from}, i) in errorResponse.body" :key="i">
+          <v-row>
+            <v-col class="pl-0">{{ message }}</v-col>
+            <v-col cols="2" v-if="from">{{ from }}</v-col>
+          </v-row>
+        </div>
+      </v-card-text>
     </v-card>
   </v-overlay>
 </template>
@@ -21,5 +27,10 @@ export default {
   description:
     'This is the overlay which appears when an api call returns an error.',
   mixins: [appStateMixin],
+  computed: {
+    isObject() {
+      return typeof this.errorResponse.body === 'object';
+    },
+  },
 };
 </script>

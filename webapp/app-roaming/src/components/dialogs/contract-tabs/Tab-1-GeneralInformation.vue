@@ -60,12 +60,16 @@
     <parties-header />
     <row label="Currency for all discounts">
       <v-col>
-        {{ documentData.framework.partyInformation[selfMsp].contractCurrency }}
+        {{
+          documentData.framework.partyInformation[selfMsp].contractCurrency
+            | isNil
+        }}
       </v-col>
       <v-divider vertical />
       <v-col>
         {{
           documentData.framework.partyInformation[partnerMsp].contractCurrency
+            | isNil
         }}
       </v-col>
     </row>
@@ -75,13 +79,13 @@
           {{
             documentData.framework.partyInformation[
               selfMsp
-            ].defaultTadigCodes.join(', ')
+            ].defaultTadigCodes.join(', ') | isNil
           }}
         </div>
         <template
           v-if="
             documentData.framework.partyInformation[selfMsp]
-              .includeContractParty
+              .includeContractParty | isNil
           "
         >
           Include contract party
@@ -94,7 +98,7 @@
           {{
             documentData.framework.partyInformation[
               partnerMsp
-            ].defaultTadigCodes.join(', ')
+            ].defaultTadigCodes.join(', ') | isNil
           }}
         </div>
         <template
@@ -111,13 +115,13 @@
     <row label="Required Signatures (minimum)">
       <v-col>
         <div>
-          {{ headerData.msps[selfMsp].minSignatures }}
+          {{ headerData.msps[selfMsp].minSignatures | isNil }}
         </div>
       </v-col>
       <v-divider vertical />
       <v-col>
         <div>
-          {{ headerData.msps[partnerMsp].minSignatures }}
+          {{ headerData.msps[partnerMsp].minSignatures | isNil }}
         </div>
       </v-col>
     </row>

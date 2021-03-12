@@ -122,12 +122,6 @@ const validationMixin = {
         errors.push(`${this._.startCase(field)} is an invalid email`);
       return errors;
     },
-    inputListeners(field) {
-      return {
-        // blur: () => this.$v[field].$touch(),
-        input: () => this.$v[field].$touch(),
-      };
-    },
   },
   computed: {
     activeValidation: () => false,
