@@ -1,30 +1,28 @@
 <template>
-  <fragment>
-    <form-container>
-      <parties label="Discount Models" label-extra-classes="grey--text" />
-      <v-row>
-        <discount-form
-          :from="msps.user"
-          v-model="userDiscountModels"
-          :home-tadigs="userTadigs"
-          :visitor-tadigs="partnerTadigs"
-          v-on:copy-other-side="copyFromUserSide"
-          :key="'user' + userComponentKey"
-          :default-currency="userDefaultCurrency"
-        />
-        <v-divider vertical />
-        <discount-form
-          :from="msps.partner"
-          v-model="partnerDiscountModels"
-          :home-tadigs="partnerTadigs"
-          :visitor-tadigs="userTadigs"
-          v-on:copy-other-side="copyFromPartnerSide"
-          :key="'partner' + partnerComponentKey"
-          :default-currency="partnerDefaultCurrency"
-        />
-      </v-row>
-    </form-container>
-  </fragment>
+  <form-container>
+    <parties label="Discount Models" label-extra-classes="grey--text" />
+    <v-row>
+      <discount-form
+        :from="msps.user"
+        v-model="userDiscountModels"
+        :home-tadigs="userTadigs"
+        :visitor-tadigs="partnerTadigs"
+        v-on:copy-other-side="copyFromUserSide"
+        :key="'user' + userComponentKey"
+        :default-currency="userDefaultCurrency"
+      />
+      <v-divider vertical />
+      <discount-form
+        :from="msps.partner"
+        v-model="partnerDiscountModels"
+        :home-tadigs="partnerTadigs"
+        :visitor-tadigs="userTadigs"
+        v-on:copy-other-side="copyFromPartnerSide"
+        :key="'partner' + partnerComponentKey"
+        :default-currency="partnerDefaultCurrency"
+      />
+    </v-row>
+  </form-container>
 </template>
 <script>
 import Parties from '../step-components/Parties.vue';

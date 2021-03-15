@@ -1,5 +1,5 @@
 <template>
-  <fragment class="text-center">
+  <div>
     <v-row>
       <v-col>
         <row no-divider label="Name">{{
@@ -117,7 +117,7 @@
         </div>
       </v-col>
     </row>
-  </fragment>
+  </div>
 </template>
 <script>
 import HelpTooltip from '@/components/other/HelpTooltip.vue';

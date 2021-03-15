@@ -1,14 +1,12 @@
 <template>
-  <fragment>
-    <v-row>
-      <v-col>
-        <v-text-field v-model="amount" label="Total Amount" />
-      </v-col>
-      <v-col>
-        <currency-selector v-model="currency" />
-      </v-col>
-    </v-row>
-  </fragment>
+  <v-row>
+    <v-col>
+      <v-text-field v-model="amount" label="Total Amount" />
+    </v-col>
+    <v-col>
+      <currency-selector v-model="currency" />
+    </v-col>
+  </v-row>
 </template>
 <script>
 export default {

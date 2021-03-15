@@ -1,9 +1,9 @@
 <template>
-  <fragment>
+  <div>
     <v-row v-if="single" align="baseline" class="font-weight-medium">
       <v-col cols="2" />
       <v-divider vertical></v-divider>
-      <v-col  class="striped-column-container">
+      <v-col class="striped-column-container">
         <v-row class="primary--text text-uppercase">
           <v-col>{{ parties[currentParty] }}</v-col>
           <v-col class="text-end pr-0">
@@ -16,9 +16,12 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="striped-column" v-for="{label, key} in subRowLabels" :key="key">{{
-            label
-          }}</v-col>
+          <v-col
+            class="striped-column"
+            v-for="{label, key} in subRowLabels"
+            :key="key"
+            >{{ label }}</v-col
+          >
         </v-row>
       </v-col>
     </v-row>
@@ -31,7 +34,7 @@
       </fragment>
     </v-row>
     <v-divider />
-  </fragment>
+  </div>
 </template>
 <script>
 import {mapGetters} from 'vuex';
