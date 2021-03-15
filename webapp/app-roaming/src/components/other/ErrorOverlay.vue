@@ -29,7 +29,7 @@ export default {
   mixins: [appStateMixin],
   computed: {
     isObject() {
-      return typeof this.errorResponse.body === 'object';
+      return this.errorResponse.body instanceof Array;
     },
   },
 };

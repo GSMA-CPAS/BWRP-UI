@@ -68,7 +68,6 @@ export default {
 
       this.saveContract().catch((e) => {
         const {title, body} = e;
-        // console.error('Error saving contract:', e);
         this.$store.dispatch('app-state/loadError', {
           title,
           body,

@@ -263,7 +263,7 @@ const newDocumentModule = {
                 // reject(err);
               });
           } catch (err) {
-            const error = {title: 'Missing values', body: errorMessages};
+            const error = {title: 'Missing values', body: errorMessages.length >0? errorMessages : err};
             reject(error);
           }
         }, 50);
