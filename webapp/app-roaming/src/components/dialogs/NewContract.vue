@@ -12,6 +12,10 @@
       <v-row>
         <file-uploader
           ref="file-uploader"
+          @on-delete="
+            $refs['file-uploader'].fileRecords = [];
+            fileAsJSON = null;
+          "
           @file-upload="saveFile"
           file-types=".json"
         />
