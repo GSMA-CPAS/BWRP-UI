@@ -146,7 +146,7 @@
 import ServiceValidation from '@validation/Service';
 import RatingPlanInput from './RatingPlanInput.vue';
 import {duplicateMixin} from '@/utils/mixins/component-specfic';
-import {mapActions, mapState} from 'vuex';
+import {mapMutations, mapState} from 'vuex';
 
 export const service = {
   id: 'service-0',
@@ -182,18 +182,20 @@ export default {
     service: {
       handler(val) {
         this.addValidation({
+          key: `discountService${this.from}`,
           from: this.from,
           isInvalid: this.$v.$invalid,
           message: `[Discount Models] ${service.id} is missing a name and/or a pricing model`,
           validate: this.$v.$touch,
         });
+        // this.$v.$touch();
         this.$emit('input', val);
       },
       deep: true,
     },
   },
   methods: {
-    ...mapActions('document/new', ['addValidation']),
+    ...mapMutations('document/new', ['addValidation', 'updateValidation']),
   },
   computed: {
     serviceError() {
@@ -212,7 +214,9 @@ export default {
     ...mapState(['services', 'serviceConfiguration']),
   },
   beforeMount() {
-    this.service = this.value;
+    if (this.value) {
+      this.service = this.value;
+    }
   },
 };
 </script>

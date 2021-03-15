@@ -102,8 +102,19 @@ const newDocumentModule = {
       // Object.assign(state[key].discountModels, value);
       state[key].discountModels = value;
     },
-    ADD_VALIDATION: (state, validation) => {
-      state.validation.push(validation);
+    addValidation: (state, validation) => {
+      if (!state.validation.find((val) => validation.key === val.key)) {
+        state.validation.push(validation);
+      } else {
+          state.validation = [...state.validation.filter((val) => validation.key !== val.key), validation];
+      }
+    },
+    updateValidation: (state, {key, isInvalid, validate}) => {
+      const newState = state.validation.find((val) => key === val.key);
+      if (newState) {
+        newState.isInvalid = isInvalid;
+        state.validation = [...state.validation.filter((val) => key !== val.key), newState];
+      }
     },
     SET_STEP(state, step) {
       state.step = step;
@@ -139,12 +150,6 @@ const newDocumentModule = {
     },
   },
   actions: {
-    addValidation(
-      {commit, dispatch, rootGetters, getters, rootState, state},
-      validation,
-    ) {
-      commit('ADD_VALIDATION', validation);
-    },
     startContract(
       {commit, dispatch, rootGetters, getters, rootState, state},
       payload,
@@ -206,11 +211,11 @@ const newDocumentModule = {
       }
     },
     saveContract({commit, dispatch, rootGetters, getters, rootState, state}) {
-      const errorMessages= [];
+      const errorMessages = [];
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           try {
-            state.validation.forEach(({from, isInvalid, message, validate}) => {
+            state.validation.forEach(({key, from, isInvalid, message, validate}) => {
               if (isInvalid) {
                 errorMessages.push({from, message: `${message}`});
                 validate();

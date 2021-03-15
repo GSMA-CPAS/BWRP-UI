@@ -20,7 +20,7 @@
 </template>
 <script>
 import ConditionFormValidations from '@validation/ConditionForm';
-import {mapActions} from 'vuex';
+import {mapMutations} from 'vuex';
 export default {
   name: 'condition-picker',
   description: 'description',
@@ -39,13 +39,17 @@ export default {
     },
     selectedConditionName: {
       handler() {
+        this.updateValidation({
+          key: `conditionName${this.from}`,
+          isInvalid: this.$v.$invalid,
+        });
         this.$emit('input', this.$data);
       },
       deep: true,
     },
   },
   methods: {
-    ...mapActions('document/new', ['addValidation']),
+    ...mapMutations('document/new', ['addValidation', 'updateValidation']),
   },
   computed: {
     conditionNameError() {
@@ -85,6 +89,7 @@ export default {
   },
   mounted() {
     this.addValidation({
+      key: `conditionName${this.from}`,
       from: this.from,
       isInvalid: this.$v.$invalid,
       message: `[Discount Models] Condition name is missing`,

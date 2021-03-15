@@ -103,7 +103,7 @@ import HelpTooltip from '@/components/other/HelpTooltip.vue';
 import {computeDateDifference} from '@/utils/Utils';
 import Parties from '../step-components/Parties.vue';
 import GeneralInformationPartyForm from '../step-components/discount-form-components/GeneralInformationPartyForm.vue';
-import {mapActions} from 'vuex';
+import {mapMutations} from 'vuex';
 import GeneralInformationValidation from '@validation/GeneralInformation';
 
 export default {
@@ -132,7 +132,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('document/new', ['addValidation']),
+    ...mapMutations('document/new', [
+      'addValidation',
+      'updateValidation',
+      'updateGeneralInformation',
+    ]),
     resetEndDate() {
       this.endDate = null;
     },
@@ -143,10 +147,12 @@ export default {
         return this.$store.state.document.new.generalInformation.name;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'name',
+        const key = 'name';
+        this.updateGeneralInformation({
+          key,
           value,
         });
+        this.updateValidation({key, isInvalid: this.$v.name.$invalid});
       },
     },
     type: {
@@ -154,7 +160,7 @@ export default {
         return this.$store.state.document.new.generalInformation.type;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'type',
           value,
         });
@@ -165,10 +171,12 @@ export default {
         return this.$store.state.document.new.generalInformation.startDate;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'startDate',
+        const key = 'startDate';
+        this.updateGeneralInformation({
+          key,
           value,
         });
+        this.updateValidation({key, isInvalid: this.$v.startDate.$invalid});
       },
     },
     endDate: {
@@ -176,10 +184,12 @@ export default {
         return this.$store.state.document.new.generalInformation.endDate;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'endDate',
+        const key = 'endDate';
+        this.updateGeneralInformation({
+          key,
           value,
         });
+        this.updateValidation({key, isInvalid: this.$v.endDate.$invalid});
       },
     },
     prolongationLength: {
@@ -188,8 +198,9 @@ export default {
           .prolongationLength;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'prolongationLength',
+        const key = 'prolongationLength';
+        this.updateGeneralInformation({
+          key,
           value,
         });
       },
@@ -199,7 +210,7 @@ export default {
         return this.$store.state.document.new.generalInformation.taxesIncluded;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'taxesIncluded',
           value,
         });
@@ -210,7 +221,7 @@ export default {
         return this.$store.state.document.new.generalInformation.authors;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'authors',
           value,
         });
@@ -221,7 +232,7 @@ export default {
         return this.$store.state.document.new.generalInformation.userData;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'userData',
           value,
         });
@@ -232,7 +243,7 @@ export default {
         return this.$store.state.document.new.generalInformation.partnerData;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'partnerData',
           value,
         });
@@ -243,24 +254,27 @@ export default {
     },
     agreementPeriod() {
       const diff = computeDateDifference(this.startDate, this.endDate);
-      return diff > 0 ? diff : this.resetEndDate();
+      return diff > 0 ? diff : 0;
     },
     contractTypes() {
       return ['Normal', 'Special'];
     },
   },
-  mounted() {
+  beforeMount() {
     this.addValidation({
+      key: 'name',
       isInvalid: this.$v.name.$invalid,
       message: `[General Information] Contract name is missing`,
       validate: this.$v.name.$touch,
     });
     this.addValidation({
+      key: 'startDate',
       isInvalid: this.$v.startDate.$invalid,
       message: `[General Information] Start date is missing`,
       validate: this.$v.startDate.$touch,
     });
     this.addValidation({
+      key: 'endDate',
       isInvalid: this.$v.endDate.$invalid,
       message: `[General Information] End date is missing`,
       validate: this.$v.endDate.$touch,
