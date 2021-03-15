@@ -76,16 +76,12 @@
     <row label="TADIG Codes">
       <v-col>
         <div>
-          {{
-            documentData.framework.partyInformation[
-              selfMsp
-            ].defaultTadigCodes.join(', ') | isNil
-          }}
+          {{ tadigCodesSelf | isNil }}
         </div>
         <template
           v-if="
             documentData.framework.partyInformation[selfMsp]
-              .includeContractParty | isNil
+              .includeContractParty
           "
         >
           Include contract party
@@ -93,13 +89,9 @@
         </template>
       </v-col>
       <v-divider vertical />
-      <v-col>
+      <v-col v-if="documentData.framework.partyInformation">
         <div>
-          {{
-            documentData.framework.partyInformation[
-              partnerMsp
-            ].defaultTadigCodes.join(', ') | isNil
-          }}
+          {{ tadigCodesPartner | isNil }}
         </div>
         <template
           v-if="
@@ -141,5 +133,21 @@ export default {
     PartiesHeader,
   },
   mixins: [timelineMixin],
+  computed: {
+    tadigCodesSelf() {
+      const tadigCodesSelf = this.documentData.framework.partyInformation[
+        this.selfMsp
+      ].defaultTadigCodes;
+      return tadigCodesSelf instanceof Array ? tadigCodesSelf.join(', ') : null;
+    },
+    tadigCodesPartner() {
+      const tadigCodesPartner = this.documentData.framework.partyInformation[
+        this.partnerMsp
+      ].defaultTadigCodes;
+      return tadigCodesPartner instanceof Array
+        ? tadigCodesPartner.join(', ')
+        : null;
+    },
+  },
 };
 </script>
