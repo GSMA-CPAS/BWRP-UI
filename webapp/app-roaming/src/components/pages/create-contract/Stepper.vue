@@ -9,7 +9,15 @@
           :complete="step > index"
           :step="index"
         >
-          {{ content.description }}
+          <div
+            :class="{
+              'error--text':
+                saveAttempt &&
+                validation.some(({step}) => step === content.description),
+            }"
+          >
+            {{ content.description }}
+          </div>
         </v-stepper-step>
         <v-stepper-items>
           <v-stepper-content :step="index">
@@ -77,7 +85,7 @@ export default {
   },
   computed: {
     ...mapGetters('document/new', ['contract']),
-    ...mapState('document/new', ['step']),
+    ...mapState('document/new', ['step', 'saveAttempt', 'validation']),
     steps() {
       const components = require.context(
         './steps/',

@@ -15,6 +15,7 @@ function parseISOString(s) {
 const defaultState = () => ({
   step: 1,
   validation: [],
+  saveAttempt: false,
   partner: null,
   generalInformation: {
     name: null,
@@ -106,15 +107,24 @@ const newDocumentModule = {
       if (!state.validation.find((val) => validation.key === val.key)) {
         state.validation.push(validation);
       } else {
-          state.validation = [...state.validation.filter((val) => validation.key !== val.key), validation];
+        state.validation = [
+          ...state.validation.filter((val) => validation.key !== val.key),
+          validation,
+        ];
       }
     },
     updateValidation: (state, {key, isInvalid, validate}) => {
       const newState = state.validation.find((val) => key === val.key);
       if (newState) {
         newState.isInvalid = isInvalid;
-        state.validation = [...state.validation.filter((val) => key !== val.key), newState];
+        state.validation = [
+          ...state.validation.filter((val) => key !== val.key),
+          newState,
+        ];
       }
+    },
+    attemptedToSave(state) {
+      state.saveAttempt = true;
     },
     SET_STEP(state, step) {
       state.step = step;
@@ -215,13 +225,16 @@ const newDocumentModule = {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           try {
-            state.validation.forEach(({key, from, isInvalid, message, validate}) => {
-              if (isInvalid) {
-                errorMessages.push({from, message: `${message}`});
-                validate();
-              }
-            });
+            state.validation.forEach(
+              ({step, from, isInvalid, message, validate}) => {
+                if (isInvalid) {
+                  errorMessages.push({step, from, message: `${message}`});
+                  validate();
+                }
+              },
+            );
             if (errorMessages.length > 0) {
+              commit('attemptedToSave');
               throw new Error();
             }
             const partnerMsp = getters.msps.partner;
@@ -263,7 +276,10 @@ const newDocumentModule = {
                 // reject(err);
               });
           } catch (err) {
-            const error = {title: 'Missing values', body: errorMessages.length >0? errorMessages : err};
+            const error = {
+              title: 'Missing values',
+              body: errorMessages.length > 0 ? errorMessages : err,
+            };
             reject(error);
           }
         }, 50);

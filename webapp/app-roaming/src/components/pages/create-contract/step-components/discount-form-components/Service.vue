@@ -183,9 +183,10 @@ export default {
       handler(val) {
         this.addValidation({
           key: `discountService${this.from}`,
+          step: 'Discount Models',
           from: this.from,
           isInvalid: this.$v.$invalid,
-          message: `[Discount Models] ${service.id} is missing a name and/or a pricing model`,
+          message: `${service.id} is missing a name and/or a pricing model`,
           validate: this.$v.$touch,
         });
         // this.$v.$touch();

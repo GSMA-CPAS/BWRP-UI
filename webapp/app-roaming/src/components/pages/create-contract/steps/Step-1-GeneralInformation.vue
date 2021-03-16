@@ -263,18 +263,21 @@ export default {
   beforeMount() {
     this.addValidation({
       key: 'name',
+      step: 'General Information',
       isInvalid: this.$v.name.$invalid,
-      message: `[General Information] Contract name is missing`,
+      message: `Contract name is missing`,
       validate: this.$v.name.$touch,
     });
     this.addValidation({
       key: 'startDate',
+      step: 'General Information',
       isInvalid: this.$v.startDate.$invalid,
       message: `[General Information] Start date is missing`,
       validate: this.$v.startDate.$touch,
     });
     this.addValidation({
       key: 'endDate',
+      step: 'General Information',
       isInvalid: this.$v.endDate.$invalid,
       message: `[General Information] End date is missing`,
       validate: this.$v.endDate.$touch,

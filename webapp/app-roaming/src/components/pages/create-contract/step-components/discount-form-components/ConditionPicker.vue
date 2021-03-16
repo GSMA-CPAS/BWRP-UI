@@ -90,9 +90,10 @@ export default {
   mounted() {
     this.addValidation({
       key: `conditionName${this.from}`,
+      step: 'Discount Models',
       from: this.from,
       isInvalid: this.$v.$invalid,
-      message: `[Discount Models] Condition name is missing`,
+      message: `Condition name is missing`,
       validate: this.$v.$touch,
     });
     if (this.value) {
