@@ -123,9 +123,6 @@ const newDocumentModule = {
         ];
       }
     },
-    replaceValidation(state, newState) {
-      state.validation = newState;
-    },
     attemptedToSave(state) {
       state.saveAttempt = true;
     },
@@ -228,17 +225,14 @@ const newDocumentModule = {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           try {
-            const filteredArray = state.validation.filter(
+            state.validation.forEach(
               ({step, from, isInvalid, message, validate}) => {
                 if (isInvalid) {
                   errorMessages.push({step, from, message: `${message}`});
                   validate();
-                  return true;
                 }
-                return false;
               },
             );
-            commit('replaceValidation', filteredArray);
             if (errorMessages.length > 0) {
               commit('attemptedToSave');
               throw new Error();

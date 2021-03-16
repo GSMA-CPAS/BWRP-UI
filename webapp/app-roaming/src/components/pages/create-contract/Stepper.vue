@@ -13,7 +13,10 @@
             :class="{
               'error--text':
                 saveAttempt &&
-                validation.some(({step}) => step === content.description),
+                validation.some(
+                  ({step, isInvalid}) =>
+                    step === content.description && isInvalid,
+                ),
             }"
           >
             {{ content.description }}
