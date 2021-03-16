@@ -9,10 +9,15 @@
         </v-icon>
       </v-card-title>
       <v-card-text class="subtitle-1">
-        <div v-if="!isObject">{{ `${errorResponse.body}` }}</div>
-        <div v-else v-for="({message, from}, i) in errorResponse.body" :key="i">
+        <div v-if="!isObject">Please verify your input</div>
+        <!-- <div v-if="!isObject">{{ `${errorResponse.body}` }}</div> -->
+        <div
+          v-else
+          v-for="({step, message, from}, i) in errorResponse.body"
+          :key="i"
+        >
           <v-row>
-            <v-col class="pl-0">{{ message }}</v-col>
+            <v-col class="pl-0">{{ `[${step}] ${message}` }}</v-col>
             <v-col cols="2" v-if="from">{{ from }}</v-col>
           </v-row>
         </div>

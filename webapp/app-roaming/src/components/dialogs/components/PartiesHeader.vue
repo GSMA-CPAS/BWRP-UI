@@ -20,8 +20,9 @@
             class="striped-column"
             v-for="{label, key} in subRowLabels"
             :key="key"
-            >{{ label }}</v-col
           >
+            {{ label }}
+          </v-col>
         </v-row>
       </v-col>
     </v-row>
