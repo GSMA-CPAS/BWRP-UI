@@ -387,6 +387,31 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async sendUsageById(contractId, usageId) {
+      try {
+         const response = await got.put(
+             this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/' +
+             usageId +
+             '/send/',
+             {responseType: 'json'},
+         );
+         this.getLogger().debug(
+             '[CommonAdapter::sendUsageById] sent usage to partner: - %s',
+             JSON.stringify(response.body),
+         );
+         return response.body;
+      } catch (error) {
+         this.getLogger().error(
+             '[CommonAdapter::sendUsageById] failed to send usage - %s',
+             error.message,
+         );
+         throw error;
+      }
+   }
+
    async generateSettlementsById(contractId, usageId) {
       try {
          const response = await got.put(

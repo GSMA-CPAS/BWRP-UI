@@ -27,7 +27,60 @@ const utilsMixin = {
         0,
       );
     },
+    csvToJSON(csv, result) {
+      const lines=csv.split('\n');
+      console.log(JSON.stringify(lines));
+      const headers=[
+          'yearMonth',
+          'homeTadig',
+          'visitorTadig',
+          'direction',
+          'service',
+          'usage',
+          'units'
+      ];
+      for (let i=1; i<lines.length; i++) {
+        const obj = {};
+        const currentLine=lines[i].replace('\r', '').split(/[,;]+/);
+        for (let j=0; j<headers.length; j++) {
+          obj[headers[j]] = currentLine[j];
+        }
+        obj['currency']='EUR';
+        if (obj['direction']?.toLowerCase() === 'inbound') {
+          result.inbound.push(obj);
+        } else if (obj['direction']?.toLowerCase() === 'outbound') {
+          result.outbound.push(obj);
+        }
+        delete obj['direction'];
+      }
+    },
+    parseJson(json, result) {
+      const headers = {
+        'Year_Month': 'yearMonth',
+        'HPMN': 'homeTadig',
+        'VPMN': 'visitorTadig',
+        'Services Categorised': 'service',
+        'Usage': 'usage',
+        'Units': 'units'
+      };
+      for (const row of json) {
+        const obj = row;
+        obj['Direction']?.toLowerCase() === 'inbound' ?
+            this.parseSingleUsage(obj, result.inbound, headers) : this.parseSingleUsage(obj, result.outbound, headers);
+      }
+    },
+    parseSingleUsage(obj, result, headers) {
+      const newObj = {};
+      for (const oldKey of Object.keys(headers)) {
+          newObj[headers[oldKey]] = obj[oldKey];
+      }
+
+      newObj['currency']='EUR';
+      result.push(newObj);
+    }
   },
+  // Accepts the array and key
+
 };
 
 export {dataMixin, utilsMixin, converterMixin};

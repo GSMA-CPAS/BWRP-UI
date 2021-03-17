@@ -237,6 +237,27 @@ class CommonService extends AbstractService {
     });
 
     /**
+     * Send Usage Report to Partner
+     * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/send/
+     */
+    this.getRouter().put('/usages/:contractId/:usageId/send/', ensureAuthenticated, async (req, res) => {
+      console.log('commonService');
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      console.log(contractId);
+      console.log(usageId);
+      try {
+        const response = await this.getBackendAdapter('common').sendUsageById(contractId, usageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_BAD_REQUEST,
+          message: 'Failed to send usage',
+        })), 'PUT /usages/:contractId/:usageId/send/');
+      }
+    });
+
+    /**
      * Generated Settlement from usageId
      * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/generate/
      */

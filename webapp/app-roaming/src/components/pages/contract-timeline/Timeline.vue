@@ -6,7 +6,8 @@
     <v-timeline>
       <Item-1-ContractView />
       <Item-2-Signatures />
-      <Item-4-SettlementView v-if="isSigned" />
+      <Item-3-UploadUsage />
+      <Item-4-UsageReport v-if="isUsageUploaded" />
       <Item-5-Discrepancies :class="{'opacity-0': exists('discrepancies')}" />
       <Item-6-ApproveSettlement
         :class="{'opacity-0': exists('discrepancies')}"
@@ -18,14 +19,16 @@
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import Item1ContractView from './timeline-items/Item-1-ContractView.vue';
 import Item2Signatures from './timeline-items/Item-2-Signatures.vue';
-import Item4SettlementView from './timeline-items/Item-4-SettlementView.vue';
+import Item3UploadUsage from './timeline-items/Item-3-UploadUsage';
+import Item4UsageReport from './timeline-items/Item-4-UsageReport';
 import Item5Discrepancies from './timeline-items/Item-5-Discrepancies.vue';
 import Item6ApproveSettlement from './timeline-items/Item-6-ApproveSettlement.vue';
 export default {
   components: {
     Item6ApproveSettlement,
     Item5Discrepancies,
-    Item4SettlementView,
+    Item4UsageReport,
+    Item3UploadUsage,
     Item2Signatures,
     Item1ContractView,
   },

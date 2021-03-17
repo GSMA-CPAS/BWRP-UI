@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card class="ml-15" color="#fafafa">
+      <v-card class="mr-15" color="#fafafa">
         <v-card-text>
           <div class="font-weight-bold text-uppercase mb-3">Data Uploaded</div>
           <v-row class="mb-1">
@@ -17,26 +17,23 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <settlement />
         </v-card-actions>
       </v-card>
     </template>
     <template #icon>
-      <upload-settlement />
+      <send-usage />
     </template>
   </timeline-item>
 </template>
 <script>
-import Settlement from '@/components/dialogs/Settlement.vue';
-import UploadSettlement from '@/components/dialogs/UploadSettlement.vue';
+import SendUsage from '@/components/dialogs/SendUsage.vue';
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
   name: 'item-4',
   description: 'description',
   mixins: [timelineMixin],
   components: {
-    Settlement,
-    UploadSettlement,
+    SendUsage,
   },
 };
 </script>
