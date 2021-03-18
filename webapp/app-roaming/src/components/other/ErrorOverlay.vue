@@ -9,8 +9,8 @@
         </v-icon>
       </v-card-title>
       <v-card-text class="subtitle-1">
-        <div v-if="!isObject">Please verify your input</div>
-        <!-- <div v-if="!isObject">{{ `${errorResponse.body}` }}</div> -->
+        <div v-if="errorResponse.code">{{ `${errorResponse.code}` }}</div>
+        <div v-else-if="!isArray">Please verify your input</div>
         <div
           v-else
           v-for="({step, message, from}, i) in errorResponse.body"
@@ -33,7 +33,7 @@ export default {
     'This is the overlay which appears when an api call returns an error.',
   mixins: [appStateMixin],
   computed: {
-    isObject() {
+    isArray() {
       return this.errorResponse.body instanceof Array;
     },
   },

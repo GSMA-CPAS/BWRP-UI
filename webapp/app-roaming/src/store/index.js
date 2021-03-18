@@ -85,7 +85,7 @@ export default new Vuex.Store({
             (error) => {
               dispatch('app-state/loadError', {
                 title: error.statusText,
-                body: `Status code ${error.status}`,
+                code: `Status code ${error.status}`,
               });
               return Promise.reject(error);
             },
@@ -105,7 +105,7 @@ export default new Vuex.Store({
               }
               dispatch('app-state/loadError', {
                 title: error.response.statusText,
-                body: `Status code ${error.response.status}|message ${error.response.data.message}`,
+                code: `Status code ${error.response.status} | message ${error.response.data.message}`,
               });
               return Promise.reject(error);
             },
@@ -116,7 +116,14 @@ export default new Vuex.Store({
       dispatch('user/initializeUser');
       dispatch('loadDocuments');
     },
-    async loadDocuments({commit, dispatch, rootGetters, getters, rootState, state}) {
+    async loadDocuments({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
       await Vue.axios.commonAdapter
         .get('/documents', {withCredentials: true})
         .then((res) => {
