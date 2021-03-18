@@ -211,6 +211,10 @@ const documentModule = {
       console.log(state.usage);
       return state.usage.usageId;
     },
+    isUsageSent: (state, getters) => {
+      console.log(state.usage);
+      return state.usage.usageState === 'SENT';
+    },
     totalSignatures: (state, getters) => {
       const {selfMsp, partnerMsp} = getters;
       const totalSignatures =
