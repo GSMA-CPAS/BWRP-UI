@@ -85,8 +85,7 @@ const timelineMixin = {
       headerData: (state) => state.document.header,
       rawData: (state) => state.rawData.raw,
       signatures: (state) => state.signatures,
-      creationDate: (state) => state.creationDate,
-      usageData: (state) => state.document.usage
+      creationDate: (state) => state.creationDate
     }),
     ...mapGetters('document', [
       'bankDetails',
@@ -101,7 +100,8 @@ const timelineMixin = {
       'minSignaturesSelf',
       'minSignaturesPartner',
       'isUsageUploaded',
-      'isUsageSent'
+      'isUsageSent',
+      'isPartnerUsageReceived',
     ]),
     ...mapGetters('partners', ['list'])
   },

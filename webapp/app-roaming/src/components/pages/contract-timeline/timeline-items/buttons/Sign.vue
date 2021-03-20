@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-icon v-if="isSigned" color="success" x-large>
+    <v-icon v-if="isSigned" color="primary" x-large>
       mdi-check-circle-outline
     </v-icon>
     <app-dialog

@@ -163,7 +163,7 @@ class CommonService extends AbstractService {
     });
 
     /**
-     * get usages ny usageId
+     * get usages by usageId
      * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}
      */
     this.getRouter().get('/usages/:contractId/:usageId', ensureAuthenticated, async (req, res) => {

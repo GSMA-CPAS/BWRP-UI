@@ -29,7 +29,6 @@ const utilsMixin = {
     },
     csvToJSON(csv, result) {
       const lines=csv.split('\n');
-      console.log(JSON.stringify(lines));
       const headers=[
           'yearMonth',
           'homeTadig',

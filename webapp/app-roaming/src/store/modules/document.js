@@ -6,7 +6,7 @@ const {log} = console;
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({rawData: null, document: null, signatures: [], usage: {usageId: null, usageState: null}, partnerUsage: {id: null}}),
+  state: () => ({rawData: null, document: null, signatures: [], usage: {}}),
   mutations: {
     UPDATE_RAW_DATA: (state, rawData) => {
       state.rawData = rawData;
@@ -20,9 +20,7 @@ const documentModule = {
     },
     UPDATE_USAGE: (state, usage) => {
       state.usage = usage;
-    },
-    UPDATE_PARTNER_USAGE: (state, partnerUsage) => {
-      state.partnerUsage = partnerUsage;
+      console.log(usage);
     },
   },
   actions: {
@@ -111,28 +109,54 @@ const documentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       contractId,
     ) {
-      const url = '' + `/usages/${contractId}/`;
+      const url = `/usages/${contractId}/`;
       await Vue.axios.commonAdapter
           .get(url, {
             withCredentials: true,
           })
           .then((data) => {
             // TODO: usage should be overwritten by comA, for now taking latest usage uploaded
-            if (data[0]) {
-              const {
-                usageId,
-                state
-              } = data[0];
-              commit('UPDATE_USAGE', {
-                usageId: usageId,
-                usageState: state
-              });
-            } else {
-              commit('UPDATE_USAGE', {
-                usageId: null,
-                usageState: null
-              });
-            }
+            const {
+              usageId,
+              state
+            } = data[0]? data[0] : {};
+            console.log(data);
+            commit('UPDATE_USAGE', {
+              id: usageId,
+              state: state
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      if (state.usage.id) {
+        const usageId = state.usage.id;
+        await dispatch('getUsageById', {contractId, usageId});
+      }
+    },
+    async getUsageById(
+        {commit, dispatch, rootGetters, getters, rootState, state},
+        req
+    ) {
+      const url = `/usages/${req.contractId}/${req.usageId}`;
+      await Vue.axios.commonAdapter
+          .get(url, {
+            withCredentials: true,
+          })
+          .then((data) => {
+            const {
+              usageId,
+              state,
+              body,
+              creationDate
+            } = data;
+            console.log(data);
+            commit('UPDATE_USAGE', {
+              id: usageId,
+              state: state,
+              body: body,
+              creationDate: creationDate
+            });
           })
           .catch((err) => {
             console.log(err);
@@ -154,11 +178,16 @@ const documentModule = {
           .then((res) => {
             const {
               usageId,
-              state
+              state,
+              body,
+              creationDate
             } = res;
+            console.log(res);
             commit('UPDATE_USAGE', {
-              usageId: usageId,
-              usageState: state
+              id: usageId,
+              state: state,
+              body: body,
+              creationDate: creationDate
             });
           })
           .catch((err) => {
@@ -166,13 +195,24 @@ const documentModule = {
           });
     },
     async sendUsage({commit, dispatch, rootGetters, getters, rootState, state}) {
-      console.log('uga');
       await Vue.axios.commonAdapter
           .put(
-              `/usages/` + state.document.contractId + '/' + state.usage.usageId + '/send/'
+              `/usages/` + state.document.contractId + '/' + state.usage.id + '/send/'
           )
           .then((res) => {
+            const {
+              usageId,
+              state,
+              body,
+              creationDate
+            } = res;
             console.log(res);
+            commit('UPDATE_USAGE', {
+              id: usageId,
+              state: state,
+              body: body,
+              creationDate: creationDate
+            });
           })
           .catch((err) => {
             log(err);
@@ -183,8 +223,8 @@ const documentModule = {
       contractId,
     ) {
       await dispatch('getDocument', contractId);
-      await dispatch('getSignatures', contractId);
       await dispatch('getUsages', contractId);
+      await dispatch('getSignatures', contractId);
     },
   },
   getters: {
@@ -207,13 +247,17 @@ const documentModule = {
         minSignaturesPartner <= totalSignatures[partnerMsp];
       return isSigned;
     },
-    isUsageUploaded: (state, getters) => {
-      console.log(state.usage);
-      return state.usage.usageId;
+    isUsageUploaded: (state) => {
+      // console.log(state.usage);
+      return state.usage.id;
     },
-    isUsageSent: (state, getters) => {
-      console.log(state.usage);
-      return state.usage.usageState === 'SENT';
+    isUsageSent: (state) => {
+      // console.log(state.usage);
+      return state.usage.state === 'SENT';
+    },
+    isPartnerUsageReceived: (state) => {
+      // console.log(state.usage);
+      return state.usage.state === 'SENT';
     },
     totalSignatures: (state, getters) => {
       const {selfMsp, partnerMsp} = getters;

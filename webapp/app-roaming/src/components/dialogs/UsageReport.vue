@@ -2,11 +2,12 @@
   <fragment>
     <app-dialog title="View Usage Report" label="view usage report">
       <template #content>
-        Inbound
-<!--        <v-data-table :headers="data.headers" :items="data.outbound.items" >-->
-<!--        </v-data-table>Outbound-->
-<!--        <v-data-table :headers="data.headers" :items="data.inbound.items" >-->
-<!--        </v-data-table>-->
+        <strong>Inbound</strong>
+        <v-data-table :headers="headers" :items="inbound" :items-per-page="5">
+        </v-data-table>Outbound
+        <strong>Outbound</strong>
+        <v-data-table :headers="headers" :items="outbound" :items-per-page="5">
+        </v-data-table>
       </template>
     </app-dialog>
   </fragment>
@@ -19,7 +20,33 @@ import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
   name: 'UsageReport',
   mixins: [timelineMixin],
-  props: {data: Object}
+  props: {
+    isOwnUsage: {
+      type: Boolean,
+      default: false
+    },
+  },
+  computed: {
+    headers() {
+      return [
+        {text: 'Year/Month', value: 'yearMonth', align: 'center'},
+        {text: 'HPMN', value: 'homeTadig', align: 'center'},
+        {text: 'VPMN', value: 'visitorTadig', align: 'center'},
+        {text: 'Service categorised', value: 'service', align: 'center'},
+        {text: 'Value', value: 'usage', align: 'center'},
+        {text: 'Units', value: 'units', align: 'center'},
+        {text: 'Currency ??', value: 'currency', align: 'center'}
+      ];
+    },
+    inbound() {
+      return this.$store.state.document.usage?.body?
+          this.$store.state.document.usage.body.inbound : [];
+    },
+    outbound() {
+      return this.$store.state.document.usage.body?
+          this.$store.state.document.usage.body.outbound : [];
+    },
+  }
 };
 </script>
 
