@@ -10,6 +10,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <usage-report :is-own-usage="isOwnUsage"/>
+          <ul/>
           <v-menu offset-y bottom>
             <template v-slot:activator="{on, attrs}">
               <app-button label="Export" v-bind="attrs" v-on="on" />
