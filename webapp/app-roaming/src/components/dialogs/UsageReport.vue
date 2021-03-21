@@ -4,7 +4,7 @@
       <template #content>
         <strong>Inbound</strong>
         <v-data-table :headers="headers" :items="inbound" :items-per-page="5">
-        </v-data-table>Outbound
+        </v-data-table>
         <strong>Outbound</strong>
         <v-data-table :headers="headers" :items="outbound" :items-per-page="5">
         </v-data-table>
@@ -39,12 +39,24 @@ export default {
       ];
     },
     inbound() {
-      return this.$store.state.document.usage?.body?
-          this.$store.state.document.usage.body.inbound : [];
+      const document = this.$store.state.document;
+      if (this.isOwnUsage) {
+        return document.usage.body ?
+            document.usage.body.inbound : [];
+      } else {
+        return document.partnerUsage.body ?
+            document.partnerUsage.body.inbound : [];
+      }
     },
     outbound() {
-      return this.$store.state.document.usage.body?
-          this.$store.state.document.usage.body.outbound : [];
+      const document = this.$store.state.document;
+      if (this.isOwnUsage) {
+        return document.usage.body ?
+            document.usage.body.outbound : [];
+      } else {
+        return document.partnerUsage.body ?
+            document.partnerUsage.body.outbound : [];
+      }
     },
   }
 };

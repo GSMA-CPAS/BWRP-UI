@@ -259,14 +259,14 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
-   async getUsages(contractId) {
+   async getUsages(contractId, isReceived) {
       try {
-         const lists = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/',
-         ).json();
+         const params = isReceived? '?states=RECEIVED' : '?states=SENT|DRAFT';
+         const url = this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/'+ params;
+         const lists = await got(url).json();
          this.getLogger().debug(
             '[CommonAdapter::getUsages] get all Usages of contractId-' +
                contractId +

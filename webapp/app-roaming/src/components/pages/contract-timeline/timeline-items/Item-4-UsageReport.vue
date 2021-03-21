@@ -1,7 +1,12 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card class="mr-15" color="#fafafa">
+      <v-card v-if="!isOwnUsage && !isPartnerUsageReceived" class="mr-15" color="#fafafa">
+        <v-card-text>
+          <div>WAITING FOR PARTNER USAGE</div>
+        </v-card-text>
+      </v-card>
+      <v-card v-else :class="isUsageSent?'':'mr-15'" color="#fafafa">
         <v-card-text>
           <div v-if="isOwnUsage">DTAG</div>
           <div v-else>TMUS</div>
@@ -36,7 +41,7 @@
 import SendUsage from '@/components/dialogs/SendUsage.vue';
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import UsageReport from '@/components/dialogs/UsageReport';
-
+import AppButton from '@/components/global-components/Button';
 export default {
   name: 'item-4',
   description: 'description',
@@ -46,6 +51,11 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      partnerBody: null
+    };
   },
   methods: {
     usageJsonToCsv() {
@@ -92,7 +102,19 @@ export default {
         link.click();
         link.remove();
       }
-    }
+    },
+    pollData() {
+      this.partnerBody = setInterval(() => {
+        if (!this.isPartnerUsageReceived) {
+          this.$store.dispatch('document/getPartnerUsage', this.contractId);
+        } else {
+          clearInterval(this.partnerBody);
+        }
+      }, 30000);
+    },
+  },
+  beforeDestroy() {
+    clearInterval(this.partnerBody);
   },
   computed: {
     items() {
@@ -102,7 +124,11 @@ export default {
       ];
     },
   },
+  created() {
+    if (!this.isOwnUsage) this.pollData();
+  },
   components: {
+    AppButton,
     UsageReport,
     SendUsage,
   },

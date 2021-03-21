@@ -152,7 +152,8 @@ class CommonService extends AbstractService {
     this.getRouter().get('/usages/:contractId', ensureAuthenticated, async (req, res) => {
       try {
         const contractId = req.params.contractId;
-        const response = await this.getBackendAdapter('common').getUsages(contractId);
+        const isReceived = req.query.states === 'RECEIVED';
+        const response = await this.getBackendAdapter('common').getUsages(contractId, isReceived);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({

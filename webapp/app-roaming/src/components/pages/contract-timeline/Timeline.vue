@@ -8,7 +8,7 @@
       <Item-2-Signatures />
       <Item-3-UploadUsage />
       <Item-4-UsageReport v-if="this.isUsageUploaded" :isOwnUsage="true"/>
-      <Item-4-UsageReport v-if="this.isPartnerUsageReceived" />
+      <Item-4-UsageReport v-if="this.isUsageSent" />
       <Item-5-Discrepancies :class="{'opacity-0': exists('discrepancies')}" />
       <Item-6-ApproveSettlement
         :class="{'opacity-0': exists('discrepancies')}"

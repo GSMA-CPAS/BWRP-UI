@@ -6,7 +6,7 @@ const {log} = console;
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({rawData: null, document: null, signatures: [], usage: {}}),
+  state: () => ({rawData: null, document: null, signatures: [], usage: {}, partnerUsage: {}}),
   mutations: {
     UPDATE_RAW_DATA: (state, rawData) => {
       state.rawData = rawData;
@@ -20,7 +20,9 @@ const documentModule = {
     },
     UPDATE_USAGE: (state, usage) => {
       state.usage = usage;
-      console.log(usage);
+    },
+    UPDATE_PARTNER_USAGE: (state, usage) => {
+      state.partnerUsage = usage;
     },
   },
   actions: {
@@ -120,7 +122,6 @@ const documentModule = {
               usageId,
               state
             } = data[0]? data[0] : {};
-            console.log(data);
             commit('UPDATE_USAGE', {
               id: usageId,
               state: state
@@ -130,8 +131,34 @@ const documentModule = {
             console.log(err);
           });
       if (state.usage.id) {
-        const usageId = state.usage.id;
-        await dispatch('getUsageById', {contractId, usageId});
+        await dispatch('getUsageById', {contractId, usageId: state.usage.id, isPartner: false});
+      }
+    },
+    async getPartnerUsage(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      contractId,
+    ) {
+      const url = `/usages/${contractId}/?states=RECEIVED`;
+      await Vue.axios.commonAdapter
+          .get(url, {
+            withCredentials: true,
+          })
+          .then((data) => {
+            // TODO: usage should be overwritten by comA, for now taking latest usage uploaded
+            const {
+              usageId,
+              referenceId
+            } = data[0]? data[0] : {};
+            commit('UPDATE_PARTNER_USAGE', {
+              id: usageId,
+              referenceId: referenceId
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      if (state.partnerUsage.id) {
+        await dispatch('getUsageById', {contractId, usageId: state.partnerUsage.id, isPartner: true});
       }
     },
     async getUsageById(
@@ -148,15 +175,25 @@ const documentModule = {
               usageId,
               state,
               body,
-              creationDate
+              creationDate,
+              referenceId
             } = data;
-            console.log(data);
-            commit('UPDATE_USAGE', {
-              id: usageId,
-              state: state,
-              body: body,
-              creationDate: creationDate
-            });
+            if (req.isPartner) {
+              commit('UPDATE_PARTNER_USAGE', {
+                id: usageId,
+                body: body,
+                creationDate: creationDate,
+                referenceId: referenceId
+              });
+            } else {
+              commit('UPDATE_USAGE', {
+                id: usageId,
+                state: state,
+                body: body,
+                creationDate: creationDate,
+                referenceId: referenceId
+              });
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -182,7 +219,6 @@ const documentModule = {
               body,
               creationDate
             } = res;
-            console.log(res);
             commit('UPDATE_USAGE', {
               id: usageId,
               state: state,
@@ -206,7 +242,6 @@ const documentModule = {
               body,
               creationDate
             } = res;
-            console.log(res);
             commit('UPDATE_USAGE', {
               id: usageId,
               state: state,
@@ -225,6 +260,7 @@ const documentModule = {
       await dispatch('getDocument', contractId);
       await dispatch('getUsages', contractId);
       await dispatch('getSignatures', contractId);
+      await dispatch('getPartnerUsage', contractId);
     },
   },
   getters: {
@@ -248,16 +284,13 @@ const documentModule = {
       return isSigned;
     },
     isUsageUploaded: (state) => {
-      // console.log(state.usage);
       return state.usage.id;
     },
     isUsageSent: (state) => {
-      // console.log(state.usage);
       return state.usage.state === 'SENT';
     },
     isPartnerUsageReceived: (state) => {
-      // console.log(state.usage);
-      return state.usage.state === 'SENT';
+      return state.partnerUsage.body;
     },
     totalSignatures: (state, getters) => {
       const {selfMsp, partnerMsp} = getters;
