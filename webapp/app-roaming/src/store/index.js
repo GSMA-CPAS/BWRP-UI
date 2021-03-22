@@ -103,9 +103,17 @@ export default new Vuex.Store({
               if (error.response?.status === 401) {
                 parent.postMessage('unauthorized', '*');
               }
+              let errorMessage = 'The application has encountered an unknown error';
+              if (error.response?.data) {
+                errorMessage = error.response.data.message;
+              } else {
+                if (error.message) {
+                  errorMessage = error.message;
+                }
+              }
               dispatch('app-state/loadError', {
-                title: error.response.statusText,
-                code: `Status code ${error.response.status} | message ${error.response.data.message}`,
+                title: 'Oops! Something went wrong!',
+                code: errorMessage,
               });
               return Promise.reject(error);
             },
