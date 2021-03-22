@@ -29,11 +29,7 @@ export default {
     groupCodeSearchTerm: null,
   }),
   methods: {
-    ...mapActions('workspace-config/tadig-codes', ['loadCodes']),
-    ...mapActions('workspace-config/tadig-groups', [
-      'loadGroups',
-      'loadGroupCodes',
-    ]),
+    ...mapActions('workspace-config/tadig-groups', ['loadGroupCodes']),
     removeSearchTerm(e) {
       this.groupCodeSearchTerm = null;
       this.groupCodeRemovalSearchTerm = null;
@@ -79,10 +75,6 @@ export default {
         this.codes.map((x) => x.code),
       );
     },
-  },
-  mounted() {
-    this.loadCodes();
-    this.loadGroups();
   },
 };
 </script>
