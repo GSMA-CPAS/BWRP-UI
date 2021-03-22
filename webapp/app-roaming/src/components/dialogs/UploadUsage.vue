@@ -1,7 +1,6 @@
 <template>
   <div>
     <app-dialog
-      v-if="active"
       outlined
       title="Upload Service Data"
       label="upload data"
@@ -25,7 +24,6 @@
         />
       </template>
     </app-dialog>
-    <v-icon v-else color="success" x-large>mdi-check-circle-outline</v-icon>
   </div>
 </template>
 <script >

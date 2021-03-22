@@ -102,6 +102,8 @@ const timelineMixin = {
       'isUsageUploaded',
       'isUsageSent',
       'isPartnerUsageReceived',
+      'selfContractTadigs',
+      'partnerContractTadigs',
     ]),
     ...mapGetters('partners', ['list'])
   },
