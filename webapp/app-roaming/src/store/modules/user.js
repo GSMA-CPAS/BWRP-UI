@@ -9,7 +9,7 @@ const userModule = {
     },
     SET_IDENTITIES(state, identities) {
       state.identities = identities;
-    }
+    },
   },
   actions: {
     // initialize user
@@ -23,18 +23,26 @@ const userModule = {
         }
       }
     },
-    async loadIdentities({commit, dispatch, rootGetters, getters, rootState, state}) {
+    async loadIdentities({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
       await Vue.axios.core
-          .get('/users/self/identities', {
-            withCredentials: true,
-          })
-          .then((data) => {
-            commit('SET_IDENTITIES', data);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-    }
+        .get('/users/self/identities', {
+          withCredentials: true,
+          loadingSpinner: true,
+        })
+        .then((data) => {
+          commit('SET_IDENTITIES', data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   getters: {
     organizationMSPID: (state) => {
@@ -45,7 +53,7 @@ const userModule = {
     },
     isAdmin(state) {
       // TODO:
-    }
-  }
+    },
+  },
 };
 export default userModule;

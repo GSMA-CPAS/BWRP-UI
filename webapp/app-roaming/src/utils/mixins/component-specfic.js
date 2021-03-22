@@ -90,7 +90,6 @@ const timelineMixin = {
       'parties',
       'contractId',
       'creationDate',
-      'isSigned',
       'totalSignatures',
       'partnerMsp',
       'selfMsp',

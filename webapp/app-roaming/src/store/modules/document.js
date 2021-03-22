@@ -116,17 +116,21 @@ const documentModule = {
     minSignaturesPartner: (state, getters) => {
       return state.document?.header.msps[getters.partnerMsp].minSignatures;
     },
+    signedBySelf: (state, getters) => {
+      const {selfMsp, totalSignatures, minSignaturesSelf} = getters;
+      log(minSignaturesSelf <= totalSignatures[selfMsp]);
+      const isSigned = minSignaturesSelf <= totalSignatures[selfMsp];
+      return isSigned;
+    },
     isSigned: (state, getters) => {
       const {
-        selfMsp,
         totalSignatures,
         partnerMsp,
-        minSignaturesSelf,
         minSignaturesPartner,
+        signedBySelf,
       } = getters;
       const isSigned =
-        minSignaturesSelf <= totalSignatures[selfMsp] &&
-        minSignaturesPartner <= totalSignatures[partnerMsp];
+        signedBySelf && minSignaturesPartner <= totalSignatures[partnerMsp];
       return isSigned;
     },
     totalSignatures: (state, getters) => {

@@ -1,8 +1,7 @@
 <template>
   <div>
-    <v-icon v-if="isSigned" color="success" x-large>
-      mdi-check-circle-outline
-    </v-icon>
+    <v-icon v-if="signedBySelf" x-large>mdi-progress-check </v-icon>
+    <v-icon v-else-if="isSigned" x-large>mdi-check-circle-outline </v-icon>
     <app-dialog
       v-else
       outlined
@@ -15,6 +14,7 @@
     >
       <template #content>
         <v-select
+          :loading="loadingSpinner"
           v-model="selectedIdentity"
           :items="identities"
           item-text="name"
@@ -40,7 +40,7 @@
 </template>
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';
-import {mapState} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 export default {
   name: 'sign-button',
   description: 'description',
@@ -51,6 +51,7 @@ export default {
   },
   mixins: [timelineMixin],
   computed: {
+    ...mapGetters('document', ['signedBySelf', 'isSigned']),
     ...mapState('app-state', ['loadingSpinner']),
   },
   methods: {

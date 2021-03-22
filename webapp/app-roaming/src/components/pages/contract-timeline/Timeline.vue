@@ -21,6 +21,7 @@ import Item2Signatures from './timeline-items/Item-2-Signatures.vue';
 import Item4SettlementView from './timeline-items/Item-4-SettlementView.vue';
 import Item5Discrepancies from './timeline-items/Item-5-Discrepancies.vue';
 import Item6ApproveSettlement from './timeline-items/Item-6-ApproveSettlement.vue';
+import {mapGetters} from 'vuex';
 export default {
   components: {
     Item6ApproveSettlement,
@@ -33,6 +34,9 @@ export default {
   title: 'Timeline',
   description: 'Component: Timeline',
   mixins: [timelineMixin],
+  computed: {
+    ...mapGetters('document', ['isSigned']),
+  },
   created() {
     this.loadData(this.$route.params.cid);
   },
