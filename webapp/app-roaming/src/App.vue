@@ -3,7 +3,7 @@
     <error-overlay />
     <breadcrumb />
     <v-main class="background">
-      <loading-spinner />
+      <loading-spinner :isLoading="isLoading" />
       <router-view v-show="!isLoading" />
     </v-main>
   </v-app>

@@ -20,23 +20,23 @@ const documentModule = {
     },
   },
   actions: {
-    async signDocument({commit, dispatch, rootGetters, getters, rootState, state}, identity) {
+    async signDocument(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      identity,
+    ) {
       Vue.axios.commonAdapter
         .put(
-          // `/signatures/` + state.document.documentId,
           `/signatures/` + state.document.contractId,
-          {'identity': identity},
+          {identity: identity},
           {
-            signing: true,
+            loadingSpinner: true,
             withCredentials: true,
           },
         )
         .then((res) => {
-          dispatch('app-state/signing', false, {root: true});
           dispatch('getSignatures', state.document.contractId);
         })
         .catch((err) => {
-          dispatch('app-state/signing', false, {root: true});
           log(err);
         });
     },

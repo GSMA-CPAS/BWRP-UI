@@ -7,11 +7,9 @@
 </template>
 
 <script>
-import {appStateMixin} from '@/utils/mixins/component-specfic';
-
 export default {
   name: 'app',
-  mixins: [appStateMixin],
+  props: ['isLoading'],
 };
 </script>
 
