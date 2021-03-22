@@ -11,7 +11,7 @@
         <v-spacer />
         <v-icon color="dark" @click="hide">mdi-close</v-icon>
       </v-card-title>
-      <div class="pa-5">
+      <div>
         <v-card-text>
           <slot name="content" />
         </v-card-text>
@@ -19,6 +19,7 @@
       <v-divider />
       <v-card-actions>
         <v-spacer />
+        <app-button plain label="Cancel" @button-pressed="hide" />
         <app-button
           label="Confirm"
           :disabled="disabled"

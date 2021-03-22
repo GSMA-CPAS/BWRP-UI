@@ -31,6 +31,7 @@
             </v-row>
           </template>
           <template #actions="{cancel}">
+            <app-button @button-pressed="cancel" label="Cancel" plain />
             <app-button
               :disabled="
                 code === null ||
@@ -100,7 +101,9 @@
             @on-confirm="deleteCode(item.id)"
             :icon="icons.remove"
           >
-            <template #content> Are you sure? </template>
+            <template #content>
+              <div class="body-1">Are you sure?</div>
+            </template>
           </dialog-popup>
         </template>
       </v-data-table>
