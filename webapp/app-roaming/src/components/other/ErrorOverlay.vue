@@ -22,6 +22,11 @@
           </v-row>
         </div>
       </v-card-text>
+      <v-divider />
+      <v-card-actions>
+        <v-spacer />
+        <app-button label="Ok" @button-pressed="setErrorVisibility(false)" />
+      </v-card-actions>
     </v-card>
   </v-overlay>
 </template>
