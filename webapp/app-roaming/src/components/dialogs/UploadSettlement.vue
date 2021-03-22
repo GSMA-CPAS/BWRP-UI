@@ -20,7 +20,7 @@
             active = false;
             cancel();
           "
-          label="Confirm"
+          label="Ok"
           :disabled="_.isNil(file)"
         />
       </template>

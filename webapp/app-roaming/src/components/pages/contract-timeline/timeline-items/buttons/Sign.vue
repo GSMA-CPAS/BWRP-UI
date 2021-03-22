@@ -32,7 +32,7 @@
             onSign();
             cancel();
           "
-          label="Confirm"
+          label="Ok"
         />
       </template>
     </app-dialog>

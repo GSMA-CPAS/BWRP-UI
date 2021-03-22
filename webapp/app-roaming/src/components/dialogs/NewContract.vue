@@ -40,7 +40,7 @@
       />
       <app-button
         :disabled="partnerSelected"
-        label="Confirm"
+        label="Ok"
         @button-pressed="confirm"
       />
     </template>

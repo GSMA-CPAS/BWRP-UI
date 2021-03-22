@@ -21,7 +21,7 @@
         <v-spacer />
         <app-button plain label="Cancel" @button-pressed="hide" />
         <app-button
-          label="Confirm"
+          label="Ok"
           :disabled="disabled"
           @button-pressed="
             $emit('on-confirm');
