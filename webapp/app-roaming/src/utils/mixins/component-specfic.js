@@ -67,7 +67,6 @@ const timelineMixin = {
   mixins: [utilsMixin],
   methods: {
     ...mapActions('document/new', ['startContract']),
-    ...mapActions('partners', ['loadPartners']),
     ...mapActions('document', ['loadData', 'signDocument']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
@@ -77,7 +76,6 @@ const timelineMixin = {
       return {'ma-5': true};
     },
     ...mapState('user', ['identities']),
-    ...mapState('app-state', ['signing']),
     ...mapState('document', {
       referenceId: (state) => state.document.referenceId,
       blockchainTxId: (state) => state.document.blockchainRef.txId,
@@ -100,7 +98,7 @@ const timelineMixin = {
       'minSignaturesSelf',
       'minSignaturesPartner',
     ]),
-    ...mapGetters('partners', ['list'])
+    ...mapGetters('partners', ['list']),
   },
 };
 export {timelineMixin};

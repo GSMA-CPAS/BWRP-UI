@@ -57,12 +57,16 @@ const SERVICE_ORDER = [
 export default new Vuex.Store({
   state: {
     documents: [],
+    partners: [],
     serviceConfiguration: SERVICE_CONFIGURATION,
     services: SERVICE_ORDER,
   },
   mutations: {
     LOAD_DOCUMENTS: (state, documents) => {
       state.documents = documents;
+    },
+    SET_PARTNERS: (state, partners) => {
+      state.partners = partners;
     },
   },
   actions: {
@@ -72,13 +76,14 @@ export default new Vuex.Store({
           const {request, response} = Vue.axios[key].interceptors;
           request.use(
             (config) => {
-              const {method, baseURL, url, signing} = config;
+              const {method, baseURL, url, loadingSpinner} = config;
               console.log(
                 `%c Made ${method} request to ${baseURL + url}`,
                 'color:green; font-weight:800',
               );
-              signing
-                ? dispatch('app-state/signing', true)
+
+              loadingSpinner
+                ? dispatch('app-state/loadingSpinner', true)
                 : dispatch('app-state/loading', true);
               return config;
             },
@@ -93,6 +98,7 @@ export default new Vuex.Store({
           response.use(
             (response) => {
               dispatch('app-state/loading', false);
+              dispatch('app-state/loadingSpinner', false);
               try {
                 return JSON.parse(response.data);
               } catch {
@@ -103,7 +109,8 @@ export default new Vuex.Store({
               if (error.response?.status === 401) {
                 parent.postMessage('unauthorized', '*');
               }
-              let errorMessage = 'The application has encountered an unknown error';
+              let errorMessage =
+                'The application has encountered an unknown error';
               if (error.response?.data) {
                 errorMessage = error.response.data.message;
               } else {
@@ -115,6 +122,7 @@ export default new Vuex.Store({
                 title: 'Oops! Something went wrong!',
                 code: errorMessage,
               });
+              dispatch('app-state/loadingSpinner', false);
               return Promise.reject(error);
             },
           );
@@ -140,6 +148,33 @@ export default new Vuex.Store({
         .catch((err) => {
           console.log(err);
         });
+    },
+    async loadPartners({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
+      if (state.partners.length === 0) {
+        await Vue.axios.commonAdapter
+          .get('/discovery/msps', {withCredentials: true, loadingSpinner: true})
+          .then((data) => {
+            const parsedData = data;
+            const affiliatedOrganization =
+              rootGetters['user/organizationMSPID'];
+            const exclude = ['OrdererMSP', 'GSMA', affiliatedOrganization];
+
+            const partners = Vue.lodash.difference(parsedData, exclude);
+
+            commit('SET_PARTNERS', partners);
+          })
+          .catch(function(error) {
+            // TODO: handle error
+            console.log(error);
+          });
+      }
     },
   },
   modules: allModules,
