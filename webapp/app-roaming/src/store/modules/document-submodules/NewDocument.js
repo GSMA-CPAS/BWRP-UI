@@ -19,7 +19,7 @@ const defaultState = () => ({
   partner: null,
   generalInformation: {
     name: null,
-    type: null,
+    /*   deprecrated:  type: null, */
     startDate: null,
     endDate: null,
     prolongationLength: null,
@@ -160,54 +160,99 @@ const newDocumentModule = {
     },
   },
   actions: {
+    convertJsonModelToUiModel(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      data,
+    ) {
+      const {partner, user} = getters.msps;
+      /** @type Array */
+      const parties = data?.body.framework.contractParties;
+      const userMspIncluded = parties.includes(user);
+      log(userMspIncluded);
+      if (userMspIncluded) {
+        const map = {
+          item: {
+            generalInformation: {
+              name: 'metadata.name',
+              startDate: 'framework.term.start',
+              endDate: 'framework.term.end',
+              prolongationLength: 'framework.term.prolongation',
+              taxesIncluded: 'framework.payment.taxesIncluded',
+              authors: 'metadata.authors',
+              userData: {
+                currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
+                tadigCodes: {codes: null, includeContractParty: false},
+              },
+              partnerData: {
+                currencyForAllDiscounts: null,
+                tadigCodes: {codes: null, includeContractParty: false},
+              },
+            },
+          },
+        };
+      } else {
+        dispatch(
+          'app-state/loadError',
+          {
+            title: 'No matching MSPs',
+            code: `${user}s MSP doesn't match imported JSON.`,
+          },
+          {root: true},
+        );
+      }
+    },
+    convertUiModelToJsonModel(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      payload,
+    ) {},
     startContract(
       {commit, dispatch, rootGetters, getters, rootState, state},
       payload,
     ) {
       const user = rootGetters['user/organizationMSPID'];
       const {partner, fileAsJSON} = payload;
-
+      fileAsJSON && dispatch('convertJsonModelToUiModel', fileAsJSON);
       const loadedJson = {};
 
-      if (fileAsJSON) {
-        if (fileAsJSON.generalInformation) {
-          loadedJson.generalInformation = fileAsJSON.generalInformation;
+      // if (fileAsJSON) {
+      //   if (fileAsJSON.generalInformation) {
+      //     loadedJson.generalInformation = fileAsJSON.generalInformation;
 
-          if (loadedJson.generalInformation[user]) {
-            loadedJson.generalInformation.userData =
-              loadedJson.generalInformation[user];
-            delete loadedJson.generalInformation[user];
-          }
+      //     if (loadedJson.generalInformation[user]) {
+      //       loadedJson.generalInformation.userData =
+      //         loadedJson.generalInformation[user];
+      //       delete loadedJson.generalInformation[user];
+      //     }
 
-          if (loadedJson.generalInformation[partner]) {
-            loadedJson.generalInformation.partnerData =
-              loadedJson.generalInformation[partner];
-            delete loadedJson.generalInformation[partner];
-          }
-        }
+      //     if (loadedJson.generalInformation[partner]) {
+      //       loadedJson.generalInformation.partnerData =
+      //         loadedJson.generalInformation[partner];
+      //       delete loadedJson.generalInformation[partner];
+      //     }
+      //   }
 
-        if (fileAsJSON[user]) {
-          loadedJson.userData = fileAsJSON[user];
-        }
+      //   if (fileAsJSON[user]) {
+      //     loadedJson.userData = fileAsJSON[user];
+      //   }
 
-        if (fileAsJSON[partner]) {
-          loadedJson.partnerData = fileAsJSON[partner];
-        }
+      //   if (fileAsJSON[partner]) {
+      //     loadedJson.partnerData = fileAsJSON[partner];
+      //   }
 
-        if (loadedJson.generalInformation.startDate) {
-          loadedJson.generalInformation.startDate = parseISOString(
-            loadedJson.generalInformation.startDate,
-          );
-        }
+      //   if (loadedJson.generalInformation.startDate) {
+      //     loadedJson.generalInformation.startDate = parseISOString(
+      //       loadedJson.generalInformation.startDate,
+      //     );
+      //   }
 
-        if (loadedJson.generalInformation.endDate) {
-          loadedJson.generalInformation.endDate = parseISOString(
-            loadedJson.generalInformation.endDate,
-          );
-        }
-      }
+      //   if (loadedJson.generalInformation.endDate) {
+      //     loadedJson.generalInformation.endDate = parseISOString(
+      //       loadedJson.generalInformation.endDate,
+      //     );
+      //   }
+      // }
 
-      commit('READ_JSON', loadedJson);
+      // commit('READ_JSON', loadedJson);
       commit('SET_PARTNER', partner);
     },
     setStep(
