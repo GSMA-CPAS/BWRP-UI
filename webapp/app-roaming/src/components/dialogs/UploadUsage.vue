@@ -25,7 +25,7 @@
         />
       </template>
     </app-dialog>
-    <v-icon v-else color="primary" x-large>mdi-check-circle-outline</v-icon>
+    <v-icon v-else color="success" x-large>mdi-check-circle-outline</v-icon>
   </div>
 </template>
 <script >

@@ -59,8 +59,8 @@ export default {
   },
   methods: {
     usageJsonToCsv() {
-      const inboundItems = this.$store.state.document.usage.body.inbound;
-      const outboundItems = this.$store.state.document.usage.body.outbound;
+      const inboundItems = this.$store.state.usage.ownUsage.body.inbound;
+      const outboundItems = this.$store.state.usage.ownUsage.body.outbound;
       const header = Object.keys(inboundItems[0]);
       header.push('direction');
       return [
@@ -106,7 +106,7 @@ export default {
     pollData() {
       this.partnerBody = setInterval(() => {
         if (!this.isPartnerUsageReceived) {
-          this.$store.dispatch('document/getPartnerUsage', this.contractId);
+          this.$store.dispatch('usage/getPartnerUsage', this.contractId);
         } else {
           clearInterval(this.partnerBody);
         }

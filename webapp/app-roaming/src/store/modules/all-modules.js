@@ -6,10 +6,12 @@ import userModule from './user';
 import appStateModule from './app-states';
 import appDetailsModule from './app-details';
 import workspaceModule from './workspace';
+import usageModule from './usage';
 
 const allModules = {
   document: documentModule,
   'app-state': appStateModule,
+  usage: usageModule,
   partners: partnersModule,
   user: userModule,
   'app-details': appDetailsModule,

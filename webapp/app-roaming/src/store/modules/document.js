@@ -6,7 +6,7 @@ const {log} = console;
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({rawData: null, document: null, signatures: [], usage: {}, partnerUsage: {}, settlement: {}, partnerSettlement: {}}),
+  state: () => ({rawData: null, document: null, signatures: []}),
   mutations: {
     UPDATE_RAW_DATA: (state, rawData) => {
       state.rawData = rawData;
@@ -17,12 +17,6 @@ const documentModule = {
     },
     UPDATE_SIGNATURES: (state, signatures) => {
       state.signatures = signatures;
-    },
-    UPDATE_USAGE: (state, usage) => {
-      state.usage = usage;
-    },
-    UPDATE_PARTNER_USAGE: (state, usage) => {
-      state.partnerUsage = usage;
     },
   },
   actions: {
@@ -107,160 +101,15 @@ const documentModule = {
           console.log(err);
         });
     },
-    async getUsages(
-      {commit, dispatch, rootGetters, getters, rootState, state},
-      contractId,
-    ) {
-      const url = `/usages/${contractId}/`;
-      await Vue.axios.commonAdapter
-          .get(url, {
-            withCredentials: true,
-          })
-          .then((data) => {
-            // TODO: usage should be overwritten by comA, for now taking latest usage uploaded
-            const {
-              usageId,
-              state
-            } = data[0]? data[0] : {};
-            commit('UPDATE_USAGE', {
-              id: usageId,
-              state: state
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      if (state.usage.id) {
-        await dispatch('getUsageById', {contractId, usageId: state.usage.id, isPartner: false});
-      }
-    },
-    async getPartnerUsage(
-      {commit, dispatch, rootGetters, getters, rootState, state},
-      contractId,
-    ) {
-      const url = `/usages/${contractId}/?states=RECEIVED`;
-      await Vue.axios.commonAdapter
-          .get(url, {
-            withCredentials: true,
-          })
-          .then((data) => {
-            // TODO: usage should be overwritten by comA, for now taking latest usage uploaded
-            const {
-              usageId,
-              referenceId
-            } = data[0]? data[0] : {};
-            commit('UPDATE_PARTNER_USAGE', {
-              id: usageId,
-              referenceId: referenceId
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      if (state.partnerUsage.id) {
-        await dispatch('getUsageById', {contractId, usageId: state.partnerUsage.id, isPartner: true});
-      }
-    },
-    async getUsageById(
-        {commit, dispatch, rootGetters, getters, rootState, state},
-        req
-    ) {
-      const url = `/usages/${req.contractId}/${req.usageId}`;
-      await Vue.axios.commonAdapter
-          .get(url, {
-            withCredentials: true,
-          })
-          .then((data) => {
-            const {
-              usageId,
-              state,
-              body,
-              creationDate,
-              referenceId
-            } = data;
-            if (req.isPartner) {
-              commit('UPDATE_PARTNER_USAGE', {
-                id: usageId,
-                body: body,
-                creationDate: creationDate,
-                referenceId: referenceId
-              });
-            } else {
-              commit('UPDATE_USAGE', {
-                id: usageId,
-                state: state,
-                body: body,
-                creationDate: creationDate,
-                referenceId: referenceId
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-    },
-    async uploadUsage({commit, dispatch, rootGetters, getters, rootState, state}, usage) {
-      const header = {
-        'type': 'usage',
-        'version': '1.0'
-      };
-      const body = {
-        'inbound': usage['inbound'],
-        'outbound': usage['outbound'],
-      };
-      await Vue.axios.commonAdapter
-          .post(
-              `/usages/` + state.document.contractId, {header: header, body: body}, {withCredentials: true}
-          )
-          .then((res) => {
-            const {
-              usageId,
-              state,
-              body,
-              creationDate
-            } = res;
-            commit('UPDATE_USAGE', {
-              id: usageId,
-              state: state,
-              body: body,
-              creationDate: creationDate
-            });
-          })
-          .catch((err) => {
-            log(err);
-          });
-    },
-    async sendUsage({commit, dispatch, rootGetters, getters, rootState, state}) {
-      await Vue.axios.commonAdapter
-          .put(
-              `/usages/` + state.document.contractId + '/' + state.usage.id + '/send/'
-          )
-          .then((res) => {
-            const {
-              usageId,
-              state,
-              body,
-              creationDate
-            } = res;
-            commit('UPDATE_USAGE', {
-              id: usageId,
-              state: state,
-              body: body,
-              creationDate: creationDate
-            });
-          })
-          .catch((err) => {
-            log(err);
-          });
-    },
+
     async loadData(
       {commit, dispatch, rootGetters, getters, rootState, state},
       contractId,
     ) {
       await dispatch('getDocument', contractId);
-      await dispatch('getUsages', contractId);
+      await dispatch('usage/getUsages', contractId, {root: true});
       await dispatch('getSignatures', contractId);
-      await dispatch('getPartnerUsage', contractId);
+      await dispatch('usage/getPartnerUsage', contractId, {root: true});
     },
   },
   getters: {
@@ -282,15 +131,6 @@ const documentModule = {
         minSignaturesSelf <= totalSignatures[selfMsp] &&
         minSignaturesPartner <= totalSignatures[partnerMsp];
       return isSigned;
-    },
-    isUsageUploaded: (state) => {
-      return state.usage.id;
-    },
-    isUsageSent: (state) => {
-      return state.usage.state === 'SENT';
-    },
-    isPartnerUsageReceived: (state) => {
-      return state.partnerUsage.body;
     },
     totalSignatures: (state, getters) => {
       const {selfMsp, partnerMsp} = getters;

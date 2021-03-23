@@ -1,16 +1,14 @@
 
 <template>
   <v-container v-if="$store.state.document">
-    <!--<app-headline :title="`Contract ${name}`" />
-    <v-divider />-->
     <v-timeline>
       <Item-1-ContractView />
       <Item-2-Signatures />
       <Item-3-UploadUsage />
       <Item-4-UsageReport v-if="this.isUsageUploaded" :isOwnUsage="true"/>
       <Item-4-UsageReport v-if="this.isUsageSent" />
-      <Item-5-Discrepancies v-if="this.isPartnerUsageReceived" />
-      <Item-6-GenerateSettlement v-if="this.isPartnerUsageReceived"/>
+      <Item-5-Discrepancies v-if="this.areUsagesExchanged" />
+      <Item-6-GenerateSettlement v-if="this.areUsagesExchanged"/>
     </v-timeline>
   </v-container>
 </template>

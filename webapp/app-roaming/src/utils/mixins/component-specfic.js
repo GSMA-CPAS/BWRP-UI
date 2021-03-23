@@ -68,7 +68,8 @@ const timelineMixin = {
   methods: {
     ...mapActions('document/new', ['startContract']),
     ...mapActions('partners', ['loadPartners']),
-    ...mapActions('document', ['loadData', 'signDocument', 'uploadUsage', 'sendUsage']),
+    ...mapActions('document', ['loadData', 'signDocument']),
+    ...mapActions('usage', ['uploadUsage', 'sendUsage']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
   },
@@ -99,11 +100,14 @@ const timelineMixin = {
       'partnerMsp',
       'minSignaturesSelf',
       'minSignaturesPartner',
+      'selfContractTadigs',
+      'partnerContractTadigs',
+    ]),
+    ...mapGetters('usage', [
       'isUsageUploaded',
       'isUsageSent',
       'isPartnerUsageReceived',
-      'selfContractTadigs',
-      'partnerContractTadigs',
+      'areUsagesExchanged'
     ]),
     ...mapGetters('partners', ['list'])
   },

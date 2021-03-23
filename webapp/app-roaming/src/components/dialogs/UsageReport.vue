@@ -39,23 +39,23 @@ export default {
       ];
     },
     inbound() {
-      const document = this.$store.state.document;
+      const usage = this.$store.state.usage;
       if (this.isOwnUsage) {
-        return document.usage.body ?
-            document.usage.body.inbound : [];
+        return usage.ownUsage.body ?
+            usage.ownUsage.body.inbound : [];
       } else {
-        return document.partnerUsage.body ?
-            document.partnerUsage.body.inbound : [];
+        return usage.partnerUsage.body ?
+            usage.partnerUsage.body.inbound : [];
       }
     },
     outbound() {
-      const document = this.$store.state.document;
+      const usage = this.$store.state.usage;
       if (this.isOwnUsage) {
-        return document.usage.body ?
-            document.usage.body.outbound : [];
+        return usage.ownUsage.body ?
+            usage.ownUsage.body.outbound : [];
       } else {
-        return document.partnerUsage.body ?
-            document.partnerUsage.body.outbound : [];
+        return usage.partnerUsage.body ?
+            usage.partnerUsage.body.outbound : [];
       }
     },
   }
