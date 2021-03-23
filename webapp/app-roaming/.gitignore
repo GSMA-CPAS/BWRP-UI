@@ -2,6 +2,7 @@
 node_modules
 /dist
 commit-changes.sh
+src/assets/dummy/json
 
 # local env files
 .env.local
