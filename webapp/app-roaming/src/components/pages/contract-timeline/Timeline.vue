@@ -10,9 +10,7 @@
       <Item-4-UsageReport v-if="this.isUsageUploaded" :isOwnUsage="true"/>
       <Item-4-UsageReport v-if="this.isUsageSent" />
       <Item-5-Discrepancies v-if="this.isPartnerUsageReceived" />
-      <Item-6-ApproveSettlement
-        :class="{'opacity-0': exists('discrepancies')}"
-      />
+      <Item-6-GenerateSettlement/>
     </v-timeline>
   </v-container>
 </template>
@@ -23,10 +21,10 @@ import Item2Signatures from './timeline-items/Item-2-Signatures.vue';
 import Item3UploadUsage from './timeline-items/Item-3-UploadUsage';
 import Item4UsageReport from './timeline-items/Item-4-UsageReport';
 import Item5Discrepancies from './timeline-items/Item-5-UsageDiscrepancies.vue';
-import Item6ApproveSettlement from './timeline-items/Item-6-ApproveSettlement.vue';
+import Item6GenerateSettlement from './timeline-items/Item-6-GenerateSettlement.vue';
 export default {
   components: {
-    Item6ApproveSettlement,
+    Item6GenerateSettlement,
     Item5Discrepancies,
     Item4UsageReport,
     Item3UploadUsage,

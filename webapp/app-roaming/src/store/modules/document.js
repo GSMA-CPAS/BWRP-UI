@@ -6,7 +6,7 @@ const {log} = console;
 const namespaced = true;
 const documentModule = {
   namespaced,
-  state: () => ({rawData: null, document: null, signatures: [], usage: {}, partnerUsage: {}}),
+  state: () => ({rawData: null, document: null, signatures: [], usage: {}, partnerUsage: {}, settlement: {}, partnerSettlement: {}}),
   mutations: {
     UPDATE_RAW_DATA: (state, rawData) => {
       state.rawData = rawData;

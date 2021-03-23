@@ -1,6 +1,7 @@
 <template>
   <div>
     <app-dialog
+      v-if="active"
       outlined
       title="Upload Service Data"
       label="upload data"

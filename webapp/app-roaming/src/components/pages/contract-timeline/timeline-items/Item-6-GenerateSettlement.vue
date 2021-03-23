@@ -4,19 +4,17 @@
       <v-container/>
     </template>
     <template #icon>
-      <upload-usage v-if="!isUsageSent"/>
+      <generate-settlement />
     </template>
   </timeline-item>
 </template>
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';
-import UploadUsage from '@/components/dialogs/UploadUsage.vue';
+import GenerateSettlement from '@/components/dialogs/GenerateSettlement';
 export default {
-  name: 'item-3',
+  name: 'item-1',
   description: 'description',
   mixins: [timelineMixin],
-  components: {
-    UploadUsage,
-  },
+  components: {GenerateSettlement},
 };
 </script>
