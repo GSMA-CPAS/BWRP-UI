@@ -35,7 +35,7 @@ export default {
         {text: 'Service categorised', value: 'service', align: 'center'},
         {text: 'Value', value: 'usage', align: 'center'},
         {text: 'Units', value: 'units', align: 'center'},
-        {text: 'Currency ??', value: 'currency', align: 'center'}
+        {text: 'Currency', value: 'currency', align: 'center'}
       ];
     },
     inbound() {

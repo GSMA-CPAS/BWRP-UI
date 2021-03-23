@@ -10,7 +10,7 @@
       <Item-4-UsageReport v-if="this.isUsageUploaded" :isOwnUsage="true"/>
       <Item-4-UsageReport v-if="this.isUsageSent" />
       <Item-5-Discrepancies v-if="this.isPartnerUsageReceived" />
-      <Item-6-GenerateSettlement/>
+      <Item-6-GenerateSettlement v-if="this.isPartnerUsageReceived"/>
     </v-timeline>
   </v-container>
 </template>
