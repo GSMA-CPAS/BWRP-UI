@@ -4,7 +4,9 @@ import {PATHS} from '@/utils/Enums';
 import Vue from 'vue';
 import convertModelsModule from './convert-models';
 import {service} from '@/components/pages/create-contract/step-components/discount-form-components/Service.vue';
-const {log} = console;
+import {transform} from 'node-json-transform';
+
+const log = console.log;
 const namespaced = true;
 
 function parseISOString(s) {
@@ -132,13 +134,6 @@ const newDocumentModule = {
     SET_PARTNER: (state, partner) => {
       state.partner = partner;
     },
-    READ_JSON: (state, json) => {
-      for (const key in json) {
-        if (Object.prototype.hasOwnProperty.call(json, key)) {
-          state[key] = json[key];
-        }
-      }
-    },
     SAVE_DATA(state, payload) {
       const {key, data} = payload;
       state[key] = data;
@@ -164,32 +159,58 @@ const newDocumentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       data,
     ) {
-      const {partner, user} = getters.msps;
       /** @type Array */
       const parties = data?.body.framework.contractParties;
+      const user = getters.msps.user;
+      const partner = parties.filter((val) => val !== user)[0];
+
       const userMspIncluded = parties.includes(user);
-      log(userMspIncluded);
+
+      const generalInformationMap = {
+        name: 'metadata.name',
+        startDate: 'framework.term.start',
+        endDate: 'framework.term.end',
+        prolongationLength: 'framework.term.prolongation',
+        taxesIncluded: 'framework.payment.taxesIncluded',
+        authors: 'metadata.authors',
+        userData: {
+          currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
+          tadigCodes: {
+            codes: `framework.partyInformation.${user}.defaultTadigCodes`,
+            includeContractParty: `framework.partyInformation.${user}.alsoContractParty`,
+          },
+        },
+        partnerData: {
+          currencyForAllDiscounts: `framework.partyInformation.${partner}.contractCurrency`,
+          tadigCodes: {
+            codes: `framework.partyInformation.${partner}.defaultTadigCodes`,
+            includeContractParty: `framework.partyInformation.${partner}.alsoContractParty`,
+          },
+        },
+      };
+
       if (userMspIncluded) {
         const map = {
           item: {
-            generalInformation: {
-              name: 'metadata.name',
-              startDate: 'framework.term.start',
-              endDate: 'framework.term.end',
-              prolongationLength: 'framework.term.prolongation',
-              taxesIncluded: 'framework.payment.taxesIncluded',
-              authors: 'metadata.authors',
-              userData: {
-                currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
-                tadigCodes: {codes: null, includeContractParty: false},
-              },
-              partnerData: {
-                currencyForAllDiscounts: null,
-                tadigCodes: {codes: null, includeContractParty: false},
-              },
-            },
+            ...generalInformationMap,
           },
+          operate: [
+            {
+              run: function(val) {
+                return new Date(val);
+              },
+              on: 'startDate',
+            },
+            {
+              run: function(val) {
+                return new Date(val);
+              },
+              on: 'endDate',
+            },
+          ],
         };
+        const res = transform(data.body, map);
+        commit('SAVE_DATA', {key: 'generalInformation', data: res});
       } else {
         dispatch(
           'app-state/loadError',
@@ -199,6 +220,54 @@ const newDocumentModule = {
           },
           {root: true},
         );
+        const map = {
+          item: {
+            ...generalInformationMap,
+          },
+          defaults: {
+            missingData: true,
+          },
+          operate: [
+            {
+              run: function(val) {
+                return new Date(val);
+              },
+              on: 'startDate',
+            },
+            {
+              run: function(val) {
+                return new Date(val);
+              },
+              on: 'endDate',
+            },
+            {
+              run: (val) => null,
+              on: 'userData.currencyForAllDiscounts',
+            },
+            {
+              run: (val) => [],
+              on: 'userData.tadigCodes.codes',
+            },
+            {
+              run: (val) => false,
+              on: 'userData.tadigCodes.includeContractParty',
+            },
+            {
+              run: (val) => null,
+              on: 'partnerData.currencyForAllDiscounts',
+            },
+            {
+              run: (val) => [],
+              on: 'partnerData.tadigCodes.codes',
+            },
+            {
+              run: (val) => false,
+              on: 'partnerData.tadigCodes.includeContractParty',
+            },
+          ],
+        };
+        const res = transform(data.body, map);
+        commit('SAVE_DATA', {key: 'generalInformation', data: res});
       }
     },
     convertUiModelToJsonModel(
@@ -212,47 +281,7 @@ const newDocumentModule = {
       const user = rootGetters['user/organizationMSPID'];
       const {partner, fileAsJSON} = payload;
       fileAsJSON && dispatch('convertJsonModelToUiModel', fileAsJSON);
-      const loadedJson = {};
 
-      // if (fileAsJSON) {
-      //   if (fileAsJSON.generalInformation) {
-      //     loadedJson.generalInformation = fileAsJSON.generalInformation;
-
-      //     if (loadedJson.generalInformation[user]) {
-      //       loadedJson.generalInformation.userData =
-      //         loadedJson.generalInformation[user];
-      //       delete loadedJson.generalInformation[user];
-      //     }
-
-      //     if (loadedJson.generalInformation[partner]) {
-      //       loadedJson.generalInformation.partnerData =
-      //         loadedJson.generalInformation[partner];
-      //       delete loadedJson.generalInformation[partner];
-      //     }
-      //   }
-
-      //   if (fileAsJSON[user]) {
-      //     loadedJson.userData = fileAsJSON[user];
-      //   }
-
-      //   if (fileAsJSON[partner]) {
-      //     loadedJson.partnerData = fileAsJSON[partner];
-      //   }
-
-      //   if (loadedJson.generalInformation.startDate) {
-      //     loadedJson.generalInformation.startDate = parseISOString(
-      //       loadedJson.generalInformation.startDate,
-      //     );
-      //   }
-
-      //   if (loadedJson.generalInformation.endDate) {
-      //     loadedJson.generalInformation.endDate = parseISOString(
-      //       loadedJson.generalInformation.endDate,
-      //     );
-      //   }
-      // }
-
-      // commit('READ_JSON', loadedJson);
       commit('SET_PARTNER', partner);
     },
     setStep(
