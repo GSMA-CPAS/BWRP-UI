@@ -3,10 +3,17 @@
 import Vue from 'vue';
 const {log} = console;
 const namespaced = true;
+const defaultUsageState = () => {
+  return {
+    ownUsage: {},
+    partnerUsage: {},
+    discrepancies: {}
+  };
+};
 
 const usageModule = {
   namespaced,
-  state: () => ({ownUsage: {}, partnerUsage: {}}),
+  state: () => (defaultUsageState()),
   mutations: {
     UPDATE_USAGE: (state, usage) => {
         state.ownUsage = usage;
@@ -14,8 +21,20 @@ const usageModule = {
     UPDATE_PARTNER_USAGE: (state, usage) => {
         state.partnerUsage = usage;
     },
+    UPDATE_DISCREPANCIES: (state, data) => {
+        state.discrepancies = data;
+        console.log(state.discrepancies);
+    },
+    RESET_STATE(state) {
+      Object.assign(state, defaultUsageState());
+    },
   },
   actions: {
+    async resetData(
+        {commit, dispatch, rootGetters, getters, rootState, state}
+        ) {
+      commit('RESET_STATE');
+    },
     async getUsages(
       {commit, dispatch, rootGetters, getters, rootState, state},
       contractId,
@@ -103,6 +122,25 @@ const usageModule = {
               referenceId: referenceId
             });
           }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+      if (state.ownUsage.id && state.partnerUsage.id) {
+        dispatch('getUsageDiscrepancies');
+      }
+    },
+    async getUsageDiscrepancies(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+    ) {
+      const contractId = rootGetters['document/contractId'];
+      const url = `/usages/${contractId}/${state.ownUsage.id}/discrepancy/?partnerUsageId=${state.partnerUsage.id}`;
+      await Vue.axios.commonAdapter
+        .get(url, {
+            withCredentials: true,
+        })
+        .then((data) => {
+          commit('UPDATE_DISCREPANCIES', data);
         })
         .catch((err) => {
             console.log(err);

@@ -106,6 +106,7 @@ const documentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       contractId,
     ) {
+      await dispatch('usage/resetData', contractId, {root: true});
       await dispatch('getDocument', contractId);
       await dispatch('usage/getUsages', contractId, {root: true});
       await dispatch('getSignatures', contractId);

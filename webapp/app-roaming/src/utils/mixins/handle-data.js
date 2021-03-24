@@ -18,6 +18,51 @@ const converterMixin = {
 };
 const utilsMixin = {
   methods: {
+    usageJsonToCsv() {
+      const inboundItems = this.$store.state.usage.ownUsage.body.inbound;
+      const outboundItems = this.$store.state.usage.ownUsage.body.outbound;
+      const header = Object.keys(inboundItems[0]);
+      header.push('direction');
+      return [
+        header.join(','), // header row first
+        ...inboundItems.map((row) => header.map((fieldName) => {
+          if (fieldName === 'direction') return 'inbound';
+          else return row[fieldName] ? row[fieldName] : '';
+        }).join(',')),
+        ...outboundItems.map((row) => header.map((fieldName) => {
+          if (fieldName === 'direction') return 'outbound';
+          else return row[fieldName] ? row[fieldName] : '';
+        }).join(','))
+      ].join('\r\n');
+    },
+    exportUsageToCSV() {
+      const data = new Blob([this.usageJsonToCsv()], {
+        type: 'data:text/csv',
+      });
+      const fileName = `${this.referenceId}.csv`;
+      this.generateFile(data, fileName);
+    },
+    exportUsageToXLSX() {
+      const data = new Blob([this.usageJsonToCsv()], {
+        type: 'application/excel',
+      });
+      const fileName = `${this.referenceId}.xlsx`;
+      this.generateFile(data, fileName);
+    },
+    generateFile(data, fileName) {
+      if (window.navigator.msSaveOrOpenBlob) {
+        // ie11
+        window.navigator.msSaveOrOpenBlob(data, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
+    },
     labelsToCamelCase(array) {
       return array.map((label) => ({key: this._.camelCase(label), label}));
     },
@@ -29,29 +74,39 @@ const utilsMixin = {
     },
     csvToJSON(csv, result) {
       const lines=csv.split('\n');
-      const headers=[
-          'yearMonth',
-          'homeTadig',
-          'visitorTadig',
-          'direction',
-          'service',
-          'usage',
-          'units'
-      ];
+      const headers = {
+        'Year_Month': 'yearMonth',
+        'HPMN': 'homeTadig',
+        'VPMN': 'visitorTadig',
+        'Services Categorised': 'service',
+        'Usage': 'usage',
+        'Units': 'units',
+        'Direction': 'direction'
+      };
+      const csvHeaders=lines[0].split(/[,;]+/);
       for (let i=1; i<lines.length; i++) {
         const obj = {};
         const currentLine=lines[i].replace('\r', '').split(/[,;]+/);
-        for (let j=0; j<headers.length; j++) {
-          obj[headers[j]] = currentLine[j];
+        for (let j=0; j<csvHeaders.length; j++) {
+          obj[csvHeaders[j]] = currentLine[j];
         }
+        console.log(obj);
+        Object.keys(obj).forEach((oldKey) => {
+          const newKey = headers[oldKey];
+          obj[newKey] = obj[oldKey];
+          delete obj[oldKey];
+        });
         obj['currency']='EUR';
+        console.log(obj);
         if (obj['direction']?.toLowerCase() === 'inbound') {
+          delete obj['direction'];
           result.inbound.push(obj);
         } else if (obj['direction']?.toLowerCase() === 'outbound') {
+          delete obj['direction'];
           result.outbound.push(obj);
         }
-        delete obj['direction'];
       }
+      console.log(result);
     },
     parseJson(json, result) {
       const headers = {
@@ -73,7 +128,7 @@ const utilsMixin = {
       for (const oldKey of Object.keys(headers)) {
           newObj[headers[oldKey]] = obj[oldKey];
       }
-
+      newObj['usage']= String(newObj['usage']);
       newObj['currency']='EUR';
       result.push(newObj);
     }

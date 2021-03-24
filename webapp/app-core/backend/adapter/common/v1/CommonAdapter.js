@@ -308,6 +308,34 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async getUsageDiscrepancies(contractId, ownUsageId, partnerUsageId) {
+      try {
+         const url = this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/'+
+             ownUsageId+
+             '/discrepancy/?partnerUsageId='+
+             partnerUsageId;
+         const lists = await got(url).json();
+         this.getLogger().debug(
+             '[CommonAdapter::getUsageDiscrepancies] get usage discrepancies of contractId-' +
+             contractId +
+             ': - %s',
+             JSON.stringify(lists),
+         );
+         return lists;
+      } catch (error) {
+         this.getLogger().error(
+             '[CommonAdapter::getUsageDiscrepancies] get usage discrepancies of contractId-' +
+             contractId +
+             ' - %s',
+             error.message,
+         );
+         throw error;
+      }
+   }
+
    async createUsage(contractId, data) {
       try {
          const response = await got.post(

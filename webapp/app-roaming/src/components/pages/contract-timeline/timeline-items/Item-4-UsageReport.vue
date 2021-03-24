@@ -42,10 +42,11 @@ import SendUsage from '@/components/dialogs/SendUsage.vue';
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import UsageReport from '@/components/dialogs/UsageReport';
 import AppButton from '@/components/global-components/Button';
+import {utilsMixin} from '@/utils/mixins/handle-data';
 export default {
   name: 'item-4',
   description: 'description',
-  mixins: [timelineMixin],
+  mixins: [timelineMixin, utilsMixin],
   props: {
     isOwnUsage: {
       type: Boolean,
@@ -58,51 +59,6 @@ export default {
     };
   },
   methods: {
-    usageJsonToCsv() {
-      const inboundItems = this.$store.state.usage.ownUsage.body.inbound;
-      const outboundItems = this.$store.state.usage.ownUsage.body.outbound;
-      const header = Object.keys(inboundItems[0]);
-      header.push('direction');
-      return [
-        header.join(','), // header row first
-        ...inboundItems.map((row) => header.map((fieldName) => {
-          if (fieldName === 'direction') return 'inbound';
-          else return row[fieldName] ? row[fieldName] : '';
-        }).join(',')),
-        ...outboundItems.map((row) => header.map((fieldName) => {
-          if (fieldName === 'direction') return 'outbound';
-          else return row[fieldName] ? row[fieldName] : '';
-        }).join(','))
-      ].join('\r\n');
-    },
-    exportToCSV() {
-      const data = new Blob([this.usageJsonToCsv()], {
-        type: 'data:text/csv',
-      });
-      const fileName = `${this.referenceId}.csv`;
-      this.generateFile(data, fileName);
-    },
-    exportToXLSX() {
-      const data = new Blob([this.usageJsonToCsv()], {
-        type: 'application/excel',
-      });
-      const fileName = `${this.referenceId}.xlsx`;
-      this.generateFile(data, fileName);
-    },
-    generateFile(data, fileName) {
-      if (window.navigator.msSaveOrOpenBlob) {
-        // ie11
-        window.navigator.msSaveOrOpenBlob(data, fileName);
-      } else {
-        const link = document.createElement('a');
-        link.setAttribute('type', 'hidden');
-        link.download = fileName;
-        link.href = window.URL.createObjectURL(data);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      }
-    },
     pollData() {
       this.partnerBody = setInterval(() => {
         if (!this.isPartnerUsageReceived) {
@@ -119,8 +75,8 @@ export default {
   computed: {
     items() {
       return [
-        {title: 'To CSV', icon: 'mdi-download', onClick: this.exportToCSV},
-        {title: 'To XLSX', icon: 'mdi-download', onClick: this.exportToXLSX},
+        {title: 'To CSV', icon: 'mdi-download', onClick: this.exportUsageToCSV},
+        {title: 'To XLSX', icon: 'mdi-download', onClick: this.exportUsageToXLSX},
       ];
     },
   },

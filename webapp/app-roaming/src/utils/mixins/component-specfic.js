@@ -72,6 +72,11 @@ const timelineMixin = {
     ...mapActions('usage', ['uploadUsage', 'sendUsage']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
+    discrepanciesFlag: function(item) {
+      if (Math.abs(item.delta_percentage) === 0) return 'green-flag';
+      else if (Math.abs(item.delta_percentage) <= 2) return 'yellow-flag';
+      else return Math.abs(item.delta_percentage) > 4 ? 'red-flag' : 'orange-flag';
+    },
   },
   computed: {
     cardTextStyle() {

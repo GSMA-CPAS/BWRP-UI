@@ -147,7 +147,7 @@ class CommonService extends AbstractService {
 
     /**
      * get list of available usages
-     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}
+     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/?states={states}
      */
     this.getRouter().get('/usages/:contractId', ensureAuthenticated, async (req, res) => {
       try {
@@ -178,6 +178,25 @@ class CommonService extends AbstractService {
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get usages of contracts by usageId',
         })), 'GET /usages/:contractId/:usageId');
+      }
+    });
+
+    /**
+     * get usage discrepancies
+     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/discrepancy/?partnerId={partnerId}
+     */
+    this.getRouter().get('/usages/:contractId/:usageId/discrepancy', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const ownUsageId = req.params.usageId;
+        const partnerUsageId = req.query.partnerUsageId;
+        const response = await this.getBackendAdapter('common').getUsageDiscrepancies(contractId, ownUsageId, partnerUsageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get usage discrepancies',
+        })), 'GET /usages/:contractId/:usageId/discrepancy');
       }
     });
 
