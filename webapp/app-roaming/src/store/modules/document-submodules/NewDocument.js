@@ -97,13 +97,11 @@ const newDocumentModule = {
     },
     updateSignatures(state, payload) {
       const {key, value} = payload;
-      // object: Object.assign(state[key].signatures.minSignatures, value);
       state[key].signatures.minSignatures = value;
     },
     updateDiscountModels(state, payload) {
-      const {key, value} = payload;
-      // Object.assign(state[key].discountModels, value);
-      state[key].discountModels = value;
+      const {key, data} = payload;
+      state[key].discountModels = data;
     },
     addValidation: (state, validation) => {
       if (!state.validation.find((val) => validation.key === val.key)) {
@@ -134,19 +132,17 @@ const newDocumentModule = {
     SET_PARTNER: (state, partner) => {
       state.partner = partner;
     },
-    SAVE_DATA(state, payload) {
+    uploadData(state, payload) {
       const {key, data} = payload;
       state[key] = data;
     },
     resetState(state) {
       Object.assign(state, defaultState());
-      // Object.assign(state.userData.bankDetails, defaultBankDetailsState());
       Object.assign(state.userData.signatures, defaultSignaturesState());
       Object.assign(
         state.userData.discountModels,
         defaultDiscountModelsState(),
       );
-      // Object.assign(state.partnerData.bankDetails, defaultBankDetailsState());
       Object.assign(state.partnerData.signatures, defaultSignaturesState());
       Object.assign(
         state.partnerData.discountModels,
@@ -167,50 +163,106 @@ const newDocumentModule = {
       const userMspIncluded = parties.includes(user);
 
       const generalInformationMap = {
-        name: 'metadata.name',
-        startDate: 'framework.term.start',
-        endDate: 'framework.term.end',
-        prolongationLength: 'framework.term.prolongation',
-        taxesIncluded: 'framework.payment.taxesIncluded',
-        authors: 'metadata.authors',
-        userData: {
-          currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
-          tadigCodes: {
-            codes: `framework.partyInformation.${user}.defaultTadigCodes`,
-            includeContractParty: `framework.partyInformation.${user}.alsoContractParty`,
+        item: {
+          name: 'metadata.name',
+          startDate: 'framework.term.start',
+          endDate: 'framework.term.end',
+          prolongationLength: 'framework.term.prolongation',
+          taxesIncluded: 'framework.payment.taxesIncluded',
+          authors: 'metadata.authors',
+          userData: {
+            currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
+            tadigCodes: {
+              codes: `framework.partyInformation.${user}.defaultTadigCodes`,
+              includeContractParty: `framework.partyInformation.${user}.alsoContractParty`,
+            },
+          },
+          partnerData: {
+            currencyForAllDiscounts: `framework.partyInformation.${partner}.contractCurrency`,
+            tadigCodes: {
+              codes: `framework.partyInformation.${partner}.defaultTadigCodes`,
+              includeContractParty: `framework.partyInformation.${partner}.alsoContractParty`,
+            },
           },
         },
-        partnerData: {
-          currencyForAllDiscounts: `framework.partyInformation.${partner}.contractCurrency`,
-          tadigCodes: {
-            codes: `framework.partyInformation.${partner}.defaultTadigCodes`,
-            includeContractParty: `framework.partyInformation.${partner}.alsoContractParty`,
+        operate: [
+          {
+            run: function(val) {
+              return new Date(val);
+            },
+            on: 'startDate',
           },
-        },
+          {
+            run: function(val) {
+              return new Date(val);
+            },
+            on: 'endDate',
+          },
+        ],
       };
 
       if (userMspIncluded) {
-        const map = {
+        const discountModelsMap = {
           item: {
-            ...generalInformationMap,
+            condition: `condition`,
+            serviceGroups: 'serviceGroups',
           },
           operate: [
             {
-              run: function(val) {
-                return new Date(val);
+              run: /** @param {Array} services */ function(services) {
+                const mappedServices = services.map(
+                  ({homeTadigs, visitorTadigs, services}, index) => ({
+                    id: `service-group-${index}`,
+                    homeTadigs: {codes: homeTadigs},
+                    visitorTadigs: {codes: visitorTadigs},
+                    chosenServices: services.map(({service}) => ({
+                      name: service,
+                    })),
+                  }),
+                );
+                return mappedServices;
               },
-              on: 'startDate',
+              on: 'serviceGroups',
             },
             {
-              run: function(val) {
-                return new Date(val);
+              run: function({kind, commitment}) {
+                return {
+                  selectedConditionName: kind,
+                  selectedCondition: commitment,
+                };
               },
-              on: 'endDate',
+              on: 'condition',
             },
           ],
         };
-        const res = transform(data.body, map);
-        commit('SAVE_DATA', {key: 'generalInformation', data: res});
+
+        const mappedGeneralInformation = transform(
+          data.body,
+          generalInformationMap,
+        );
+
+        const mappedUserDiscounts = transform(
+          data.body.discounts[user],
+          discountModelsMap,
+        );
+
+        const mappedPartnerDiscounts = transform(
+          data.body.discounts[partner],
+          discountModelsMap,
+        );
+
+        commit('updateDiscountModels', {
+          key: 'userData',
+          data: mappedUserDiscounts,
+        });
+        commit('updateDiscountModels', {
+          key: 'partnerData',
+          data: mappedPartnerDiscounts,
+        });
+        commit('uploadData', {
+          key: 'generalInformation',
+          data: mappedGeneralInformation,
+        });
       } else {
         dispatch(
           'app-state/loadError',
@@ -220,54 +272,44 @@ const newDocumentModule = {
           },
           {root: true},
         );
-        const map = {
-          item: {
-            ...generalInformationMap,
+
+        [
+          {
+            run: (val) => new Date(val),
+            on: 'startDate',
           },
-          defaults: {
-            missingData: true,
+          {
+            run: (val) => new Date(val),
+            on: 'endDate',
           },
-          operate: [
-            {
-              run: function(val) {
-                return new Date(val);
-              },
-              on: 'startDate',
-            },
-            {
-              run: function(val) {
-                return new Date(val);
-              },
-              on: 'endDate',
-            },
-            {
-              run: (val) => null,
-              on: 'userData.currencyForAllDiscounts',
-            },
-            {
-              run: (val) => [],
-              on: 'userData.tadigCodes.codes',
-            },
-            {
-              run: (val) => false,
-              on: 'userData.tadigCodes.includeContractParty',
-            },
-            {
-              run: (val) => null,
-              on: 'partnerData.currencyForAllDiscounts',
-            },
-            {
-              run: (val) => [],
-              on: 'partnerData.tadigCodes.codes',
-            },
-            {
-              run: (val) => false,
-              on: 'partnerData.tadigCodes.includeContractParty',
-            },
-          ],
-        };
-        const res = transform(data.body, map);
-        commit('SAVE_DATA', {key: 'generalInformation', data: res});
+          {
+            run: () => null,
+            on: 'userData.currencyForAllDiscounts',
+          },
+          {
+            run: () => [],
+            on: 'userData.tadigCodes.codes',
+          },
+          {
+            run: () => false,
+            on: 'userData.tadigCodes.includeContractParty',
+          },
+          {
+            run: () => null,
+            on: 'partnerData.currencyForAllDiscounts',
+          },
+          {
+            run: () => [],
+            on: 'partnerData.tadigCodes.codes',
+          },
+          {
+            run: () => false,
+            on: 'partnerData.tadigCodes.includeContractParty',
+          },
+        ].forEach((operation) => generalInformationMap.operate.push(operation));
+
+        const res = transform(data.body, generalInformationMap);
+        commit('uploadData', {key: 'generalInformation', data: res});
       }
     },
     convertUiModelToJsonModel(
@@ -278,7 +320,6 @@ const newDocumentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       payload,
     ) {
-      const user = rootGetters['user/organizationMSPID'];
       const {partner, fileAsJSON} = payload;
       fileAsJSON && dispatch('convertJsonModelToUiModel', fileAsJSON);
 

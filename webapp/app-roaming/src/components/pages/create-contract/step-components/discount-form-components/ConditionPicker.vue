@@ -87,7 +87,7 @@ export default {
       ];
     },
   },
-  mounted() {
+  beforeMount() {
     this.addValidation({
       key: `conditionName${this.from}`,
       step: 'Discount Models',

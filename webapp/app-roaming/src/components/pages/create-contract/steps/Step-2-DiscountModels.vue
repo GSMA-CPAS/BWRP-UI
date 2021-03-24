@@ -92,7 +92,7 @@ export default {
       set(value) {
         this.$store.commit('document/new/updateDiscountModels', {
           key: 'userData',
-          value,
+          data: value,
         });
       },
     },
@@ -103,7 +103,7 @@ export default {
       set(value) {
         this.$store.commit('document/new/updateDiscountModels', {
           key: 'partnerData',
-          value,
+          data: value,
         });
       },
     },
