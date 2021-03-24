@@ -71,8 +71,12 @@ export default new Vuex.Store({
   },
   actions: {
     setup({commit, dispatch, rootGetters, getters, rootState, state}) {
+      const csrfToken = parent?.document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       for (const key in Vue.axios) {
         if (Object.hasOwnProperty.call(Vue.axios, key)) {
+          if (csrfToken) {
+            Vue.axios[key].defaults.headers.common['X-CSRF-Token'] = csrfToken;
+          }
           const {request, response} = Vue.axios[key].interceptors;
           request.use(
             (config) => {

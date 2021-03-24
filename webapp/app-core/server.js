@@ -9,6 +9,7 @@ const history = require('connect-history-api-fallback');
 const csrf = require('csurf');
 const helmet = require('helmet');
 const fs = require('fs');
+const cheerio = require('cheerio');
 
 const Database = require('mysqlw');
 const config = require('config');
@@ -28,6 +29,7 @@ const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const app = express();
 
 app.use(history({
+  index: '/index',
   verbose: false,
   rewrites: [
     {
@@ -70,7 +72,13 @@ app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOST || '');
 app.use(express.static(path.join(__dirname, '/dist')));
 
-const csrfProtection = csrf({cookie: true});
+const csrfProtectionConfig = config.get('csrfProtection');
+const csrfEnabled = csrfProtectionConfig.enabled;
+const csrfProtection = (csrfEnabled) ?
+    csrf({cookie: csrfProtectionConfig.cookie}) :
+    (req, res, next) => {
+      next();
+    };
 app.use(cookieParser());
 
 if (app.get('env') !== 'production') {
@@ -117,6 +125,25 @@ if (sessionConfig.cookie.secure === true) {
   const database = new Database(config.get('database'));
   const services = config.get('services');
 
+  app.get('/index', csrfProtection, (req, res) => {
+    const indexFile = path.join(__dirname, '/dist/index.html');
+    fs.readFile(indexFile, 'utf8', (error, data) => {
+      if (error) {
+        return errorHandler(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_NOT_FOUND,
+          message: 'Failed to load index.html'
+        })));
+      }
+      if (csrfEnabled) {
+        const $ = cheerio.load(data);
+        $('head').append('<meta name="csrf-token" content="' + req.csrfToken() + '">');
+        res.send($.html());
+      } else {
+        res.send(data);
+      }
+    });
+  });
+
   // LOAD SERVICES
 
   for (const serviceName in services) {
@@ -129,22 +156,8 @@ if (sessionConfig.cookie.secure === true) {
           const ServiceClass = require(serviceClassPath);
           const appService = await new ServiceClass(serviceName, serviceConfig, app, database);
           if (serviceConfig.route) {
-            let csrfProtectionEnabled = serviceConfig.csrfProtectionEnabled;
-            if (csrfProtectionEnabled === undefined) {
-              csrfProtectionEnabled = true;
-            }
-            /* if (csrfProtectionEnabled) { // TODO
-                app.use(serviceConfig.route, csrfProtection, (req, res, next) => {
-                    app.locals.csrfToken = req.csrfToken();
-                    next();
-                });
-            }*/
-            if (csrfProtectionEnabled) {
-              app.use(serviceConfig.route, csrfProtection, appService.getRouter());
-            } else {
-              app.use(serviceConfig.route, appService.getRouter());
-            }
-            logger.info('[%s] service successfully started - route <%s>, csrfProtection=%s, class path <%s>', serviceName, serviceConfig.route, csrfProtectionEnabled, serviceClassPath);
+            app.use(serviceConfig.route, csrfProtection, appService.getRouter());
+            logger.info('[%s] service successfully started - route <%s>, class path <%s>', serviceName, serviceConfig.route, serviceClassPath);
           } else {
             logger.error('[%s] failed to start service <%s> - route must be specified in config file', serviceName, serviceName);
             process.exit(1);
@@ -169,7 +182,7 @@ if (sessionConfig.cookie.secure === true) {
         if (typeof require(packageName).onLoad === 'function') {
           const router = new express.Router();
           await require(packageName).onLoad(app, router, database, logger, appConfig.config);
-          app.use('/api/' + packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, router);
+          app.use('/api/' + packageName, (appConfig.adminOnly) ? ensureAdminAuthenticated : ensureAuthenticated, csrfProtection, router);
         }
         app.use('/app/' + packageName, express.static(path.join(__dirname, '/node_modules/' + packageName + '/dist')));
         logger.info('[%s] app successfully loaded', packageName);
@@ -190,7 +203,6 @@ if (sessionConfig.cookie.secure === true) {
   app.use(function(err, req, res, next) {
     if (err) {
       if (err.code === 'EBADCSRFTOKEN') {
-        // return res.status(403).json({status: 403, message: "Invalid csrf token"});
         return errorHandler(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_FORBIDDEN,
           message: 'Invalid csrf token'

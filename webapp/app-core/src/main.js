@@ -25,12 +25,16 @@ Vue.prototype.$http.interceptors.response.use((response) => {
   }
   throw error;
 });
-/*
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-if (csrfToken) {
+
+// CSRF
+
+const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+if (csrfTokenElement) {
+  const csrfToken = csrfTokenElement.getAttribute('content');
+  if (csrfToken) {
     Vue.prototype.$http.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+  }
 }
-*/
 
 // POST MESSAGE
 
