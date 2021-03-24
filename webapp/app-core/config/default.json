@@ -24,6 +24,14 @@
     }
   },
 
+  "csrfProtection": {
+    "enabled": false,
+    "cookie": {
+      "secure": true,
+      "httpOnly": true
+    }
+  },
+
   "database": {
     "pooling": true,
     "connection": {
