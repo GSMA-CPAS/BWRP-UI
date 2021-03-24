@@ -12,7 +12,6 @@ const documentModule = {
       state.rawData = rawData;
     },
     UPDATE_DOCUMENT: (state, document) => {
-      log(document);
       state.document = document;
     },
     UPDATE_SIGNATURES: (state, signatures) => {
@@ -118,7 +117,6 @@ const documentModule = {
     },
     signedBySelf: (state, getters) => {
       const {selfMsp, totalSignatures, minSignaturesSelf} = getters;
-      log(minSignaturesSelf <= totalSignatures[selfMsp]);
       const isSigned = minSignaturesSelf <= totalSignatures[selfMsp];
       return isSigned;
     },
