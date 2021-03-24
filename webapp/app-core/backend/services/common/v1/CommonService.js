@@ -285,7 +285,8 @@ class CommonService extends AbstractService {
       const contractId = req.params.contractId;
       const usageId = req.params.usageId;
       try {
-        const response = await this.getBackendAdapter('common').generateSettlementsById(contractId, usageId);
+        // const response = await this.getBackendAdapter('common').generateSettlementsById(contractId, usageId);
+        const response = await this.getBackendAdapter('common').generateAndSendSettlementsById(contractId, usageId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({

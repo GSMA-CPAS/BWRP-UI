@@ -90,14 +90,12 @@ const utilsMixin = {
         for (let j=0; j<csvHeaders.length; j++) {
           obj[csvHeaders[j]] = currentLine[j];
         }
-        console.log(obj);
         Object.keys(obj).forEach((oldKey) => {
           const newKey = headers[oldKey];
           obj[newKey] = obj[oldKey];
           delete obj[oldKey];
         });
         obj['currency']='EUR';
-        console.log(obj);
         if (obj['direction']?.toLowerCase() === 'inbound') {
           delete obj['direction'];
           result.inbound.push(obj);
@@ -106,7 +104,6 @@ const utilsMixin = {
           result.outbound.push(obj);
         }
       }
-      console.log(result);
     },
     parseJson(json, result) {
       const headers = {
@@ -133,7 +130,6 @@ const utilsMixin = {
       result.push(newObj);
     }
   },
-  // Accepts the array and key
 
 };
 

@@ -67,7 +67,6 @@ export default {
           const rawJson = XLSX.utils.sheet_to_row_object_array(worksheet);
           this.parseJson(rawJson, this.usageJson);
         }
-        // console.log(JSON.stringify(this.usageJson));
       };
     },
     onUpload() {

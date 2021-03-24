@@ -440,6 +440,7 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   // TODO: check if this method in needed from business perspective
    async generateSettlementsById(contractId, usageId) {
       try {
          const response = await got.put(
@@ -464,6 +465,33 @@ class CommonAdapter extends AbstractAdapter {
          throw error;
       }
    }
+
+   async generateAndSendSettlementsById(contractId, usageId) {
+      try {
+         const response = await got.put(
+            this.adapterConfig.url +
+               '/api/v1/contracts/' +
+               contractId +
+               '/usages/' +
+               usageId +
+               '/generate/?mode=commit',
+            {responseType: 'json'},
+         );
+         this.getLogger().debug(
+            '[CommonAdapter::createContract] generate settlement: - %s',
+            JSON.stringify(response.body),
+         );
+         return response.body;
+      } catch (error) {
+         this.getLogger().error(
+            '[CommonAdapter::createContract] failed to generate settlement - %s',
+            error.message,
+         );
+         throw error;
+      }
+   }
+
+   // http://tmus.poc.com.local:3040/api/v1/contracts/605bbee84b6d4e001e74c40f7e2b/usages/605bbfb34b6d4e001e74c41342a5/generate/?mode=commit
 
    async getSettlements(contractId) {
       try {
