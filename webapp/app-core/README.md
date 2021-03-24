@@ -2,13 +2,153 @@
 
 [TODO]
 
-## Services
+## Configuration
 
 [TODO]
 
-### Proxy Service
+### General
 
-Example ``app-core/config/production.json``
+#### Organization
+
+Default (default.json)
+
+<pre>
+"organization": {
+  "mspid": "",
+  "title": ""
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"organization": {
+  "mspid": "DTAG",
+  "title": "Deutsche Telekom"
+}
+</pre>
+
+#### Logging
+
+Default (default.json)
+
+<pre>
+"log": {
+  "level": "info",
+  "file": "",
+  "console": true
+}
+</pre>
+
+#### Session
+
+Default (default.json)
+
+<pre>
+"session": {
+  "secret": "secret123",
+  "name": "nomad.session",
+  "resave": false,
+  "saveUninitialized": false,
+  "rolling": true,
+  "timeout": 1800000,
+  "checkExpirationInterval": 3600000,
+  "cookie": {
+    "secure": true
+  }
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"session": {
+  "secret": "bd32bwk37rbwrw37br33"
+}
+</pre>
+
+#### CSRF Protection
+
+Default (default.json)
+
+<pre>
+"csrfProtection": {
+  "enabled": false,
+  "cookie": {
+    "secure": true,
+    "httpOnly": true
+  }
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"csrfProtection": {
+  "enabled": true
+}
+</pre>
+
+#### Database
+
+Default (default.json)
+
+<pre>
+"database": {
+  "pooling": true,
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "user": "",
+    "password": "",
+    "database": ""
+  }
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"database": {
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 3366,
+    "user": "nomad",
+    "password": "hackme",
+    "database": "dtag"
+  }
+}
+</pre>
+
+#### Apps
+
+Default (default.json)
+
+<pre>
+"apps": {
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"apps": {
+  "roaming": {
+    "name": "roaming",
+    "enabled": true,
+    "packageName": "app-roaming",
+    "displayName": "Roaming",
+    "config": {
+    }
+  }
+}
+</pre>
+
+### Services
+
+#### Proxy Service
+
+Example (production.json)
 
 <pre>
 "services": {
@@ -31,34 +171,9 @@ Example ``app-core/config/production.json``
 
 ``http://localhost:3000/proxy/blockchain/status`` -> ``http://localhost:8081/status``
 
-### App Service
+#### Swagger Service
 
-Example ``app-core/config/production.json``
-
-<pre>
-"apps": {
-  "roaming": {
-    "name": "roaming",
-    "enabled": true,
-    "packageName": "app-roaming",
-    "displayName": "Roaming",
-    "config": {
-    }
-  }
-}
-</pre>
-
-<pre>
-$ cd app-roaming
-$ npm link
-
-$ cd app-core
-$ npm link app-roaming
-</pre>
-
-### Swagger Service
-
-Example ``app-core/config/production.json``
+Example (production.json)
 
 <pre>
 "services": {
@@ -69,8 +184,6 @@ Example ``app-core/config/production.json``
 </pre>
 
 ``http://localhost:3000/api/docs``
-
-## Apps
 
 ### Development
 
