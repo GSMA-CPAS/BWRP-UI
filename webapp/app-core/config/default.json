@@ -20,7 +20,9 @@
     "timeout": 1800000,
     "checkExpirationInterval": 3600000,
     "cookie": {
-      "secure": true
+      "secure": true,
+      "httpOnly": true,
+      "sameSite": "strict"
     }
   },
 
@@ -28,7 +30,8 @@
     "enabled": false,
     "cookie": {
       "secure": true,
-      "httpOnly": true
+      "httpOnly": true,
+      "sameSite": "strict"
     }
   },
 
