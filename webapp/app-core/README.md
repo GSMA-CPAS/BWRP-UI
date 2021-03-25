@@ -89,6 +89,20 @@ Example (production.json)
 }
 </pre>
 
+#### CSP Directives
+
+Default (default.json)
+
+<pre>
+"cspDirectives": {
+  "defaultSrc": ["'self'"],
+  "styleSrc": ["'self'", "'unsafe-inline'"],
+  "imgSrc": ["'self'", "data:"],
+  "childSrc": ["'self'", "blob:"]
+}
+</pre>
+
+
 #### Database
 
 Default (default.json)
