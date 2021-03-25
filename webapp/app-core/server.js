@@ -59,12 +59,7 @@ app.use(/^\/(?!proxy).*$/, express.urlencoded({extended: true}));
 app.use(helmet());
 app.use(
     helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: ['\'self\''],
-        styleSrc: ['\'self\'', '\'unsafe-inline\''],
-        imgSrc: ['\'self\'', 'data:'],
-        childSrc: ['\'self\'', 'blob:']
-      }
+      directives: config.get('cspDirectives')
     })
 );
 
