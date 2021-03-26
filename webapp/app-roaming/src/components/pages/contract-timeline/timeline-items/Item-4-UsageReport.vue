@@ -8,9 +8,8 @@
       </v-card>
       <v-card v-else :class="isUsageSent?'':'mr-15'" color="#fafafa">
         <v-card-text>
-          <div v-if="isOwnUsage">DTAG</div>
-          <div v-else>TMUS</div>
-          <div>UPLOADED on {date}</div>
+          <div>{{isOwnUsage? selfMsp:partnerMsp }}</div>
+          <div>UPLOADED on {{isOwnUsage?ownUsageCreationDate:partnerUsageCreationDate}}</div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

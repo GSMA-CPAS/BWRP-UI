@@ -3,7 +3,7 @@
     <app-button v-if="active"
                 label="generate settlements"
                 outlined
-                @button-pressed="generateSettlement()"/>
+                @button-pressed="generateSettlements()"/>
     <v-icon v-else color="primary" x-large>mdi-check-circle-outline</v-icon>
   </fragment>
 </template>
@@ -20,11 +20,6 @@ export default {
   },
   mixins: [timelineMixin],
   methods: {
-    generateSettlement() {
-      console.log(this.$store.state.usage.discrepancies);
-      console.log(this.$store.state.usage.ownUsage.id);
-      console.log(this.$store.state.usage.partnerUsage.id);
-    }
   }
 };
 </script>

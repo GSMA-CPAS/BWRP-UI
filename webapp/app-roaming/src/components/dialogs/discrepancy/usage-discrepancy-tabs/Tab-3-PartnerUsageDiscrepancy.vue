@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-spacer/>
-        <app-button class="-1" label="export table"/>
+        <app-button class="-1" label="export table" @click="exportToJSON(exportData)"/>
       </v-row>
       <v-data-table :headers="headers"
                     :items="items">
@@ -57,7 +57,8 @@ export default {
   data() {
     return {
       search: '',
-      items: this.$store.state.usage.discrepancies.outbound
+      items: this.$store.state.usage.discrepancies.outbound,
+      exportData: this.$store.state.usage.discrepancies
     };
   },
   methods: {

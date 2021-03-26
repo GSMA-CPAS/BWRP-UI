@@ -183,14 +183,13 @@ class CommonService extends AbstractService {
 
     /**
      * get usage discrepancies
-     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/discrepancy/?partnerId={partnerId}
+     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/discrepancy/?partnerUsageId={partnerUsageId}
      */
     this.getRouter().get('/usages/:contractId/:usageId/discrepancy', ensureAuthenticated, async (req, res) => {
       try {
         const contractId = req.params.contractId;
-        const ownUsageId = req.params.usageId;
-        const partnerUsageId = req.query.partnerUsageId;
-        const response = await this.getBackendAdapter('common').getUsageDiscrepancies(contractId, ownUsageId, partnerUsageId);
+        const usageId = req.params.usageId;
+        const response = await this.getBackendAdapter('common').getUsageDiscrepancies(contractId, usageId, req.query.partnerUsageId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
@@ -285,8 +284,7 @@ class CommonService extends AbstractService {
       const contractId = req.params.contractId;
       const usageId = req.params.usageId;
       try {
-        // const response = await this.getBackendAdapter('common').generateSettlementsById(contractId, usageId);
-        const response = await this.getBackendAdapter('common').generateAndSendSettlementsById(contractId, usageId);
+        const response = await this.getBackendAdapter('common').generateSettlementsById(contractId, usageId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
@@ -320,6 +318,23 @@ class CommonService extends AbstractService {
         const contractId = req.params.contractId;
         const settlementId = req.params.settlementId;
         const response = await this.getBackendAdapter('common').getSettlementsById(contractId, settlementId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to get settlements of contracts by usageId',
+        })), 'GET /settlements/:contractId/:settlementId');
+      }
+    });
+
+    /**
+     * curl -X GET http://{host}:{port}/api/v1/common/settlements/{contractId}/{settlementId}/discrepancy/?partnerSettlementId={partnerSettlementId}
+     */
+    this.getRouter().get('/settlements/:contractId/:settlementId/discrepancy', ensureAuthenticated, async (req, res) => {
+      try {
+        const contractId = req.params.contractId;
+        const settlementId = req.params.settlementId;
+        const response = await this.getBackendAdapter('common').getSettlementDiscrepancies(contractId, settlementId, req.query.partnerSettlementId);
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({

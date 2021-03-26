@@ -16,5 +16,10 @@ export default {
   description: 'description',
   mixins: [timelineMixin],
   components: {GenerateSettlement},
+  created() {
+    if (this.ownSettlementId && this.partnerSettlementId) {
+      this.$store.dispatch('settlement/getSettlementDiscrepancies', this.contractId);
+    }
+  }
 };
 </script>

@@ -23,8 +23,25 @@ const utilsMixin = {
       const outboundItems = this.$store.state.usage.ownUsage.body.outbound;
       const header = Object.keys(inboundItems[0]);
       header.push('direction');
+      // remove currency header
+      for ( let i = 0; i < header.length; i++) {
+        if ( header[i] === 'currency') {
+          header.splice(i, 1);
+        }
+      }
+      const headers = {
+        'yearMonth': 'Year_Month',
+        'homeTadig': 'HPMN',
+        'visitorTadig': 'VPMN',
+        'service': 'Services Categorised',
+        'usage': 'Usage',
+        'units': 'Units',
+        'direction': 'Direction'
+      };
+      const csvHeaders = [];
+      header.forEach((key) => csvHeaders.push(headers[key]));
       return [
-        header.join(','), // header row first
+        csvHeaders.join(','), // header row first
         ...inboundItems.map((row) => header.map((fieldName) => {
           if (fieldName === 'direction') return 'inbound';
           else return row[fieldName] ? row[fieldName] : '';
@@ -47,6 +64,13 @@ const utilsMixin = {
         type: 'application/excel',
       });
       const fileName = `${this.referenceId}.xlsx`;
+      this.generateFile(data, fileName);
+    },
+    exportToJSON(json) {
+      const data = new Blob([JSON.stringify(json)], {
+        type: 'application/json',
+      });
+      const fileName = `${this.referenceId}.json`;
       this.generateFile(data, fileName);
     },
     generateFile(data, fileName) {

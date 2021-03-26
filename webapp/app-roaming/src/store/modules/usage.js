@@ -23,7 +23,6 @@ const usageModule = {
     },
     UPDATE_DISCREPANCIES: (state, data) => {
         state.discrepancies = data;
-        console.log(state.discrepancies);
     },
     RESET_STATE(state) {
       Object.assign(state, defaultUsageState());
@@ -104,29 +103,38 @@ const usageModule = {
             state,
             body,
             creationDate,
-            referenceId
+            referenceId,
+            settlementId
           } = data;
           if (req.isPartner) {
             commit('UPDATE_PARTNER_USAGE', {
               id: usageId,
               body: body,
               creationDate: creationDate,
-              referenceId: referenceId
+              referenceId: referenceId,
+              settlementId: settlementId
             });
+            if (settlementId) {
+              commit('settlement/UPDATE_PARTNER_SETTLEMENT_ID', settlementId, {root: true});
+            }
           } else {
             commit('UPDATE_USAGE', {
               id: usageId,
               state: state,
               body: body,
               creationDate: creationDate,
-              referenceId: referenceId
+              referenceId: referenceId,
+              settlementId: settlementId
             });
+            if (settlementId) {
+              commit('settlement/UPDATE_OWN_SETTLEMENT_ID', settlementId, {root: true});
+            }
           }
         })
         .catch((err) => {
             console.log(err);
         });
-      if (state.ownUsage.id && state.partnerUsage.id) {
+      if (state.ownUsage?.id && state.ownUsage?.state ==='SENT' && state.partnerUsage?.id) {
         dispatch('getUsageDiscrepancies');
       }
     },
@@ -199,6 +207,9 @@ const usageModule = {
         .catch((err) => {
             log(err);
         });
+      if (state.partnerUsage?.id) {
+        dispatch('getUsageDiscrepancies', this.contractId);
+      }
     },
   },
   getters: {
@@ -213,7 +224,13 @@ const usageModule = {
     },
     areUsagesExchanged: (state) => {
       return state.partnerUsage.body && state.ownUsage.state === 'SENT';
-    }
+    },
+    ownUsageId: (state) => {
+      return state.ownUsage?.id;
+    },
+    partnerUsageId: (state) => {
+      return state.partnerUsage?.id;
+    },
   }
 
 };

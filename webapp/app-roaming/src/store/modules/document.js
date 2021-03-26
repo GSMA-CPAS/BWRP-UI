@@ -107,6 +107,7 @@ const documentModule = {
       contractId,
     ) {
       await dispatch('usage/resetData', contractId, {root: true});
+      await dispatch('settlement/resetData', contractId, {root: true});
       await dispatch('getDocument', contractId);
       await dispatch('usage/getUsages', contractId, {root: true});
       await dispatch('getSignatures', contractId);

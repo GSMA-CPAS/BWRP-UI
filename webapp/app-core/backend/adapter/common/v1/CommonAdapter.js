@@ -308,13 +308,13 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
-   async getUsageDiscrepancies(contractId, ownUsageId, partnerUsageId) {
+   async getUsageDiscrepancies(contractId, usageId, partnerUsageId) {
       try {
          const url = this.adapterConfig.url +
              '/api/v1/contracts/' +
              contractId +
              '/usages/'+
-             ownUsageId+
+             usageId+
              '/discrepancy/?partnerUsageId='+
              partnerUsageId;
          const lists = await got(url).json();
@@ -440,7 +440,6 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
-   // TODO: check if this method in needed from business perspective
    async generateSettlementsById(contractId, usageId) {
       try {
          const response = await got.put(
@@ -465,33 +464,6 @@ class CommonAdapter extends AbstractAdapter {
          throw error;
       }
    }
-
-   async generateAndSendSettlementsById(contractId, usageId) {
-      try {
-         const response = await got.put(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/' +
-               usageId +
-               '/generate/?mode=commit',
-            {responseType: 'json'},
-         );
-         this.getLogger().debug(
-            '[CommonAdapter::createContract] generate settlement: - %s',
-            JSON.stringify(response.body),
-         );
-         return response.body;
-      } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::createContract] failed to generate settlement - %s',
-            error.message,
-         );
-         throw error;
-      }
-   }
-
-   // http://tmus.poc.com.local:3040/api/v1/contracts/605bbee84b6d4e001e74c40f7e2b/usages/605bbfb34b6d4e001e74c41342a5/generate/?mode=commit
 
    async getSettlements(contractId) {
       try {
@@ -536,6 +508,30 @@ class CommonAdapter extends AbstractAdapter {
       } catch (error) {
          this.getLogger().error(
             '[CommonAdapter::getSettlementsById] failed to get settlements - %s',
+            error.message,
+         );
+         throw error;
+      }
+   }
+
+   async getSettlementDiscrepancies(contractId, settlementId, partnerSettlementId) {
+      try {
+         const url = this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/settlements/' +
+             settlementId +
+             '/discrepancy/?partnerSettlementId='+
+             partnerSettlementId;
+         const item = await got(url).json();
+         this.getLogger().debug(
+            '[CommonAdapter::getSettlementDiscrepancies] get settlement discrepancies: - %s',
+            JSON.stringify(item),
+         );
+         return item;
+      } catch (error) {
+         this.getLogger().error(
+            '[CommonAdapter::getSettlementDiscrepancies] failed to get settlement discrepancies - %s',
             error.message,
          );
          throw error;
