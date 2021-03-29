@@ -59,7 +59,7 @@ const errorHandler = (res, error, errorMessagePrefix = '') => {
     }*/
   }
 
-  logger.error('[' + errorMessagePrefix + '] ' + error.message);
+  logger.error(((errorMessagePrefix) ? '[' + errorMessagePrefix + '] ' : '') + error.message);
   res.status(status).json({status: status, code: code, message: message});
 };
 

@@ -124,12 +124,13 @@ if (sessionConfig.cookie.secure === true) {
     const indexFile = path.join(__dirname, '/dist/index.html');
     fs.readFile(indexFile, 'utf8', (error, data) => {
       if (error) {
+        logger.error('[Server] failed to load index.html - %s', error.message);
         return errorHandler(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_NOT_FOUND,
           message: 'Failed to load index.html'
-        })));
+        })), 'Server');
       }
-      if (csrfEnabled) {
+      if (csrfEnabled && req.csrfToken) {
         const $ = cheerio.load(data);
         $('head').append('<meta name="csrf-token" content="' + req.csrfToken() + '">');
         res.send($.html());
@@ -201,12 +202,12 @@ if (sessionConfig.cookie.secure === true) {
         return errorHandler(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_FORBIDDEN,
           message: 'Invalid csrf token'
-        })));
+        })), 'Server');
       } else {
         return errorHandler(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_INTERNAL_SERVER_ERROR,
           message: 'Internal Server Error'
-        })));
+        })), 'Server');
       }
     } else {
       next();
