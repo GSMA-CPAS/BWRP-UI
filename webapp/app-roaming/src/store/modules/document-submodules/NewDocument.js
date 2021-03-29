@@ -188,13 +188,13 @@ const newDocumentModule = {
         operate: [
           {
             run: function(val) {
-              return new Date(val);
+              return val ? new Date(val) : null;
             },
             on: 'startDate',
           },
           {
             run: function(val) {
-              return new Date(val);
+              return val ? new Date(val) : null;
             },
             on: 'endDate',
           },
@@ -217,26 +217,44 @@ const newDocumentModule = {
                     visitorTadigs: {codes: visitorTadigs},
                     chosenServices: services.map(
                       ({service, usagePricing}, index) => {
-                        const {unit, ratingPlan} = usagePricing;
-                        const {
-                          rate,
-                          balancedRate,
-                          unbalancedRate,
-                          kind,
-                          accessPricingModel,
-                        } = ratingPlan;
-                        return {
-                          id: `service-${index}`,
-                          name: service,
-                          unit,
-                          rate: rate.thresholds,
-                          balancedRate,
-                          unbalancedRate,
-                          pricingModel: kind,
-                          accessPricingModel,
-                          accessPricingUnit: accessPricingModel?.unit,
-                          accessPricingRate: accessPricingModel?.rate,
-                        };
+                        if (service) {
+                          const {unit, ratingPlan} = usagePricing;
+                          const {
+                            rate,
+                            balancedRate,
+                            unbalancedRate,
+                            kind,
+                            accessPricingModel,
+                          } = ratingPlan;
+                          return {
+                            id: `service-${index}`,
+                            name: service,
+                            unit,
+                            rate: rate.thresholds,
+                            balancedRate,
+                            unbalancedRate,
+                            pricingModel: kind,
+                            accessPricingModel,
+                            accessPricingUnit: accessPricingModel?.unit,
+                            accessPricingRate: accessPricingModel?.rate,
+                          };
+                        } else {
+                          return {
+                            id: 'service-0',
+                            name: null,
+                            rate: null,
+                            unit: null,
+                            balancedRate: null,
+                            unbalancedRate: null,
+                            pricingModel: null,
+                            accessPricingModel: null,
+                            accessPricingUnit: null,
+                            accessPricingRate: null,
+                            prevDefaultUnit: null,
+                            prevDefaultAccessUnit: null,
+                            includedInCommitment: true,
+                          };
+                        }
                       },
                     ),
                   }),
@@ -247,10 +265,12 @@ const newDocumentModule = {
             },
             {
               run: function({kind, commitment}) {
-                return {
-                  selectedConditionName: kind,
-                  selectedCondition: commitment,
-                };
+                return kind
+                  ? {
+                      selectedConditionName: kind,
+                      selectedCondition: commitment,
+                    }
+                  : null;
               },
               on: 'condition',
             },
@@ -366,28 +386,7 @@ const newDocumentModule = {
               throw new Error();
             }
             const partnerMsp = getters.msps.partner;
-            const user = getters.msps.user;
-
-            const data = {
-              header: {
-                version: '1.0',
-                type: 'contract',
-                msps: {
-                  [user]: {
-                    minSignatures: state.userData.signatures.minSignatures,
-                  },
-                  [partnerMsp]: {
-                    minSignatures: state.partnerData.signatures.minSignatures,
-                  },
-                },
-              },
-              body: convertModelsModule.convertUiModelToJsonModel(
-                user,
-                partnerMsp,
-                getters.contract,
-              ),
-            };
-
+            const data = getters.contract;
             Vue.axios.commonAdapter
               .post('/documents', {partnerMsp, data}, {withCredentials: true})
               .then((res) => {
@@ -404,6 +403,7 @@ const newDocumentModule = {
                 // reject(err);
               });
           } catch (err) {
+            log(err);
             const error = {
               title: 'Missing values',
               body: errorMessages.length > 0 ? errorMessages : err,
@@ -415,9 +415,9 @@ const newDocumentModule = {
     },
   },
   getters: {
-    contract: (state, getters, rootState) => {
-      const user = getters.msps.user;
-      const {generalInformation, partner, partnerData, userData} = state;
+    contract: (state, getters) => {
+      const {user, partner} = getters.msps;
+      const {generalInformation, partnerData, userData} = state;
       const {
         userData: gUserData,
         partnerData: gPartnerData,
@@ -433,7 +433,27 @@ const newDocumentModule = {
         [partner]: partnerData,
         [user]: userData,
       };
-      return contract;
+
+      const convertedContract = {
+        header: {
+          version: '1.0',
+          type: 'contract',
+          msps: {
+            [user]: {
+              minSignatures: userData.signatures.minSignatures,
+            },
+            [partner]: {
+              minSignatures: partnerData.signatures.minSignatures,
+            },
+          },
+        },
+        body: convertModelsModule.convertUiModelToJsonModel(
+          user,
+          partner,
+          contract,
+        ),
+      };
+      return convertedContract;
     },
     msps: (state, getters, rootState) => {
       return {
