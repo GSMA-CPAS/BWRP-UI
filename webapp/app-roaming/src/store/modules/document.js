@@ -118,7 +118,6 @@ const documentModule = {
     },
     signedBySelf: (state, getters) => {
       const {selfMsp, totalSignatures, minSignaturesSelf} = getters;
-      log(minSignaturesSelf <= totalSignatures[selfMsp]);
       const isSigned = minSignaturesSelf <= totalSignatures[selfMsp];
       return isSigned;
     },
