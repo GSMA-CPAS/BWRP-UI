@@ -14,7 +14,7 @@ function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
 
 function convertUiThresholdsToJsonModel(uiRateThresholds) {
   return {
-    start: uiRateThresholds.threshold.toString(),
+    start: uiRateThresholds.start.toString(),
     fixedPrice: uiRateThresholds.fixedPrice,
     linearPrice: uiRateThresholds.linearPrice,
   };
@@ -95,10 +95,6 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
     return convertUiLinearRateToJsonModel(uiRatingPlan);
   } else if (uiRatingPlan.pricingModel === 'Not Charged') {
     return undefined;
-  } else {
-    throw Error(
-      'Unsupported rate plan model "' + uiRatingPlan.pricingModel + '" passed.',
-    );
   }
 }
 
@@ -128,7 +124,7 @@ function convertUiServiceGroupToJsonModel(uiServiceGroup) {
 function convertUiDiscountsModelsToJsonModel(uiDiscountModels) {
   const model = {
     condition: {
-      kind: uiDiscountModels.condition.selectedConditionName,
+      kind: uiDiscountModels.condition?.selectedConditionName,
     },
 
     serviceGroups: uiDiscountModels.serviceGroups.map(
@@ -136,12 +132,12 @@ function convertUiDiscountsModelsToJsonModel(uiDiscountModels) {
     ),
   };
 
-  if (uiDiscountModels.condition.selectedCondition) {
+  if (uiDiscountModels.condition?.selectedCondition) {
     model.condition.commitment = {
-      value: uiDiscountModels.condition.selectedCondition.commitmentValue,
-      currency: uiDiscountModels.condition.selectedCondition.currency,
+      value: uiDiscountModels.condition?.selectedCondition.commitmentValue,
+      currency: uiDiscountModels.condition?.selectedCondition.currency,
       includingTaxes:
-        uiDiscountModels.condition.selectedCondition.includingTaxes,
+        uiDiscountModels.condition?.selectedCondition.includingTaxes,
     };
   }
 
@@ -162,8 +158,8 @@ const convertModelsModule = {
       framework: {
         contractParties: [userCode, partnerCode],
         term: {
-          start: uiModel.generalInformation.startDate.toISOString(),
-          end: uiModel.generalInformation.endDate.toISOString(),
+          start: uiModel.generalInformation.startDate?.toISOString(),
+          end: uiModel.generalInformation.endDate?.toISOString(),
         },
         payment: {
           taxesIncluded: uiModel.generalInformation.taxesIncluded,

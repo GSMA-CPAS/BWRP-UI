@@ -8,7 +8,7 @@
         <v-col v-if="!disableThresholds">
           <v-currency-field
             :disabled="index === 0"
-            v-model="tier.threshold"
+            v-model="tier.start"
             label="Threshold"
           />
         </v-col>
@@ -70,7 +70,7 @@ export default {
       tiers: [
         {
           id: 'tier-0',
-          threshold: 0,
+          start: 0,
         },
       ],
     };
