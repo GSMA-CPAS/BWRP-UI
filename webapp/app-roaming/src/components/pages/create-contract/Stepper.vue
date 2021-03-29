@@ -9,7 +9,18 @@
           :complete="step > index"
           :step="index"
         >
-          {{ content.description }}
+          <div
+            :class="{
+              'error--text':
+                saveAttempt &&
+                validation.some(
+                  ({step, isInvalid}) =>
+                    step === content.description && isInvalid,
+                ),
+            }"
+          >
+            {{ content.description }}
+          </div>
         </v-stepper-step>
         <v-stepper-items>
           <v-stepper-content :step="index">
@@ -37,6 +48,7 @@
 import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
 export default {
   name: 'stepper',
+  title: 'Create Contract',
   description: 'Stepper used for contract-creation.',
   methods: {
     ...mapActions('document/new', ['saveContract', 'setStep']),
@@ -64,11 +76,9 @@ export default {
     },
     doSaveContract() {
       // TODO: Make validation more legible
-      this.$refs[1][0].$v.$touch();
 
       this.saveContract().catch((e) => {
         const {title, body} = e;
-        // console.error('Error saving contract:', e);
         this.$store.dispatch('app-state/loadError', {
           title,
           body,
@@ -78,7 +88,7 @@ export default {
   },
   computed: {
     ...mapGetters('document/new', ['contract']),
-    ...mapState('document/new', ['step']),
+    ...mapState('document/new', ['step', 'saveAttempt', 'validation']),
     steps() {
       const components = require.context(
         './steps/',

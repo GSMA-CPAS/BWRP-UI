@@ -23,7 +23,7 @@ class UserManagementService extends AbstractService {
         const result = await this.getBackendAdapter('userManagement').getUsers();
         res.json(result);
       } catch (error) {
-        this.handleError(res, error, 'GET /');
+        this.handleError(res, error);
       }
     });
 
@@ -42,7 +42,7 @@ class UserManagementService extends AbstractService {
         }
         res.json(result);
       } catch (error) {
-        this.handleError(res, error, 'GET /:userId');
+        this.handleError(res, error);
       }
     });
 
@@ -54,7 +54,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').createUser(req.user, req.body);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'POST /');
+        this.handleError(res, error);
       }
     });
 
@@ -66,7 +66,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').updateUser(req.params.userId, req.body);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'PUT /:userId');
+        this.handleError(res, error);
       }
     });
 
@@ -79,7 +79,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').deleteUser(req.user, parseInt(userId));
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'DELETE /:userId');
+        this.handleError(res, error);
       }
     });
 
@@ -91,7 +91,7 @@ class UserManagementService extends AbstractService {
         const result = await this.getBackendAdapter('userManagement').getUserIdentities(req.user.id);
         res.json(result);
       } catch (error) {
-        this.handleError(res, error, 'GET /self/identities');
+        this.handleError(res, error);
       }
     });
 
@@ -103,7 +103,7 @@ class UserManagementService extends AbstractService {
         const result = await this.getBackendAdapter('userManagement').getUserIdentities(req.params.userId);
         res.json(result);
       } catch (error) {
-        this.handleError(res, error, 'GET /:userId/identities');
+        this.handleError(res, error);
       }
     });
 
@@ -115,7 +115,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').addIdentities(req.params.userId, req.body);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'POST /:userId/identities');
+        this.handleError(res, error);
       }
     });
 
@@ -127,7 +127,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').removeIdentities(req.params.userId, req.body);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'POST /:userId/identities');
+        this.handleError(res, error);
       }
     });
 
@@ -143,7 +143,7 @@ class UserManagementService extends AbstractService {
           res.json({success: true});
         });
       } catch (error) {
-        this.handleError(res, error, 'POST /password/change');
+        this.handleError(res, error);
       }
     });
 
@@ -155,7 +155,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').resetPassword(req.user, req.body);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'POST /password/reset');
+        this.handleError(res, error);
       }
     });
 
@@ -167,7 +167,7 @@ class UserManagementService extends AbstractService {
         const secret = await this.getBackendAdapter('userManagement').generateTwoFactorSecret(req.user);
         res.json(secret);
       } catch (error) {
-        this.handleError(res, error, 'GET /2fa/generate');
+        this.handleError(res, error);
       }
     });
 
@@ -179,7 +179,7 @@ class UserManagementService extends AbstractService {
         const success = await this.getBackendAdapter('userManagement').enableTwoFactor(req.user, req.body);
         res.json({success: success});
       } catch (error) {
-        this.handleError(res, error, 'POST /2fa/enable');
+        this.handleError(res, error);
       }
     });
 
@@ -191,7 +191,7 @@ class UserManagementService extends AbstractService {
         await this.getBackendAdapter('userManagement').disableTwoFactor(req.user);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'POST /2fa/disable');
+        this.handleError(res, error);
       }
     });
 
@@ -203,7 +203,7 @@ class UserManagementService extends AbstractService {
         const status = await this.getBackendAdapter('userManagement').statusTwoFactor(req.user);
         res.json({success: true, isEnabled: status.isEnabled});
       } catch (error) {
-        this.handleError(res, error, 'GET /2fa/status');
+        this.handleError(res, error);
       }
     });
 
@@ -223,17 +223,14 @@ class UserManagementService extends AbstractService {
                 'username': req.user.username,
                 'isAdmin': req.user.isAdmin
               },
-              'organization': {
-                'mspid': config.get('organization').mspid,
-                'title': config.get('organization').title
-              }
+              'organization': config.get('organization')
             }
           });
         } else {
           res.json({'success': false});
         }
       } catch (error) {
-        this.handleError(res, error, 'POST /2fa/verify');
+        this.handleError(res, error);
       }
     });
   }

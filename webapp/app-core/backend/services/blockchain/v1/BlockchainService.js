@@ -69,8 +69,8 @@ class BlockchainService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get private documents',
-        })), 'GET /');
+          message: 'Failed to get private documents'
+        })));
       }
     });
 
@@ -85,8 +85,8 @@ class BlockchainService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get document',
-        })), 'GET /:referenceId');
+          message: 'Failed to get document'
+        })));
       }
     });
 
@@ -112,8 +112,8 @@ class BlockchainService extends AbstractService {
         this.getLogger().error('[BlockchainService::/] Failed to store document - %s', error.message);
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to store document',
-        })), 'POST /');
+          message: 'Failed to store document'
+        })));
       }
     });
 
@@ -173,8 +173,8 @@ class BlockchainService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to get signatures',
-        })), 'GET /:referenceId/:msp');
+          message: 'Failed to get signatures'
+        })));
       }
     });
 
@@ -187,8 +187,8 @@ class BlockchainService extends AbstractService {
       if (!identity) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_MISSING_PARAMETER,
-          message: 'Missing parameter: identity',
-        })), 'PUT /signatures/:referenceId');
+          message: 'Missing parameter: identity'
+        })));
       }
       try {
         const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
@@ -211,17 +211,17 @@ class BlockchainService extends AbstractService {
           } else {
             return this.handleError(res, new Error(JSON.stringify({
               code: ErrorCodes.ERR_VALIDATION,
-              message: 'Failed to get wallet identity: ' + identity,
-            })), 'PUT /signatures/:referenceId');
+              message: 'Failed to get wallet identity: ' + identity
+            })));
           }
         } else {
           return this.handleError(res, new Error(JSON.stringify({
             code: ErrorCodes.ERR_VALIDATION,
-            message: 'Wrong user identity: ' + identity,
-          })), 'PUT /signatures/:referenceId');
+            message: 'Wrong user identity: ' + identity
+          })));
         }
       } catch (error) {
-        this.handleError(res, error, 'PUT /signatures/:referenceId');
+        this.handleError(res, error);
       }
     });
 
@@ -243,8 +243,8 @@ class BlockchainService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_NETWORK_DISCOVERY,
-          message: 'Failed to discover msps',
-        })), 'GET /discovery/msps');
+          message: 'Failed to discover msps'
+        })));
       }
     });
 
@@ -259,8 +259,8 @@ class BlockchainService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_NETWORK_DISCOVERY,
-          message: 'Failed to discover msp',
-        })), 'GET /discovery/msps/:msp');
+          message: 'Failed to discover msp'
+        })));
       }
     });
   }

@@ -62,10 +62,10 @@ export default {
       return this._.camelCase(this.label);
     },
     date: {
-      get: function() {
+      get() {
         return this.value && this.isoDate(this.value);
       },
-      set: function(newValue) {
+      set(newValue) {
         this.$refs.menu.save(newValue);
         this.$emit('input', new Date(newValue));
       },
@@ -74,9 +74,9 @@ export default {
       return this.isoDate(this.max || moment().add(10, 'years')._d);
     },
     minDate() {
-      return this.min ?
-        this.isoDate(moment(this.min).add(1, 'months')._d) :
-        null;
+      return this.min
+        ? this.isoDate(moment(this.min).add(1, 'months')._d)
+        : null;
     },
   },
 };

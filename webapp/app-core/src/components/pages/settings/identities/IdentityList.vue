@@ -43,6 +43,7 @@ import Layout from '@/components/layouts/LayoutSettings';
 export default {
 
   name: 'IdentityList',
+  title: 'Identities',
 
   data: () => ({
     loading: true,

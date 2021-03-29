@@ -40,6 +40,7 @@ import {validationRules} from '@/utils/ValidationRules';
 export default {
 
   name: 'UserCreate',
+  title: 'Create User',
 
   data: () => ({
     loading: false,

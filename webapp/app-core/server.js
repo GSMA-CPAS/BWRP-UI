@@ -60,7 +60,8 @@ app.use(
       directives: {
         defaultSrc: ['\'self\''],
         styleSrc: ['\'self\'', '\'unsafe-inline\''],
-        imgSrc: ['\'self\'', 'data:']
+        imgSrc: ['\'self\'', 'data:'],
+        childSrc: ['\'self\'', 'blob:']
       }
     })
 );

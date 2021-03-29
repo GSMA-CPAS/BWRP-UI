@@ -138,6 +138,7 @@ import {validationRules} from '@/utils/ValidationRules';
 export default {
 
   name: 'UserDetails',
+  title: 'User Details',
 
   data: () => ({
     loading: true,

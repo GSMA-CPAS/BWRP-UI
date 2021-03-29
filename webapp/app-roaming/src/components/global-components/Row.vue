@@ -8,12 +8,12 @@
         {{ label }}
       </v-col>
     </v-row>
-    <div
+    <v-row
       v-else-if="type === 'secondary'"
       class="font-weight-medium h1 mt-2 mb-2"
     >
       {{ label }}
-    </div>
+    </v-row>
     <v-row v-else align="baseline">
       <v-col :cols="cols" class="font-weight-medium">{{ label }}</v-col>
       <v-divider v-if="!noDivider" vertical></v-divider>

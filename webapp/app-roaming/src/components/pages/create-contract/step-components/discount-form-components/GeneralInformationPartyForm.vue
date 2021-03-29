@@ -1,10 +1,10 @@
 <template>
-  <fragment>
+  <div>
     <row type="secondary" label="Currency for all Discounts" />
     <currency-for-all-discounts v-model="value.currencyForAllDiscounts" />
     <row type="secondary" label="TADIG Codes" />
     <tadig-codes v-model="value.tadigCodes" />
-  </fragment>
+  </div>
 </template>
 <script>
 import TadigCodes from '../general-information/TadigCodes.vue';

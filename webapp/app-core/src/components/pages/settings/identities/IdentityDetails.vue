@@ -55,6 +55,7 @@ import moment from 'moment';
 export default {
 
   name: 'UserDetails',
+  title: 'Identity Details',
 
   data: () => ({
     loading: true,

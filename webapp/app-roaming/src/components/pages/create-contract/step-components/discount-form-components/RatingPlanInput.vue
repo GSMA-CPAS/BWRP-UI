@@ -1,6 +1,9 @@
 <template>
   <v-col>
-    <fragment v-for="(tier, index) in (disableThresholds ? tiers.slice(0,1) : tiers)" :key="tier.id">
+    <div
+      v-for="(tier, index) in disableThresholds ? tiers.slice(0, 1) : tiers"
+      :key="tier.id"
+    >
       <v-row>
         <v-col v-if="!disableThresholds">
           <v-currency-field
@@ -39,7 +42,7 @@
           </v-icon>
         </v-col>
       </v-row>
-    </fragment>
+    </div>
   </v-col>
 </template>
 <script>

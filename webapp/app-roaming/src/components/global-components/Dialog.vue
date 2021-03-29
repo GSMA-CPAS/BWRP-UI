@@ -13,22 +13,22 @@
     </template>
     <v-card class="pa-1">
       <v-card-title class="headline">
-        {{ title }}
-        <fragment v-if="!hideIcon">
-          <v-spacer />
-          <v-icon color="dark" @click="hide">mdi-close</v-icon>
-        </fragment>
+        <div>
+          {{ title }}
+        </div>
+        <v-spacer />
+        <v-icon v-if="!hideIcon" color="dark" @click="hide">mdi-close</v-icon>
       </v-card-title>
       <v-card-text v-if="$scopedSlots['content']" class="pa-5">
         <slot name="content" />
       </v-card-text>
-      <fragment v-if="$scopedSlots['actions']">
+      <div v-if="$scopedSlots['actions']">
         <v-divider />
         <v-card-actions>
           <v-spacer />
           <slot name="actions" :cancel="hide" />
         </v-card-actions>
-      </fragment>
+      </div>
     </v-card>
   </v-dialog>
 </template>

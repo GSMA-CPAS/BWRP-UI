@@ -1,35 +1,33 @@
 <template>
-  <fragment>
-    <v-col>
-      <v-row v-for="(signature, index) in signatures" :key="signature.id">
-        <v-col>
-          <v-text-field
-            :error-messages="nameErrors(index)"
-            v-model="signature.name"
-            label="Name"
-          ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-combobox
-            v-model="signature.role"
-            :items="predefinedRoles"
-            :error-messages="roleErrors(index)"
-            label="Role"
-          />
-        </v-col>
-        <v-col align-self="center" class="mr-3" cols="1">
-          <v-icon :disabled="isDisabled" @click="removeSignature(index)">
-            {{ `mdi-${icons.remove}` }}
-          </v-icon>
-        </v-col>
-        <v-col align-self="center" class="mr-4" cols="1">
-          <v-icon @click="addSignature">
-            {{ `mdi-${icons.add}` }}
-          </v-icon>
-        </v-col>
-      </v-row>
-    </v-col>
-  </fragment>
+  <v-col>
+    <v-row v-for="(signature, index) in signatures" :key="signature.id">
+      <v-col>
+        <v-text-field
+          :error-messages="nameErrors(index)"
+          v-model="signature.name"
+          label="Name"
+        ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-combobox
+          v-model="signature.role"
+          :items="predefinedRoles"
+          :error-messages="roleErrors(index)"
+          label="Role"
+        />
+      </v-col>
+      <v-col align-self="center" class="mr-3" cols="1">
+        <v-icon :disabled="isDisabled" @click="removeSignature(index)">
+          {{ `mdi-${icons.remove}` }}
+        </v-icon>
+      </v-col>
+      <v-col align-self="center" class="mr-4" cols="1">
+        <v-icon @click="addSignature">
+          {{ `mdi-${icons.add}` }}
+        </v-icon>
+      </v-col>
+    </v-row>
+  </v-col>
 </template>
 <script>
 import {required, minLength} from 'vuelidate/lib/validators';
@@ -100,14 +98,7 @@ export default {
   },
   computed: {
     predefinedRoles() {
-      return [
-        'User',
-        'Admin',
-        'Viewer',
-        'Legal',
-        'Finance',
-        'Commercial',
-      ];
+      return ['User', 'Admin', 'Viewer', 'Legal', 'Finance', 'Commercial'];
     },
     isDisabled() {
       return this.signatures.length === 1;

@@ -6,7 +6,6 @@
         <v-col>
           <v-text-field
             label="Contract Name"
-            v-on="inputListeners('name')"
             :error-messages="requiredError('name')"
             v-model="name"
           />
@@ -99,13 +98,13 @@
 </template>
 
 <script>
-import {required, minValue, maxValue} from 'vuelidate/lib/validators';
-import moment from 'moment';
 import {validationMixin} from '@/utils/mixins/component-specfic';
 import HelpTooltip from '@/components/other/HelpTooltip.vue';
 import {computeDateDifference} from '@/utils/Utils';
 import Parties from '../step-components/Parties.vue';
 import GeneralInformationPartyForm from '../step-components/discount-form-components/GeneralInformationPartyForm.vue';
+import {mapMutations} from 'vuex';
+import GeneralInformationValidation from '@validation/GeneralInformation';
 
 export default {
   name: 'step-1',
@@ -119,16 +118,7 @@ export default {
     };
   },
   mixins: [validationMixin],
-  validations: {
-    name: {required},
-    type: {required},
-    startDate: {required, minValue: minValue(moment()._d)},
-    endDate: {
-      required,
-      minValue: minValue(moment().add(1, 'months')._d),
-      maxValue: maxValue(moment().add(25, 'years')._d),
-    },
-  },
+  ...GeneralInformationValidation,
   components: {
     Parties,
     HelpTooltip,
@@ -141,16 +131,28 @@ export default {
         : (this.prolongationLength = null);
     },
   },
+  methods: {
+    ...mapMutations('document/new', [
+      'addValidation',
+      'updateValidation',
+      'updateGeneralInformation',
+    ]),
+    resetEndDate() {
+      this.endDate = null;
+    },
+  },
   computed: {
     name: {
       get() {
         return this.$store.state.document.new.generalInformation.name;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'name',
+        const key = 'name';
+        this.updateGeneralInformation({
+          key,
           value,
         });
+        this.updateValidation({key, isInvalid: this.$v.name.$invalid});
       },
     },
     type: {
@@ -158,7 +160,7 @@ export default {
         return this.$store.state.document.new.generalInformation.type;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'type',
           value,
         });
@@ -169,10 +171,12 @@ export default {
         return this.$store.state.document.new.generalInformation.startDate;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'startDate',
+        const key = 'startDate';
+        this.updateGeneralInformation({
+          key,
           value,
         });
+        this.updateValidation({key, isInvalid: this.$v.startDate.$invalid});
       },
     },
     endDate: {
@@ -180,10 +184,12 @@ export default {
         return this.$store.state.document.new.generalInformation.endDate;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'endDate',
+        const key = 'endDate';
+        this.updateGeneralInformation({
+          key,
           value,
         });
+        this.updateValidation({key, isInvalid: this.$v.endDate.$invalid});
       },
     },
     prolongationLength: {
@@ -192,8 +198,9 @@ export default {
           .prolongationLength;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
-          key: 'prolongationLength',
+        const key = 'prolongationLength';
+        this.updateGeneralInformation({
+          key,
           value,
         });
       },
@@ -203,7 +210,7 @@ export default {
         return this.$store.state.document.new.generalInformation.taxesIncluded;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'taxesIncluded',
           value,
         });
@@ -214,7 +221,7 @@ export default {
         return this.$store.state.document.new.generalInformation.authors;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'authors',
           value,
         });
@@ -225,7 +232,7 @@ export default {
         return this.$store.state.document.new.generalInformation.userData;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'userData',
           value,
         });
@@ -236,7 +243,7 @@ export default {
         return this.$store.state.document.new.generalInformation.partnerData;
       },
       set(value) {
-        this.$store.commit('document/new/updateGeneralInformation', {
+        this.updateGeneralInformation({
           key: 'partnerData',
           value,
         });
@@ -247,11 +254,34 @@ export default {
     },
     agreementPeriod() {
       const diff = computeDateDifference(this.startDate, this.endDate);
-      return diff ? diff : null;
+      return diff > 0 ? diff : 0;
     },
     contractTypes() {
       return ['Normal', 'Special'];
     },
+  },
+  beforeMount() {
+    this.addValidation({
+      key: 'name',
+      step: 'General Information',
+      isInvalid: this.$v.name.$invalid,
+      message: `Contract name is missing`,
+      validate: this.$v.name.$touch,
+    });
+    this.addValidation({
+      key: 'startDate',
+      step: 'General Information',
+      isInvalid: this.$v.startDate.$invalid,
+      message: `[General Information] Start date is missing`,
+      validate: this.$v.startDate.$touch,
+    });
+    this.addValidation({
+      key: 'endDate',
+      step: 'General Information',
+      isInvalid: this.$v.endDate.$invalid,
+      message: `[General Information] End date is missing`,
+      validate: this.$v.endDate.$touch,
+    });
   },
 };
 </script>

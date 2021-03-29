@@ -1,13 +1,13 @@
 <template>
-  <fragment>
+  <div>
     <app-button
       v-if="active"
       @button-pressed="change"
       outlined
       label="Approve"
-    ></app-button>
+    />
     <v-icon v-else color="success" x-large>mdi-check-circle-outline</v-icon>
-  </fragment>
+  </div>
 </template>
 <script>
 export default {
