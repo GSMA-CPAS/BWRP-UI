@@ -5,12 +5,12 @@
     </v-tab>
     <v-tab-item
       class="ma-2"
-      v-for="{ key, component } in tabs"
+      v-for="{ key, component, isHome } in tabs"
       :key="key"
       :value="key"
     >
       <keep-alive>
-        <component :is="component"></component>
+        <component :is="component" :isHome="isHome" ></component>
       </keep-alive>
     </v-tab-item>
   </v-tabs>

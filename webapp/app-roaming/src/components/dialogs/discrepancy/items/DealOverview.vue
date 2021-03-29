@@ -6,29 +6,29 @@
           <span>Term: {{ documentData.framework.term.start }} - {{ documentData.framework.term.end }}</span>
         </v-row>
         <v-row>
-          <span>ID: {{ contractId }}</span>
+          <span>ReferenceId: {{ referenceId }}</span>
         </v-row>
         <v-row>
-          <span>Partner: {{partnerMsp}}</span>
+          <span>Partner: {{isHome?partnerMsp:selfMsp}}</span>
         </v-row>
         <v-row>
           <span>Own TADIGS: </span>
-          <span v-for="(ot,index) in selfContractTadigs" :key="ot">
-            <span v-if="index !== selfContractTadigs.length - 1">
+          <span v-for="(ot,index) in selfTadigs" :key="ot">
+            <span v-if="index !== selfTadigs.length - 1">
                {{ot}},
             </span>
-            <span v-if="index === selfContractTadigs.length - 1">
+            <span v-if="index === selfTadigs.length - 1">
                {{ot}}
             </span>
           </span>
         </v-row>
         <v-row>
           <span>Partner TADIGS: </span>
-          <span v-for="(pt,index) in partnerContractTadigs" :key="pt">
-            <span v-if="index !== partnerContractTadigs.length - 1">
+          <span v-for="(pt,index) in partnerTadigs" :key="pt">
+            <span v-if="index !== partnerTadigs.length - 1">
                {{pt}},
             </span>
-            <span v-if="index === partnerContractTadigs.length - 1">
+            <span v-if="index === partnerTadigs.length - 1">
                {{pt}}
             </span>
           </span>
@@ -62,6 +62,17 @@ import {timelineMixin} from '@/utils/mixins/component-specfic';
 export default {
   name: 'DealOverview',
   mixins: [timelineMixin],
+  props: {isHome: Boolean},
+  computed: {
+    selfTadigs() {
+      if (this.isHome) return this.selfContractTadigs;
+      else return this.partnerContractTadigs;
+    },
+    partnerTadigs() {
+      if (this.isHome) return this.partnerContractTadigs;
+      else return this.selfContractTadigs;
+    }
+  }
 };
 </script>
 

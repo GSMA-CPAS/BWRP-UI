@@ -36,7 +36,8 @@ const utilsMixin = {
         'service': 'Services Categorised',
         'usage': 'Usage',
         'units': 'Units',
-        'direction': 'Direction'
+        'direction': 'Direction',
+        'charges': 'Charges'
       };
       const csvHeaders = [];
       header.forEach((key) => csvHeaders.push(headers[key]));
@@ -105,7 +106,8 @@ const utilsMixin = {
         'Services Categorised': 'service',
         'Usage': 'usage',
         'Units': 'units',
-        'Direction': 'direction'
+        'Direction': 'direction',
+        'Charges': 'charges'
       };
       const csvHeaders=lines[0].split(/[,;]+/);
       for (let i=1; i<lines.length; i++) {
@@ -136,7 +138,8 @@ const utilsMixin = {
         'VPMN': 'visitorTadig',
         'Services Categorised': 'service',
         'Usage': 'usage',
-        'Units': 'units'
+        'Units': 'units',
+        'Charges': 'charges'
       };
       for (const row of json) {
         const obj = row;
@@ -149,6 +152,7 @@ const utilsMixin = {
       for (const oldKey of Object.keys(headers)) {
           newObj[headers[oldKey]] = obj[oldKey];
       }
+      if (!newObj['charges']) delete newObj['charges'];
       newObj['usage']= String(newObj['usage']);
       newObj['currency']='EUR';
       result.push(newObj);

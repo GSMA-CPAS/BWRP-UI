@@ -15,7 +15,7 @@
           ></v-text-field>
         </template>
         <template #item="{ item }">
-          <tr :class=discrepanciesFlag(item)>
+          <tr :class=discrepanciesFlag(item,flagParam)>
             <td> {{item.HTMN}}</td>
             <td> {{item.VPMN}}</td>
             <td> {{item.yearMonth}}</td>
@@ -52,12 +52,15 @@ export default {
         {text: 'Delta (abs)', value: 'delta_usage_abs'},
         {text: 'Delta (%)', value: 'delta_usage_percent'},
       ];
+    },
+    items() {
+      return this.usageDiscrepancies.outbound;
     }
   },
   data() {
     return {
       search: '',
-      items: this.$store.state.usage.discrepancies.outbound,
+      flagParam: 'delta_usage_percent',
       exportData: this.$store.state.usage.discrepancies
     };
   },

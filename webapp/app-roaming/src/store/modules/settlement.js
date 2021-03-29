@@ -94,6 +94,11 @@ const settlementModule = {
                     log(err);
                 });
         },
+    },
+    getters: {
+        areSettlementsGenerated: (state) => {
+            return state.ownSettlementId && state.partnerSettlementId;
+        }
     }
 };
 export default settlementModule;

@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-spacer/>
-        <app-button class="-1" label="export table" @click="exportToJSON(exportData)"/>
+        <app-button label="export table" @click="exportToJSON(exportData)"/>
       </v-row>
       <v-data-table :headers="headers"
                     :items="items"
@@ -16,7 +16,7 @@
           ></v-text-field>
         </template>
         <template #item="{ item }">
-          <tr :class=discrepanciesFlag(item)>
+          <tr :class=discrepanciesFlag(item,flagParam)>
             <td> {{item.HTMN}}</td>
             <td> {{item.VPMN}}</td>
             <td> {{item.yearMonth}}</td>
@@ -54,11 +54,14 @@ export default {
         {text: 'Delta (%)', value: 'delta_usage_percent'},
       ];
     },
+    items() {
+      return this.usageDiscrepancies.inbound;
+    }
   },
   data() {
     return {
       search: '',
-      items: this.$store.state.usage.discrepancies.inbound,
+      flagParam: 'delta_usage_percent',
       exportData: this.$store.state.usage.discrepancies
     };
   },

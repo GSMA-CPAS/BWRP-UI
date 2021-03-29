@@ -1,6 +1,6 @@
 <template>
   <fragment>
-    <app-button v-if="active"
+    <app-button v-if="!areSettlementsGenerated"
                 label="generate settlements"
                 outlined
                 @button-pressed="generateSettlements()"/>
@@ -20,6 +20,9 @@ export default {
   },
   mixins: [timelineMixin],
   methods: {
+    show() {
+      console.log(this.$store.state.settlement);
+    }
   }
 };
 </script>

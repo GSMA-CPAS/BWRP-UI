@@ -3,7 +3,7 @@
     <template #content>
       <v-card color="#fafafa">
         <v-card-text>
-        <div v-if="isOwnUsage">{{ selfMsp }}</div>
+        <div v-if="isHome">{{ selfMsp }}</div>
         <div v-else>{{ partnerMsp }}</div>
         </v-card-text>
         <v-card-actions>
@@ -22,16 +22,20 @@
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import {utilsMixin} from '@/utils/mixins/handle-data';
+import SettlementDiscrepancies from '@/components/dialogs/discrepancy/SettlementDiscrepancies';
 
 export default {
   name: 'Item-7-SettlementDiscrepancies',
   mixins: [timelineMixin, utilsMixin],
   props: {
-    isOwnUsage: {
+    isHome: {
       type: Boolean,
       default: false
     }
   },
+  components: {
+    SettlementDiscrepancies
+  }
 };
 </script>
 
