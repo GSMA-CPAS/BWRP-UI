@@ -215,9 +215,30 @@ const newDocumentModule = {
                     id: `service-group-${index}`,
                     homeTadigs: {codes: homeTadigs},
                     visitorTadigs: {codes: visitorTadigs},
-                    chosenServices: services.map(({service}) => ({
-                      name: service,
-                    })),
+                    chosenServices: services.map(
+                      ({service, usagePricing}, index) => {
+                        const {unit, ratingPlan} = usagePricing;
+                        const {
+                          rate,
+                          balancedRate,
+                          unbalancedRate,
+                          kind,
+                          accessPricingModel,
+                        } = ratingPlan;
+                        return {
+                          id: `service-${index}`,
+                          name: service,
+                          unit,
+                          rate: rate.thresholds,
+                          balancedRate,
+                          unbalancedRate,
+                          pricingModel: kind,
+                          accessPricingModel,
+                          accessPricingUnit: accessPricingModel?.unit,
+                          accessPricingRate: accessPricingModel?.rate,
+                        };
+                      },
+                    ),
                   }),
                 );
                 return mappedServices;
@@ -274,14 +295,6 @@ const newDocumentModule = {
         );
 
         [
-          {
-            run: (val) => new Date(val),
-            on: 'startDate',
-          },
-          {
-            run: (val) => new Date(val),
-            on: 'endDate',
-          },
           {
             run: () => null,
             on: 'userData.currencyForAllDiscounts',
