@@ -234,10 +234,20 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
-   async getUsages(contractId) {
+   async getUsages(contractId, isReceived) {
       try {
-         const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/').json();
-         this.getLogger().debug('[CommonAdapter::getUsages] get all Usages of contractId-' + contractId + ': - %s', JSON.stringify(lists));
+         const params = isReceived? '?states=RECEIVED' : '?states=SENT|DRAFT';
+         const url = this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/'+ params;
+         const lists = await got(url).json();
+         this.getLogger().debug(
+            '[CommonAdapter::getUsages] get all Usages of contractId-' +
+               contractId +
+               ': - %s',
+            JSON.stringify(lists),
+         );
          return lists;
       } catch (error) {
          this.getLogger().error('[CommonAdapter::getUsages] failed to getUsages of contractId:' + contractId + ' - %s', error.message);
@@ -252,6 +262,34 @@ class CommonAdapter extends AbstractAdapter {
          return item;
       } catch (error) {
          this.getLogger().error('[CommonAdapter::getUsagesById] failed to get usages by Id - %s', error.message);
+         throw error;
+      }
+   }
+
+   async getUsageDiscrepancies(contractId, usageId, partnerUsageId) {
+      try {
+         const url = this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/'+
+             usageId+
+             '/discrepancy/?partnerUsageId='+
+             partnerUsageId;
+         const lists = await got(url).json();
+         this.getLogger().debug(
+             '[CommonAdapter::getUsageDiscrepancies] get usage discrepancies of contractId-' +
+             contractId +
+             ': - %s',
+             JSON.stringify(lists),
+         );
+         return lists;
+      } catch (error) {
+         this.getLogger().error(
+             '[CommonAdapter::getUsageDiscrepancies] get usage discrepancies of contractId-' +
+             contractId +
+             ' - %s',
+             error.message,
+         );
          throw error;
       }
    }
@@ -305,6 +343,31 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async sendUsageById(contractId, usageId) {
+      try {
+         const response = await got.put(
+             this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/' +
+             usageId +
+             '/send/',
+             {responseType: 'json'},
+         );
+         this.getLogger().debug(
+             '[CommonAdapter::sendUsageById] sent usage to partner: - %s',
+             JSON.stringify(response.body),
+         );
+         return response.body;
+      } catch (error) {
+         this.getLogger().error(
+             '[CommonAdapter::sendUsageById] failed to send usage - %s',
+             error.message,
+         );
+         throw error;
+      }
+   }
+
    async generateSettlementsById(contractId, usageId) {
       try {
          const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/generate/',
@@ -339,6 +402,30 @@ class CommonAdapter extends AbstractAdapter {
          return item;
       } catch (error) {
          this.getLogger().error('[CommonAdapter::getSettlementsById] failed to get settlements - %s', error.message);
+         throw error;
+      }
+   }
+
+   async getSettlementDiscrepancies(contractId, settlementId, partnerSettlementId) {
+      try {
+         const url = this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/settlements/' +
+             settlementId +
+             '/discrepancy/?partnerSettlementId='+
+             partnerSettlementId;
+         const item = await got(url).json();
+         this.getLogger().debug(
+            '[CommonAdapter::getSettlementDiscrepancies] get settlement discrepancies: - %s',
+            JSON.stringify(item),
+         );
+         return item;
+      } catch (error) {
+         this.getLogger().error(
+            '[CommonAdapter::getSettlementDiscrepancies] failed to get settlement discrepancies - %s',
+            error.message,
+         );
          throw error;
       }
    }

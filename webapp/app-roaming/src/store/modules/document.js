@@ -100,12 +100,17 @@ const documentModule = {
           console.log(err);
         });
     },
+
     async loadData(
       {commit, dispatch, rootGetters, getters, rootState, state},
       contractId,
     ) {
+      await dispatch('usage/resetData', contractId, {root: true});
+      await dispatch('settlement/resetData', contractId, {root: true});
       await dispatch('getDocument', contractId);
+      await dispatch('usage/getUsages', contractId, {root: true});
       await dispatch('getSignatures', contractId);
+      await dispatch('usage/getPartnerUsage', contractId, {root: true});
     },
   },
   getters: {
@@ -161,6 +166,13 @@ const documentModule = {
     },
     partnerMsp: (state) => {
       return state.document?.partnerMsp;
+    },
+    selfContractTadigs: (state, getters, rootState, rootGetters) => {
+      const selfMsp = rootGetters['user/organizationMSPID'];
+      return state.document.data.framework.partyInformation[selfMsp].defaultTadigCodes;
+    },
+    partnerContractTadigs: (state) => {
+      return state.document.data.framework.partyInformation[state.document?.partnerMsp].defaultTadigCodes;
     },
     exists: (state) => (key) => {
       return state.document[key] ? true : false;

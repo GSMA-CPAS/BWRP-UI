@@ -68,8 +68,15 @@ const timelineMixin = {
   methods: {
     ...mapActions('document/new', ['startContract']),
     ...mapActions('document', ['loadData', 'signDocument']),
+    ...mapActions('usage', ['uploadUsage', 'sendUsage']),
+    ...mapActions('settlement', ['generateSettlements']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
+    discrepanciesFlag: function(item) {
+      if (Math.abs(item.delta_usage_percent) === 0) return 'green-flag';
+      else if (Math.abs(item.delta_usage_percent) <= 2) return 'yellow-flag';
+      else return Math.abs(item.delta_usage_percent) > 4 ? 'red-flag' : 'orange-flag';
+    },
   },
   computed: {
     cardTextStyle() {
@@ -83,7 +90,19 @@ const timelineMixin = {
       headerData: (state) => state.document.header,
       rawData: (state) => state.rawData.raw,
       signatures: (state) => state.signatures,
-      creationDate: (state) => state.creationDate,
+      creationDate: (state) => state.creationDate
+    }),
+    ...mapState('usage', {
+      ownUsage: (state) => state.ownUsage,
+      partnerUsage: (state) => state.partnerUsage,
+      ownUsageCreationDate: (state) => state.ownUsage.creationDate,
+      partnerUsageCreationDate: (state) => state.partnerUsage.creationDate,
+      usageDiscrepancies: (state) => state.discrepancies
+    }),
+    ...mapState('settlement', {
+      ownSettlementId: (state) => state.ownSettlementId,
+      partnerSettlementId: (state) => state.partnerSettlementId,
+      settlementDiscrepancies: (state) => state.discrepancies
     }),
     ...mapGetters('document', [
       'bankDetails',
@@ -96,6 +115,14 @@ const timelineMixin = {
       'partnerMsp',
       'minSignaturesSelf',
       'minSignaturesPartner',
+      'selfContractTadigs',
+      'partnerContractTadigs',
+    ]),
+    ...mapGetters('usage', [
+      'isUsageUploaded',
+      'isUsageSent',
+      'isPartnerUsageReceived',
+      'areUsagesExchanged'
     ]),
     ...mapGetters('partners', ['list']),
   },

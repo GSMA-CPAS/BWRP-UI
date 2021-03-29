@@ -46,7 +46,7 @@ export default {
   description: 'description',
   data() {
     return {
-      selectedIdentity: null,
+      selectedIdentity: null
     };
   },
   mixins: [timelineMixin],
