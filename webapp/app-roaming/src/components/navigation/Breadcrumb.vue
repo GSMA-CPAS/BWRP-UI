@@ -63,7 +63,16 @@ export default {
   }),
   methods: {
     refreshPage() {
-      this.$store.dispatch('document/loadData', this.$route.params.cid);
+      switch (this.$route.name) {
+        case 'timeline-page':
+          this.$store.dispatch('document/loadData', this.$route.params.cid);
+          break;
+        case 'contracts-overview':
+          this.$store.dispatch('loadDocuments');
+          break;
+        default:
+          break;
+      }
     },
     addBreadcrumb(text, to) {
       this.items.push({text, to});
@@ -92,7 +101,18 @@ export default {
       return options;
     },
     refreshActive() {
-      return this.$route.name === 'timeline-page';
+      let active = false;
+      switch (this.$route.name) {
+        case 'timeline-page':
+          active = true;
+          break;
+        case 'contracts-overview':
+          active = true;
+          break;
+        default:
+          break;
+      }
+      return active;
     },
     toWorkspace() {
       return PATHS.editWorkspace;

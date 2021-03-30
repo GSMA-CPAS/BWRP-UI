@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-icon v-if="signedBySelf" x-large>mdi-progress-check </v-icon>
-    <v-icon v-else-if="isSigned" x-large>mdi-check-circle-outline </v-icon>
+    <v-icon v-if="isSigned" x-large>mdi-check-circle-outline </v-icon>
+    <v-icon v-else-if="signedBySelf" x-large>mdi-progress-check </v-icon>
     <app-dialog
       v-else
       outlined

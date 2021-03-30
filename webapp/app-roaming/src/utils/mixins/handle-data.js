@@ -18,6 +18,75 @@ const converterMixin = {
 };
 const utilsMixin = {
   methods: {
+    usageJsonToCsv() {
+      const inboundItems = this.$store.state.usage.ownUsage.body.inbound;
+      const outboundItems = this.$store.state.usage.ownUsage.body.outbound;
+      const header = Object.keys(inboundItems[0]);
+      header.push('direction');
+      // remove currency header
+      for ( let i = 0; i < header.length; i++) {
+        if ( header[i] === 'currency') {
+          header.splice(i, 1);
+        }
+      }
+      const headers = {
+        'yearMonth': 'Year_Month',
+        'homeTadig': 'HPMN',
+        'visitorTadig': 'VPMN',
+        'service': 'Services Categorised',
+        'usage': 'Usage',
+        'units': 'Units',
+        'direction': 'Direction'
+      };
+      const csvHeaders = [];
+      header.forEach((key) => csvHeaders.push(headers[key]));
+      return [
+        csvHeaders.join(','), // header row first
+        ...inboundItems.map((row) => header.map((fieldName) => {
+          if (fieldName === 'direction') return 'inbound';
+          else return row[fieldName] ? row[fieldName] : '';
+        }).join(',')),
+        ...outboundItems.map((row) => header.map((fieldName) => {
+          if (fieldName === 'direction') return 'outbound';
+          else return row[fieldName] ? row[fieldName] : '';
+        }).join(','))
+      ].join('\r\n');
+    },
+    exportUsageToCSV() {
+      const data = new Blob([this.usageJsonToCsv()], {
+        type: 'data:text/csv',
+      });
+      const fileName = `${this.referenceId}.csv`;
+      this.generateFile(data, fileName);
+    },
+    exportUsageToXLSX() {
+      const data = new Blob([this.usageJsonToCsv()], {
+        type: 'application/excel',
+      });
+      const fileName = `${this.referenceId}.xlsx`;
+      this.generateFile(data, fileName);
+    },
+    exportToJSON(json) {
+      const data = new Blob([JSON.stringify(json)], {
+        type: 'application/json',
+      });
+      const fileName = `${this.referenceId}.json`;
+      this.generateFile(data, fileName);
+    },
+    generateFile(data, fileName) {
+      if (window.navigator.msSaveOrOpenBlob) {
+        // ie11
+        window.navigator.msSaveOrOpenBlob(data, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
+    },
     labelsToCamelCase(array) {
       return array.map((label) => ({key: this._.camelCase(label), label}));
     },
@@ -27,7 +96,65 @@ const utilsMixin = {
         0,
       );
     },
+    csvToJSON(csv, result) {
+      const lines=csv.split('\n');
+      const headers = {
+        'Year_Month': 'yearMonth',
+        'HPMN': 'homeTadig',
+        'VPMN': 'visitorTadig',
+        'Services Categorised': 'service',
+        'Usage': 'usage',
+        'Units': 'units',
+        'Direction': 'direction'
+      };
+      const csvHeaders=lines[0].split(/[,;]+/);
+      for (let i=1; i<lines.length; i++) {
+        const obj = {};
+        const currentLine=lines[i].replace('\r', '').split(/[,;]+/);
+        for (let j=0; j<csvHeaders.length; j++) {
+          obj[csvHeaders[j]] = currentLine[j];
+        }
+        Object.keys(obj).forEach((oldKey) => {
+          const newKey = headers[oldKey];
+          obj[newKey] = obj[oldKey];
+          delete obj[oldKey];
+        });
+        obj['currency']='EUR';
+        if (obj['direction']?.toLowerCase() === 'inbound') {
+          delete obj['direction'];
+          result.inbound.push(obj);
+        } else if (obj['direction']?.toLowerCase() === 'outbound') {
+          delete obj['direction'];
+          result.outbound.push(obj);
+        }
+      }
+    },
+    parseJson(json, result) {
+      const headers = {
+        'Year_Month': 'yearMonth',
+        'HPMN': 'homeTadig',
+        'VPMN': 'visitorTadig',
+        'Services Categorised': 'service',
+        'Usage': 'usage',
+        'Units': 'units'
+      };
+      for (const row of json) {
+        const obj = row;
+        obj['Direction']?.toLowerCase() === 'inbound' ?
+            this.parseSingleUsage(obj, result.inbound, headers) : this.parseSingleUsage(obj, result.outbound, headers);
+      }
+    },
+    parseSingleUsage(obj, result, headers) {
+      const newObj = {};
+      for (const oldKey of Object.keys(headers)) {
+          newObj[headers[oldKey]] = obj[oldKey];
+      }
+      newObj['usage']= String(newObj['usage']);
+      newObj['currency']='EUR';
+      result.push(newObj);
+    }
   },
+
 };
 
 export {dataMixin, utilsMixin, converterMixin};
