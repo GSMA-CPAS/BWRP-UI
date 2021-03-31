@@ -3,16 +3,16 @@
     <v-row>
       <v-col cols="4">
         <v-row>
-          <span>Term: {{ documentData.framework.term.start }} - {{ documentData.framework.term.end }}</span>
+          <span>Term: {{ documentData.framework.term.start }}</span><span class="text-wrap"> - {{ documentData.framework.term.end }}</span>
         </v-row>
         <v-row>
-          <span>ReferenceId: {{ referenceId }}</span>
+          <span >ReferenceId:</span><span class="text-wrap"> {{ referenceId }}</span>
         </v-row>
         <v-row>
           <span>Partner: {{isHome?partnerMsp:selfMsp}}</span>
         </v-row>
         <v-row>
-          <span>Own TADIGS: </span>
+          <span class="text-wrap">Own TADIGS: </span>
           <span v-for="(ot,index) in selfTadigs" :key="ot">
             <span v-if="index !== selfTadigs.length - 1">
                {{ot}},
@@ -24,11 +24,11 @@
         </v-row>
         <v-row>
           <span>Partner TADIGS: </span>
-          <span v-for="(pt,index) in partnerTadigs" :key="pt">
+          <span class="text-wrap" v-for="(pt,index) in partnerTadigs" :key="pt">
             <span v-if="index !== partnerTadigs.length - 1">
                {{pt}},
             </span>
-            <span v-if="index === partnerTadigs.length - 1">
+            <span class="text-wrap" v-if="index === partnerTadigs.length - 1">
                {{pt}}
             </span>
           </span>

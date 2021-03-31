@@ -132,7 +132,7 @@ export default {
            voice = ((record.own_calculation * 100)/divider).toFixed(0);
         } else if (record.service === 'SMS') {
            sms = ((record.own_calculation * 100)/divider).toFixed(0);
-        } else {
+        } else if (record.service === 'Data') {
           data = ((record.own_calculation * 100)/divider).toFixed(0);
         }
       });
