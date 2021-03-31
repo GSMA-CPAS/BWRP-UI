@@ -104,10 +104,10 @@ export default {
   mixins: [timelineMixin],
   computed: {
     homeData() {
-      return this.$store.state.settlement.discrepancies.homePerspective?.general_information;
+      return this.$store.state.settlement.discrepancies.homePerspective['general_information'];
     },
     partnerData() {
-      return this.$store.state.settlement.discrepancies.partnerPerspective?.general_information;
+      return this.$store.state.settlement.discrepancies.partnerPerspective['general_information'];
     },
   },
   methods: {
