@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <deal-overview/>
+    <deal-overview :isHome="true"/>
     <usage-discrepancy-summary/>
   </div>
 </template>
