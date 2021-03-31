@@ -21,7 +21,8 @@
             <td> {{item.unit}}</td>
             <td> {{item.own_usage}}</td>
             <td> {{item.partner_usage}}</td>
-            <td> {{item.discrepancy}}</td>
+            <td> {{item.delta_usage_abs}}</td>
+            <td> {{item.delta_usage_percent}}</td>
             <td> {{item.own_calculation}}</td>
             <td> {{item.partner_calculation}}</td>
             <td> {{item.delta_calculation_percent}}</td>
@@ -53,7 +54,8 @@ export default {
         {text: 'Unit', value: 'unit'},
         {text: 'Own Usage', value: 'own_usage'},
         {text: 'Partner Usage', value: 'partner_usage'},
-        {text: 'Discrepancy', value: 'discrepancy'},
+        {text: 'Delta (abs)', value: 'delta_usage_abs'},
+        {text: 'Delta (%)', value: 'delta_usage_percent'},
         {text: 'Own Calculation', value: 'own_calculation'},
         {text: 'Partner Calculation', value: 'partner_calculation'},
         {text: 'Delta', value: 'delta_calculation_percent'},

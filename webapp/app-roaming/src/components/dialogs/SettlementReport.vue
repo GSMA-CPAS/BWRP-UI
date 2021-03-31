@@ -128,9 +128,9 @@ export default {
     calculateChartData(settlementData, divider) {
       let voice; let sms; let data = 0;
       settlementData?.forEach((record) => {
-        if (record.bearer === 'Voice') {
+        if (record.service === 'Voice') {
            voice = ((record.own_calculation * 100)/divider).toFixed(0);
-        } else if (record.bearer === 'SMS') {
+        } else if (record.service === 'SMS') {
            sms = ((record.own_calculation * 100)/divider).toFixed(0);
         } else {
           data = ((record.own_calculation * 100)/divider).toFixed(0);

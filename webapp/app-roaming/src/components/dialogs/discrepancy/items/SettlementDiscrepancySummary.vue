@@ -7,7 +7,7 @@
           >
           <template #item="{ item }">
             <tr :class=discrepanciesFlag(item,flagParam)>
-              <td> {{item.bearer}}</td>
+              <td> {{item.service}}</td>
               <td> {{item.unit}}</td>
               <td> {{item.own_usage}}</td>
               <td> {{item.partner_usage}}</td>
@@ -39,7 +39,7 @@ export default {
   computed: {
     headers() {
       return [
-        {text: 'Bearer', value: 'bearer'},
+        {text: 'Bearer', value: 'service'},
         {text: 'Unit', value: 'unit'},
         {text: 'Own Usage', value: 'own_usage'},
         {text: 'Partner Usage', value: 'partner_usage'},
