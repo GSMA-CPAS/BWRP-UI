@@ -4,9 +4,33 @@
       <template #content>
         <strong>Inbound</strong>
         <v-data-table :headers="headers" :items="inbound" :items-per-page="5">
+          <template #item="{ item }">
+            <tr>
+              <td> {{item.yearMonth}}</td>
+              <td> {{item.homeTadig}}</td>
+              <td> {{item.visitorTadig}}</td>
+              <td> {{item.service}}</td>
+              <td> {{item.usage}}</td>
+              <td> {{item.units}}</td>
+              <td> {{item.charges?item.charges:0}}</td>
+              <td> {{item.currency}}</td>
+            </tr>
+          </template>
         </v-data-table>
         <strong>Outbound</strong>
         <v-data-table :headers="headers" :items="outbound" :items-per-page="5">
+          <template #item="{ item }">
+            <tr>
+              <td> {{item.yearMonth}}</td>
+              <td> {{item.homeTadig}}</td>
+              <td> {{item.visitorTadig}}</td>
+              <td> {{item.service}}</td>
+              <td> {{item.usage}}</td>
+              <td> {{item.units}}</td>
+              <td> {{item.charges?item.charges:0}}</td>
+              <td> {{item.currency}}</td>
+            </tr>
+          </template>
         </v-data-table>
       </template>
     </app-dialog>
@@ -29,13 +53,14 @@ export default {
   computed: {
     headers() {
       return [
-        {text: 'Year/Month', value: 'yearMonth', align: 'center'},
-        {text: 'HPMN', value: 'homeTadig', align: 'center'},
-        {text: 'VPMN', value: 'visitorTadig', align: 'center'},
-        {text: 'Service categorised', value: 'service', align: 'center'},
-        {text: 'Value', value: 'usage', align: 'center'},
-        {text: 'Units', value: 'units', align: 'center'},
-        {text: 'Currency', value: 'currency', align: 'center'}
+        {text: 'Year/Month', value: 'yearMonth'},
+        {text: 'HPMN', value: 'homeTadig'},
+        {text: 'VPMN', value: 'visitorTadig'},
+        {text: 'Service categorised', value: 'service'},
+        {text: 'Usage', value: 'usage'},
+        {text: 'Units', value: 'units'},
+        {text: 'Charges', value: 'charges'},
+        {text: 'Currency', value: 'currency'}
       ];
     },
     inbound() {

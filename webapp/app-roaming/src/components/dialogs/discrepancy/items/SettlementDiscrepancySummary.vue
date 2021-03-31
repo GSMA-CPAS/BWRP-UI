@@ -51,9 +51,9 @@ export default {
     },
     items() {
       if (this.isHome) {
-        return this.settlementDiscrepancies.homePerspective.general_information;
+        return this.settlementDiscrepancies.homePerspective?.general_information;
       } else {
-        return this.settlementDiscrepancies.partnerPerspective.general_information;
+        return this.settlementDiscrepancies.partnerPerspective?.general_information;
       }
     }
   },

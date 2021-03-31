@@ -7,7 +7,8 @@ const defaultSettlementState = () => {
     return {
         ownSettlementId: null,
         partnerSettlementId: null,
-        discrepancies: {}
+        discrepancies: {},
+        settlementStatus: null
     };
 };
 const settlementModule = {
@@ -28,6 +29,12 @@ const settlementModule = {
         UPDATE_DISCREPANCIES(state, data) {
             state.discrepancies = data;
             console.log(state);
+        },
+        ACCEPT_DISCREPANCIES: (state) => {
+            state.settlementStatus = 'Accepted';
+        },
+        DECLINE_DISCREPANCIES: (state) => {
+            state.settlementStatus = 'Declined';
         },
     },
     actions: {
@@ -94,10 +101,26 @@ const settlementModule = {
                     log(err);
                 });
         },
+        acceptDiscrepancies(
+            {commit, dispatch, rootGetters, getters, rootState, state}
+        ) {
+            commit('ACCEPT_DISCREPANCIES');
+        },
+        declineDiscrepancies(
+            {commit, dispatch, rootGetters, getters, rootState, state}
+        ) {
+            commit('DECLINE_DISCREPANCIES');
+        },
     },
     getters: {
         areSettlementsGenerated: (state) => {
-            return state.ownSettlementId && state.partnerSettlementId;
+            return state.ownSettlementId && state.partnerSettlementId && state.discrepancies;
+        },
+        areDiscrepanciesCalculated: (state) => {
+            return state.discrepancies.homePerspective && state.discrepancies.partnerPerspective;
+        },
+        settlementStatus: (state) => {
+            return state.settlementStatus;
         }
     }
 };

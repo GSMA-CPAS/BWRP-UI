@@ -122,6 +122,10 @@ const utilsMixin = {
           delete obj[oldKey];
         });
         obj['currency']='EUR';
+        obj['usage'] = Number(obj['usage']);
+        if (obj['charges'] && obj['charges'] !== '') {
+          obj['charges'] = Number(obj['charges']);
+        } else delete obj['charges'];
         if (obj['direction']?.toLowerCase() === 'inbound') {
           delete obj['direction'];
           result.inbound.push(obj);
@@ -153,7 +157,8 @@ const utilsMixin = {
           newObj[headers[oldKey]] = obj[oldKey];
       }
       if (!newObj['charges']) delete newObj['charges'];
-      newObj['usage']= String(newObj['usage']);
+      else newObj['charges']= Number(newObj['charges']);
+      newObj['yearMonth']= String(newObj['yearMonth']);
       newObj['currency']='EUR';
       result.push(newObj);
     }
