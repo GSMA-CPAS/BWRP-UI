@@ -1,8 +1,8 @@
 <template>
-  <fragment class="text-center">
+  <div class="text-center">
     <deal-overview/>
     <usage-discrepancy-summary/>
-  </fragment>
+  </div>
 </template>
 <script>
 

@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <app-dialog outlined title="Settlement Report" label="View settlement report">
       <template #content>
         <v-container>
@@ -91,7 +91,7 @@
         </v-container>
       </template>
     </app-dialog>
-  </fragment>
+  </div>
 </template>
 
 <script>

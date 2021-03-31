@@ -1,11 +1,11 @@
 <template>
-  <fragment>
+  <div>
     <app-button v-if="!areSettlementsGenerated"
                 label="generate settlements"
                 outlined
                 @button-pressed="generateSettlements()"/>
     <v-icon v-else color="primary" x-large>mdi-check-circle-outline</v-icon>
-  </fragment>
+  </div>
 </template>
 
 <script>

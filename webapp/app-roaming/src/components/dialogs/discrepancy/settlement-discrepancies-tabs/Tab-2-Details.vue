@@ -1,5 +1,5 @@
 <template>
-  <fragment class="text-center">
+  <div class="text-center">
     <v-container>
       <v-row>
         <v-spacer/>
@@ -30,7 +30,7 @@
         </template>
       </v-data-table>
     </v-container>
-  </fragment>
+  </div>
 </template>
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';

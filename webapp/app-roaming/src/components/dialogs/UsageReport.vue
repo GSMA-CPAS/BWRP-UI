@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <app-dialog title="View Usage Report" label="view usage report">
       <template #content>
         <strong>Inbound</strong>
@@ -34,7 +34,7 @@
         </v-data-table>
       </template>
     </app-dialog>
-  </fragment>
+  </div>
 </template>
 
 <script>

@@ -1,11 +1,11 @@
 <template>
-  <fragment>
+  <div>
     <app-dialog width="90vw" outlined title="Usage Discrepancies" label="View usage discrepancies">
       <template #content>
         <tabs :tabs="tabs" />
       </template>
     </app-dialog>
-  </fragment>
+  </div>
 </template>
 
 <script>

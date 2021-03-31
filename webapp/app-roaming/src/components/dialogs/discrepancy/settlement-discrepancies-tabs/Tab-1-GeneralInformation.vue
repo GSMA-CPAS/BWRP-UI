@@ -1,10 +1,10 @@
 <template>
-  <fragment>
+  <div>
     <v-container>
       <deal-overview :isHome="isHome"/>
       <settlement-discrepancy-summary :isHome="isHome"/>
     </v-container>
-  </fragment>
+  </div>
 </template>
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';
