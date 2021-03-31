@@ -460,7 +460,7 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
-   async initialize() {}
+   async onSetup() {}
 }
 
 module.exports = CommonAdapter;

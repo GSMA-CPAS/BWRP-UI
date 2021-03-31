@@ -142,6 +142,7 @@ if (sessionConfig.cookie.secure === true) {
 
   // LOAD SERVICES
 
+  const cacheBackendAdapters = {};
   for (const serviceName in services) {
     if (Object.prototype.hasOwnProperty.call(services, serviceName)) {
       const serviceConfig = config.get('services.' + serviceName);
@@ -151,9 +152,40 @@ if (sessionConfig.cookie.secure === true) {
           fs.statSync(serviceClassPath + '.js');
           const ServiceClass = require(serviceClassPath);
           const appService = await new ServiceClass(serviceName, serviceConfig, app, database);
+          if (serviceConfig.has('useBackendAdapters')) {
+            const backendAdapters = serviceConfig.get('useBackendAdapters');
+            for (let i = 0; i < backendAdapters.length; i++) {
+              const adapterType = backendAdapters[i].type;
+              const adapterName = backendAdapters[i].name;
+              if (adapterType && adapterName) {
+                if (adapterName in cacheBackendAdapters) {
+                  appService.setBackendAdapter(adapterType, cacheBackendAdapters[adapterName]);
+                  logger.info('[%s] adapter <%s> successfully loaded', serviceName, adapterName);
+                } else {
+                  if (config.has('backendAdapters.' + adapterName)) {
+                    const adapterConfig = config.get('backendAdapters.' + adapterName);
+                    const adapterClassPath = global.GLOBAL_BACKEND_ROOT + adapterConfig.get('classPath');
+                    try {
+                      fs.statSync(adapterClassPath + '.js');
+                      const BackendAdapter = require(adapterClassPath);
+                      cacheBackendAdapters[adapterName] = new BackendAdapter(adapterName, adapterConfig.config, database);
+                      if (typeof cacheBackendAdapters[adapterName].onLoad === 'function') {
+                        await cacheBackendAdapters[adapterName].onLoad();
+                      }
+                      appService.setBackendAdapter(adapterType, cacheBackendAdapters[adapterName]);
+                      logger.info('[%s] adapter <%s> successfully loaded', serviceName, adapterName);
+                    } catch (error) {
+                      logger.error('[%s] failed to load adapter <%s> - %s', serviceName, adapterName, error.message);
+                      process.exit(1);
+                    }
+                  }
+                }
+              }
+            }
+          }
           if (serviceConfig.route) {
             app.use(serviceConfig.route, csrfProtection, appService.getRouter());
-            logger.info('[%s] service successfully started - route <%s>, class path <%s>', serviceName, serviceConfig.route, serviceClassPath);
+            logger.info('[%s] service successfully started - route <%s>', serviceName, serviceConfig.route);
           } else {
             logger.error('[%s] failed to start service <%s> - route must be specified in config file', serviceName, serviceName);
             process.exit(1);

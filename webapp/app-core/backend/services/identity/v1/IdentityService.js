@@ -9,6 +9,8 @@ class IdentityService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
     this.registerRequestHandler();
+    this.requiredAdapterType('certAuth');
+    this.requiredAdapterType('identity');
   }
 
   registerRequestHandler() {
@@ -24,10 +26,10 @@ class IdentityService extends AbstractService {
     this.getRouter().get('/:id', ensureAdminAuthenticated, async (req, res) => {
       try {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
-        let walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity.name);
+        let walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity.name);
         if (!walletIdentity) {
           walletIdentity = await this.getBackendAdapter('certAuth').enroll(identity.name);
-          await this.getBackendAdapter('wallet').putIdentity(identity.name, walletIdentity);
+          await this.getBackendAdapter('certAuth').putWalletIdentity(identity.name, walletIdentity);
         }
         const certificate = walletIdentity.credentials.certificate;
         identity['x509'] = cryptoUtils.parseCert(certificate);
@@ -62,12 +64,12 @@ class IdentityService extends AbstractService {
         } else {
           createdIdentityResult = await this.getBackendAdapter('identity').createIdentity(req.body);
           const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
-          const registrar = await this.getBackendAdapter('wallet').getUserContext(adminEnrollmentId);
+          const registrar = await this.getBackendAdapter('certAuth').getUserContext(adminEnrollmentId);
           if (!await this.getBackendAdapter('certAuth').existsIdentity(identityName, registrar)) {
             await this.getBackendAdapter('certAuth').register(identityName, registrar, true);
           }
           const identity = await this.getBackendAdapter('certAuth').enroll(identityName);
-          await this.getBackendAdapter('wallet').putIdentity(identityName, identity);
+          await this.getBackendAdapter('certAuth').putWalletIdentity(identityName, identity);
           return res.json({success: true});
         }
       } catch (error) {
@@ -81,7 +83,7 @@ class IdentityService extends AbstractService {
     this.getRouter().delete('/:id', ensureAdminAuthenticated, async (req, res) => {
       try {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
-        await this.getBackendAdapter('wallet').removeIdentity(identity.name);
+        await this.getBackendAdapter('certAuth').removeWalletIdentity(identity.name);
         await this.getBackendAdapter('identity').deleteIdentity(req.params.id);
         res.json({success: true});
       } catch (error) {
@@ -93,7 +95,7 @@ class IdentityService extends AbstractService {
       try {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
         const newIdentity = await this.getBackendAdapter('certAuth').enroll(identity.name);
-        await this.getBackendAdapter('wallet').putIdentity(identity.name, newIdentity);
+        await this.getBackendAdapter('certAuth').putWalletIdentity(identity.name, newIdentity);
         return res.json({success: true});
       } catch (error) {
         this.handleError(res, error);

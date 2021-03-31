@@ -1,6 +1,5 @@
 'use strict';
 
-const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
 const config = require('config');
@@ -19,31 +18,7 @@ class AbstractService {
     this.serviceName = serviceName;
     this.serviceConfig = serviceConfig;
     this.logger = logger;
-
     this.backendAdapters = {};
-
-    if (serviceConfig.has('useBackendAdapters')) {
-      const backendAdapters = serviceConfig.get('useBackendAdapters');
-      for (let i = 0; i < backendAdapters.length; i++) {
-        const adapterType = backendAdapters[i].type;
-        const adapterName = backendAdapters[i].name;
-        if (adapterType && adapterName) {
-          if (config.has('backendAdapters.' + adapterName)) {
-            const adapterConfig = config.get('backendAdapters.' + adapterName);
-            const adapterClassPath = global.GLOBAL_BACKEND_ROOT + adapterConfig.get('classPath');
-            try {
-              fs.statSync(adapterClassPath + '.js');
-              const BackendAdapter = require(adapterClassPath);
-              this.backendAdapters[adapterType] = new BackendAdapter(adapterName, adapterConfig.config, database);
-              this.logger.info('[%s] adapter <%s> successfully loaded - class path <%s>', this.serviceName, adapterName, adapterClassPath);
-            } catch (error) {
-              this.logger.error('[%s] failed to load adapter <%s> - %s', this.serviceName, adapterName, error.message);
-              process.exit(1);
-            }
-          }
-        }
-      }
-    }
 
     this.corsEnabled = serviceConfig.has('cors') ?
         serviceConfig.get('cors.enabled') :
@@ -53,6 +28,12 @@ class AbstractService {
 
     if (this.corsEnabled) {
       this.router.use(cors(this.serviceConfig.cors));
+    }
+  }
+
+  setBackendAdapter(type, adapter) {
+    if (!(type in this.backendAdapters)) {
+      this.backendAdapters[type] = adapter;
     }
   }
 

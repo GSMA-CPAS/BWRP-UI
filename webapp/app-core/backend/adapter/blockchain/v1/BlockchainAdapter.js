@@ -116,15 +116,15 @@ class BlockchainAdapter extends AbstractAdapter {
     }
   }
 
-  async initialize() {
+  async onSetup() {
     try {
       const webhooks = this.getAdapterConfig().webhooks;
       for (const webhook of webhooks) {
         await this.webhookSubscribe(webhook.eventName, webhook.callbackUrl);
-        this.getLogger().info('[BlockchainAdapter::initialize] webhook subscribe: %s -> %s', webhook.eventName, webhook.callbackUrl);
+        this.getLogger().info('[BlockchainAdapter::onSetup] webhook subscribe: %s -> %s', webhook.eventName, webhook.callbackUrl);
       }
     } catch (error) {
-      this.getLogger().error('[BlockchainAdapter::initialize] failed to initialize adapter - %s', error.message);
+      this.getLogger().error('[BlockchainAdapter::onSetup] failed to initialize adapter - %s', error.message);
       throw error;
     }
   }

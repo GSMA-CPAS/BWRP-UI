@@ -90,7 +90,7 @@ class IdentityAdapter extends AbstractAdapter {
     }
   }
 
-  async initialize() {
+  async onSetup() {
     await this.initIdentitiesTable();
     await this.initIdentitiesRelationTable();
   }
@@ -109,13 +109,13 @@ class IdentityAdapter extends AbstractAdapter {
               'name VARCHAR(100) NOT NULL, ' +
               'PRIMARY KEY (id), ' +
               'CONSTRAINT uc_identities UNIQUE (name))');
-          this.getLogger().info('[IdentityAdapter::initialize] table %s has been created successfully!', tableName);
+          this.getLogger().info('[IdentityAdapter::onSetup] table %s has been created successfully!', tableName);
         } catch (error) {
-          this.getLogger().error('[IdentityAdapter::initialize] failed to create %s table - %s ', tableName, JSON.stringify(error));
+          this.getLogger().error('[IdentityAdapter::onSetup] failed to create %s table - %s ', tableName, JSON.stringify(error));
           throw error;
         }
       } else {
-        this.getLogger().error('[IdentityAdapter::initialize] Error checking database - %s ', JSON.stringify(error));
+        this.getLogger().error('[IdentityAdapter::onSetup] Error checking database - %s ', JSON.stringify(error));
         throw error;
       }
     }
@@ -136,13 +136,13 @@ class IdentityAdapter extends AbstractAdapter {
               'PRIMARY KEY (user_id, identity_id), ' +
               'FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE, ' +
               'FOREIGN KEY (identity_id) REFERENCES users_identities(id) ON DELETE CASCADE ON UPDATE CASCADE)');
-          this.getLogger().info('[IdentityAdapter::initialize] table %s has been created successfully!', tableName);
+          this.getLogger().info('[IdentityAdapter::onSetup] table %s has been created successfully!', tableName);
         } catch (error) {
-          this.getLogger().error('[IdentityAdapter::initialize] failed to create %s table - %s ', tableName, JSON.stringify(error));
+          this.getLogger().error('[IdentityAdapter::onSetup] failed to create %s table - %s ', tableName, JSON.stringify(error));
           throw error;
         }
       } else {
-        this.getLogger().error('[IdentityAdapter::initialize] Error checking database - %s ', JSON.stringify(error));
+        this.getLogger().error('[IdentityAdapter::onSetup] Error checking database - %s ', JSON.stringify(error));
         throw error;
       }
     }
