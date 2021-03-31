@@ -1,6 +1,5 @@
 'use strict';
 
-const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
@@ -13,7 +12,6 @@ class CommonService extends AbstractService {
     this.requiredAdapterType('wallet');
     this.requiredAdapterType('common');
     this.registerRequestHandler();
-    this.mspid = config.organization.mspid;
   }
 
   registerRequestHandler() {
@@ -27,7 +25,7 @@ class CommonService extends AbstractService {
         const response = await this.getBackendAdapter('common').getContracts(req.query);
         return res.json(response);
       } catch (error) {
-        this.handleError(res, error, 'GET /documents');
+        this.handleError(res, error);
       }
     });
 
@@ -42,15 +40,14 @@ class CommonService extends AbstractService {
         if (requireRaw) {
           response = await this.getBackendAdapter('common').getRawContractById(contractId);
         } else {
-          // currently passing self mspid for some Payload convertion. Require some cleanup
-          response = await this.getBackendAdapter('common').getContractById(contractId, this.mspid);
+          response = await this.getBackendAdapter('common').getContractById(contractId);
         }
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to get document'
-        })), 'GET /:contractId');
+        })));
       }
     });
 
@@ -61,12 +58,11 @@ class CommonService extends AbstractService {
       try {
         const toMSP = req.body.toMSP;
         const data = req.body.data;
-        // TODO: sync payload requirement with common adapter. currently some Pre processing is needed in the Adapter code.
         const response = await this.getBackendAdapter('common').createContract(toMSP, data);
         return res.json(response);
       } catch (error) {
         this.getLogger().error('[CommonService::/] Failed to store document - %s', error.message);
-        this.handleError(res, error, 'POST /documents');
+        this.handleError(res, error);
       }
     });
 
@@ -81,8 +77,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to get signatures',
-        })), 'GET /:contractId');
+          message: 'Failed to get signatures'
+        })));
       }
     });
 
@@ -95,8 +91,8 @@ class CommonService extends AbstractService {
       if (!identity) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_MISSING_PARAMETER,
-          message: 'Missing parameter: identity',
-        })), 'PUT /signatures/:contractId');
+          message: 'Missing parameter: identity'
+        })));
       }
       try {
         const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
@@ -114,17 +110,17 @@ class CommonService extends AbstractService {
           } else {
             return this.handleError(res, new Error(JSON.stringify({
               code: ErrorCodes.ERR_VALIDATION,
-              message: 'Failed to get wallet identity: ' + identity,
-            })), 'PUT /signatures/:contractId');
+              message: 'Failed to get wallet identity: ' + identity
+            })));
           }
         } else {
           return this.handleError(res, new Error(JSON.stringify({
             code: ErrorCodes.ERR_VALIDATION,
-            message: 'Wrong user identity: ' + identity,
-          })), 'PUT /signatures/:contractId');
+            message: 'Wrong user identity: ' + identity
+          })));
         }
       } catch (error) {
-        this.handleError(res, error, 'PUT /signatures/:contractId');
+        this.handleError(res, error);
       }
     });
 
@@ -140,8 +136,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to get signature',
-        })), 'GET /:contractId/:signatureId');
+          message: 'Failed to get signature'
+        })));
       }
     });
 
@@ -158,8 +154,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get usages of contracts',
-        })), 'GET /usages/:contractId');
+          message: 'Failed to get usages of contracts'
+        })));
       }
     });
 
@@ -176,8 +172,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get usages of contracts by usageId',
-        })), 'GET /usages/:contractId/:usageId');
+          message: 'Failed to get usages of contracts by usageId'
+        })));
       }
     });
 
@@ -213,8 +209,8 @@ class CommonService extends AbstractService {
         this.getLogger().error('[CommonService::/] Failed to store usage - %s', error.message);
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to store usage',
-        })), 'POST /usages/:contractId');
+          message: 'Failed to store usage'
+        })));
       }
     });
 
@@ -231,9 +227,9 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to update usages',
-        })), 'PUT /usages/:contractId/:usageId');
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to update usages'
+        })));
       }
     });
 
@@ -249,9 +245,9 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to delete usages',
-        })), 'DELETE /usages/:contractId/:usageId');
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to delete usages'
+        })));
       }
     });
 
@@ -288,9 +284,9 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to generate settlements',
-        })), 'PUT /usages/:contractId/:usageId/generate/');
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to generate settlements'
+        })));
       }
     });
 
@@ -305,8 +301,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get settlements of contracts',
-        })), 'GET /settlements/:contractId');
+          message: 'Failed to get settlements of contracts'
+        })));
       }
     });
 
@@ -322,8 +318,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
-          message: 'Failed to get settlements of contracts by usageId',
-        })), 'GET /settlements/:contractId/:settlementId');
+          message: 'Failed to get settlements of contracts by usageId'
+        })));
       }
     });
 
@@ -356,9 +352,9 @@ class CommonService extends AbstractService {
         return res.json(response);
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
-          code: ErrorCodes.ERR_SIGNATURE,
-          message: 'Failed to send settlements',
-        })), 'PUT /settlements/:contractId/:settlementId/send/');
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to send settlements'
+        })));
       }
     });
 
@@ -372,8 +368,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_NETWORK_DISCOVERY,
-          message: 'Failed to discover msps',
-        })), 'GET /discovery/msps');
+          message: 'Failed to discover msps'
+        })));
       }
     });
 
@@ -388,8 +384,8 @@ class CommonService extends AbstractService {
       } catch (error) {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_NETWORK_DISCOVERY,
-          message: 'Failed to discover msp',
-        })), 'GET /discovery/msps/:msp');
+          message: 'Failed to discover msp'
+        })));
       }
     });
   }

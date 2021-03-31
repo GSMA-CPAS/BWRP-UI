@@ -1,18 +1,25 @@
 <template>
   <div>
-    <parties-header single :sub-row-labels="labels" v-on:party-switch="partySwitch"/>
-    <div v-for="(serviceGroup, sgIndex) in discountData.serviceGroups" :key="`party-${partyId}-sg-${sgIndex}`">
-      <row
-        type="secondary"
-        class="pa-4"
-        :label="`Group ${sgIndex+1}`"
-      />
+    <parties-header
+      single
+      :sub-row-labels="labels"
+      v-on:party-switch="partySwitch"
+    />
+    <div
+      v-for="(serviceGroup, sgIndex) in discountData.serviceGroups"
+      :key="`party-${partyId}-sg-${sgIndex}`"
+    >
+      <row type="secondary" class="pa-4" :label="`Group ${sgIndex + 1}`" />
       <v-divider />
       <row cols="2" label="TADIGs">
         <v-col class="striped-column-container">
           <v-row>
             <v-col class="striped-column"><b>Home</b></v-col>
-            <v-col class="striped-column">{{ serviceGroup.homeTadigs && serviceGroup.homeTadigs.length > 0 ? serviceGroup.homeTadigs.join(', ') : 'Default' }}</v-col>
+            <v-col class="striped-column">{{
+              serviceGroup.homeTadigs && serviceGroup.homeTadigs.length > 0
+                ? serviceGroup.homeTadigs.join(', ')
+                : 'Default'
+            }}</v-col>
             <v-col class="striped-column"></v-col>
             <v-col class="striped-column"></v-col>
             <v-col class="striped-column"></v-col>
@@ -20,7 +27,12 @@
           </v-row>
           <v-row>
             <v-col class="striped-column"><b>Visitor</b></v-col>
-            <v-col class="striped-column">{{ serviceGroup.visitorTadigs && serviceGroup.visitorTadigs.length > 0 ? serviceGroup.visitorTadigs.join(', ') : 'Default' }}</v-col>
+            <v-col class="striped-column">{{
+              serviceGroup.visitorTadigs &&
+              serviceGroup.visitorTadigs.length > 0
+                ? serviceGroup.visitorTadigs.join(', ')
+                : 'Default'
+            }}</v-col>
             <v-col class="striped-column"></v-col>
             <v-col class="striped-column"></v-col>
             <v-col class="striped-column"></v-col>
@@ -29,23 +41,80 @@
         </v-col>
       </row>
       <v-divider />
-      <div v-for="(service, index) in serviceGroup.services" :key="`party-${partyId}-sg-${sgIndex}-row-${index}`">
+      <div
+        v-for="(service, index) in serviceGroup.services"
+        :key="`party-${partyId}-sg-${sgIndex}-row-${index}`"
+      >
         <row cols="2" :label="service.service">
           <v-col class="striped-column-container">
-            <template v-if="service.usagePricing">
+            <template
+              v-if="
+                service.usagePricing && service.usagePricing.ratingPlan.rate
+              "
+            >
               <v-row>
-                <simple-model-template v-if="service.usagePricing.ratingPlan.kind === 'Linear rate'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
-                <simple-model-template v-if="service.usagePricing.ratingPlan.kind === 'Flat rate'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
-                <tiered-model-template v-if="service.usagePricing.ratingPlan.kind === 'Threshold - back to first'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
-                <tiered-model-template v-if="service.usagePricing.ratingPlan.kind === 'Tiered with Thresholds'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
-                <balanced-unbalanced-model-template v-if="service.usagePricing.ratingPlan.kind === 'Balanced/Unbalanced (Linear rate)'" :data="service.usagePricing" :in-commitment="service.includedInCommitment" model-type="Usage"/>
+                <simple-model-template
+                  v-if="service.usagePricing.ratingPlan.kind === 'Linear rate'"
+                  :data="service.usagePricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Usage"
+                />
+                <simple-model-template
+                  v-if="service.usagePricing.ratingPlan.kind === 'Flat rate'"
+                  :data="service.usagePricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Usage"
+                />
+                <tiered-model-template
+                  v-if="
+                    service.usagePricing.ratingPlan.kind ===
+                    'Threshold - back to first'
+                  "
+                  :data="service.usagePricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Usage"
+                />
+                <tiered-model-template
+                  v-if="
+                    service.usagePricing.ratingPlan.kind ===
+                    'Tiered with Thresholds'
+                  "
+                  :data="service.usagePricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Usage"
+                />
+                <balanced-unbalanced-model-template
+                  v-if="
+                    service.usagePricing.ratingPlan.kind ===
+                    'Balanced/Unbalanced (Linear rate)'
+                  "
+                  :data="service.usagePricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Usage"
+                />
               </v-row>
             </template>
 
             <template v-if="service.accessPricing">
               <v-row>
-                <tiered-model-template v-if="service.accessPricing.ratingPlan.kind === 'Threshold - back to first'" :data="service.accessPricing" :in-commitment="service.includedInCommitment" model-type="Access"/>
-                <tiered-model-template v-if="service.accessPricing.ratingPlan.kind === 'Tiered with Thresholds'" :data="service.accessPricing" :in-commitment="service.includedInCommitment" model-type="Access"/>
+                <tiered-model-template
+                  v-if="
+                    service.accessPricing.ratingPlan.kind ===
+                    'Threshold - back to first'
+                  "
+                  :data="service.accessPricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Access"
+                />
+                <tiered-model-template
+                  v-if="
+                    service.accessPricing.ratingPlan.kind ===
+                    'Tiered with Thresholds'
+                  "
+                  :data="service.accessPricing"
+                  :in-commitment="service.includedInCommitment"
+                  model-type="Access"
+                />
               </v-row>
             </template>
           </v-col>
@@ -65,13 +134,32 @@
           }}</v-col>
         </v-row>
         <v-row>
-          <v-col>{{ documentData.framework.partyInformation[this.parties[this.partyId]].contractCurrency}}</v-col>
+          <v-col>{{
+            documentData.framework.partyInformation[this.parties[this.partyId]]
+              .contractCurrency
+          }}</v-col>
           <v-col>{{ discountData.condition.kind }}</v-col>
-          <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.currency : '' }}</v-col>
-          <v-col>{{ discountData.condition.commitment ? discountData.condition.commitment.value : '' }}</v-col>
-          <v-col><v-icon v-if="discountData.condition.commitment && discountData.condition.commitment.includingTaxes" color="primary">
-            mdi-checkbox-marked-outline
-          </v-icon></v-col>
+          <v-col>{{
+            discountData.condition.commitment
+              ? discountData.condition.commitment.currency
+              : ''
+          }}</v-col>
+          <v-col>{{
+            discountData.condition.commitment
+              ? discountData.condition.commitment.value
+              : ''
+          }}</v-col>
+          <v-col
+            ><v-icon
+              v-if="
+                discountData.condition.commitment &&
+                discountData.condition.commitment.includingTaxes
+              "
+              color="primary"
+            >
+              mdi-checkbox-marked-outline
+            </v-icon></v-col
+          >
         </v-row>
       </v-col>
     </v-row>
@@ -95,7 +183,7 @@ export default {
     PartiesHeader,
     TieredModelTemplate,
     SimpleModelTemplate,
-    BalancedUnbalancedModelTemplate
+    BalancedUnbalancedModelTemplate,
   },
   data() {
     return {
@@ -107,7 +195,7 @@ export default {
       this.partyId = partyId;
     },
     renderModel(model) {
-      if ( model === undefined ) {
+      if (model === undefined) {
         return;
       }
 

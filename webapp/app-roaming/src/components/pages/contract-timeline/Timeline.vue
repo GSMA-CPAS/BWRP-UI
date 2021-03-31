@@ -40,6 +40,7 @@ export default {
     Item1ContractView,
   },
   name: 'timeline',
+  title: 'Timeline',
   description: 'Component: Timeline',
   mixins: [timelineMixin],
   created() {

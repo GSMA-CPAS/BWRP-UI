@@ -8,6 +8,7 @@
             <v-text-field v-model="groupName" label="New Group" />
           </template>
           <template #actions="{cancel}">
+            <app-button @button-pressed="cancel" label="Cancel" plain />
             <app-button
               :disabled="groupName === null"
               @button-pressed="

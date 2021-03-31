@@ -1,21 +1,19 @@
 <template>
-  <fragment>
-    <v-combobox
-        :items="codeNames"
-        multiple
-        v-model="value.codes"
-        rows="2"
-        auto-grow
-        label="TADIG Codes"
-        @change="removeSearchTerm"
-        :search-input.sync="groupCodeSearchTerm"
-    />
-    <!-- <v-checkbox
+  <v-combobox
+    :items="codeNames"
+    multiple
+    v-model="value.codes"
+    rows="2"
+    auto-grow
+    label="TADIG Codes"
+    @change="removeSearchTerm"
+    :search-input.sync="groupCodeSearchTerm"
+  />
+  <!-- <v-checkbox
       v-model="value.includeContractParty"
       auto-grow
       label="also contract party"
     /> -->
-  </fragment>
 </template>
 <script>
 import {mapActions, mapState} from 'vuex';
@@ -31,12 +29,7 @@ export default {
     groupCodeSearchTerm: null,
   }),
   methods: {
-    ...mapActions('workspace-config/tadig-codes', [
-      'loadCodes',
-    ]),
-    ...mapActions('workspace-config/tadig-groups', [
-        'loadGroups', 'loadGroupCodes'
-    ]),
+    ...mapActions('workspace-config/tadig-groups', ['loadGroupCodes']),
     removeSearchTerm(e) {
       this.groupCodeSearchTerm = null;
       this.groupCodeRemovalSearchTerm = null;
@@ -47,8 +40,8 @@ export default {
       async handler(val) {
         let newVal = [];
         let changed = false;
-        for ( const code of val.codes ) {
-          if ( this.groupNames.indexOf(code) !== -1) {
+        for (const code of val.codes) {
+          if (this.groupNames.indexOf(code) !== -1) {
             const codeId = this.groups[this.groupNames.indexOf(code)].id;
             await this.loadGroupCodes(codeId);
             for (const c of this.groupCodes) {
@@ -61,14 +54,14 @@ export default {
         }
 
         newVal = [...new Set(newVal)];
-        if ( changed ) {
+        if (changed) {
           Vue.nextTick(() => {
             this.value.codes = newVal;
           });
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     ...mapState('workspace-config/tadig-codes', ['codes']),
@@ -77,12 +70,11 @@ export default {
       return this.groups.map((x) => x.name);
     },
     codeNames() {
-      return [].concat(this.groupNames, this.codes.map((x) => x.code));
-    }
-  },
-  mounted() {
-    this.loadCodes();
-    this.loadGroups();
+      return [].concat(
+        this.groupNames,
+        this.codes.map((x) => x.code),
+      );
+    },
   },
 };
 </script>

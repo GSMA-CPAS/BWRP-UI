@@ -45,7 +45,7 @@ class AppService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_NOT_FOUND,
           message: 'App ' + appName + ' not found'
-        })), 'GET /:name');
+        })));
       }
     });
   }

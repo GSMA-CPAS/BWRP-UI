@@ -42,6 +42,9 @@ const errorHandler = (res, error, errorMessagePrefix = '') => {
         case ErrorCodes.ERR_CA_IDENTITY:
           status = 500;
           break;
+        case ErrorCodes.ERR_NETWORK_DISCOVERY:
+          status = 500;
+          break;
         default:
           code = ErrorCodes.ERR_INTERNAL_SERVER_ERROR;
           message = 'Internal Server Error';
@@ -56,7 +59,7 @@ const errorHandler = (res, error, errorMessagePrefix = '') => {
     }*/
   }
 
-  logger.error('[' + errorMessagePrefix + '] ' + error.message);
+  logger.error(((errorMessagePrefix) ? '[' + errorMessagePrefix + '] ' : '') + error.message);
   res.status(status).json({status: status, code: code, message: message});
 };
 

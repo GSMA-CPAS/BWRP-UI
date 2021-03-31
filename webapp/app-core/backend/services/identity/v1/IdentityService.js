@@ -17,7 +17,7 @@ class IdentityService extends AbstractService {
         const result = await this.getBackendAdapter('identity').getIdentities();
         res.json(result);
       } catch (error) {
-        this.handleError(res, error, 'GET /');
+        this.handleError(res, error);
       }
     });
 
@@ -34,7 +34,7 @@ class IdentityService extends AbstractService {
         identity['certificate'] = certificate;
         res.json(identity);
       } catch (error) {
-        this.handleError(res, error, 'GET /:id');
+        this.handleError(res, error);
       }
     });
 
@@ -43,22 +43,22 @@ class IdentityService extends AbstractService {
       if (!identityName) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_MISSING_PARAMETER,
-          message: 'Missing parameter: name',
-        })), 'POST /');
+          message: 'Missing parameter: name'
+        })));
       }
       if (identityName === this.getBackendAdapter('certAuth').getAdminEnrollmentId()) {
         return this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_VALIDATION,
-          message: identityName + ' is reserved for admin identity',
-        })), 'POST /');
+          message: identityName + ' is reserved for admin identity'
+        })));
       }
       let createdIdentityResult;
       try {
         if (await this.getBackendAdapter('identity').existsIdentity(identityName)) {
           return this.handleError(res, new Error(JSON.stringify({
             code: ErrorCodes.ERR_DUPLICATE_ENTRY,
-            message: 'Identity already exists',
-          })), 'POST /');
+            message: 'Identity already exists'
+          })));
         } else {
           createdIdentityResult = await this.getBackendAdapter('identity').createIdentity(req.body);
           const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
@@ -74,7 +74,7 @@ class IdentityService extends AbstractService {
         if (createdIdentityResult && createdIdentityResult.insertId > 0) {
           await this.getBackendAdapter('identity').deleteIdentity(createdIdentityResult.insertId);
         }
-        this.handleError(res, error, 'POST /');
+        this.handleError(res, error);
       }
     });
 
@@ -85,7 +85,7 @@ class IdentityService extends AbstractService {
         await this.getBackendAdapter('identity').deleteIdentity(req.params.id);
         res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'DELETE /:id');
+        this.handleError(res, error);
       }
     });
 
@@ -96,7 +96,7 @@ class IdentityService extends AbstractService {
         await this.getBackendAdapter('wallet').putIdentity(identity.name, newIdentity);
         return res.json({success: true});
       } catch (error) {
-        this.handleError(res, error, 'POST /:id/renew');
+        this.handleError(res, error);
       }
     });
   }

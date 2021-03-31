@@ -20,8 +20,26 @@
     "timeout": 1800000,
     "checkExpirationInterval": 3600000,
     "cookie": {
-      "secure": true
+      "secure": true,
+      "httpOnly": true,
+      "sameSite": "strict"
     }
+  },
+
+  "csrfProtection": {
+    "enabled": false,
+    "cookie": {
+      "secure": true,
+      "httpOnly": true,
+      "sameSite": "strict"
+    }
+  },
+
+  "cspDirectives": {
+    "defaultSrc": ["'self'"],
+    "styleSrc": ["'self'", "'unsafe-inline'"],
+    "imgSrc": ["'self'", "data:"],
+    "childSrc": ["'self'", "blob:"]
   },
 
   "database": {
@@ -43,7 +61,6 @@
       "enabled": true,
       "classPath": "/login/v1/LoginService",
       "route": "/api/v1/auth",
-      "csrfProtectionEnabled": false,
       "maxLoginAttempts": 5,
       "rateLimit": {
         "enabled": true,
@@ -59,7 +76,6 @@
       "enabled": true,
       "classPath": "/users/v1/UserManagementService",
       "route": "/api/v1/users",
-      "csrfProtectionEnabled": false,
       "useBackendAdapters": [
         {"type": "userManagement", "name": "UserManagementAdapter"}
       ]
@@ -68,7 +84,6 @@
       "enabled": true,
       "classPath": "/identity/v1/IdentityService",
       "route": "/api/v1/identities",
-      "csrfProtectionEnabled": false,
       "useBackendAdapters": [
         {"type": "wallet", "name": "WalletAdapter"},
         {"type": "certAuth", "name": "CertAuthAdapter"},
@@ -78,14 +93,12 @@
     "AppService": {
       "enabled": true,
       "classPath": "/apps/v1/AppService",
-      "route": "/api/v1/apps",
-      "csrfProtectionEnabled": false
+      "route": "/api/v1/apps"
     },
     "BlockchainService": {
       "enabled": false,
       "classPath": "/blockchain/v1/BlockchainService",
       "route": "/api/v1/blockchain",
-      "csrfProtectionEnabled": false,
       "useBackendAdapters": [
         {"type": "blockchain", "name": "BlockchainAdapter"},
         {"type": "localStorage", "name": "LocalStorageAdapter"},
@@ -97,7 +110,6 @@
       "enabled": true,
       "classPath": "/common/v1/CommonService",
       "route": "/api/v1/common",
-      "csrfProtectionEnabled": false,
       "useBackendAdapters": [
         {"type": "user", "name": "UserManagementAdapter"},
         {"type": "wallet", "name": "WalletAdapter"},
@@ -107,8 +119,7 @@
     "ProxyService": {
       "enabled": false,
       "classPath": "/proxy/v1/ProxyService",
-      "route": "/proxy",
-      "csrfProtectionEnabled": false
+      "route": "/proxy"
     },
     "SwaggerService": {
       "enabled": false,

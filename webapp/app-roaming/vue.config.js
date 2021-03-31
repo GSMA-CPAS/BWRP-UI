@@ -1,8 +1,13 @@
 const fs = require('fs');
 const webpack = require('webpack');
+const path = require('path');
 const packageJson = fs.readFileSync('./package.json');
 const version = JSON.parse(packageJson).version || 0;
 const name = JSON.parse(packageJson).name || 'undefined';
+function resolve(dir) {
+  console.log(__dirname, dir);
+  return path.resolve(__dirname, dir);
+}
 
 module.exports = {
   configureWebpack: {
@@ -13,6 +18,12 @@ module.exports = {
         },
       }),
     ],
+    resolve: {
+      /* add aliases here, also edit jsconfig for intellisense in VSCode */
+      alias: {
+        '@validation': resolve('./src/utils/validation')
+      }
+    },
   },
   transpileDependencies: ['vuetify'],
 
@@ -28,7 +39,6 @@ module.exports = {
       },
     },
   },
-
   publicPath:
     process.env.NODE_ENV === 'production' ? '/app/' + name + '/' : '/',
 };

@@ -6,6 +6,7 @@
           v-model="selectedConditionName"
           :items="conditions"
           placeholder="Select Condition"
+          :error-messages="conditionNameError"
         />
       </v-col>
     </v-row>
@@ -18,6 +19,8 @@
   </div>
 </template>
 <script>
+import ConditionFormValidations from '@validation/ConditionForm';
+import {mapMutations} from 'vuex';
 export default {
   name: 'condition-picker',
   description: 'description',
@@ -25,7 +28,8 @@ export default {
     return {selectedConditionName: null, selectedCondition: null};
   },
   components: {},
-  props: ['service', 'value', 'defaultCurrency'],
+  ...ConditionFormValidations,
+  props: ['from', 'service', 'value', 'defaultCurrency'],
   watch: {
     selectedCondition: {
       handler() {
@@ -35,12 +39,26 @@ export default {
     },
     selectedConditionName: {
       handler() {
+        this.updateValidation({
+          key: `conditionName${this.from}`,
+          isInvalid: this.$v.$invalid,
+        });
         this.$emit('input', this.$data);
       },
       deep: true,
     },
   },
+  methods: {
+    ...mapMutations('document/new', ['addValidation', 'updateValidation']),
+  },
   computed: {
+    conditionNameError() {
+      const errors = [];
+      if (!this.$v.selectedConditionName.$dirty) return errors;
+      !this.$v.selectedConditionName.required &&
+        errors.push(`Condition name is required`);
+      return errors;
+    },
     condition() {
       let path = null;
       switch (this.selectedConditionName) {
@@ -70,6 +88,14 @@ export default {
     },
   },
   mounted() {
+    this.addValidation({
+      key: `conditionName${this.from}`,
+      step: 'Discount Models',
+      from: this.from,
+      isInvalid: this.$v.$invalid,
+      message: `Condition name is missing`,
+      validate: this.$v.$touch,
+    });
     if (this.value) {
       this.selectedConditionName = this.value.selectedConditionName;
       this.selectedCondition = this.value.selectedCondition;

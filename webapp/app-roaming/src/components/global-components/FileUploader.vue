@@ -2,7 +2,7 @@
   <VueFileAgent
     v-model="fileRecords"
     style="width: 100%"
-    @beforedelete="fileRecords = []"
+    @beforedelete="$emit('on-delete')"
     v-bind="$props"
     :accept="fileTypes"
     :errorText="{

@@ -67,7 +67,6 @@ const timelineMixin = {
   mixins: [utilsMixin],
   methods: {
     ...mapActions('document/new', ['startContract']),
-    ...mapActions('partners', ['loadPartners']),
     ...mapActions('document', ['loadData', 'signDocument']),
     ...mapActions('usage', ['uploadUsage', 'sendUsage']),
     ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'declineDiscrepancies']),
@@ -84,7 +83,6 @@ const timelineMixin = {
       return {'ma-5': true};
     },
     ...mapState('user', ['identities']),
-    ...mapState('app-state', ['signing']),
     ...mapState('document', {
       referenceId: (state) => state.document.referenceId,
       blockchainTxId: (state) => state.document.blockchainRef.txId,
@@ -111,7 +109,6 @@ const timelineMixin = {
       'parties',
       'contractId',
       'creationDate',
-      'isSigned',
       'totalSignatures',
       'partnerMsp',
       'selfMsp',
@@ -153,12 +150,6 @@ const validationMixin = {
         !this.$v[field].email &&
         errors.push(`${this._.startCase(field)} is an invalid email`);
       return errors;
-    },
-    inputListeners(field) {
-      return {
-        // blur: () => this.$v[field].$touch(),
-        input: () => this.$v[field].$touch(),
-      };
     },
   },
   computed: {

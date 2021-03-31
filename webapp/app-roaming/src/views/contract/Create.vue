@@ -4,6 +4,7 @@
 <script>
 import {PATHS} from '@/utils/Enums';
 import Stepper from '@/components/pages/create-contract/Stepper.vue';
+import {mapActions} from 'vuex';
 export default {
   name: 'create-page',
   text: 'New',
@@ -11,6 +12,15 @@ export default {
   path: PATHS.createContract,
   components: {
     Stepper,
+  },
+  methods: {
+    ...mapActions('workspace-config/tadig-codes', ['loadCodes']),
+    ...mapActions('workspace-config/tadig-groups', ['loadGroups']),
+  },
+  beforeMount() {
+    // load required data
+    this.loadCodes();
+    this.loadGroups();
   },
 };
 </script>

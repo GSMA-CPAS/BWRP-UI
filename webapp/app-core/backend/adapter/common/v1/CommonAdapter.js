@@ -5,7 +5,7 @@ const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
 const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 
 class CommonAdapter extends AbstractAdapter {
    constructor(adapterName, adapterConfig, database) {
@@ -25,8 +25,7 @@ class CommonAdapter extends AbstractAdapter {
    getTadigCodes(body) {
       const tadigCodes = [];
       for (const [key] of Object.entries(body.framework.partyInformation)) {
-         const defaultTadigCodes =
-            body.framework.partyInformation[key].defaultTadigCodes;
+         const defaultTadigCodes = body.framework.partyInformation[key].defaultTadigCodes;
          if (defaultTadigCodes) {
             for (const code of defaultTadigCodes) {
                if (!tadigCodes.includes(code)) {
@@ -72,22 +71,16 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
-   // currently passing self mspid for some Payload convertion. Require some cleanup.
-   async getContractById(contractId, selfMSP) {
+   async getContractById(contractId) {
       try {
-         const item = await got(
-            this.adapterConfig.url + '/api/v1/contracts/' + contractId,
-         ).json();
-         this.getLogger().debug(
-            '[CommonAdapter::getContractById] get contract: - %s',
-            JSON.stringify(item),
-         );
+         const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId).json();
+         this.getLogger().debug('[CommonAdapter::getContractById] get contract: - %s', JSON.stringify(item));
 
          // to be removed if not required.
-         let fromSk = '';
+         /* let fromSk = '';
          let toSk = '';
          for (const msp in item.header.msps) {
-            if (msp === selfMSP) {
+            if (msp === this.mspid) {
                fromSk = crypto
                   .createHash('sha256')
                   .update(msp + item.referenceId)
@@ -100,7 +93,7 @@ class CommonAdapter extends AbstractAdapter {
                   .digest('hex')
                   .toString('utf8');
             }
-         }
+         }*/
 
          // convert header
          const header = {
@@ -109,8 +102,7 @@ class CommonAdapter extends AbstractAdapter {
             version: item.header.version,
             msps: item.header.msps,
          };
-         // header.msps[item.header.fromMsp.mspId] = {minSignatures: item.header.fromMsp.signatures.length};
-         // header.msps[item.header.toMsp.mspId] = {minSignatures: item.header.toMsp.signatures.length};
+
          return {
             contractId: item.contractId,
             blockchainRef: item.blockchainRef,
@@ -119,38 +111,21 @@ class CommonAdapter extends AbstractAdapter {
             data: JSON.stringify({body: item.body, header: header}),
             state: 'sent',
             creationDate: item.creationDate,
-            lastModificationDate: item.lastModificationDate,
-            fromStorageKey: fromSk,
-            toStorageKey: toSk,
+            lastModificationDate: item.lastModificationDate
          };
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getContractById] failed to get contract - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::getContractById] failed to get contract - %s', error.message);
          throw error;
       }
    }
 
    async getRawContractById(contractId) {
       try {
-         const item = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/?format=RAW',
-         ).json();
-         // item.data = item.raw;
-         this.getLogger().debug(
-            '[CommonAdapter::getContractById] get contract in RAW: - %s',
-            JSON.stringify(item),
-         );
+         const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/?format=RAW').json();
+         this.getLogger().debug('[CommonAdapter::getContractById] get contract in RAW: - %s', JSON.stringify(item));
          return item;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getContracts] failed to get contracts - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::getContracts] failed to get contracts - %s', error.message);
          throw error;
       }
    }
@@ -275,35 +250,18 @@ class CommonAdapter extends AbstractAdapter {
          );
          return lists;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getUsages] failed to getUsages of contractId:' +
-               contractId +
-               ' - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::getUsages] failed to getUsages of contractId:' + contractId + ' - %s', error.message);
          throw error;
       }
    }
 
    async getUsagesById(contractId, usageId) {
       try {
-         const item = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/' +
-               usageId,
-         ).json();
-         this.getLogger().debug(
-            '[CommonAdapter::getUsagesById] get usages by Id: - %s',
-            JSON.stringify(item),
-         );
+         const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId).json();
+         this.getLogger().debug('[CommonAdapter::getUsagesById] get usages by Id: - %s', JSON.stringify(item));
          return item;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getUsagesById] failed to get usages by Id - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::getUsagesById] failed to get usages by Id - %s', error.message);
          throw error;
       }
    }
@@ -338,79 +296,49 @@ class CommonAdapter extends AbstractAdapter {
 
    async createUsage(contractId, data) {
       try {
-         const response = await got.post(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/',
+         const response = await got.post(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/',
             {
                json: data,
                responseType: 'json',
             },
          );
 
-         this.getLogger().debug(
-            '[CommonAdapter::createUsage] create new Usage: - %s',
-            JSON.stringify(response.body),
-         );
+         this.getLogger().debug('[CommonAdapter::createUsage] create new Usage: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::createUsage] failed to create usage - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::createUsage] failed to create usage - %s', error.message);
          throw error;
       }
    }
 
    async updateUsage(contractId, usageId, data) {
       try {
-         const response = await got.put(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/' +
-               usageId,
+         const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId,
             {
                json: data,
                responseType: 'json',
             },
          );
 
-         this.getLogger().debug(
-            '[CommonAdapter::updateUsage] update Usage: - %s',
-            JSON.stringify(response.body),
-         );
+         this.getLogger().debug('[CommonAdapter::updateUsage] update Usage: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::updateUsage] failed to update usage - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::updateUsage] failed to update usage - %s', error.message);
          throw error;
       }
    }
 
    async deleteUsage(contractId, usageId) {
       try {
-         const response = await got.delete(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/' +
-               usageId,
-            {responseType: 'json'},
+         const response = await got.delete(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId,
+            {
+               responseType: 'json'
+            },
          );
-         this.getLogger().debug(
-            '[CommonAdapter::deleteUsage] delete usage: - %s',
-            JSON.stringify(response.body),
-         );
+         this.getLogger().debug('[CommonAdapter::deleteUsage] delete usage: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::deleteUsage] failed to delete usage - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::deleteUsage] failed to delete usage - %s', error.message);
          throw error;
       }
    }
@@ -442,74 +370,38 @@ class CommonAdapter extends AbstractAdapter {
 
    async generateSettlementsById(contractId, usageId) {
       try {
-         const response = await got.put(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/usages/' +
-               usageId +
-               '/generate/',
-            {responseType: 'json'},
+         const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/generate/',
+            {
+               responseType: 'json'
+            },
          );
-         this.getLogger().debug(
-            '[CommonAdapter::createContract] generate settlement: - %s',
-            JSON.stringify(response.body),
-         );
+         this.getLogger().debug('[CommonAdapter::createContract] generate settlement: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::createContract] failed to generate settlement - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::createContract] failed to generate settlement - %s', error.message);
          throw error;
       }
    }
 
    async getSettlements(contractId) {
       try {
-         const lists = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/settlements/',
+         const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/',
          ).json();
-         this.getLogger().debug(
-            '[CommonAdapter::getSettlements] get all Settlements of contractId-' +
-               contractId +
-               ': - %s',
-            JSON.stringify(lists),
-         );
+         this.getLogger().debug('[CommonAdapter::getSettlements] get all Settlements of contractId-' + contractId + ': - %s', JSON.stringify(lists));
          return lists;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getSettlements] failed to getSettlements of contractId:' +
-               contractId +
-               ' - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::getSettlements] failed to getSettlements of contractId:' + contractId + ' - %s', error.message);
          throw error;
       }
    }
 
    async getSettlementsById(contractId, settlementId) {
       try {
-         const item = await got(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/settlements/' +
-               settlementId,
-         ).json();
-         this.getLogger().debug(
-            '[CommonAdapter::getSettlementsById] get settlements by Id: - %s',
-            JSON.stringify(item),
-         );
+         const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/' + settlementId).json();
+         this.getLogger().debug('[CommonAdapter::getSettlementsById] get settlements by Id: - %s', JSON.stringify(item));
          return item;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::getSettlementsById] failed to get settlements - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::getSettlementsById] failed to get settlements - %s', error.message);
          throw error;
       }
    }
@@ -540,25 +432,15 @@ class CommonAdapter extends AbstractAdapter {
 
    async sendSettlementsById(contractId, settlementId) {
       try {
-         const response = await got.put(
-            this.adapterConfig.url +
-               '/api/v1/contracts/' +
-               contractId +
-               '/settlements/' +
-               settlementId +
-               '/send/',
-            {responseType: 'json'},
+         const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/' + settlementId + '/send/',
+            {
+               responseType: 'json'
+            },
          );
-         this.getLogger().debug(
-            '[CommonAdapter::createContract] create new contract: - %s',
-            JSON.stringify(response.body),
-         );
+         this.getLogger().debug('[CommonAdapter::createContract] create new contract: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::createContract] failed to create contract - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::createContract] failed to create contract - %s', error.message);
          throw error;
       }
    }
@@ -567,20 +449,13 @@ class CommonAdapter extends AbstractAdapter {
       try {
          let response;
          if (msp) {
-            response = await got(
-               this.adapterConfig.url + '/api/v1/discovery/msps/' + msp,
-            );
+            response = await got(this.adapterConfig.url + '/api/v1/discovery/msps/' + msp);
          } else {
-            response = await got(
-               this.adapterConfig.url + '/api/v1/discovery/msps',
-            );
+            response = await got(this.adapterConfig.url + '/api/v1/discovery/msps');
          }
          return response.body;
       } catch (error) {
-         this.getLogger().error(
-            '[CommonAdapter::discovery] failed to discover msp - %s',
-            error.message,
-         );
+         this.getLogger().error('[CommonAdapter::discovery] failed to discover msp - %s', error.message);
          throw error;
       }
    }

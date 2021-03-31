@@ -6,6 +6,8 @@
 <script>
 
 export default {
+  name: 'NotFound',
+  title: 'Not Found 404',
   data: () => ({}),
 };
 

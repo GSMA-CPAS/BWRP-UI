@@ -49,6 +49,7 @@ import Layout from '@/components/layouts/LayoutAccount';
 export default {
 
   name: 'Security',
+  title: 'Security',
 
   data: () => ({
     loading: true,

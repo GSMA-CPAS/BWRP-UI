@@ -57,6 +57,7 @@ const SERVICE_ORDER = [
 export default new Vuex.Store({
   state: {
     documents: [],
+    partners: [],
     serviceConfiguration: SERVICE_CONFIGURATION,
     services: SERVICE_ORDER,
   },
@@ -64,28 +65,36 @@ export default new Vuex.Store({
     LOAD_DOCUMENTS: (state, documents) => {
       state.documents = documents;
     },
+    SET_PARTNERS: (state, partners) => {
+      state.partners = partners;
+    },
   },
   actions: {
     setup({commit, dispatch, rootGetters, getters, rootState, state}) {
+      const csrfToken = parent?.document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
       for (const key in Vue.axios) {
         if (Object.hasOwnProperty.call(Vue.axios, key)) {
+          if (csrfToken) {
+            Vue.axios[key].defaults.headers.common['X-CSRF-Token'] = csrfToken;
+          }
           const {request, response} = Vue.axios[key].interceptors;
           request.use(
             (config) => {
-              const {method, baseURL, url, signing} = config;
+              const {method, baseURL, url, loadingSpinner} = config;
               console.log(
                 `%c Made ${method} request to ${baseURL + url}`,
                 'color:green; font-weight:800',
               );
-              signing
-                ? dispatch('app-state/signing', true)
+
+              loadingSpinner
+                ? dispatch('app-state/loadingSpinner', true)
                 : dispatch('app-state/loading', true);
               return config;
             },
             (error) => {
               dispatch('app-state/loadError', {
                 title: error.statusText,
-                body: `Status code ${error.status}`,
+                code: `Status code ${error.status}`,
               });
               return Promise.reject(error);
             },
@@ -93,6 +102,7 @@ export default new Vuex.Store({
           response.use(
             (response) => {
               dispatch('app-state/loading', false);
+              dispatch('app-state/loadingSpinner', false);
               try {
                 return JSON.parse(response.data);
               } catch {
@@ -103,10 +113,20 @@ export default new Vuex.Store({
               if (error.response?.status === 401) {
                 parent.postMessage('unauthorized', '*');
               }
+              let errorMessage =
+                'The application has encountered an unknown error';
+              if (error.response?.data) {
+                errorMessage = error.response.data.message;
+              } else {
+                if (error.message) {
+                  errorMessage = error.message;
+                }
+              }
               dispatch('app-state/loadError', {
-                title: error.response.statusText,
-                body: `Status code ${error.response.status}|message ${error.response.data.message}`,
+                title: 'Oops! Something went wrong!',
+                code: errorMessage,
               });
+              dispatch('app-state/loadingSpinner', false);
               return Promise.reject(error);
             },
           );
@@ -116,7 +136,14 @@ export default new Vuex.Store({
       dispatch('user/initializeUser');
       dispatch('loadDocuments');
     },
-    async loadDocuments({commit, dispatch, rootGetters, getters, rootState, state}) {
+    async loadDocuments({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
       await Vue.axios.commonAdapter
         .get('/documents', {withCredentials: true})
         .then((res) => {
@@ -125,6 +152,33 @@ export default new Vuex.Store({
         .catch((err) => {
           console.log(err);
         });
+    },
+    async loadPartners({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
+      if (state.partners.length === 0) {
+        await Vue.axios.commonAdapter
+          .get('/discovery/msps', {withCredentials: true, loadingSpinner: true})
+          .then((data) => {
+            const parsedData = data;
+            const affiliatedOrganization =
+              rootGetters['user/organizationMSPID'];
+            const exclude = ['OrdererMSP', 'GSMA', affiliatedOrganization];
+
+            const partners = Vue.lodash.difference(parsedData, exclude);
+
+            commit('SET_PARTNERS', partners);
+          })
+          .catch(function(error) {
+            // TODO: handle error
+            console.log(error);
+          });
+      }
     },
   },
   modules: allModules,

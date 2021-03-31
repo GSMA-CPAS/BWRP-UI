@@ -36,6 +36,7 @@ import {validationRules} from '@/utils/ValidationRules';
 export default {
 
   name: 'ChangePassword',
+  title: 'Change Password',
 
   data: () => ({
     loading: false,

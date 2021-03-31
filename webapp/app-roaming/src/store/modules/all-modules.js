@@ -1,6 +1,5 @@
 /* eslint-disable quote-props */
 /* eslint-disable no-unused-vars */
-import partnersModule from './partners';
 import documentModule from './document';
 import userModule from './user';
 import appStateModule from './app-states';
@@ -14,7 +13,6 @@ const allModules = {
   'app-state': appStateModule,
   usage: usageModule,
   settlement: settlementModule,
-  partners: partnersModule,
   user: userModule,
   'app-details': appDetailsModule,
   'workspace-config': workspaceModule,

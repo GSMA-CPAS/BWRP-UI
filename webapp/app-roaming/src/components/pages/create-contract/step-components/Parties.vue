@@ -1,5 +1,5 @@
 <template>
-  <fragment>
+  <div>
     <row
       type="secondary"
       :label="label"
@@ -11,7 +11,7 @@
       <v-divider class="ml-1" vertical />
       <row type="primary" :label="msps.partner" />
     </v-row>
-  </fragment>
+  </div>
 </template>
 <script>
 import {mapGetters} from 'vuex';

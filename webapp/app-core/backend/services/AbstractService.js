@@ -97,9 +97,9 @@ class AbstractService {
     return this.constructor.name;
   }
 
-  handleError(res, error, errorMessagePrefix = '') {
-    if (errorMessagePrefix) {
-      errorHandler(res, error, this.getClassName() + ' ' + errorMessagePrefix);
+  handleError(res, error) {
+    if (res && res.req) {
+      errorHandler(res, error, this.getClassName() + ' ' + res.req.method + ' ' + res.req.originalUrl);
     } else {
       errorHandler(res, error, this.getClassName());
     }

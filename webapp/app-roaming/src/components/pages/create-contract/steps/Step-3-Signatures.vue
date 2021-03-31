@@ -1,16 +1,14 @@
 <template>
-  <fragment>
-    <form-container>
-      <parties label="Signatures" />
-      <v-row>
-        <signature-form-v2 v-model="userSignatures" />
-        <!-- <signature-form :ref="msps.user" v-model="userSignatures" /> -->
-        <v-divider vertical />
-        <signature-form-v2 v-model="partnerSignatures" />
-        <!-- <signature-form :ref="msps.partner" v-model="partnerSignatures" /> -->
-      </v-row>
-    </form-container>
-  </fragment>
+  <form-container>
+    <parties label="Signatures" />
+    <v-row>
+      <signature-form-v2 v-model="userSignatures" />
+      <!-- <signature-form :ref="msps.user" v-model="userSignatures" /> -->
+      <v-divider vertical />
+      <signature-form-v2 v-model="partnerSignatures" />
+      <!-- <signature-form :ref="msps.partner" v-model="partnerSignatures" /> -->
+    </v-row>
+  </form-container>
 </template>
 <script>
 import Parties from '../step-components/Parties.vue';

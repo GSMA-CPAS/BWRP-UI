@@ -4,7 +4,7 @@ const appStateModule = {
     isLoading: false,
     errorResponse: null,
     showError: false,
-    signing: false,
+    loadingSpinner: false,
   }),
   mutations: {
     SET_ERROR: (state, error) => {
@@ -16,8 +16,8 @@ const appStateModule = {
     SET_LOADING(state, isLoading) {
       state.isLoading = isLoading;
     },
-    SET_SIGNING: (state, signing) => {
-      state.signing = signing;
+    SET_LOADING_SPINNER: (state, loadingSpinner) => {
+      state.loadingSpinner = loadingSpinner;
     },
     SET_OVERLAY: (state, showOverlay) => {
       state.showOverlay = showOverlay;
@@ -38,8 +38,8 @@ const appStateModule = {
     setOverlay({commit}, showOverlay) {
       commit('SET_OVERLAY', showOverlay);
     },
-    signing({commit}, signing) {
-      commit('SET_SIGNING', signing);
+    loadingSpinner({commit}, loadingSpinner) {
+      commit('SET_LOADING_SPINNER', loadingSpinner);
     },
   },
   getters: {},

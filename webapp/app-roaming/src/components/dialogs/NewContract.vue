@@ -1,21 +1,32 @@
 <template>
-  <app-dialog title="NEW CONTRACT" label="create contract">
+  <app-dialog
+    @on-open="loadPartners"
+    title="NEW CONTRACT"
+    label="create contract"
+  >
     <template #content>
-      <v-row>
-        <v-select
-          v-model="partner"
-          filled
-          label="Select Business Partner"
-          :items="list"
-        />
-      </v-row>
-      <v-row>
-        <file-uploader
-          ref="file-uploader"
-          @file-upload="saveFile"
-          file-types=".json"
-        />
-      </v-row>
+      <loading-spinner :isLoading="loadingSpinner" />
+      <div v-show="!loadingSpinner">
+        <v-row>
+          <v-select
+            v-model="partner"
+            filled
+            label="Select Business Partner"
+            :items="partners"
+          />
+        </v-row>
+        <v-row>
+          <file-uploader
+            ref="file-uploader"
+            @on-delete="
+              $refs['file-uploader'].fileRecords = [];
+              fileAsJSON = null;
+            "
+            @file-upload="saveFile"
+            file-types=".json"
+          />
+        </v-row>
+      </div>
     </template>
     <template #actions="{cancel}">
       <app-button
@@ -29,7 +40,7 @@
       />
       <app-button
         :disabled="partnerSelected"
-        label="Confirm"
+        label="Ok"
         @button-pressed="confirm"
       />
     </template>
@@ -39,12 +50,18 @@
 import {dataMixin} from '@/utils/mixins/handle-data';
 import {PATHS} from '@/utils/Enums';
 import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {mapState} from 'vuex';
+import LoadingSpinner from '../other/LoadingSpinner.vue';
+import {mapActions} from 'vuex';
 
 export default {
+  components: {LoadingSpinner},
   name: 'create-contract',
   description: 'This is the dialog view when creating a new contract.',
   data: () => ({partner: null, fileAsJSON: null}),
   computed: {
+    ...mapState('app-state', ['loadingSpinner']),
+    ...mapState(['partners']),
     partnerSelected() {
       return this.partner === null;
     },
@@ -54,6 +71,7 @@ export default {
   },
   mixins: [dataMixin, timelineMixin],
   methods: {
+    ...mapActions(['loadPartners']),
     confirm() {
       this.startContract({
         partner: this.partner,
@@ -69,9 +87,6 @@ export default {
         this.fileAsJSON = result;
       };
     },
-  },
-  created() {
-    this.loadPartners();
   },
 };
 </script>

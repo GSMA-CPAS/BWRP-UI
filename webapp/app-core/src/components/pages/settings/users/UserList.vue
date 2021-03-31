@@ -41,6 +41,7 @@ import Layout from '@/components/layouts/LayoutSettings';
 export default {
 
   name: 'UserList',
+  title: 'Users',
 
   data: () => ({
     loading: true,

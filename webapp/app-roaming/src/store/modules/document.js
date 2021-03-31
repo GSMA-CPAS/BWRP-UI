@@ -12,7 +12,6 @@ const documentModule = {
       state.rawData = rawData;
     },
     UPDATE_DOCUMENT: (state, document) => {
-      log(document);
       state.document = document;
     },
     UPDATE_SIGNATURES: (state, signatures) => {
@@ -20,23 +19,23 @@ const documentModule = {
     },
   },
   actions: {
-    async signDocument({commit, dispatch, rootGetters, getters, rootState, state}, identity) {
+    async signDocument(
+      {commit, dispatch, rootGetters, getters, rootState, state},
+      identity,
+    ) {
       Vue.axios.commonAdapter
         .put(
-          // `/signatures/` + state.document.documentId,
           `/signatures/` + state.document.contractId,
-          {'identity': identity},
+          {identity: identity},
           {
-            signing: true,
+            loadingSpinner: true,
             withCredentials: true,
           },
         )
         .then((res) => {
-          dispatch('app-state/signing', false, {root: true});
           dispatch('getSignatures', state.document.contractId);
         })
         .catch((err) => {
-          dispatch('app-state/signing', false, {root: true});
           log(err);
         });
     },
@@ -121,17 +120,20 @@ const documentModule = {
     minSignaturesPartner: (state, getters) => {
       return state.document?.header.msps[getters.partnerMsp].minSignatures;
     },
+    signedBySelf: (state, getters) => {
+      const {selfMsp, totalSignatures, minSignaturesSelf} = getters;
+      const isSigned = minSignaturesSelf <= totalSignatures[selfMsp];
+      return isSigned;
+    },
     isSigned: (state, getters) => {
       const {
-        selfMsp,
         totalSignatures,
         partnerMsp,
-        minSignaturesSelf,
         minSignaturesPartner,
+        signedBySelf,
       } = getters;
       const isSigned =
-        minSignaturesSelf <= totalSignatures[selfMsp] &&
-        minSignaturesPartner <= totalSignatures[partnerMsp];
+        signedBySelf && minSignaturesPartner <= totalSignatures[partnerMsp];
       return isSigned;
     },
     totalSignatures: (state, getters) => {

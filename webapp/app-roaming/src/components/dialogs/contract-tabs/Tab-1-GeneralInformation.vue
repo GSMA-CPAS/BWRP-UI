@@ -1,5 +1,5 @@
 <template>
-  <fragment class="text-center">
+  <div>
     <v-row>
       <v-col>
         <row no-divider label="Name">{{
@@ -60,23 +60,23 @@
     <parties-header />
     <row label="Currency for all discounts">
       <v-col>
-        {{ documentData.framework.partyInformation[selfMsp].contractCurrency }}
+        {{
+          documentData.framework.partyInformation[selfMsp].contractCurrency
+            | isNil
+        }}
       </v-col>
       <v-divider vertical />
       <v-col>
         {{
           documentData.framework.partyInformation[partnerMsp].contractCurrency
+            | isNil
         }}
       </v-col>
     </row>
     <row label="TADIG Codes">
       <v-col>
         <div>
-          {{
-            documentData.framework.partyInformation[
-              selfMsp
-            ].defaultTadigCodes.join(', ')
-          }}
+          {{ tadigCodesSelf | isNil }}
         </div>
         <template
           v-if="
@@ -89,13 +89,9 @@
         </template>
       </v-col>
       <v-divider vertical />
-      <v-col>
+      <v-col v-if="documentData.framework.partyInformation">
         <div>
-          {{
-            documentData.framework.partyInformation[
-              partnerMsp
-            ].defaultTadigCodes.join(', ')
-          }}
+          {{ tadigCodesPartner | isNil }}
         </div>
         <template
           v-if="
@@ -111,17 +107,17 @@
     <row label="Required Signatures (minimum)">
       <v-col>
         <div>
-          {{ headerData.msps[selfMsp].minSignatures }}
+          {{ headerData.msps[selfMsp].minSignatures | isNil }}
         </div>
       </v-col>
       <v-divider vertical />
       <v-col>
         <div>
-          {{ headerData.msps[partnerMsp].minSignatures }}
+          {{ headerData.msps[partnerMsp].minSignatures | isNil }}
         </div>
       </v-col>
     </row>
-  </fragment>
+  </div>
 </template>
 <script>
 import HelpTooltip from '@/components/other/HelpTooltip.vue';
@@ -137,5 +133,21 @@ export default {
     PartiesHeader,
   },
   mixins: [timelineMixin],
+  computed: {
+    tadigCodesSelf() {
+      const tadigCodesSelf = this.documentData.framework.partyInformation[
+        this.selfMsp
+      ].defaultTadigCodes;
+      return tadigCodesSelf instanceof Array ? tadigCodesSelf.join(', ') : null;
+    },
+    tadigCodesPartner() {
+      const tadigCodesPartner = this.documentData.framework.partyInformation[
+        this.partnerMsp
+      ].defaultTadigCodes;
+      return tadigCodesPartner instanceof Array
+        ? tadigCodesPartner.join(', ')
+        : null;
+    },
+  },
 };
 </script>
