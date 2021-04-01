@@ -11,10 +11,10 @@
   "dependencies": {
     "@mdi/font": "^5.9.55",
     "axios": "^0.21.1",
-    "fast-csv": "^4.3.6",
     "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^0.7.0",
     "chartjs-plugin-labels": "^1.1.0",
+    "fast-csv": "^4.3.6",
     "material-design-icons-iconfont": "^5.0.1",
     "moment": "^2.29.1",
     "v-currency-field": "^3.1.1",

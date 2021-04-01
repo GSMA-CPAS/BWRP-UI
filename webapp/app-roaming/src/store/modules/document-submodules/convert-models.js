@@ -1,20 +1,13 @@
-// function convertUiSignaturesToJsonModel(uiSignatures) {
-//   return uiSignatures.map((x) => {
-//     return {name: x.name, role: x.role};
-//   });
-// }
-
 function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
   return {
     contractCurrency: uiPartyGeneralData.currencyForAllDiscounts,
     defaultTadigCodes: uiPartyGeneralData.tadigCodes.codes,
-    tadigGroups: {},
   };
 }
 
 function convertUiThresholdsToJsonModel(uiRateThresholds) {
   return {
-    start: uiRateThresholds.threshold.toString(),
+    start: uiRateThresholds.threshold,
     fixedPrice: uiRateThresholds.fixedPrice,
     linearPrice: uiRateThresholds.linearPrice,
   };
@@ -155,7 +148,6 @@ const convertModelsModule = {
 
       metadata: {
         name: uiModel.generalInformation.name,
-        type: uiModel.generalInformation.type,
         authors: uiModel.generalInformation.authors,
       },
 
@@ -168,36 +160,6 @@ const convertModelsModule = {
         payment: {
           taxesIncluded: uiModel.generalInformation.taxesIncluded,
         },
-        // signers: {
-        //   [userCode]: [
-        //     {
-        //       id: 'signature-0',
-        //       name: 'Hans',
-        //       role: 'Finance',
-        //     },
-        //     {
-        //       id: 'signature-0',
-        //       name: 'Hans',
-        //       role: 'Finance',
-        //     },
-        //   ],
-        //   // /* convertUiSignaturesToJsonModel( */ uiModel[userCode]
-        //   //   .signatures /* ) */,
-        //   [partnerCode]: [
-        //     {
-        //       id: 'signature-0',
-        //       name: 'Hans',
-        //       role: 'Finance',
-        //     },
-        //     {
-        //       id: 'signature-0',
-        //       name: 'Hans',
-        //       role: 'Finance',
-        //     },
-        //   ],
-        //   // /* convertUiSignaturesToJsonModel( */ uiModel[partnerCode]
-        //   //   .signatures /* ) */,
-        // },
         partyInformation: {
           [userCode]: convertUiPartyInformationToJsonModel(
             uiModel.generalInformation[userCode],
@@ -207,7 +169,6 @@ const convertModelsModule = {
           ),
         },
       },
-
       discounts: {
         [userCode]: convertUiDiscountsModelsToJsonModel(
           uiModel[userCode].discountModels,
