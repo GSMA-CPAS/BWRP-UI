@@ -8,6 +8,10 @@
     "build": "NODE_ENV=production vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "engines": {
+    "node": ">=10.0.0 <13.0.0",
+    "npm": ">=5.0.0 <7.0.0"
+  },
   "dependencies": {
     "@mdi/font": "^5.9.55",
     "axios": "^0.21.1",

@@ -8,6 +8,10 @@
     "build": "vue-cli-service build",
     "lint": "eslint ."
   },
+  "engines": {
+    "node": ">=10.0.0 <13.0.0",
+    "npm": ">=5.0.0 <7.0.0"
+  },
   "dependencies": {
     "@mdi/js": "4.9.95",
     "argon2": "0.27.0",
