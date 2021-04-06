@@ -109,7 +109,7 @@ const utilsMixin = {
         'Direction': 'direction',
         'Charges': 'charges'
       };
-      const csvHeaders=lines[0].split(/[,;]+/);
+      const csvHeaders=lines[0].replace('\r', '').split(/[,;]+/);
       for (let i=1; i<lines.length; i++) {
         const obj = {};
         const currentLine=lines[i].replace('\r', '').split(/[,;]+/);
