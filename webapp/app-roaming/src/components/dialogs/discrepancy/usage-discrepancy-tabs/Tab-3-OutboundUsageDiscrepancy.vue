@@ -20,10 +20,10 @@
             <td> {{item.VPMN}}</td>
             <td> {{item.yearMonth}}</td>
             <td> {{item.service}}</td>
-            <td> {{item.own_usage}}</td>
-            <td> {{item.partner_usage}}</td>
-            <td> {{item.delta_usage_abs}}</td>
-            <td> {{item.delta_usage_percent}}</td>
+            <td> {{item.own_usage.toFixed(2)}}</td>
+            <td> {{item.partner_usage.toFixed(2)}}</td>
+            <td> {{item.delta_usage_abs.toFixed(2)}}</td>
+            <td> {{item.delta_usage_percent.toFixed(2)}}</td>
           </tr>
         </template>
       </v-data-table>
@@ -43,14 +43,14 @@ export default {
   computed: {
     headers() {
       return [
-        {text: 'HPMN', value: 'HTMN'},
-        {text: 'VPMN', value: 'VPMN'},
-        {text: 'yearMonth', value: 'yearMonth'},
-        {text: 'Service', value: 'service'},
-        {text: 'Own usage', value: 'own_usage'},
-        {text: 'Partner usage', value: 'partner_usage'},
-        {text: 'Delta (abs)', value: 'delta_usage_abs'},
-        {text: 'Delta (%)', value: 'delta_usage_percent'},
+        {text: 'HPMN', value: 'HTMN', align: 'center'},
+        {text: 'VPMN', value: 'VPMN', align: 'center'},
+        {text: 'yearMonth', value: 'yearMonth', align: 'center'},
+        {text: 'Service', value: 'service', align: 'center'},
+        {text: 'Own usage', value: 'own_usage', align: 'center'},
+        {text: 'Partner usage', value: 'partner_usage', align: 'center'},
+        {text: 'Delta (abs)', value: 'delta_usage_abs', align: 'center'},
+        {text: 'Delta (%)', value: 'delta_usage_percent', align: 'center'},
       ];
     },
     items() {

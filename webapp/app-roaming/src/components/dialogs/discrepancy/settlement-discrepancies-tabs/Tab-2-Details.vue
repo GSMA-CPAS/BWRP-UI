@@ -19,13 +19,13 @@
           <tr :class=discrepanciesFlag(item,flagParam)>
             <td> {{item.service}}</td>
             <td> {{item.unit}}</td>
-            <td> {{item.own_usage}}</td>
-            <td> {{item.partner_usage}}</td>
-            <td> {{item.delta_usage_abs}}</td>
-            <td> {{item.delta_usage_percent}}</td>
-            <td> {{item.own_calculation}}</td>
-            <td> {{item.partner_calculation}}</td>
-            <td> {{item.delta_calculation_percent}}</td>
+            <td> {{item.own_usage.toFixed(2)}}</td>
+            <td> {{item.partner_usage.toFixed(2)}}</td>
+            <td> {{item.delta_usage_abs.toFixed(2)}}</td>
+            <td> {{item.delta_usage_percent.toFixed(2)}}</td>
+            <td> {{(item.own_calculation).toFixed(2)}}</td>
+            <td> {{(item.partner_calculation).toFixed(2)}}</td>
+            <td> {{(item.delta_calculation_percent).toFixed(2)}}</td>
           </tr>
         </template>
       </v-data-table>
@@ -50,15 +50,15 @@ export default {
   computed: {
     headers() {
       return [
-        {text: 'Service', value: 'service'},
-        {text: 'Unit', value: 'unit'},
-        {text: 'Own Usage', value: 'own_usage'},
-        {text: 'Partner Usage', value: 'partner_usage'},
-        {text: 'Delta (abs)', value: 'delta_usage_abs'},
-        {text: 'Delta (%)', value: 'delta_usage_percent'},
-        {text: 'Own Calculation', value: 'own_calculation'},
-        {text: 'Partner Calculation', value: 'partner_calculation'},
-        {text: 'Delta', value: 'delta_calculation_percent'},
+        {text: 'Service', value: 'service', align: 'center'},
+        {text: 'Unit', value: 'unit', align: 'center'},
+        {text: 'Own Usage', value: 'own_usage', align: 'center'},
+        {text: 'Partner Usage', value: 'partner_usage', align: 'center'},
+        {text: 'Delta (abs)', value: 'delta_usage_abs', align: 'center'},
+        {text: 'Delta (%)', value: 'delta_usage_percent', align: 'center'},
+        {text: 'Own Calculation', value: 'own_calculation', align: 'center'},
+        {text: 'Partner Calculation', value: 'partner_calculation', align: 'center'},
+        {text: 'Delta', value: 'delta_calculation_percent', align: 'center'},
       ];
     },
     items() {
