@@ -18,9 +18,9 @@ const converterMixin = {
 };
 const utilsMixin = {
   methods: {
-    usageJsonToCsv() {
-      const inboundItems = this.$store.state.usage.ownUsage.body.inbound;
-      const outboundItems = this.$store.state.usage.ownUsage.body.outbound;
+    usageJsonToCsv(body) {
+      const inboundItems = body.inbound;
+      const outboundItems = body.outbound;
       const header = Object.keys(inboundItems[0]);
       header.push('direction');
       // remove currency header
@@ -53,19 +53,31 @@ const utilsMixin = {
         }).join(','))
       ].join('\r\n');
     },
-    exportUsageToCSV() {
-      const data = new Blob([this.usageJsonToCsv()], {
+    exportUsageToCSV(body) {
+      const data = new Blob([this.usageJsonToCsv(body)], {
         type: 'data:text/csv',
       });
       const fileName = `${this.referenceId}.csv`;
       this.generateFile(data, fileName);
     },
-    exportUsageToXLSX() {
-      const data = new Blob([this.usageJsonToCsv()], {
+    exportUsageToXLSX(body) {
+      const data = new Blob([this.usageJsonToCsv(body)], {
         type: 'application/excel',
       });
       const fileName = `${this.referenceId}.xlsx`;
       this.generateFile(data, fileName);
+    },
+    exportOwnUsageToCSV() {
+      this.exportUsageToCSV(this.$store.state.usage.ownUsage.body);
+    },
+    exportPartnerUsageToCSV() {
+      this.exportUsageToCSV(this.$store.state.usage.partnerUsage.body);
+    },
+    exportOwnUsageToXLSX() {
+      this.exportUsageToXLSX(this.$store.state.usage.ownUsage.body);
+    },
+    exportPartnerUsageToXLSX() {
+      this.exportUsageToXLSX(this.$store.state.usage.partnerUsage.body);
     },
     exportToJSON(json) {
       const data = new Blob([JSON.stringify(json)], {

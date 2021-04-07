@@ -73,10 +73,17 @@ export default {
   },
   computed: {
     items() {
-      return [
-        {title: 'To CSV', icon: 'mdi-download', onClick: this.exportUsageToCSV},
-        {title: 'To XLSX', icon: 'mdi-download', onClick: this.exportUsageToXLSX},
-      ];
+      if (this.isOwnUsage) {
+        return [
+          {title: 'To CSV', icon: 'mdi-download', onClick: this.exportOwnUsageToCSV},
+          {title: 'To XLSX', icon: 'mdi-download', onClick: this.exportOwnUsageToXLSX},
+        ];
+      } else {
+        return [
+          {title: 'To CSV', icon: 'mdi-download', onClick: this.exportPartnerUsageToCSV},
+          {title: 'To XLSX', icon: 'mdi-download', onClick: this.exportPartnerUsageToXLSX},
+        ];
+      }
     },
   },
   created() {
