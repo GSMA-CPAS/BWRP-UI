@@ -79,7 +79,7 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-import Filters from '@/components/other/Filters.vue';
+import Filters from '@components/Filters.vue';
 export default {
   name: 'contracts-table',
   title: 'Contracts',

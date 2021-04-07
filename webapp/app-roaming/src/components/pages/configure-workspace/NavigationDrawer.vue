@@ -22,7 +22,7 @@
   </v-navigation-drawer>
 </template>
 <script>
-import AppFooter from '@/components/other/Footer.vue';
+import AppFooter from '@components/Footer.vue';
 export default {
   data() {
     return {

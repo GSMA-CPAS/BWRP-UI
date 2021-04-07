@@ -24,6 +24,7 @@ module.exports = {
         '@validation': resolve('./src/utils/validation'),
         '@mixins': resolve('./src/utils/mixins'),
         '@dialogs': resolve('./src/components/dialogs'),
+        '@components': resolve('./src/components/other'),
       },
     },
   },

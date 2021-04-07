@@ -51,7 +51,7 @@ import {dataMixin} from '@mixins/handle-data';
 import {PATHS} from '@/utils/Enums';
 import {timelineMixin} from '@mixins/component-specfic';
 import {mapState} from 'vuex';
-import LoadingSpinner from '../other/LoadingSpinner.vue';
+import LoadingSpinner from '@components/LoadingSpinner.vue';
 import {mapActions} from 'vuex';
 
 export default {

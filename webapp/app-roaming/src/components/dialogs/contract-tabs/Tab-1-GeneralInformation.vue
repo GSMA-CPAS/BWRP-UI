@@ -120,7 +120,7 @@
   </div>
 </template>
 <script>
-import HelpTooltip from '@/components/other/HelpTooltip.vue';
+import HelpTooltip from '@components/HelpTooltip.vue';
 import {timelineMixin} from '@mixins/component-specfic';
 import PartiesHeader from '../components/PartiesHeader.vue';
 export default {

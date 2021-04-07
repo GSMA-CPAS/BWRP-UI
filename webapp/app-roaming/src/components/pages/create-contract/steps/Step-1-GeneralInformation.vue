@@ -99,7 +99,7 @@
 
 <script>
 import {validationMixin} from '@mixins/component-specfic';
-import HelpTooltip from '@/components/other/HelpTooltip.vue';
+import HelpTooltip from '@components/HelpTooltip.vue';
 import {computeDateDifference} from '@/utils/Utils';
 import Parties from '../step-components/Parties.vue';
 import GeneralInformationPartyForm from '../step-components/discount-form-components/GeneralInformationPartyForm.vue';
