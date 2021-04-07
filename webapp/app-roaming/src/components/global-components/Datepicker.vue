@@ -30,7 +30,7 @@
 </template>
 <script>
 import moment from 'moment';
-import {validationMixin} from '@/utils/mixins/component-specfic';
+import {validationMixin} from '@mixins/component-specfic';
 export default {
   name: 'date-picker',
   description: 'This is a custom date picker.',
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     isoDate(input) {
-      const date = input || moment(new Date()).add(1, 'months')._d;
+      const date = input || moment().add(1, 'months')._d;
       return date.toISOString().substr(0, 10);
     },
   },

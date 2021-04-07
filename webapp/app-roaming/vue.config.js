@@ -21,8 +21,10 @@ module.exports = {
     resolve: {
       /* add aliases here, also edit jsconfig for intellisense in VSCode */
       alias: {
-        '@validation': resolve('./src/utils/validation')
-      }
+        '@validation': resolve('./src/utils/validation'),
+        '@mixins': resolve('./src/utils/mixins'),
+        '@dialogs': resolve('./src/components/dialogs'),
+      },
     },
   },
   transpileDependencies: ['vuetify'],

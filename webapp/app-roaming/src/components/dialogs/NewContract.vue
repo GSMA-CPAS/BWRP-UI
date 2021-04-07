@@ -47,9 +47,9 @@
   </app-dialog>
 </template>
 <script>
-import {dataMixin} from '@/utils/mixins/handle-data';
+import {dataMixin} from '@mixins/handle-data';
 import {PATHS} from '@/utils/Enums';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 import {mapState} from 'vuex';
 import LoadingSpinner from '../other/LoadingSpinner.vue';
 import {mapActions} from 'vuex';

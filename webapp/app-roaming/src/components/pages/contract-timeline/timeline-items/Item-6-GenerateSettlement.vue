@@ -1,7 +1,7 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-container/>
+      <v-container />
     </template>
     <template #icon>
       <generate-settlement />
@@ -9,8 +9,8 @@
   </timeline-item>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
-import GenerateSettlement from '@/components/dialogs/GenerateSettlement';
+import {timelineMixin} from '@mixins/component-specfic';
+import GenerateSettlement from '@dialogs/GenerateSettlement';
 export default {
   name: 'item-1',
   description: 'description',
@@ -18,8 +18,11 @@ export default {
   components: {GenerateSettlement},
   created() {
     if (this.ownSettlementId && this.partnerSettlementId) {
-      this.$store.dispatch('settlement/getSettlementDiscrepancies', this.contractId);
+      this.$store.dispatch(
+        'settlement/getSettlementDiscrepancies',
+        this.contractId,
+      );
     }
-  }
+  },
 };
 </script>

@@ -14,10 +14,7 @@
 </template>
 <script>
 import {required} from 'vuelidate/lib/validators';
-import {
-  validationMixin,
-  bankFieldsMixin,
-} from '@/utils/mixins/component-specfic';
+import {validationMixin, bankFieldsMixin} from '@mixins/component-specfic';
 export default {
   name: 'bank-form',
   description: 'This is the bank form',

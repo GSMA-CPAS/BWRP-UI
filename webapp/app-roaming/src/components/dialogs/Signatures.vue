@@ -54,7 +54,7 @@
 /*
   INFO: SUBJECT to changes
  */
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 export default {
   name: 'signatures',
   description: 'This is the dialog view for the signatures.',

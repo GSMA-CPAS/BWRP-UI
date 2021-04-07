@@ -29,9 +29,9 @@
   </timeline-item>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
-import Contract from '@/components/dialogs/Contract.vue';
-import {converterMixin} from '@/utils/mixins/handle-data';
+import {timelineMixin} from '@mixins/component-specfic';
+import Contract from '@dialogs/Contract.vue';
+import {converterMixin} from '@mixins/handle-data';
 export default {
   name: 'item-1',
   description: 'description',

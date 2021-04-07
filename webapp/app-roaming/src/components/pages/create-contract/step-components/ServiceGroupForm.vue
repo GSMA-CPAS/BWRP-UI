@@ -35,7 +35,7 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {duplicateMixin} from '@mixins/component-specfic';
 import Vue from 'vue';
 import TadigCodes from '@/components/pages/create-contract/step-components/general-information/TadigCodes';
 import Service, {service} from './discount-form-components/Service.vue';

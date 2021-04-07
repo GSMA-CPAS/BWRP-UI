@@ -46,7 +46,7 @@
   </v-col>
 </template>
 <script>
-import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {duplicateMixin} from '@mixins/component-specfic';
 /* import DiscountPicker from "./discount-form-components/DiscountPicker.vue";
 import OverallRevenueCommitment from "./discount-form-components/OverallRevenueCommitment.vue";
 import AdditionalComments from "./discount-form-components/AdditionalComments.vue";

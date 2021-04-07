@@ -121,7 +121,7 @@
 </template>
 <script>
 import HelpTooltip from '@/components/other/HelpTooltip.vue';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 import PartiesHeader from '../components/PartiesHeader.vue';
 export default {
   name: 'tab-1',

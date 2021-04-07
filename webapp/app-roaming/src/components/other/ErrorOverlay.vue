@@ -31,7 +31,7 @@
   </v-overlay>
 </template>
 <script>
-import {appStateMixin} from '@/utils/mixins/component-specfic';
+import {appStateMixin} from '@mixins/component-specfic';
 export default {
   name: 'error-overlay',
   description:

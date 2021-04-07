@@ -1,16 +1,16 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-container/>
+      <v-container />
     </template>
     <template #icon>
-      <upload-usage v-if="!isUsageSent"/>
+      <upload-usage v-if="!isUsageSent" />
     </template>
   </timeline-item>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
-import UploadUsage from '@/components/dialogs/UploadUsage.vue';
+import {timelineMixin} from '@mixins/component-specfic';
+import UploadUsage from '@dialogs/UploadUsage.vue';
 export default {
   name: 'item-3',
   description: 'description',

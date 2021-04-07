@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import {validationMixin} from '@/utils/mixins/component-specfic';
+import {validationMixin} from '@mixins/component-specfic';
 import HelpTooltip from '@/components/other/HelpTooltip.vue';
 import {computeDateDifference} from '@/utils/Utils';
 import Parties from '../step-components/Parties.vue';

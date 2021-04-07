@@ -33,7 +33,7 @@
   INFO: SUBJECT to changes
  */
 import * as XLSX from 'xlsx';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 
 export default {
   name: 'upload-usage',
@@ -43,8 +43,8 @@ export default {
       file: null,
       active: true,
       usageJson: {
-        'inbound': [],
-        'outbound': []
+        inbound: [],
+        outbound: [],
       },
     };
   },
@@ -57,7 +57,7 @@ export default {
       fr.readAsBinaryString(file);
       this.file = file;
       fr.onload = (e) => {
-        if (file.type ==='text/csv') {
+        if (file.type === 'text/csv') {
           this.csvToJSON(e.target.result, this.usageJson);
         } else {
           const data = e.target.result;
@@ -70,9 +70,7 @@ export default {
       };
     },
     onUpload() {
-      this.uploadUsage(
-        this.usageJson
-      );
+      this.uploadUsage(this.usageJson);
     },
   },
 };

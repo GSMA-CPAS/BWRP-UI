@@ -5,14 +5,14 @@ import {vuetify} from './plugins/all-plugins';
 import VCurrencyField from 'v-currency-field';
 import './utils/filters/global-filters';
 
-import titleMixin from './utils/mixins/page-title';
+import titleMixin from '@mixins/page-title';
 Vue.mixin(titleMixin);
 
 // register global components
 const components = require.context(
-    '@/components/global-components/',
-    true,
-    /.*.(vue|js)$/
+  '@/components/global-components/',
+  true,
+  /.*.(vue|js)$/,
 );
 components.keys().forEach((x) => {
   const component = components(x).default;
@@ -35,7 +35,7 @@ Vue.use(VCurrencyField, {
   max: null,
   defaultValue: 0,
   valueAsInteger: false,
-  allowNegative: true
+  allowNegative: true,
 });
 
 new Vue({

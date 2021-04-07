@@ -39,7 +39,7 @@
   </div>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 import {mapGetters, mapState} from 'vuex';
 export default {
   name: 'sign-button',

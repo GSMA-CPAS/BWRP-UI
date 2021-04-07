@@ -1,13 +1,12 @@
 <template>
   <div class="text-center">
-    <deal-overview :isHome="true"/>
-    <usage-discrepancy-summary/>
+    <deal-overview :isHome="true" />
+    <usage-discrepancy-summary />
   </div>
 </template>
 <script>
-
-import DealOverview from '@/components/dialogs/discrepancy/items/DealOverview';
-import UsageDiscrepancySummary from '@/components/dialogs/discrepancy/items/UsageDiscrepancySummary';
+import DealOverview from '@dialogs/discrepancy/items/DealOverview';
+import UsageDiscrepancySummary from '@dialogs/discrepancy/items/UsageDiscrepancySummary';
 
 export default {
   name: 'tab-1',
@@ -21,5 +20,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

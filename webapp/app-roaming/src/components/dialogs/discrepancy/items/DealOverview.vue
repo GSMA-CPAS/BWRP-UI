@@ -3,40 +3,43 @@
     <v-row>
       <v-col cols="4">
         <v-row>
-          <span>Term: {{ documentData.framework.term.start }}</span><span class="text-wrap"> - {{ documentData.framework.term.end }}</span>
+          <span>Term: {{ documentData.framework.term.start }}</span
+          ><span class="text-wrap">
+            - {{ documentData.framework.term.end }}</span
+          >
         </v-row>
         <v-row>
-          <span >ReferenceId:</span><span class="text-wrap"> {{ referenceId }}</span>
+          <span>ReferenceId:</span
+          ><span class="text-wrap"> {{ referenceId }}</span>
         </v-row>
         <v-row>
-          <span>Partner: {{isHome?partnerMsp:selfMsp}}</span>
+          <span>Partner: {{ isHome ? partnerMsp : selfMsp }}</span>
         </v-row>
         <v-row>
           <span class="text-wrap">Own TADIGS: </span>
-          <span v-for="(ot,index) in selfTadigs" :key="ot">
-            <span v-if="index !== selfTadigs.length - 1">
-               {{ot}},
-            </span>
+          <span v-for="(ot, index) in selfTadigs" :key="ot">
+            <span v-if="index !== selfTadigs.length - 1"> {{ ot }}, </span>
             <span v-if="index === selfTadigs.length - 1">
-               {{ot}}
+              {{ ot }}
             </span>
           </span>
         </v-row>
         <v-row>
           <span>Partner TADIGS: </span>
-          <span class="text-wrap" v-for="(pt,index) in partnerTadigs" :key="pt">
-            <span v-if="index !== partnerTadigs.length - 1">
-               {{pt}},
-            </span>
+          <span
+            class="text-wrap"
+            v-for="(pt, index) in partnerTadigs"
+            :key="pt"
+          >
+            <span v-if="index !== partnerTadigs.length - 1"> {{ pt }}, </span>
             <span class="text-wrap" v-if="index === partnerTadigs.length - 1">
-               {{pt}}
+              {{ pt }}
             </span>
           </span>
         </v-row>
       </v-col>
       <v-col cols="4">
-        <v-spacer/>
-
+        <v-spacer />
       </v-col>
       <v-col cols="4">
         <v-row>
@@ -57,7 +60,7 @@
 </template>
 
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 
 export default {
   name: 'DealOverview',
@@ -71,11 +74,10 @@ export default {
     partnerTadigs() {
       if (this.isHome) return this.partnerContractTadigs;
       else return this.selfContractTadigs;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-
 </style>

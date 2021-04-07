@@ -5,7 +5,7 @@
   </v-footer>
 </template>
 <script>
-import {appDetailsMixin} from '@/utils/mixins/component-specfic';
+import {appDetailsMixin} from '@mixins/component-specfic';
 export default {
   name: 'app-footer',
   description:

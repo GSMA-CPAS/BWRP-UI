@@ -26,7 +26,7 @@
 </template>
 <script>
 import Parties from '../step-components/Parties.vue';
-import {validationMixin} from '@/utils/mixins/component-specfic';
+import {validationMixin} from '@mixins/component-specfic';
 import DiscountForm from '../step-components/DiscountForm.vue';
 
 export default {

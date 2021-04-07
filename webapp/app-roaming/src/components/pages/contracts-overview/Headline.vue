@@ -6,7 +6,7 @@
   </v-card-title>
 </template>
 <script>
-import NewContractVue from '@/components/dialogs/NewContract.vue';
+import NewContractVue from '@dialogs/NewContract.vue';
 export default {
   name: 'contracts-headline',
   description: 'Headling of contracts overview.',

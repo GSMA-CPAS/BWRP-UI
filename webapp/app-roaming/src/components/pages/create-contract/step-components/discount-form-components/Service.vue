@@ -145,7 +145,7 @@
 <script>
 import ServiceValidation from '@validation/Service';
 import RatingPlanInput from './RatingPlanInput.vue';
-import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {duplicateMixin} from '@mixins/component-specfic';
 import {mapMutations, mapState} from 'vuex';
 
 export const service = {

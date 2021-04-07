@@ -111,7 +111,7 @@
   </div>
 </template>
 <script>
-import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {duplicateMixin} from '@mixins/component-specfic';
 import {mapActions, mapState} from 'vuex';
 import DialogPopup from './tadig-groups/DialogPopup.vue';
 export default {

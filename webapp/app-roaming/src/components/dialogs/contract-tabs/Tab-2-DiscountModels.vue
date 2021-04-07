@@ -167,8 +167,8 @@
 </template>
 <script>
 import PartiesHeader from '../components/PartiesHeader.vue';
-import {utilsMixin} from '@/utils/mixins/handle-data';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {utilsMixin} from '@mixins/handle-data';
+import {timelineMixin} from '@mixins/component-specfic';
 import {mapGetters} from 'vuex';
 import TieredModelTemplate from './models/TieredModelTemplate.vue';
 import BalancedUnbalancedModelTemplate from './models/BalancedUnbalancedModelTemplate.vue';

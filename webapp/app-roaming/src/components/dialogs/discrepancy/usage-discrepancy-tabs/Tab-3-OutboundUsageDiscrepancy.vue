@@ -2,28 +2,31 @@
   <div class="text-center">
     <v-container>
       <v-row>
-        <v-spacer/>
-        <app-button class="-1" label="export table" @click="exportToJSON(exportData)"/>
+        <v-spacer />
+        <app-button
+          class="-1"
+          label="export table"
+          @click="exportToJSON(exportData)"
+        />
       </v-row>
-      <v-data-table :headers="headers"
-                    :items="items">
+      <v-data-table :headers="headers" :items="items">
         <template v-slot:top>
           <v-text-field
-              v-model="search"
-              label="Search"
-              class="mx-4"
+            v-model="search"
+            label="Search"
+            class="mx-4"
           ></v-text-field>
         </template>
-        <template #item="{ item }">
-          <tr :class=discrepanciesFlag(item,flagParam)>
-            <td> {{item.HTMN}}</td>
-            <td> {{item.VPMN}}</td>
-            <td> {{item.yearMonth}}</td>
-            <td> {{item.service}}</td>
-            <td> {{item.own_usage.toFixed(2)}}</td>
-            <td> {{item.partner_usage.toFixed(2)}}</td>
-            <td> {{item.delta_usage_abs.toFixed(2)}}</td>
-            <td> {{item.delta_usage_percent.toFixed(2)}}</td>
+        <template #item="{item}">
+          <tr :class="discrepanciesFlag(item, flagParam)">
+            <td>{{ item.HTMN }}</td>
+            <td>{{ item.VPMN }}</td>
+            <td>{{ item.yearMonth }}</td>
+            <td>{{ item.service }}</td>
+            <td>{{ item.own_usage.toFixed(2) }}</td>
+            <td>{{ item.partner_usage.toFixed(2) }}</td>
+            <td>{{ item.delta_usage_abs.toFixed(2) }}</td>
+            <td>{{ item.delta_usage_percent.toFixed(2) }}</td>
           </tr>
         </template>
       </v-data-table>
@@ -33,7 +36,7 @@
 
 <script>
 import AppButton from '@/components/global-components/Button';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 export default {
   name: 'tab-3',
   components: {AppButton},
@@ -55,17 +58,15 @@ export default {
     },
     items() {
       return this.usageDiscrepancies.outbound;
-    }
+    },
   },
   data() {
     return {
       search: '',
       flagParam: 'delta_usage_percent',
-      exportData: this.$store.state.usage.discrepancies
+      exportData: this.$store.state.usage.discrepancies,
     };
   },
-  methods: {
-
-  }
+  methods: {},
 };
 </script>

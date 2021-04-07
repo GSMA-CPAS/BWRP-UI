@@ -8,7 +8,7 @@
   </v-col>
 </template>
 <script>
-import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {duplicateMixin} from '@mixins/component-specfic';
 export default {
   name: 'signature-form-v2',
   description: 'Second version of signature form.',

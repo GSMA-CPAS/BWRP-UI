@@ -145,7 +145,7 @@
 <script>
 import {mapActions, mapState} from 'vuex';
 import DialogPopup from './tadig-groups/DialogPopup.vue';
-import {duplicateMixin} from '@/utils/mixins/component-specfic';
+import {duplicateMixin} from '@mixins/component-specfic';
 export default {
   name: 'tadig-groups',
   description: 'Groups',

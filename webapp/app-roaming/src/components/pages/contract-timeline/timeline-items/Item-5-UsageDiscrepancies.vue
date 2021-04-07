@@ -1,20 +1,20 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-container/>
+      <v-container />
     </template>
     <template #icon>
-      <usage-discrepancy/>
+      <usage-discrepancy />
     </template>
   </timeline-item>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
-import UsageDiscrepancy from '@/components/dialogs/discrepancy/UsageDiscrepancy';
+import {timelineMixin} from '@mixins/component-specfic';
+import UsageDiscrepancy from '@dialogs/discrepancy/UsageDiscrepancy';
 export default {
   name: 'item-1',
   description: 'description',
   mixins: [timelineMixin],
-  components: {UsageDiscrepancy}
+  components: {UsageDiscrepancy},
 };
 </script>

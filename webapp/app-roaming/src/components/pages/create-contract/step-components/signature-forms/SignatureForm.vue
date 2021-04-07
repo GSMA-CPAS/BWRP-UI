@@ -31,10 +31,7 @@
 </template>
 <script>
 import {required, minLength} from 'vuelidate/lib/validators';
-import {
-  duplicateMixin,
-  validationMixin,
-} from '@/utils/mixins/component-specfic';
+import {duplicateMixin, validationMixin} from '@mixins/component-specfic';
 export default {
   name: 'signature-form',
   description: 'description',

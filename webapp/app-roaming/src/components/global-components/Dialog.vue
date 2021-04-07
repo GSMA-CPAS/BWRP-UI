@@ -33,7 +33,7 @@
   </v-dialog>
 </template>
 <script>
-import {handleComponentVisibilityMixin} from '@/utils/mixins/handle-states';
+import {handleComponentVisibilityMixin} from '@mixins/handle-states';
 export default {
   name: 'app-dialog',
   description: 'This is a custom dialog.',

@@ -1,20 +1,27 @@
 <template>
   <timeline-item>
     <template #content>
-      <v-card v-if="!isOwnUsage && !isPartnerUsageReceived" class="mr-15" color="#fafafa">
+      <v-card
+        v-if="!isOwnUsage && !isPartnerUsageReceived"
+        class="mr-15"
+        color="#fafafa"
+      >
         <v-card-text>
           <div>WAITING FOR PARTNER USAGE</div>
         </v-card-text>
       </v-card>
-      <v-card v-else :class="isUsageSent?'':'mr-15'" color="#fafafa">
+      <v-card v-else :class="isUsageSent ? '' : 'mr-15'" color="#fafafa">
         <v-card-text>
-          <div>{{isOwnUsage? selfMsp:partnerMsp }}</div>
-          <div>UPLOADED on {{isOwnUsage?ownUsageCreationDate:partnerUsageCreationDate}}</div>
+          <div>{{ isOwnUsage ? selfMsp : partnerMsp }}</div>
+          <div>
+            UPLOADED on
+            {{ isOwnUsage ? ownUsageCreationDate : partnerUsageCreationDate }}
+          </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <usage-report :is-own-usage="isOwnUsage"/>
-          <ul/>
+          <usage-report :is-own-usage="isOwnUsage" />
+          <ul />
           <v-menu offset-y bottom>
             <template v-slot:activator="{on, attrs}">
               <app-button label="Export" v-bind="attrs" v-on="on" />
@@ -32,16 +39,16 @@
       </v-card>
     </template>
     <template #icon>
-      <send-usage v-if="!isUsageSent"/>
+      <send-usage v-if="!isUsageSent" />
     </template>
   </timeline-item>
 </template>
 <script>
-import SendUsage from '@/components/dialogs/SendUsage.vue';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
-import UsageReport from '@/components/dialogs/UsageReport';
+import SendUsage from '@dialogs/SendUsage.vue';
+import {timelineMixin} from '@mixins/component-specfic';
+import UsageReport from '@dialogs/UsageReport';
 import AppButton from '@/components/global-components/Button';
-import {utilsMixin} from '@/utils/mixins/handle-data';
+import {utilsMixin} from '@mixins/handle-data';
 export default {
   name: 'item-4',
   description: 'description',
@@ -49,12 +56,12 @@ export default {
   props: {
     isOwnUsage: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      partnerBody: null
+      partnerBody: null,
     };
   },
   methods: {
@@ -75,7 +82,11 @@ export default {
     items() {
       return [
         {title: 'To CSV', icon: 'mdi-download', onClick: this.exportUsageToCSV},
-        {title: 'To XLSX', icon: 'mdi-download', onClick: this.exportUsageToXLSX},
+        {
+          title: 'To XLSX',
+          icon: 'mdi-download',
+          onClick: this.exportUsageToXLSX,
+        },
       ];
     },
   },

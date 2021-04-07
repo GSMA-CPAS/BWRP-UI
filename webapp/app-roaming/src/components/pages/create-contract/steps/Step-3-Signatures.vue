@@ -13,10 +13,7 @@
 <script>
 import Parties from '../step-components/Parties.vue';
 import SignatureFormV2 from '../step-components/signature-forms/SignatureFormV2.vue';
-import {
-  duplicateMixin,
-  validationMixin,
-} from '@/utils/mixins/component-specfic';
+import {duplicateMixin, validationMixin} from '@mixins/component-specfic';
 export default {
   name: 'step-3',
   description: 'Signatures',

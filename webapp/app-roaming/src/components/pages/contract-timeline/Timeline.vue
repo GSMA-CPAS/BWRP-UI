@@ -5,19 +5,22 @@
       <Item-1-ContractView />
       <Item-2-Signatures />
       <Item-3-UploadUsage />
-      <Item-4-UsageReport v-if="this.isUsageUploaded" :isOwnUsage="true"/>
+      <Item-4-UsageReport v-if="this.isUsageUploaded" :isOwnUsage="true" />
       <Item-4-UsageReport v-if="this.isUsageSent" />
       <Item-5-Discrepancies v-if="this.areUsagesExchanged" />
-      <Item-6-GenerateSettlement v-if="this.areUsagesExchanged"/>
-      <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated" :isHome="true"/>
-      <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated"/>
+      <Item-6-GenerateSettlement v-if="this.areUsagesExchanged" />
+      <Item-7-SettlementDiscrepancies
+        v-if="this.areSettlementsGenerated"
+        :isHome="true"
+      />
+      <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated" />
       <Item-8-SettlementReport v-if="this.areSettlementsGenerated" />
       <Item-9-Result v-if="this.settlementStatus" />
     </v-timeline>
   </v-container>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 import Item1ContractView from './timeline-items/Item-1-ContractView.vue';
 import Item2Signatures from './timeline-items/Item-2-Signatures.vue';
 import Item3UploadUsage from './timeline-items/Item-3-UploadUsage';

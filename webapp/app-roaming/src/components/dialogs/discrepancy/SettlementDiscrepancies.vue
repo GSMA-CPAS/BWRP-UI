@@ -1,5 +1,5 @@
 <template>
-  <app-dialog width="90vw" :title="title" :label=label>
+  <app-dialog width="90vw" :title="title" :label="label">
     <template #content>
       <tabs :tabs="tabs" />
     </template>
@@ -7,7 +7,7 @@
 </template>
 <script>
 import Tabs from '../../global-components/Tabs.vue';
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 export default {
   components: {
     Tabs,
@@ -18,21 +18,25 @@ export default {
   props: {
     isHome: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   data() {
     return {
-      label: this.isHome? 'view home settlement discrepancy':'view partner settlement discrepancy',
-      title: this.isHome? 'Settlement Discrepancy - Home Perspective':'Settlement Discrepancy - Partner Perspective'
+      label: this.isHome
+        ? 'view home settlement discrepancy'
+        : 'view partner settlement discrepancy',
+      title: this.isHome
+        ? 'Settlement Discrepancy - Home Perspective'
+        : 'Settlement Discrepancy - Partner Perspective',
     };
   },
   computed: {
     tabs() {
       const components = require.context(
-          './settlement-discrepancies-tabs/',
-          false,
-          /(Tab-)\d-\w*\.(vue|js)$/
+        './settlement-discrepancies-tabs/',
+        false,
+        /(Tab-)\d-\w*\.(vue|js)$/,
       );
       const tabs = components.keys().map((x) => {
         const component = components(x).default;

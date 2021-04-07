@@ -30,10 +30,10 @@
   </div>
 </template>
 <script>
-import {timelineMixin} from '@/utils/mixins/component-specfic';
+import {timelineMixin} from '@mixins/component-specfic';
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
-import {converterMixin} from '@/utils/mixins/handle-data';
+import {converterMixin} from '@mixins/handle-data';
 
 export default {
   name: 'tab-3',
