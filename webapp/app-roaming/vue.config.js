@@ -25,6 +25,7 @@ module.exports = {
         '@mixins': resolve('./src/utils/mixins'),
         '@dialogs': resolve('./src/components/dialogs'),
         '@components': resolve('./src/components/other'),
+        '@pages/': resolve('./src/components/pages'),
       },
     },
   },

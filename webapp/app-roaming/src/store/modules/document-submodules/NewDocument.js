@@ -3,7 +3,7 @@ import router from '@/router';
 import {PATHS} from '@/utils/Enums';
 import Vue from 'vue';
 import convertModelsModule from './convert-models';
-import {service} from '@/components/pages/create-contract/step-components/discount-form-components/Service.vue';
+import {service} from '@pages/create-contract/step-components/discount-form-components/Service.vue';
 import {transform} from 'node-json-transform';
 
 const log = console.log;

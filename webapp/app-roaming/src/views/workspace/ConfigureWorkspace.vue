@@ -6,8 +6,8 @@
 </template>
 <script>
 import {PATHS} from '@/utils/Enums';
-import NavigationDrawer from '@/components/pages/configure-workspace/NavigationDrawer.vue';
-import View from '@/components/pages/configure-workspace/View.vue';
+import NavigationDrawer from '@pages/configure-workspace/NavigationDrawer.vue';
+import View from '@pages/configure-workspace/View.vue';
 export default {
   components: {
     WorkspaceView: View,

@@ -3,7 +3,7 @@
 </template>
 <script>
 import {PATHS} from '@/utils/Enums';
-import Stepper from '@/components/pages/create-contract/Stepper.vue';
+import Stepper from '@pages/create-contract/Stepper.vue';
 import {mapActions} from 'vuex';
 export default {
   name: 'create-page',

@@ -37,7 +37,7 @@
 import {mapState} from 'vuex';
 import {duplicateMixin} from '@mixins/component-specfic';
 import Vue from 'vue';
-import TadigCodes from '@/components/pages/create-contract/step-components/general-information/TadigCodes';
+import TadigCodes from '@pages/create-contract/step-components/general-information/TadigCodes';
 import Service, {service} from './discount-form-components/Service.vue';
 export default {
   name: 'service-group-form',

@@ -10,8 +10,8 @@
 </template>
 <script>
 import {PATHS} from '@/utils/Enums';
-import Contracts from '@/components/pages/contracts-overview/Table.vue';
-import Headline from '@/components/pages/contracts-overview/Headline';
+import Contracts from '@pages/contracts-overview/Table.vue';
+import Headline from '@pages/contracts-overview/Headline';
 export default {
   name: 'contracts-overview',
   text: 'Contracts',
