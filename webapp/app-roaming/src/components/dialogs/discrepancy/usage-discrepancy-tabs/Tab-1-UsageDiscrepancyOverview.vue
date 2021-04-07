@@ -1,8 +1,8 @@
 <template>
-  <fragment class="text-center">
-    <deal-overview/>
+  <div class="text-center">
+    <deal-overview :isHome="true"/>
     <usage-discrepancy-summary/>
-  </fragment>
+  </div>
 </template>
 <script>
 

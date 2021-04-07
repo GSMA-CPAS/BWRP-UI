@@ -69,13 +69,13 @@ const timelineMixin = {
     ...mapActions('document/new', ['startContract']),
     ...mapActions('document', ['loadData', 'signDocument']),
     ...mapActions('usage', ['uploadUsage', 'sendUsage']),
-    ...mapActions('settlement', ['generateSettlements']),
+    ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'declineDiscrepancies']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
-    discrepanciesFlag: function(item) {
-      if (Math.abs(item.delta_usage_percent) === 0) return 'green-flag';
-      else if (Math.abs(item.delta_usage_percent) <= 2) return 'yellow-flag';
-      else return Math.abs(item.delta_usage_percent) > 4 ? 'red-flag' : 'orange-flag';
+    discrepanciesFlag: function(item, param) {
+      if (Math.abs(item[param]) === 0) return 'green-flag';
+      else if (Math.abs(item[param]) <= 2) return 'yellow-flag';
+      else return Math.abs(item[param]) > 4 ? 'red-flag' : 'orange-flag';
     },
   },
   computed: {
@@ -124,7 +124,12 @@ const timelineMixin = {
       'isPartnerUsageReceived',
       'areUsagesExchanged'
     ]),
-    ...mapGetters('partners', ['list']),
+    ...mapGetters('settlement', [
+      'areSettlementsGenerated',
+      'areDiscrepanciesCalculated',
+      'settlementStatus'
+    ]),
+    ...mapGetters('partners', ['list'])
   },
 };
 export {timelineMixin};

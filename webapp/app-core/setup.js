@@ -57,80 +57,54 @@ const isAdapterUsedByService = (adapterName) => {
 const setup = async () => {
   const database = new Database(config.get('database'));
 
-  // initialize SessionManagementAdapter
+  // setup SessionManagementAdapter
 
   const sessionManagementAdapter = createAdapterInstance('SessionManagementAdapter', database);
-  try {
-    await sessionManagementAdapter.initialize();
-  } catch (error) {
-    logger.error(error.message);
-    throw error;
-  }
+  await sessionManagementAdapter.onSetup();
 
-  // initialize UserManagementAdapter
+  // setup UserManagementAdapter
 
   const userManagementAdapter = createAdapterInstance('UserManagementAdapter', database);
-  try {
-    await userManagementAdapter.initialize();
-  } catch (error) {
-    logger.error(error.message);
-    throw error;
-  }
+  await userManagementAdapter.onSetup();
 
   // create admin user / enroll admin identity
 
-  const walletAdapter = createAdapterInstance('WalletAdapter', database);
-  const certAuthAdapter = createAdapterInstance('CertAuthAdapter', database);
-  try {
+  if (isAdapterUsedByService('CertAuthAdapter')) {
+    const certAuthAdapter = createAdapterInstance('CertAuthAdapter', database);
     if (!await userManagementAdapter.existsUser('admin')) {
       await userManagementAdapter.createAdmin();
     }
+    await certAuthAdapter.onLoad();
     const adminEnrollmentId = certAuthAdapter.getAdminEnrollmentId();
-    const adminIdentity = await walletAdapter.getIdentity(adminEnrollmentId);
+    const adminIdentity = await certAuthAdapter.getWalletIdentity(adminEnrollmentId);
     if (!adminIdentity) {
       const adminIdentity = await certAuthAdapter.enrollAdmin();
-      await walletAdapter.putIdentity(adminEnrollmentId, adminIdentity);
+      await certAuthAdapter.putWalletIdentity(adminEnrollmentId, adminIdentity);
     }
-  } catch (error) {
-    logger.error(error.message);
-    throw error;
   }
 
-  // initialize IdentityAdapter
+  // setup IdentityAdapter
 
-  const identityAdapter = createAdapterInstance('IdentityAdapter', database);
-  try {
-    await identityAdapter.initialize();
-  } catch (error) {
-    logger.error(error.message);
-    throw error;
+  if (isAdapterUsedByService('IdentityAdapter')) {
+    const identityAdapter = createAdapterInstance('IdentityAdapter', database);
+    await identityAdapter.onSetup();
   }
 
-  // initialize BlockchainAdapter
+  // setup BlockchainAdapter
 
   if (isAdapterUsedByService('BlockchainAdapter')) {
     const blockchainAdapter = createAdapterInstance('BlockchainAdapter', database);
-    try {
-      await blockchainAdapter.initialize();
-    } catch (error) {
-      logger.error(error.message);
-      throw error;
-    }
+    await blockchainAdapter.onSetup();
   }
 
-  // initialize LocalStorageAdapter
+  // setup LocalStorageAdapter
 
   if (isAdapterUsedByService('LocalStorageAdapter')) {
     const localStorageAdapter = createAdapterInstance('LocalStorageAdapter', database);
-    try {
-      await localStorageAdapter.initialize();
-    } catch (error) {
-      logger.error(error.message);
-      throw error;
-    }
+    await localStorageAdapter.onSetup();
   }
 
-  // initialize apps
+  // setup apps
 
   const moduleApps = config.get('apps');
   for (const moduleAppName in moduleApps) {

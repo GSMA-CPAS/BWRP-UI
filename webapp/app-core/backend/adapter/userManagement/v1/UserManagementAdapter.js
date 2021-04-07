@@ -518,7 +518,7 @@ class UserManagementAdapter extends AbstractAdapter {
    * Returns true if users table was created, false if table already exists.
    * @return {Promise<boolean>}
    */
-  async initialize() {
+  async onSetup() {
     try {
       await this.database.query('describe users');
       return false;
@@ -542,14 +542,14 @@ class UserManagementAdapter extends AbstractAdapter {
               'twoFactorSecret VARCHAR(255) NULL, ' +
               'PRIMARY KEY (id), ' +
               'CONSTRAINT uc_user UNIQUE (username))');
-          this.getLogger().info('[UserManagementAdapter::initialize] table users has been created successfully!');
+          this.getLogger().info('[UserManagementAdapter::onSetup] table users has been created successfully!');
           return true;
         } catch (error) {
-          this.getLogger().error('[UserManagementAdapter::initialize] failed to create users table - %s ', JSON.stringify(error));
+          this.getLogger().error('[UserManagementAdapter::onSetup] failed to create users table - %s ', JSON.stringify(error));
           throw error;
         }
       } else {
-        this.getLogger().error('[UserManagementAdapter::initialize] Error checking database - %s ', JSON.stringify(error));
+        this.getLogger().error('[UserManagementAdapter::onSetup] Error checking database - %s ', JSON.stringify(error));
         throw error;
       }
     }

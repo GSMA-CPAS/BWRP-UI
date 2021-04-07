@@ -1,12 +1,16 @@
 {
   "name": "app-core",
-  "version": "0.4.1",
+  "version": "0.5.1",
   "main": "server.js",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "eslint ."
+  },
+  "engines": {
+    "node": ">=10.0.0 <13.0.0",
+    "npm": ">=5.0.0 <7.0.0"
   },
   "dependencies": {
     "@mdi/js": "4.9.95",

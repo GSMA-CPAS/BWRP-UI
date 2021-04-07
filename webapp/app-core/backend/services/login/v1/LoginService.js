@@ -11,13 +11,14 @@ const rateLimit = require('express-rate-limit');
 class LoginService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
+    this.requiredAdapterType('user');
     this.sessionName = config.get('session').name;
 
     passport.use(new Strategy(
         async (username, password, done) => {
           let user;
           try {
-            user = await this.getBackendAdapter('userManagement').getUserByName(username, true);
+            user = await this.getBackendAdapter('user').getUserByName(username, true);
           } catch (error) {
             this.getLogger().error('[LoginService] failed to get user %s - %s', username, error.message);
             return done(error);
@@ -25,7 +26,7 @@ class LoginService extends AbstractService {
 
           let passwordVerified = false;
           try {
-            passwordVerified = await this.getBackendAdapter('userManagement').comparePassword(user, password);
+            passwordVerified = await this.getBackendAdapter('user').comparePassword(user, password);
           } catch (error) {
             this.getLogger().error('[LoginService] failed to compare password - %s', error.message);
             return done(error);
@@ -34,7 +35,7 @@ class LoginService extends AbstractService {
           if (passwordVerified) {
             if (user.loginAttempts > 0) {
               try {
-                await this.getBackendAdapter('userManagement').setLoginAttempts(user, 0);
+                await this.getBackendAdapter('user').setLoginAttempts(user, 0);
               } catch (error) {
                 this.getLogger().error('[LoginService] failed to set login attempts - %s', error.message);
               }
@@ -62,7 +63,7 @@ class LoginService extends AbstractService {
               const loginAttempts = user.loginAttempts + 1;
               if (loginAttempts >= this.maxLoginAttempts) {
                 try {
-                  await this.getBackendAdapter('userManagement').deactivateUser(user);
+                  await this.getBackendAdapter('user').deactivateUser(user);
                   this.getLogger().warn('[LoginService] user %s suspended - max login attempts (%s) exceeded', username, this.maxLoginAttempts);
                 } catch (error) {
                   this.getLogger().error('[LoginService] failed to update user - %s', error.message);
@@ -70,7 +71,7 @@ class LoginService extends AbstractService {
                 }
               } else {
                 try {
-                  await this.getBackendAdapter('userManagement').setLoginAttempts(user, loginAttempts);
+                  await this.getBackendAdapter('user').setLoginAttempts(user, loginAttempts);
                 } catch (error) {
                   this.getLogger().error('[LoginService] failed to set login attempt - %s', error.message);
                   return done(error);
@@ -90,7 +91,7 @@ class LoginService extends AbstractService {
       const userId = user.id;
       const kek = user.kek;
       try {
-        user = await this.getBackendAdapter('userManagement').getUserById(userId);
+        user = await this.getBackendAdapter('user').getUserById(userId);
       } catch (error) {
         this.getLogger().error('[LoginService::deserializeUser] failed to get user with id %s - %s', userId, error.message);
         return done(null, false);
@@ -114,7 +115,6 @@ class LoginService extends AbstractService {
         serviceConfig.maxLoginAttempts :
         5;
 
-    this.requiredAdapterType('userManagement');
     this.registerRequestHandler();
   }
 

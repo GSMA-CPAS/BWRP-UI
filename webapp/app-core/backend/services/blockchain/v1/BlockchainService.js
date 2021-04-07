@@ -13,7 +13,7 @@ class BlockchainService extends AbstractService {
     this.requiredAdapterType('blockchain');
     this.requiredAdapterType('localStorage');
     this.requiredAdapterType('user');
-    this.requiredAdapterType('wallet');
+    this.requiredAdapterType('certAuth');
     this.registerRequestHandler();
     this.mspid = config.organization.mspid;
   }
@@ -194,7 +194,7 @@ class BlockchainService extends AbstractService {
         const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
         const hasIdentity = userIdentities.some((item) => item.name === identity);
         if (hasIdentity) {
-          const walletIdentity = await this.getBackendAdapter('wallet').getIdentity(identity);
+          const walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity);
           if (walletIdentity) {
             const privateKey = walletIdentity.credentials.privateKey;
             const certificate = walletIdentity.credentials.certificate;

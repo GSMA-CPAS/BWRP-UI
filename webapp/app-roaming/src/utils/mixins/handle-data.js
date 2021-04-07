@@ -36,7 +36,8 @@ const utilsMixin = {
         'service': 'Services Categorised',
         'usage': 'Usage',
         'units': 'Units',
-        'direction': 'Direction'
+        'direction': 'Direction',
+        'charges': 'Charges'
       };
       const csvHeaders = [];
       header.forEach((key) => csvHeaders.push(headers[key]));
@@ -105,9 +106,10 @@ const utilsMixin = {
         'Services Categorised': 'service',
         'Usage': 'usage',
         'Units': 'units',
-        'Direction': 'direction'
+        'Direction': 'direction',
+        'Charges': 'charges'
       };
-      const csvHeaders=lines[0].split(/[,;]+/);
+      const csvHeaders=lines[0].replace('\r', '').split(/[,;]+/);
       for (let i=1; i<lines.length; i++) {
         const obj = {};
         const currentLine=lines[i].replace('\r', '').split(/[,;]+/);
@@ -120,6 +122,10 @@ const utilsMixin = {
           delete obj[oldKey];
         });
         obj['currency']='EUR';
+        obj['usage'] = Number(obj['usage']);
+        if (obj['charges'] && obj['charges'] !== '') {
+          obj['charges'] = Number(obj['charges']);
+        } else delete obj['charges'];
         if (obj['direction']?.toLowerCase() === 'inbound') {
           delete obj['direction'];
           result.inbound.push(obj);
@@ -136,7 +142,8 @@ const utilsMixin = {
         'VPMN': 'visitorTadig',
         'Services Categorised': 'service',
         'Usage': 'usage',
-        'Units': 'units'
+        'Units': 'units',
+        'Charges': 'charges'
       };
       for (const row of json) {
         const obj = row;
@@ -149,7 +156,9 @@ const utilsMixin = {
       for (const oldKey of Object.keys(headers)) {
           newObj[headers[oldKey]] = obj[oldKey];
       }
-      newObj['usage']= String(newObj['usage']);
+      if (!newObj['charges']) delete newObj['charges'];
+      else newObj['charges']= Number(newObj['charges']);
+      newObj['yearMonth']= String(newObj['yearMonth']);
       newObj['currency']='EUR';
       result.push(newObj);
     }

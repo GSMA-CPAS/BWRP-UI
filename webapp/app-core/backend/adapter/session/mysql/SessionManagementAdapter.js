@@ -7,7 +7,7 @@ class SessionManagementAdapter extends AbstractAdapter {
     super(adapterName, adapterConfig, database);
   }
 
-  async initialize() {
+  async onSetup() {
     try {
       await this.database.query('describe sessions');
       return false;
@@ -20,14 +20,14 @@ class SessionManagementAdapter extends AbstractAdapter {
               'expires INT(11) UNSIGNED NOT NULL, ' +
               'data MEDIUMTEXT NOT NULL, ' +
               'PRIMARY KEY (session_id))');
-          this.getLogger().info('[SessionManagementAdapter::initialize] table sessions has been created successfully!');
+          this.getLogger().info('[SessionManagementAdapter::onSetup] table sessions has been created successfully!');
           return true;
         } catch (error) {
-          this.getLogger().error('[SessionManagementAdapter::initialize] failed to create sessions table - %s ', JSON.stringify(error));
+          this.getLogger().error('[SessionManagementAdapter::onSetup] failed to create sessions table - %s ', JSON.stringify(error));
           throw error;
         }
       } else {
-        this.getLogger().error('[SessionManagementAdapter::initialize] Error checking database - %s ', JSON.stringify(error));
+        this.getLogger().error('[SessionManagementAdapter::onSetup] Error checking database - %s ', JSON.stringify(error));
         throw error;
       }
     }

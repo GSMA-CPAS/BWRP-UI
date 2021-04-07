@@ -115,11 +115,7 @@ class LocalStorageAdapter extends AbstractAdapter {
     }
   }
 
-  async initialize() {
-    await this.createTableDocuments();
-  }
-
-  async createTableDocuments() {
+  async onSetup() {
     try {
       await this.database.query('describe documents');
       return false;
@@ -139,14 +135,14 @@ class LocalStorageAdapter extends AbstractAdapter {
               '`toStorageKey` VARCHAR(64) AS (SHA2(CONCAT(toMSP, referenceId), 256)) STORED NOT NULL, ' +
               'PRIMARY KEY (id), ' +
               'UNIQUE INDEX referenceId (referenceId))');
-          this.getLogger().info('[LocalStorageAdapter::createTableDocuments] table documents has been created successfully!');
+          this.getLogger().info('[LocalStorageAdapter::onSetup] table documents has been created successfully!');
           return true;
         } catch (error) {
-          this.getLogger().error('[LocalStorageAdapter::createTableDocuments] failed to create documents table - %s ', JSON.stringify(error));
+          this.getLogger().error('[LocalStorageAdapter::onSetup] failed to create documents table - %s ', JSON.stringify(error));
           throw error;
         }
       } else {
-        this.getLogger().error('[LocalStorageAdapter::createTableDocuments] Error checking database - %s ', JSON.stringify(error));
+        this.getLogger().error('[LocalStorageAdapter::onSetup] Error checking database - %s ', JSON.stringify(error));
         throw error;
       }
     }
