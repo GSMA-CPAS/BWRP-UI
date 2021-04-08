@@ -5,7 +5,6 @@ const packageJson = fs.readFileSync('./package.json');
 const version = JSON.parse(packageJson).version || 0;
 const name = JSON.parse(packageJson).name || 'undefined';
 function resolve(dir) {
-  console.log(__dirname, dir);
   return path.resolve(__dirname, dir);
 }
 
@@ -25,7 +24,7 @@ module.exports = {
         '@mixins': resolve('./src/utils/mixins'),
         '@dialogs': resolve('./src/components/dialogs'),
         '@components': resolve('./src/components/other'),
-        '@pages/': resolve('./src/components/pages'),
+        '@pages': resolve('./src/components/pages'),
       },
     },
   },
