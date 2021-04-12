@@ -25,6 +25,18 @@
                           :items="items"
                           :search="search"
                           hide-default-footer>
+              <template #item="{ item }">
+                <tr>
+                  <td> {{item.service}}</td>
+                  <td> {{item.unit}}</td>
+                  <td> {{item.inbound_own_usage.toFixed(2)}}</td>
+                  <td> {{item.inbound_partner_usage.toFixed(2)}}</td>
+                  <td> {{item.inbound_discrepancy.toFixed(2)}}</td>
+                  <td> {{item.outbound_own_usage.toFixed(2)}}</td>
+                  <td> {{item.outbound_partner_usage.toFixed(2)}}</td>
+                  <td> {{item.outbound_discrepancy.toFixed(2)}}</td>
+                </tr>
+              </template>
             </v-data-table>
           </v-col>
         </v-row>

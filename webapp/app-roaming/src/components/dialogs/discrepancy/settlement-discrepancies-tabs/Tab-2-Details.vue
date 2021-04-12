@@ -23,9 +23,9 @@
             <td> {{item.partner_usage.toFixed(2)}}</td>
             <td> {{item.delta_usage_abs.toFixed(2)}}</td>
             <td> {{item.delta_usage_percent.toFixed(2)}}</td>
-            <td> {{(item.own_calculation).toFixed(2)}}</td>
-            <td> {{(item.partner_calculation).toFixed(2)}}</td>
-            <td> {{(item.delta_calculation_percent).toFixed(2)}}</td>
+            <td> {{item.own_calculation.toFixed(2)}}</td>
+            <td> {{item.partner_calculation.toFixed(2)}}</td>
+            <td> {{item.delta_calculation_percent.toFixed(2)}}</td>
           </tr>
         </template>
       </v-data-table>
