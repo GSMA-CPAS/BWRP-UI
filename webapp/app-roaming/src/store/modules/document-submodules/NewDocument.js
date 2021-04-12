@@ -219,7 +219,7 @@ const newDocumentModule = {
                     visitorTadigs: {codes: visitorTadigs},
                     chosenServices: services.map(
                       ({service, usagePricing}, index) => {
-                        if (service) {
+                        if (service && usagePricing) {
                           const {unit, ratingPlan} = usagePricing;
                           const {
                             rate,
