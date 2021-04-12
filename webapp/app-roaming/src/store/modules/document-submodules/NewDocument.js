@@ -160,6 +160,8 @@ const newDocumentModule = {
       const user = getters.msps.user;
       const partner = parties.filter((val) => val !== user)[0];
 
+      const headerData = data?.header;
+
       const userMspIncluded = parties.includes(user);
 
       const generalInformationMap = {
@@ -276,6 +278,22 @@ const newDocumentModule = {
             },
           ],
         };
+        let userMinSignatures;
+        let partnerMinSignatures;
+
+        if (headerData.msps) {
+          userMinSignatures = headerData.msps[user].minSignatures;
+          partnerMinSignatures = headerData.msps[partner].minSignatures;
+        } else {
+          userMinSignatures =
+            headerData.fromMsp.mspId === user
+              ? headerData.fromMsp.minSignatures
+              : headerData.toMsp.minSignatures;
+          partnerMinSignatures =
+            headerData.fromMsp.mspId === partner
+              ? headerData.fromMsp.minSignatures
+              : headerData.toMsp.minSignatures;
+        }
 
         const mappedGeneralInformation = transform(
           data.body,
@@ -292,6 +310,14 @@ const newDocumentModule = {
           discountModelsMap,
         );
 
+        commit('updateSignatures', {
+          key: 'userData',
+          value: userMinSignatures,
+        });
+        commit('updateSignatures', {
+          key: 'partnerData',
+          value: partnerMinSignatures,
+        });
         commit('updateDiscountModels', {
           key: 'userData',
           data: mappedUserDiscounts,
