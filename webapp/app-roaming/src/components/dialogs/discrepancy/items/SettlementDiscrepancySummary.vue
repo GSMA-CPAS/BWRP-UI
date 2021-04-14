@@ -3,7 +3,7 @@
     <v-card class="pa-2">
       <v-container fluid>
         <v-data-table
-            :headers="headers" :items="items"
+            :headers="headers" :items="items" hide-default-footer
           >
           <template #item="{ item }">
             <tr :class=discrepanciesFlag(item,flagParam)>
