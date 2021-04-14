@@ -159,8 +159,11 @@ const utilsMixin = {
       };
       for (const row of json) {
         const obj = row;
-        obj['Direction']?.toLowerCase() === 'inbound' ?
-            this.parseSingleUsage(obj, result.inbound, headers) : this.parseSingleUsage(obj, result.outbound, headers);
+        if (obj['Direction']?.toLowerCase() === 'inbound') {
+            this.parseSingleUsage(obj, result.inbound, headers);
+        } else if (obj['Direction']?.toLowerCase() === 'outbound') {
+            this.parseSingleUsage(obj, result.outbound, headers);
+        }
       }
     },
     parseSingleUsage(obj, result, headers) {
