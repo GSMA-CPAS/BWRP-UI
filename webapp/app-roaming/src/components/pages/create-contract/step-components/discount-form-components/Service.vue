@@ -56,7 +56,7 @@
       <row label="Rate">
         <rating-plan-input
           v-model="service.rate"
-          disable-thresholds="true"
+          :disable-thresholds="true"
           disable-linear="true"
         />
       </row>
@@ -65,7 +65,7 @@
       <row label="Rate">
         <rating-plan-input
           v-model="service.rate"
-          disable-thresholds="true"
+          :disable-thresholds="true"
           disable-fixed="true"
         />
       </row>

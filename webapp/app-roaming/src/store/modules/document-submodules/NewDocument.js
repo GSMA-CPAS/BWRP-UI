@@ -218,8 +218,26 @@ const newDocumentModule = {
                     homeTadigs: {codes: homeTadigs},
                     visitorTadigs: {codes: visitorTadigs},
                     chosenServices: services.map(
-                      ({service, usagePricing}, index) => {
-                        if (service && usagePricing) {
+                      (
+                        {service, usagePricing, includedInCommitment},
+                        index,
+                      ) => {
+                        const mappedService = {
+                          id: `service-${index}`,
+                          name: service,
+                          includedInCommitment,
+                          rate: null,
+                          unit: null,
+                          balancedRate: null,
+                          unbalancedRate: null,
+                          pricingModel: null,
+                          prevDefaultUnit: null,
+                          prevDefaultAccessUnit: null,
+                          accessPricingModel: null,
+                          accessPricingUnit: null,
+                          accessPricingRate: null,
+                        };
+                        if (usagePricing) {
                           const {unit, ratingPlan} = usagePricing;
                           const {
                             rate,
@@ -228,35 +246,23 @@ const newDocumentModule = {
                             kind,
                             accessPricingModel,
                           } = ratingPlan;
-                          return {
-                            id: `service-${index}`,
-                            name: service,
-                            unit,
-                            rate: rate.thresholds,
-                            balancedRate,
-                            unbalancedRate,
-                            pricingModel: kind,
-                            accessPricingModel,
-                            accessPricingUnit: accessPricingModel?.unit,
-                            accessPricingRate: accessPricingModel?.rate,
-                          };
-                        } else {
-                          return {
-                            id: 'service-0',
-                            name: null,
-                            rate: null,
-                            unit: null,
-                            balancedRate: null,
-                            unbalancedRate: null,
-                            pricingModel: null,
-                            accessPricingModel: null,
-                            accessPricingUnit: null,
-                            accessPricingRate: null,
-                            prevDefaultUnit: null,
-                            prevDefaultAccessUnit: null,
-                            includedInCommitment: true,
-                          };
+                          if (rate.thresholds) {
+                            mappedService.rate = rate.thresholds;
+                          } else {
+                            mappedService.rate = {rate};
+                            log(rate, mappedService.rate);
+                          }
+                          mappedService.unit = unit;
+                          mappedService.balancedRate = balancedRate;
+                          mappedService.unbalancedRate = unbalancedRate;
+                          mappedService.pricingModel = kind;
+                          mappedService.accessPricingModel = accessPricingModel;
+                          mappedService.accessPricingUnit =
+                            accessPricingModel?.unit;
+                          mappedService.accessPricingRate =
+                            accessPricingModel?.rate;
                         }
+                        return mappedService;
                       },
                     ),
                   }),

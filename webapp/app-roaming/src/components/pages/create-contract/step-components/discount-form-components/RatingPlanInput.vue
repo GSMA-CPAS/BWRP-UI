@@ -1,7 +1,7 @@
 <template>
   <v-col>
     <div
-      v-for="(tier, index) in disableThresholds ? tiers.slice(0, 1) : tiers"
+      v-for="(tier, index) in tiers.slice ? tiers.slice(0, 1) : tiers"
       :key="tier.id"
     >
       <v-row>
