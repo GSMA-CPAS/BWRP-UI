@@ -73,9 +73,9 @@ const timelineMixin = {
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
     discrepanciesFlag: function(item, param) {
-      if (Math.abs(item[param]) === 0) return 'green-flag';
-      else if (Math.abs(item[param]) <= 2) return 'yellow-flag';
-      else return Math.abs(item[param]) > 4 ? 'red-flag' : 'orange-flag';
+      if (Math.abs(item[param]) <= 0.5) return 'green-flag';
+      else if (Math.abs(item[param]) <= 1) return 'yellow-flag';
+      else return Math.abs(item[param]) > 2 ? 'red-flag' : 'orange-flag';
     },
   },
   computed: {
