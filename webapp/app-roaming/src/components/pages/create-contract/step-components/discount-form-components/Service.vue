@@ -22,7 +22,7 @@
     </v-row>
     <row label="Included in commitment?">
       <v-col>
-        <v-checkbox v-model="service.includedInCommitment"></v-checkbox>
+        <v-checkbox v-model="service.includedInCommitment" />
       </v-col>
     </row>
     <row label="Usage Pricing Model">

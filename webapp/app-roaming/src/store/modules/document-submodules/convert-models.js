@@ -8,8 +8,10 @@ function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
 function convertUiThresholdsToJsonModel(uiRateThresholds) {
   return {
     start: uiRateThresholds.threshold,
-    fixedPrice: uiRateThresholds.fixedPrice,
-    linearPrice: uiRateThresholds.linearPrice,
+    fixedPrice: uiRateThresholds.fixedPrice ? uiRateThresholds.fixedPrice : 0,
+    linearPrice: uiRateThresholds.linearPrice
+      ? uiRateThresholds.linearPrice
+      : 0,
   };
 }
 
@@ -34,7 +36,7 @@ function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(
       kind: uiBalancedUnbalancedRatePlan.pricingModel,
       balancedRate: {
         linearPrice: convertUiThresholdsToJsonModel(
-          uiBalancedUnbalancedRatePlan.balancedRate[0],
+          uiBalancedUnbalancedRatePlan.rate[0],
         ).linearPrice,
       },
       unbalancedRate: {
@@ -98,7 +100,9 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
 function convertUiServiceToJsonModel(uiService) {
   return {
     service: uiService.name,
-    includedInCommitment: uiService.includedInCommitment,
+    includedInCommitment: uiService.includedInCommitment
+      ? uiService.includedInCommitment
+      : true,
     usagePricing: convertUiRatePlanToJsonModel(uiService),
     accessPricing: uiService.accessPricingModel
       ? convertUiRatePlanToJsonModel({
