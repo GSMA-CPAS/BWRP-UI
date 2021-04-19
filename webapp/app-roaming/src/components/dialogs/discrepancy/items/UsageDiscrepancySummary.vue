@@ -28,13 +28,13 @@
               <template #item="{ item }">
                 <tr>
                   <td> {{item.service}}</td>
-                  <td> {{item.unit}}</td>
-                  <td> {{item.inbound_own_usage.toFixed(2)}}</td>
-                  <td> {{item.inbound_partner_usage.toFixed(2)}}</td>
-                  <td> {{item.inbound_discrepancy.toFixed(2)}}</td>
-                  <td> {{item.outbound_own_usage.toFixed(2)}}</td>
-                  <td> {{item.outbound_partner_usage.toFixed(2)}}</td>
-                  <td> {{item.outbound_discrepancy.toFixed(2)}}</td>
+                  <td style="border-right: 1px #e5e5e5 solid"> {{item.unit}}</td>
+                  <td> {{parseValue(item.inbound_own_usage)}}</td>
+                  <td> {{parseValue(item.inbound_partner_usage)}}</td>
+                  <td style="border-right: 1px #e5e5e5 solid"> {{parseValue(item.inbound_discrepancy)}}</td>
+                  <td> {{parseValue(item.outbound_own_usage)}}</td>
+                  <td> {{parseValue(item.outbound_partner_usage)}}</td>
+                  <td> {{parseValue(item.outbound_discrepancy)}}</td>
                 </tr>
               </template>
             </v-data-table>
@@ -46,9 +46,12 @@
 </template>
 
 <script>
+import {timelineMixin} from '@/utils/mixins/component-specfic';
+
 export default {
   name: 'UsageDiscrepancySummary',
   description: 'Discrepancies Deal Summary',
+  mixins: [timelineMixin],
   computed: {
     headers() {
       return [

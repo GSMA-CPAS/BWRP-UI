@@ -18,6 +18,9 @@ const converterMixin = {
 };
 const utilsMixin = {
   methods: {
+    parseValue(number) {
+      return Number(number).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
     usageJsonToCsv(body) {
       const inboundItems = body.inbound;
       const outboundItems = body.outbound;
