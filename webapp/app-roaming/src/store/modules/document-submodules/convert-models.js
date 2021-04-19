@@ -102,9 +102,10 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
 function convertUiServiceToJsonModel(uiService) {
   return {
     service: uiService.name,
-    includedInCommitment: uiService.includedInCommitment
-      ? uiService.includedInCommitment
-      : true,
+    includedInCommitment:
+      typeof uiService.includedInCommitment === 'boolean'
+        ? uiService.includedInCommitment
+        : false,
     usagePricing: convertUiRatePlanToJsonModel(uiService),
     accessPricing: uiService.accessPricingModel
       ? convertUiRatePlanToJsonModel({
