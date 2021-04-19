@@ -168,55 +168,56 @@ const newDocumentModule = {
       const {partner, fileAsJSON} = payload;
 
       const loadedJson = {};
+      if (fileAsJSON) {
+        if (!fileAsJSON.generalInformation) {
+          dispatch(
+            'app-state/loadError',
+            {
+              title: 'Invalid format',
+              code: `Only contract draft model is supported.`,
+            },
+            {root: true},
+          );
+        } else {
+          if (fileAsJSON.generalInformation) {
+            loadedJson.generalInformation = fileAsJSON.generalInformation;
 
-      if (!fileAsJSON.generalInformation) {
-        dispatch(
-          'app-state/loadError',
-          {
-            title: 'Invalid format',
-            code: `Only contract draft model is supported.`,
-          },
-          {root: true},
-        );
-      } else {
-        if (fileAsJSON.generalInformation) {
-          loadedJson.generalInformation = fileAsJSON.generalInformation;
+            if (loadedJson.generalInformation[user]) {
+              loadedJson.generalInformation.userData =
+                loadedJson.generalInformation[user];
+              delete loadedJson.generalInformation[user];
+            }
 
-          if (loadedJson.generalInformation[user]) {
-            loadedJson.generalInformation.userData =
-              loadedJson.generalInformation[user];
-            delete loadedJson.generalInformation[user];
+            if (loadedJson.generalInformation[partner]) {
+              loadedJson.generalInformation.partnerData =
+                loadedJson.generalInformation[partner];
+              delete loadedJson.generalInformation[partner];
+            }
           }
 
-          if (loadedJson.generalInformation[partner]) {
-            loadedJson.generalInformation.partnerData =
-              loadedJson.generalInformation[partner];
-            delete loadedJson.generalInformation[partner];
+          if (fileAsJSON[user]) {
+            loadedJson.userData = fileAsJSON[user];
           }
-        }
 
-        if (fileAsJSON[user]) {
-          loadedJson.userData = fileAsJSON[user];
-        }
+          if (fileAsJSON[partner]) {
+            loadedJson.partnerData = fileAsJSON[partner];
+          }
 
-        if (fileAsJSON[partner]) {
-          loadedJson.partnerData = fileAsJSON[partner];
-        }
+          if (loadedJson.generalInformation.startDate) {
+            loadedJson.generalInformation.startDate = parseISOString(
+              loadedJson.generalInformation.startDate,
+            );
+          }
 
-        if (loadedJson.generalInformation.startDate) {
-          loadedJson.generalInformation.startDate = parseISOString(
-            loadedJson.generalInformation.startDate,
-          );
-        }
-
-        if (loadedJson.generalInformation.endDate) {
-          loadedJson.generalInformation.endDate = parseISOString(
-            loadedJson.generalInformation.endDate,
-          );
+          if (loadedJson.generalInformation.endDate) {
+            loadedJson.generalInformation.endDate = parseISOString(
+              loadedJson.generalInformation.endDate,
+            );
+          }
+          commit('READ_JSON', loadedJson);
         }
       }
 
-      commit('READ_JSON', loadedJson);
       commit('SET_PARTNER', partner);
     },
     setStep(
