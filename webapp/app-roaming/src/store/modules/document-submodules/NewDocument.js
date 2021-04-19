@@ -173,8 +173,8 @@ const newDocumentModule = {
         dispatch(
           'app-state/loadError',
           {
-            title: 'Invalid upload',
-            code: `Uploaded file is not supported in ${rootGetters['app-details/version']}`,
+            title: 'Invalid format',
+            code: `Only contract draft model is supported.`,
           },
           {root: true},
         );
@@ -289,6 +289,7 @@ const newDocumentModule = {
               title: 'Missing values',
               body: errorMessages.length > 0 ? errorMessages : err,
             };
+            console.log(err);
             reject(error);
           }
         }, 50);
