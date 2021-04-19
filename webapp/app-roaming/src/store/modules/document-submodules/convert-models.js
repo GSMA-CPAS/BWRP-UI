@@ -35,9 +35,11 @@ function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(
     ratingPlan: {
       kind: uiBalancedUnbalancedRatePlan.pricingModel,
       balancedRate: {
-        linearPrice: convertUiThresholdsToJsonModel(
-          uiBalancedUnbalancedRatePlan.rate[0],
-        ).linearPrice,
+        linearPrice: uiBalancedUnbalancedRatePlan.balancedRate[0]
+          ? convertUiThresholdsToJsonModel(
+              uiBalancedUnbalancedRatePlan.balancedRate[0],
+            ).linearPrice
+          : uiBalancedUnbalancedRatePlan.rate[0],
       },
       unbalancedRate: {
         linearPrice: convertUiThresholdsToJsonModel(
