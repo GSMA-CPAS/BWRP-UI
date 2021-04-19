@@ -169,7 +169,16 @@ const newDocumentModule = {
 
       const loadedJson = {};
 
-      if (fileAsJSON) {
+      if (!fileAsJSON.generalInformation) {
+        dispatch(
+          'app-state/loadError',
+          {
+            title: 'Invalid upload',
+            code: `Uploaded file is not supported in ${rootGetters['app-details/version']}`,
+          },
+          {root: true},
+        );
+      } else {
         if (fileAsJSON.generalInformation) {
           loadedJson.generalInformation = fileAsJSON.generalInformation;
 
