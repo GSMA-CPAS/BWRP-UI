@@ -80,21 +80,23 @@
         <rating-plan-input v-model="service.rate" />
       </row>
     </div>
-    <div v-if="service.pricingModel === 'Balanced/Unbalanced (Linear rate)'">
-      <row label="Balanced Rate">
-        <rating-plan-input
-          v-model="service.balancedRate"
-          :disable-thresholds="true"
-          :disable-fixed="true"
-        />
-      </row>
-      <row label="Unbalanced Rate">
-        <rating-plan-input
-          v-model="service.unbalancedRate"
-          :disable-thresholds="true"
-          :disable-fixed="true"
-        />
-      </row>
+    <div>
+      <div v-if="service.pricingModel === 'Balanced/Unbalanced (Linear rate)'">
+        <row label="Balanced Rate">
+          <rating-plan-input
+            v-model="service.balancedRate"
+            :disable-thresholds="true"
+            :disable-fixed="true"
+          />
+        </row>
+        <row label="Unbalanced Rate">
+          <rating-plan-input
+            v-model="service.unbalancedRate"
+            :disable-thresholds="true"
+            :disable-fixed="true"
+          />
+        </row>
+      </div>
     </div>
     <row
       v-if="
