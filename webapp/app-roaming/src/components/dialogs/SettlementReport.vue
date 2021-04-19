@@ -27,7 +27,7 @@
               <v-card style="border: orange 2px solid">
                 <v-card-title class="orange--text headline">NET Position</v-card-title>
                 <v-card-text class="orange--text">
-                  {{ netPosition }} €
+                  {{ parseValue(netPosition) }} €
                 </v-card-text>
               </v-card>
             </v-col>
