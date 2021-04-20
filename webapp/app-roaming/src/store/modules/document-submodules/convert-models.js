@@ -7,7 +7,7 @@ function convertUiPartyInformationToJsonModel(uiPartyGeneralData) {
 
 function convertUiThresholdsToJsonModel(uiRateThresholds) {
   return {
-    start: uiRateThresholds.threshold,
+    start: uiRateThresholds.threshold ? uiRateThresholds.threshold : 0,
     fixedPrice: uiRateThresholds.fixedPrice ? uiRateThresholds.fixedPrice : 0,
     linearPrice: uiRateThresholds.linearPrice
       ? uiRateThresholds.linearPrice
