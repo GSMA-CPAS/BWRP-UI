@@ -3,19 +3,19 @@
     <v-card class="pa-2">
       <v-container fluid>
         <v-data-table
-            :headers="headers" :items="items"
+            :headers="headers" :items="items" hide-default-footer
           >
           <template #item="{ item }">
             <tr :class=discrepanciesFlag(item,flagParam)>
               <td> {{item.service}}</td>
               <td> {{item.unit}}</td>
-              <td> {{item.own_usage.toFixed(2)}}</td>
-              <td> {{item.partner_usage.toFixed(2)}}</td>
-              <td> {{item.delta_usage_abs.toFixed(2)}}</td>
-              <td> {{item.delta_usage_percent.toFixed(2)}}</td>
-              <td> {{(item.own_calculation).toFixed(2)}}</td>
-              <td> {{(item.partner_calculation).toFixed(2)}}</td>
-              <td> {{(item.delta_calculation_percent).toFixed(2)}}</td>
+              <td> {{parseValue(item.own_usage)}}</td>
+              <td> {{parseValue(item.partner_usage)}}</td>
+              <td> {{parseValue(item.delta_usage_abs)}}</td>
+              <td> {{parseValue(item.delta_usage_percent)}}</td>
+              <td> {{parseValue(item.own_calculation)}}</td>
+              <td> {{parseValue(item.partner_calculation)}}</td>
+              <td> {{parseValue(item.delta_calculation_percent)}}</td>
             </tr>
           </template>
         </v-data-table>

@@ -20,10 +20,10 @@
             <td> {{item.VPMN}}</td>
             <td> {{item.yearMonth}}</td>
             <td> {{item.service}}</td>
-            <td> {{item.own_usage.toFixed(2)}}</td>
-            <td> {{item.partner_usage.toFixed(2)}}</td>
-            <td> {{item.delta_usage_abs.toFixed(2)}}</td>
-            <td> {{item.delta_usage_percent.toFixed(2)}}</td>
+            <td> {{parseValue(item.own_usage)}}</td>
+            <td> {{parseValue(item.partner_usage)}}</td>
+            <td> {{parseValue(item.delta_usage_abs)}}</td>
+            <td> {{parseValue(item.delta_usage_percent)}}</td>
           </tr>
         </template>
       </v-data-table>

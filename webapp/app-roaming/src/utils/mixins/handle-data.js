@@ -18,6 +18,10 @@ const converterMixin = {
 };
 const utilsMixin = {
   methods: {
+    parseValue(number) {
+      const notNullNumber = number ? number : 0;
+      return Number(notNullNumber).toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
     usageJsonToCsv(body) {
       const inboundItems = body.inbound;
       const outboundItems = body.outbound;
@@ -159,8 +163,11 @@ const utilsMixin = {
       };
       for (const row of json) {
         const obj = row;
-        obj['Direction']?.toLowerCase() === 'inbound' ?
-            this.parseSingleUsage(obj, result.inbound, headers) : this.parseSingleUsage(obj, result.outbound, headers);
+        if (obj['Direction']?.toLowerCase() === 'inbound') {
+            this.parseSingleUsage(obj, result.inbound, headers);
+        } else if (obj['Direction']?.toLowerCase() === 'outbound') {
+            this.parseSingleUsage(obj, result.outbound, headers);
+        }
       }
     },
     parseSingleUsage(obj, result, headers) {

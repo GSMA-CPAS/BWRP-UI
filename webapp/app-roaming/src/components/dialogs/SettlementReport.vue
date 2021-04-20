@@ -11,7 +11,7 @@
               <v-card style="border: green 2px solid">
                 <v-card-title class="green--text headline" >Home revenues</v-card-title>
                 <v-card-text class="green--text">
-                  {{homeRevenues}} €
+                  {{parseValue(homeRevenues)}} €
                 </v-card-text>
               </v-card>
             </v-col>
@@ -19,7 +19,7 @@
               <v-card style="border: #ff6b6b 2px solid">
                 <v-card-title class="red--text headline">Partner revenues</v-card-title>
                 <v-card-text class="red--text">
-                  {{ partnerRevenues }} €
+                  {{ parseValue(partnerRevenues) }} €
                 </v-card-text>
               </v-card>
             </v-col>
@@ -27,7 +27,7 @@
               <v-card style="border: orange 2px solid">
                 <v-card-title class="orange--text headline">NET Position</v-card-title>
                 <v-card-text class="orange--text">
-                  {{ netPosition }} €
+                  {{ parseValue(netPosition) }} €
                 </v-card-text>
               </v-card>
             </v-col>
@@ -40,7 +40,7 @@
               <v-card large>
                 <v-card-title class="headline">Partner Charges</v-card-title>
                 <v-card-text>
-                  {{ partnerCharges }} €
+                  {{ parseValue(partnerCharges) }} €
                 </v-card-text>
                 <v-card-text class="text-right text-sm-h5" :class="firstPercentageDiscrepancy<0?'red--text':'green--text'">
                   {{ firstPercentageDiscrepancy }} %
@@ -51,7 +51,7 @@
               <v-card large>
                 <v-card-title class="headline">Home Charges</v-card-title>
                 <v-card-text>
-                  {{ homeCharges }} €
+                  {{ parseValue(homeCharges) }} €
                 </v-card-text>
                 <v-card-text class="text-right text-sm-h5" :class="secondPercentageDiscrepancy<0?'green--text':'red--text'">
                   {{ secondPercentageDiscrepancy }} %
