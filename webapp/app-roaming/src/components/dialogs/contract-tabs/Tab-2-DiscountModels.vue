@@ -47,11 +47,7 @@
       >
         <row cols="2" :label="service.service">
           <v-col class="striped-column-container">
-            <template
-              v-if="
-                service.usagePricing && service.usagePricing.ratingPlan.rate
-              "
-            >
+            <template v-if="service.usagePricing">
               <v-row>
                 <simple-model-template
                   v-if="service.usagePricing.ratingPlan.kind === 'Linear rate'"
