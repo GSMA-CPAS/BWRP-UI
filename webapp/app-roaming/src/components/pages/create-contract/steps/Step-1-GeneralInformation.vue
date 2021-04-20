@@ -192,16 +192,6 @@ export default {
         this.updateValidation({key, isInvalid: this.$v.endDate.$invalid});
       },
     },
-    active: {
-      get() {
-        return this.prolongationLength > 0;
-      },
-      set(isActive) {
-        isActive
-          ? (this.prolongationLength = 12)
-          : (this.prolongationLength = null);
-      },
-    },
     prolongationLength: {
       get() {
         const prolongationLength = this.$store.state.document.new
