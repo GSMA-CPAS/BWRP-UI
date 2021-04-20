@@ -109,9 +109,6 @@ import GeneralInformationValidation from '@validation/GeneralInformation';
 export default {
   name: 'step-1',
   description: 'General Information',
-  data: () => ({
-    active: false,
-  }),
   provide() {
     return {
       $v: this.$v,
@@ -124,13 +121,6 @@ export default {
     HelpTooltip,
     GeneralInformationPartyForm,
   },
-  watch: {
-    active(isActive) {
-      isActive
-        ? (this.prolongationLength = 12)
-        : (this.prolongationLength = null);
-    },
-  },
   methods: {
     ...mapMutations('document/new', [
       'addValidation',
@@ -142,6 +132,16 @@ export default {
     },
   },
   computed: {
+    active: {
+      get() {
+        return this.prolongationLength > 0;
+      },
+      set(isActive) {
+        isActive
+          ? (this.prolongationLength = 12)
+          : (this.prolongationLength = null);
+      },
+    },
     name: {
       get() {
         return this.$store.state.document.new.generalInformation.name;
@@ -194,8 +194,9 @@ export default {
     },
     prolongationLength: {
       get() {
-        return this.$store.state.document.new.generalInformation
-          .prolongationLength;
+        const prolongationLength = this.$store.state.document.new
+          .generalInformation.prolongationLength;
+        return prolongationLength;
       },
       set(value) {
         const key = 'prolongationLength';
