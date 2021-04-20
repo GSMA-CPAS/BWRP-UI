@@ -132,6 +132,16 @@ export default {
     },
   },
   computed: {
+    active: {
+      get() {
+        return this.prolongationLength > 0;
+      },
+      set(isActive) {
+        isActive
+          ? (this.prolongationLength = 12)
+          : (this.prolongationLength = null);
+      },
+    },
     name: {
       get() {
         return this.$store.state.document.new.generalInformation.name;
@@ -196,7 +206,6 @@ export default {
       get() {
         const prolongationLength = this.$store.state.document.new
           .generalInformation.prolongationLength;
-
         return prolongationLength;
       },
       set(value) {

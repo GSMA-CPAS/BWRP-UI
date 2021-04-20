@@ -161,7 +161,16 @@ const newDocumentModule = {
       const partner = parties.filter((val) => val !== user)[0];
 
       const headerData = data?.header;
-
+      if (!data.header && !data.body) {
+        dispatch(
+          'app-state/loadError',
+          {
+            title: 'Invalid format',
+            code: `Only contract draft model is supported.`,
+          },
+          {root: true},
+        );
+      }
       const userMspIncluded = parties.includes(user);
 
       const generalInformationMap = {
@@ -440,6 +449,7 @@ const newDocumentModule = {
               title: 'Missing values',
               body: errorMessages.length > 0 ? errorMessages : err,
             };
+            console.log(err);
             reject(error);
           }
         }, 50);

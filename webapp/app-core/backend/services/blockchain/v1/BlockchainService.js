@@ -200,7 +200,7 @@ class BlockchainService extends AbstractService {
             const certificate = walletIdentity.credentials.certificate;
             const document = await this.getBackendAdapter('localStorage').getDocument(referenceId);
             const signature = cryptoUtils.createSignature(privateKey, document.data);
-            const signatureAlgo = 'ecdsa-with-SHA256_secp256r1';
+            const signatureAlgo = 'ecdsaWithSha256';
             await this.getBackendAdapter('blockchain').uploadSignature(referenceId, certificate, signatureAlgo, signature);
             return res.json({
               signature: signature,

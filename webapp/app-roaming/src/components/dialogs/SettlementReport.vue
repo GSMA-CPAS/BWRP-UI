@@ -17,7 +17,7 @@
                   >Home revenues</v-card-title
                 >
                 <v-card-text class="green--text">
-                  {{ homeRevenues }} €
+                  {{ parseValue(homeRevenues) }} €
                 </v-card-text>
               </v-card>
             </v-col>
@@ -27,7 +27,7 @@
                   >Partner revenues</v-card-title
                 >
                 <v-card-text class="red--text">
-                  {{ partnerRevenues }} €
+                  {{ parseValue(partnerRevenues) }} €
                 </v-card-text>
               </v-card>
             </v-col>
@@ -37,7 +37,7 @@
                   >NET Position</v-card-title
                 >
                 <v-card-text class="orange--text">
-                  {{ netPosition }} €
+                  {{ parseValue(netPosition) }} €
                 </v-card-text>
               </v-card>
             </v-col>
@@ -49,7 +49,7 @@
             <v-col cols="3">
               <v-card large>
                 <v-card-title class="headline">Partner Charges</v-card-title>
-                <v-card-text> {{ partnerCharges }} € </v-card-text>
+                <v-card-text> {{ parseValue(partnerCharges) }} € </v-card-text>
                 <v-card-text
                   class="text-right text-sm-h5"
                   :class="
@@ -63,7 +63,7 @@
             <v-col cols="3">
               <v-card large>
                 <v-card-title class="headline">Home Charges</v-card-title>
-                <v-card-text> {{ homeCharges }} € </v-card-text>
+                <v-card-text> {{ parseValue(homeCharges) }} € </v-card-text>
                 <v-card-text
                   class="text-right text-sm-h5"
                   :class="

@@ -1,18 +1,18 @@
 <template>
   <v-col class="striped-column-container">
     <v-row>
-      <v-col class="striped-column"
-        ><b>{{ modelType }}</b></v-col
-      >
+      <v-col class="striped-column">
+        <b>{{ modelType }}</b>
+      </v-col>
       <v-col class="striped-column">{{ data.unit }}</v-col>
       <v-col class="striped-column"></v-col>
       <v-col class="striped-column"></v-col>
       <v-col class="striped-column"></v-col>
-      <v-col class="striped-column"
-        ><v-icon v-if="inCommitment" color="primary">
+      <v-col class="striped-column">
+        <v-icon v-if="inCommitment" color="primary">
           mdi-checkbox-marked-outline
-        </v-icon></v-col
-      >
+        </v-icon>
+      </v-col>
     </v-row>
     <v-divider />
     <v-row>
@@ -26,11 +26,11 @@
         Number(data.ratingPlan.balancedRate.linearPrice || 0).toLocaleString()
       }}</v-col>
       <v-col class="striped-column"></v-col>
-      <!--<v-col>
+      <!-- <v-col>
         <v-icon v-if="revenueCommitment" color="primary"
           >mdi-checkbox-marked-outline</v-icon
         >
-      </v-col>-->
+      </v-col> -->
     </v-row>
     <v-divider />
     <v-row>
@@ -59,6 +59,6 @@ export default {
   name: 'balanced-unbalanced-model-template',
   model: 'Balanced Unbalanced Model Template',
   mixins: [discountModelsMixin],
-  props: ['modelType', 'inCommitment'],
+  props: ['modelType', 'inCommitment', 'data'],
 };
 </script>
