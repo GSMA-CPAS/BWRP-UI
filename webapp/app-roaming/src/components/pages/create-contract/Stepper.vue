@@ -45,18 +45,22 @@
   </div>
 </template>
 <script>
-import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
+import {mapState, mapActions, mapMutations} from 'vuex';
 export default {
   name: 'stepper',
   title: 'Create Contract',
   description: 'Stepper used for contract-creation.',
   methods: {
-    ...mapActions('document/new', ['saveContract', 'setStep']),
+    ...mapActions('document/new', [
+      'saveContract',
+      'setStep',
+      'getContractData',
+    ]),
     ...mapMutations('document/new', ['resetState']),
     exportDraft() {
-      const contract = this.contract;
+      const contract = this.getContractData();
       delete contract.step;
-      const data = new Blob([JSON.stringify(this.contract)], {
+      const data = new Blob([JSON.stringify(contract)], {
         type: 'data:application/json',
       });
       const fileName = `contract-draft.json`;
@@ -87,7 +91,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('document/new', ['contract']),
     ...mapState('document/new', ['step', 'saveAttempt', 'validation']),
     steps() {
       const components = require.context(

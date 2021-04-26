@@ -265,8 +265,7 @@ const newDocumentModule = {
                               }),
                             );
                           } else {
-                            mappedService.rate = {rate};
-                            log(rate, mappedService.rate);
+                            mappedService.rate = [{...rate}];
                           }
                           mappedService.unit = unit;
                           mappedService.balancedRate = balancedRate;
@@ -419,7 +418,7 @@ const newDocumentModule = {
     saveContract({commit, dispatch, rootGetters, getters, rootState, state}) {
       const errorMessages = [];
       return new Promise((resolve, reject) => {
-        setTimeout(() => {
+        setTimeout(async () => {
           try {
             state.validation.forEach(
               ({step, from, isInvalid, message, validate}) => {
@@ -434,7 +433,8 @@ const newDocumentModule = {
               throw new Error();
             }
             const partnerMsp = getters.msps.partner;
-            const data = getters.contract;
+            const data = await dispatch('getContractData');
+            log(data);
             Vue.axios.commonAdapter
               .post('/documents', {partnerMsp, data}, {withCredentials: true})
               .then((res) => {
@@ -462,9 +462,14 @@ const newDocumentModule = {
         }, 50);
       });
     },
-  },
-  getters: {
-    contract: (state, getters) => {
+    getContractData({
+      commit,
+      dispatch,
+      rootGetters,
+      getters,
+      rootState,
+      state,
+    }) {
       const {user, partner} = getters.msps;
       const {generalInformation, partnerData, userData} = state;
       const {
@@ -504,6 +509,9 @@ const newDocumentModule = {
       };
       return convertedContract;
     },
+  },
+  getters: {
+    // contract: (state, getters) => {},
     msps: (state, getters, rootState) => {
       return {
         user: rootState.user.organization.mspid,
