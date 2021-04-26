@@ -20,15 +20,12 @@ const settlementModule = {
         },
         UPDATE_OWN_SETTLEMENT_ID(state, id) {
             state.ownSettlementId = id;
-            console.log(state);
         },
         UPDATE_PARTNER_SETTLEMENT_ID(state, id) {
             state.partnerSettlementId = id;
-            console.log(state);
         },
         UPDATE_DISCREPANCIES(state, data) {
             state.discrepancies = data;
-            console.log(state);
         },
         ACCEPT_DISCREPANCIES: (state) => {
             state.settlementStatus = 'Accepted';
@@ -121,7 +118,13 @@ const settlementModule = {
         },
         settlementStatus: (state) => {
             return state.settlementStatus;
-        }
+        },
+        ownSettlementId: (state) => {
+            return state.ownSettlementId;
+        },
+        partnerSettlementId: (state) => {
+            return state.partnerSettlementId;
+        },
     }
 };
 export default settlementModule;

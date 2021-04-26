@@ -142,6 +142,8 @@ const usageModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
     ) {
       const contractId = rootGetters['document/contractId'];
+      const ownSettlementId = rootGetters['settlement/ownSettlementId'];
+      const partnerSettlementId = rootGetters['settlement/partnerSettlementId'];
       const url = `/usages/${contractId}/${state.ownUsage.id}/discrepancy/?partnerUsageId=${state.partnerUsage.id}`;
       await Vue.axios.commonAdapter
         .get(url, {
@@ -149,6 +151,7 @@ const usageModule = {
         })
         .then((data) => {
           commit('UPDATE_DISCREPANCIES', data);
+          if (ownSettlementId && partnerSettlementId) dispatch('settlement/getSettlementDiscrepancies', contractId, {root: true});
         })
         .catch((err) => {
             console.log(err);
