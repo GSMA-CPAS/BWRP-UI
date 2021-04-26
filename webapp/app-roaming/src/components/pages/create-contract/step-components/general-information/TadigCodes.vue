@@ -28,7 +28,7 @@ export default {
     removeSearchTerm(codes) {
       this.value.codes = codes.reduce((res, curVal) => {
         const splitCode = curVal.split(',');
-        splitCode.forEach((code) => code.length > 0 && res.push(code));
+        splitCode.forEach((code) => code.length > 0 && res.push(code.trim()));
         return res;
       }, []);
       this.groupCodeSearchTerm = null;
@@ -51,7 +51,7 @@ export default {
           } else {
             code
               .split(',')
-              .forEach((code) => code.length > 0 && newVal.push(code));
+              .forEach((code) => code.length > 0 && newVal.push(code.trim()));
           }
         }
 
