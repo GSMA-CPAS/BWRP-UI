@@ -20,10 +20,10 @@
             <td>{{ parseValue(item.own_usage) }}</td>
             <td>{{ parseValue(item.partner_usage) }}</td>
             <td>{{ parseValue(item.delta_usage_abs) }}</td>
-            <td>{{ parseValue(item.delta_usage_percent) }}</td>
+            <td>{{ item.delta_usage_percent.toFixed(2) }}</td>
             <td>{{ parseValue(item.own_calculation) }}</td>
             <td>{{ parseValue(item.partner_calculation) }}</td>
-            <td>{{ parseValue(item.delta_calculation_percent) }}</td>
+            <td>{{ item.delta_calculation_percent.toFixed(2) }}</td>
           </tr>
         </template>
       </v-data-table>

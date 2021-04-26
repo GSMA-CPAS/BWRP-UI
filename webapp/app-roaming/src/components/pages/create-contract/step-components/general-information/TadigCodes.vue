@@ -9,11 +9,6 @@
     @change="removeSearchTerm"
     :search-input.sync="groupCodeSearchTerm"
   />
-  <!-- <v-checkbox
-      v-model="value.includeContractParty"
-      auto-grow
-      label="also contract party"
-    /> -->
 </template>
 <script>
 import {mapActions, mapState} from 'vuex';
@@ -30,7 +25,12 @@ export default {
   }),
   methods: {
     ...mapActions('workspace-config/tadig-groups', ['loadGroupCodes']),
-    removeSearchTerm(e) {
+    removeSearchTerm(codes) {
+      this.value.codes = codes.reduce((res, curVal) => {
+        const splitCode = curVal.split(',');
+        splitCode.forEach((code) => code.length > 0 && res.push(code.trim()));
+        return res;
+      }, []);
       this.groupCodeSearchTerm = null;
       this.groupCodeRemovalSearchTerm = null;
     },
@@ -49,7 +49,9 @@ export default {
             }
             changed = true;
           } else {
-            newVal.push(code);
+            code
+              .split(',')
+              .forEach((code) => code.length > 0 && newVal.push(code.trim()));
           }
         }
 
