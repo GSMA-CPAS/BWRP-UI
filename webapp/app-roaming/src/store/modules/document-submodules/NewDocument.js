@@ -256,7 +256,14 @@ const newDocumentModule = {
                             accessPricingModel,
                           } = ratingPlan;
                           if (rate.thresholds) {
-                            mappedService.rate = rate.thresholds;
+                            mappedService.rate = rate.thresholds.map(
+                              ({fixedPrice, linearPrice}, i) => ({
+                                tier: `tier-${i}`,
+                                start: 0,
+                                linearPrice,
+                                fixedPrice,
+                              }),
+                            );
                           } else {
                             mappedService.rate = {rate};
                             log(rate, mappedService.rate);
