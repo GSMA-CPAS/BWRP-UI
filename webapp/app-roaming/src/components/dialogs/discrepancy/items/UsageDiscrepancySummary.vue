@@ -55,7 +55,7 @@ export default {
   computed: {
     headers() {
       return [
-        {text: 'Service', value: 'service', sortable: false, align: 'start'},
+        {text: 'Service', value: 'service', sortable: false, align: 'center'},
         {text: 'Unit', value: 'unit', sortable: false, align: 'center'},
         {text: 'Own Usage', value: 'inbound_own_usage', sortable: false, align: 'center'},
         {text: 'Partner Usage', value: 'inbound_partner_usage', sortable: false, align: 'center'},
