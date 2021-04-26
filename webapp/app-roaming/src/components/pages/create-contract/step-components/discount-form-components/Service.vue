@@ -98,49 +98,52 @@
         </row>
       </div>
     </div>
-    <row
-      v-if="
-        serviceConfiguration[service.name] &&
-        serviceConfiguration[service.name].access
-      "
-      label="Access Pricing Model"
-    >
-      <v-col>
-        <v-select
-          :items="[
-            'Not Charged',
-            'Threshold - back to first',
-            'Tiered with Thresholds',
-          ]"
-          placeholder="Select Model"
-          v-model="service.accessPricingModel"
-        />
-      </v-col>
-    </row>
-    <div
-      v-if="
-        service.accessPricingModel &&
-        service.accessPricingModel !== 'Not Charged'
-      "
-    >
-      <row label="Unit">
-        <v-col>
-          <v-text-field
-            v-model="service.accessPricingUnit"
-            placeholder="Access unit to charge"
-          />
-        </v-col>
-      </row>
-    </div>
-    <div v-if="service.accessPricingModel === 'Threshold - back to first'">
-      <row label="Rate">
-        <rating-plan-input v-model="service.accessPricingRate" />
-      </row>
-    </div>
-    <div v-if="service.accessPricingModel === 'Tiered with Thresholds'">
-      <row label="Rate">
-        <rating-plan-input v-model="service.accessPricingRate" />
-      </row>
+    <div>
+      <div
+        v-if="
+          serviceConfiguration[service.name] &&
+          serviceConfiguration[service.name].access
+        "
+      >
+        <row label="Access Pricing Model">
+          <v-col>
+            <v-select
+              :items="[
+                'Not Charged',
+                'Threshold - back to first',
+                'Tiered with Thresholds',
+              ]"
+              placeholder="Select Model"
+              v-model="service.accessPricingModel"
+            />
+          </v-col>
+        </row>
+      </div>
+      <div
+        v-if="
+          service.accessPricingModel &&
+          service.accessPricingModel !== 'Not Charged'
+        "
+      >
+        <row label="Unit">
+          <v-col>
+            <v-text-field
+              v-model="service.accessPricingUnit"
+              placeholder="Access unit to charge"
+            />
+          </v-col>
+        </row>
+      </div>
+      <div v-if="service.accessPricingModel === 'Threshold - back to first'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.accessPricingRate" />
+        </row>
+      </div>
+      <div v-if="service.accessPricingModel === 'Tiered with Thresholds'">
+        <row label="Rate">
+          <rating-plan-input v-model="service.accessPricingRate" />
+        </row>
+      </div>
     </div>
   </div>
 </template>
