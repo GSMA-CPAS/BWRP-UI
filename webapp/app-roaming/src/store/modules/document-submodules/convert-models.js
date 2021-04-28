@@ -42,35 +42,39 @@ function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(
           : uiBalancedUnbalancedRatePlan.rate[0],
       },
       unbalancedRate: {
-        linearPrice: convertUiThresholdsToJsonModel(
-          uiBalancedUnbalancedRatePlan.unbalancedRate[0],
-        ).linearPrice,
+        linearPrice: uiBalancedUnbalancedRatePlan.unbalancedRate[0]
+          ? convertUiThresholdsToJsonModel(
+              uiBalancedUnbalancedRatePlan.unbalancedRate[0],
+            ).linearPrice
+          : 0,
       },
     },
   };
 }
 
 function convertUiFlatRateToJsonModel(uiFlatRatePlan) {
+  const fixedPrice = convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0])
+    .fixedPrice;
   return {
     unit: uiFlatRatePlan.unit,
     ratingPlan: {
       kind: uiFlatRatePlan.pricingModel,
       rate: {
-        fixedPrice: convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0])
-          .fixedPrice,
+        fixedPrice: fixedPrice ? fixedPrice : 0,
       },
     },
   };
 }
 
 function convertUiLinearRateToJsonModel(uiLinearRatePlan) {
+  const linearPrice = convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0])
+    .linearPrice;
   return {
     unit: uiLinearRatePlan.unit,
     ratingPlan: {
       kind: uiLinearRatePlan.pricingModel,
       rate: {
-        linearPrice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0])
-          .linearPrice,
+        linearPrice: linearPrice ? linearPrice : 0,
       },
     },
   };
@@ -92,10 +96,6 @@ function convertUiRatePlanToJsonModel(uiRatingPlan) {
     return convertUiLinearRateToJsonModel(uiRatingPlan);
   } else if (uiRatingPlan.pricingModel === 'Not Charged') {
     return undefined;
-  } else {
-    throw Error(
-      'Unsupported rate plan model "' + uiRatingPlan.pricingModel + '" passed.',
-    );
   }
 }
 
@@ -128,7 +128,7 @@ function convertUiServiceGroupToJsonModel(uiServiceGroup) {
 function convertUiDiscountsModelsToJsonModel(uiDiscountModels) {
   const model = {
     condition: {
-      kind: uiDiscountModels.condition.selectedConditionName,
+      kind: uiDiscountModels.condition?.selectedConditionName,
     },
 
     serviceGroups: uiDiscountModels.serviceGroups.map(
@@ -136,12 +136,12 @@ function convertUiDiscountsModelsToJsonModel(uiDiscountModels) {
     ),
   };
 
-  if (uiDiscountModels.condition.selectedCondition) {
+  if (uiDiscountModels.condition?.selectedCondition) {
     model.condition.commitment = {
-      value: uiDiscountModels.condition.selectedCondition.commitmentValue,
-      currency: uiDiscountModels.condition.selectedCondition.currency,
+      value: uiDiscountModels.condition?.selectedCondition.commitmentValue,
+      currency: uiDiscountModels.condition?.selectedCondition.currency,
       includingTaxes:
-        uiDiscountModels.condition.selectedCondition.includingTaxes,
+        uiDiscountModels.condition?.selectedCondition.includingTaxes,
     };
   }
 
@@ -161,8 +161,8 @@ const convertModelsModule = {
       framework: {
         contractParties: [userCode, partnerCode],
         term: {
-          start: uiModel.generalInformation.startDate.toISOString(),
-          end: uiModel.generalInformation.endDate.toISOString(),
+          start: uiModel.generalInformation.startDate?.toISOString(),
+          end: uiModel.generalInformation.endDate?.toISOString(),
         },
         payment: {
           taxesIncluded: uiModel.generalInformation.taxesIncluded,
