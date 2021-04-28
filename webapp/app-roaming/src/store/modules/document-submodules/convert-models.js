@@ -42,35 +42,39 @@ function convertUiBalancedUnbalancedLinearRatePlanToJsonModel(
           : uiBalancedUnbalancedRatePlan.rate[0],
       },
       unbalancedRate: {
-        linearPrice: convertUiThresholdsToJsonModel(
-          uiBalancedUnbalancedRatePlan.unbalancedRate[0],
-        ).linearPrice,
+        linearPrice: uiBalancedUnbalancedRatePlan.unbalancedRate[0]
+          ? convertUiThresholdsToJsonModel(
+              uiBalancedUnbalancedRatePlan.unbalancedRate[0],
+            ).linearPrice
+          : 0,
       },
     },
   };
 }
 
 function convertUiFlatRateToJsonModel(uiFlatRatePlan) {
+  const fixedPrice = convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0])
+    .fixedPrice;
   return {
     unit: uiFlatRatePlan.unit,
     ratingPlan: {
       kind: uiFlatRatePlan.pricingModel,
       rate: {
-        fixedPrice: convertUiThresholdsToJsonModel(uiFlatRatePlan.rate[0])
-          .fixedPrice,
+        fixedPrice: fixedPrice ? fixedPrice : 0,
       },
     },
   };
 }
 
 function convertUiLinearRateToJsonModel(uiLinearRatePlan) {
+  const linearPrice = convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0])
+    .linearPrice;
   return {
     unit: uiLinearRatePlan.unit,
     ratingPlan: {
       kind: uiLinearRatePlan.pricingModel,
       rate: {
-        linearPrice: convertUiThresholdsToJsonModel(uiLinearRatePlan.rate[0])
-          .linearPrice,
+        linearPrice: linearPrice ? linearPrice : 0,
       },
     },
   };

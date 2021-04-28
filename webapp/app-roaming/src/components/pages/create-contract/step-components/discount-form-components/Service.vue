@@ -166,7 +166,7 @@ export const service = {
   accessPricingRate: null,
   prevDefaultUnit: null,
   prevDefaultAccessUnit: null,
-  includedInCommitment: true,
+  includedInCommitment: false,
 };
 
 export default {
