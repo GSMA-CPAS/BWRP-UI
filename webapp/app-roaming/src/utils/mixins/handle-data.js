@@ -48,10 +48,12 @@ const utilsMixin = {
       return [
         csvHeaders.join(','), // header row first
         ...inboundItems.map((row) => header.map((fieldName) => {
+          if ((fieldName === 'usage' || fieldName === 'charges') && row[fieldName] === 0) return 0;
           if (fieldName === 'direction') return 'inbound';
           else return row[fieldName] ? row[fieldName] : '';
         }).join(',')),
         ...outboundItems.map((row) => header.map((fieldName) => {
+          if ((fieldName === 'usage' || fieldName === 'charges') && row[fieldName] === 0) return 0;
           if (fieldName === 'direction') return 'outbound';
           else return row[fieldName] ? row[fieldName] : '';
         }).join(','))
@@ -139,7 +141,7 @@ const utilsMixin = {
         });
         obj['currency']='EUR';
         obj['usage'] = Number(obj['usage']);
-        if (obj['charges'] && obj['charges'] !== '') {
+        if (obj['charges'] !== undefined && obj['charges'] !== '') {
           obj['charges'] = Number(obj['charges']);
         } else delete obj['charges'];
         if (obj['direction']?.toLowerCase() === 'inbound') {
@@ -175,7 +177,7 @@ const utilsMixin = {
       for (const oldKey of Object.keys(headers)) {
           newObj[headers[oldKey]] = obj[oldKey];
       }
-      if (!newObj['charges']) delete newObj['charges'];
+      if (newObj['charges'] === undefined) delete newObj['charges'];
       else newObj['charges']= Number(newObj['charges']);
       newObj['yearMonth']= String(newObj['yearMonth']);
       newObj['currency']='EUR';
