@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       data: {
-        labels: ['DATA', 'VOICE', 'SMS'],
+        labels: ['DATA', 'MTC', 'MOC', 'SMS'],
         datasets: [{
           label: 'dddd',
           data: this.chartData,
@@ -19,11 +19,13 @@ export default {
             'rgb(48,88,46)',
             'rgb(9,180,13)',
             'rgb(147,245,139)',
+            'rgb(189,245,185)',
           ],
           borderColor: [
             'rgb(48,88,46)',
             'rgb(9,180,13)',
             'rgb(147,245,139)',
+            'rgb(189,245,185)',
           ],
           borderWidth: 1
         }]

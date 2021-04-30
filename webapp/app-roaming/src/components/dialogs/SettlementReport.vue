@@ -126,17 +126,19 @@ export default {
       return result;
     },
     calculateChartData(settlementData, divider) {
-      let voice; let sms; let data = 0;
+      let moc; let mtc; let sms; let data = 0;
       settlementData?.forEach((record) => {
-        if (record.service === 'Voice') {
-           voice = ((record.own_calculation * 100)/divider).toFixed(0);
+        if (record.service === 'MOC') {
+          moc = ((record.own_calculation * 100)/divider).toFixed(0);
+        } else if (record.service === 'MTC') {
+          mtc = ((record.own_calculation * 100)/divider).toFixed(0);
         } else if (record.service === 'SMS') {
-           sms = ((record.own_calculation * 100)/divider).toFixed(0);
+          sms = ((record.own_calculation * 100)/divider).toFixed(0);
         } else if (record.service === 'Data') {
           data = ((record.own_calculation * 100)/divider).toFixed(0);
         }
       });
-      return [data, voice, sms];
+      return [data, mtc, moc, sms];
     },
     calculateHomeRevenues() {
       this.homeRevenues = this.calculateHomeSettlement('own_calculation').toFixed(2);
@@ -159,8 +161,8 @@ export default {
       netPosition: 0,
       firstPercentageDiscrepancy: 0,
       secondPercentageDiscrepancy: 0,
-      firstChartData: ['0', '0', '0'],
-      secondChartData: ['0', '0', '0']
+      firstChartData: ['0', '0', '0', '0'],
+      secondChartData: ['0', '0', '0', '0']
     };
   },
   created() {

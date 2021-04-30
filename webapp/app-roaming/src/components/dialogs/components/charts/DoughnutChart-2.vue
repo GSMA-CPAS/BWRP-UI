@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       data: {
-        labels: ['DATA', 'VOICE', 'SMS'],
+        labels: ['DATA', 'MOC', 'MTC', 'SMS'],
         datasets: [{
           labels: {
             render: 'label'
@@ -26,11 +26,13 @@ export default {
             'rgb(134,92,61)',
             'rgb(235,126,54)',
             'rgb(231,192,82)',
+            'rgb(253,225,171)',
           ],
           borderColor: [
             'rgb(134,92,61)',
             'rgb(235,126,54)',
             'rgb(231,192,82)',
+            'rgb(253,225,171)',
           ],
           borderWidth: 1
         }]
