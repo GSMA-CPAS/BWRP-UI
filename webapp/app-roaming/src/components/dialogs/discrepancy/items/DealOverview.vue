@@ -8,13 +8,19 @@
         <v-row>
           <span> {{ documentData.framework.term.start }}</span><span class="text-wrap"> - {{ documentData.framework.term.end }}</span>
         </v-row>
-        <v-row class="mt-2">
+        <v-row>
+          <p/>
+        </v-row>
+        <v-row>
           <strong >ReferenceId:</strong>
         </v-row>
         <v-row>
           <span class="text-wrap"> {{ referenceId }}</span>
         </v-row>
-        <v-row class="mt-2">
+        <v-row>
+          <p/>
+        </v-row>
+        <v-row>
           <strong>Partner: </strong>
         </v-row>
         <v-row>
@@ -36,7 +42,10 @@
             </span>
           </span>
         </v-row>
-        <v-row class="mt-2">
+        <v-row>
+          <p/>
+        </v-row>
+        <v-row >
           <strong>Partner TADIGS: </strong>
         </v-row>
         <v-row>
