@@ -2,9 +2,9 @@
   <div>
     <app-dialog outlined title="Settlement Report" label="View settlement report">
       <template #content>
-        <v-container style="min-width: 920px" class="pt-0">
+        <v-container style="min-width: 1100px" class="pt-0">
           <v-row align="start" class="pt-0">
-            <v-col style="min-width: 220px" cols="3" class="pt-0">
+            <v-col style="min-width: 250px" cols="3" class="pt-0">
               <v-row>
                 <v-col cols="12">
                   <v-row class="pl-7 pb-1">
