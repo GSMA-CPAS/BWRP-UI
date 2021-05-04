@@ -438,7 +438,6 @@ const newDocumentModule = {
             }
             const partnerMsp = getters.msps.partner;
             const data = await dispatch('getContractData');
-            log(data);
             Vue.axios.commonAdapter
               .post('/documents', {partnerMsp, data}, {withCredentials: true})
               .then((res) => {
