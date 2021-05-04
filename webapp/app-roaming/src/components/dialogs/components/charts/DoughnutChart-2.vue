@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       data: {
-        labels: ['DATA', 'MOC', 'MTC', 'SMS'],
+        labels: ['DATA', 'MTC', 'MOC', 'SMS'],
         datasets: [{
           labels: {
             render: 'label'
@@ -47,7 +47,7 @@ export default {
           datalabels: {
             color: '#ffffff',
             formatter: function(value) {
-              return Math.round(value) + '%';
+              return value>3.0?Math.round(value) + '%':'';
             },
             font: {
               weight: 'bold',

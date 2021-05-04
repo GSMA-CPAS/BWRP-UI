@@ -2,90 +2,148 @@
   <div>
     <app-dialog outlined title="Settlement Report" label="View settlement report">
       <template #content>
-        <v-container>
-          <v-row align="center">
-            <v-col cols="3">
-              <doughnut-chart-1 :chartData="firstChartData"/>
+        <v-container class="pt-0">
+          <v-row align="center" class="pt-0">
+            <v-col cols="3" class="pt-7">
+              <v-row>
+                <v-col cols="12">
+                  <v-row class="pl-7 pb-1">
+                    <span class="black--text font-weight-bold">Home revenues</span>
+                  </v-row>
+                  <doughnut-chart-1 :chartData="firstChartData"/>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-row class="pl-7 pb-1">
+                    <span class="black--text font-weight-bold">Partner revenues</span>
+                  </v-row>
+                  <doughnut-chart-2 :chartData="secondChartData"/>
+                </v-col>
+              </v-row>
             </v-col>
-            <v-col cols="3">
-              <v-card style="border: green 2px solid">
-                <v-card-title class="green--text headline" >Home revenues</v-card-title>
-                <v-card-text class="green--text">
-                  {{parseValue(homeRevenues)}} €
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="3">
-              <v-card style="border: #ff6b6b 2px solid">
-                <v-card-title class="red--text headline">Partner revenues</v-card-title>
-                <v-card-text class="red--text">
-                  {{ parseValue(partnerRevenues) }} €
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="3">
-              <v-card style="border: orange 2px solid">
-                <v-card-title class="orange--text headline">NET Position</v-card-title>
-                <v-card-text class="orange--text">
-                  {{ parseValue(netPosition) }} €
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-row align="center">
-            <v-col cols="3">
-              <doughnut-chart-2 :chartData="secondChartData"/>
-            </v-col>
-            <v-col cols="3">
-              <v-card large>
-                <v-card-title class="headline">Partner Charges</v-card-title>
-                <v-card-text>
-                  {{ parseValue(partnerCharges) }} €
-                </v-card-text>
-                <v-card-text class="text-right text-sm-h5" :class="firstPercentageDiscrepancy<0?'red--text':'green--text'">
-                  {{ firstPercentageDiscrepancy }} %
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="3">
-              <v-card large>
-                <v-card-title class="headline">Home Charges</v-card-title>
-                <v-card-text>
-                  {{ parseValue(homeCharges) }} €
-                </v-card-text>
-                <v-card-text class="text-right text-sm-h5" :class="secondPercentageDiscrepancy<0?'green--text':'red--text'">
-                  {{ secondPercentageDiscrepancy }} %
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="3">
-              <v-container>
-                <v-spacer/>
-                <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    large
-                    color="green"
-                    @click="acceptDiscrepancies"
-                >
-                  <v-icon dark>
-                    mdi-check
-                  </v-icon>
-                </v-btn>
-                <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    large
-                    color="red"
-                    @click="declineDiscrepancies"
-                >
-                  <v-icon dark>
-                    mdi-close
-                  </v-icon>
-                </v-btn>
-              </v-container>
+            <v-col cols="9">
+              <v-row>
+                <span class="black--text font-weight-bold">My view</span>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-card >
+                    <v-card-title class="headline" >Home revenues</v-card-title>
+                    <v-card-text>
+                      {{parseValue(homeRevenues)}} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="4">
+                  <v-card >
+                    <v-card-title class=" headline">Partner revenues</v-card-title>
+                    <v-card-text>
+                      {{ parseValue(partnerRevenues) }} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="4">
+                  <v-card >
+                    <v-card-title class="headline">NET Position</v-card-title>
+                    <v-card-text>
+                      {{ parseValue(revenuesNetPosition) }} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <span class="black--text font-weight-bold">Partner view</span>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-card large>
+                    <v-card-title class="headline">Partner Charges</v-card-title>
+                    <v-card-text>
+                      {{ parseValue(partnerCharges) }} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="4">
+                  <v-card large>
+                    <v-card-title class="headline">Home Charges</v-card-title>
+                    <v-card-text>
+                      {{ parseValue(homeCharges) }} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="4">
+                  <v-card >
+                    <v-card-title class="headline">NET Position</v-card-title>
+                    <v-card-text>
+                      {{ parseValue(chargesNetPosition) }} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row>
+                <span class="black--text font-weight-bold">Differences</span>
+              </v-row>
+              <v-row>
+                <v-col cols="4">
+                  <v-card >
+                    <v-card-title class="headline pb-0">Difference</v-card-title>
+                    <v-row>
+                      <v-col cols="8" class="px-0 pt-0 pb-0">
+                        <v-card-text>
+                          {{parseValue(homeRevenues - partnerCharges)}} €
+                        </v-card-text>
+                      </v-col>
+                      <v-col cols="4" class="px-0 pt-0 pb-0">
+                        <v-card-text class="text-sm-h6 px-0 pb-0 pt-3" :class="firstPercentageDiscrepancy<0?'red--text':'green--text'">
+                          {{ firstPercentageDiscrepancy }} %
+                        </v-card-text>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </v-col>
+                <v-col cols="4">
+                  <v-card>
+                    <v-card-title class="headline pb-0">Difference</v-card-title>
+                    <v-row>
+                      <v-col cols="8" class="px-0 pt-0 pb-0">
+                        <v-card-text fluid>
+                          {{ parseValue(partnerRevenues - homeCharges) }} €
+                        </v-card-text>
+                      </v-col>
+                      <v-col cols="4" class="px-0 pt-0 pb-0">
+                        <v-card-text class="text-sm-h6 px-0 pb-0 pt-3" :class="secondPercentageDiscrepancy<0?'green--text':'red--text'">
+                          {{ secondPercentageDiscrepancy }} %
+                        </v-card-text>
+                      </v-col>
+                    </v-row>
+                  </v-card>
+                </v-col>
+                <v-col cols="4">
+                  <v-card >
+                    <v-card-title class="headline">NET Difference</v-card-title>
+                    <v-card-text>
+                      {{parseValue((homeRevenues - partnerCharges)-(partnerRevenues - homeCharges))}} €
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-row class="mt-6 mr-3">
+                  <v-spacer/>
+                  <app-button
+                      class="mr-3"
+                      style="border: #e5e5e5 1px solid"
+                      label="accept"
+                      @click="acceptDiscrepancies"
+                  >
+                  </app-button>
+                  <app-button
+                      style="border: #e5e5e5 1px solid"
+                      label="reject"
+                      @click="declineDiscrepancies"
+                  >
+                  </app-button>
+              </v-row>
             </v-col>
           </v-row>
         </v-container>
@@ -127,6 +185,7 @@ export default {
     },
     calculateChartData(settlementData, divider) {
       let moc; let mtc; let sms; let data = 0;
+      if (parseFloat(divider) === parseFloat(0.00)) return [0, 0, 0, 0];
       settlementData?.forEach((record) => {
         if (record.service === 'MOC') {
           moc = ((record.own_calculation * 100)/divider).toFixed(0);
@@ -145,9 +204,10 @@ export default {
       this.partnerRevenues= this.calculatePartnerSettlement('own_calculation').toFixed(2);
       this.homeCharges= this.calculatePartnerSettlement('partner_calculation').toFixed(2);
       this.partnerCharges= this.calculateHomeSettlement('partner_calculation').toFixed(2);
-      this.netPosition = (this.homeRevenues- this.partnerRevenues).toFixed(2);
-      this.firstPercentageDiscrepancy = ((this.homeRevenues - this.partnerCharges)*100/this.homeRevenues).toFixed(2);
-      this.secondPercentageDiscrepancy = ((this.partnerRevenues - this.homeCharges)*100/this.partnerRevenues).toFixed(2);
+      this.revenuesNetPosition = (this.homeRevenues- this.partnerRevenues).toFixed(2);
+      this.chargesNetPosition = (this.homeCharges- this.partnerCharges).toFixed(2);
+      this.firstPercentageDiscrepancy = parseFloat(this.homeRevenues) !== parseFloat(0.00) ? ((this.homeRevenues - this.partnerCharges)*100/this.homeRevenues).toFixed(2) : '0.00';
+      this.secondPercentageDiscrepancy = parseFloat(this.homeCharges) !== parseFloat(0.00) ? ((this.partnerRevenues - this.homeCharges)*100/this.homeCharges).toFixed(2) : '0.00';
       this.firstChartData = this.calculateChartData(this.homeData, this.homeRevenues);
       this.secondChartData = this.calculateChartData(this.partnerData, this.partnerRevenues);
     }
@@ -158,7 +218,8 @@ export default {
       partnerRevenues: 0,
       homeCharges: 0,
       partnerCharges: 0,
-      netPosition: 0,
+      revenuesNetPosition: 0,
+      chargesNetPosition: 0,
       firstPercentageDiscrepancy: 0,
       secondPercentageDiscrepancy: 0,
       firstChartData: ['0', '0', '0', '0'],

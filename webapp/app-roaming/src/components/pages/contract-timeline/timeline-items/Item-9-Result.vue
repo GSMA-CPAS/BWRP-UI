@@ -5,7 +5,7 @@
     </template>
     <template #icon>
       <app-button v-if="settlementStatus === 'Accepted'" color="success" outlined disabled label="Accepted"/>
-      <app-button v-if="settlementStatus === 'Declined'" color="error" outlined disabled label="declined"/>
+      <app-button v-if="settlementStatus === 'Rejected'" color="error" outlined disabled label="Rejected"/>
     </template>
   </timeline-item>
 </template>

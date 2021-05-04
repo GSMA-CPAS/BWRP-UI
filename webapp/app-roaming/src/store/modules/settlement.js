@@ -31,7 +31,7 @@ const settlementModule = {
             state.settlementStatus = 'Accepted';
         },
         DECLINE_DISCREPANCIES: (state) => {
-            state.settlementStatus = 'Declined';
+            state.settlementStatus = 'Rejected';
         },
     },
     actions: {
