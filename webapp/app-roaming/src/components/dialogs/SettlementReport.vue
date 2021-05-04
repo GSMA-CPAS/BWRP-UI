@@ -3,8 +3,8 @@
     <app-dialog outlined title="Settlement Report" label="View settlement report">
       <template #content>
         <v-container class="pt-0">
-          <v-row align="center" class="pt-0">
-            <v-col cols="3" class="pt-7">
+          <v-row align="start" class="pt-0">
+            <v-col style="min-width: 220px" cols="3" class="pt-0">
               <v-row>
                 <v-col cols="12">
                   <v-row class="pl-7 pb-1">
