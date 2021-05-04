@@ -2,7 +2,7 @@
   <div>
     <app-dialog outlined title="Settlement Report" label="View settlement report">
       <template #content>
-        <v-container class="pt-0">
+        <v-container style="min-width: 920px" class="pt-0">
           <v-row align="start" class="pt-0">
             <v-col style="min-width: 220px" cols="3" class="pt-0">
               <v-row>
@@ -128,7 +128,7 @@
                   </v-card>
                 </v-col>
               </v-row>
-              <v-row class="mt-6 mr-3">
+              <v-row class="pt-6 mr-3">
                   <v-spacer/>
                   <app-button
                       class="mr-3"
