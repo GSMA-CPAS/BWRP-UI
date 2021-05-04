@@ -155,13 +155,237 @@ const newDocumentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       data,
     ) {
-      /** @type Array */
-      const parties = data?.body.framework.contractParties;
-      const user = getters.msps.user;
-      const partner = parties.filter((val) => val !== user)[0];
+      try {
+        /** @type Array */
+        const parties = data?.body.framework.contractParties;
+        const user = getters.msps.user;
+        const partner = parties.filter((val) => val !== user)[0];
 
-      const headerData = data?.header;
-      if (!data.header && !data.body) {
+        const headerData = data?.header;
+        const userMspIncluded = parties.includes(user);
+
+        const generalInformationMap = {
+          item: {
+            name: 'metadata.name',
+            startDate: 'framework.term.start',
+            endDate: 'framework.term.end',
+            prolongationLength: 'framework.term.prolongation',
+            taxesIncluded: 'framework.payment.taxesIncluded',
+            authors: 'metadata.authors',
+            userData: {
+              currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
+              tadigCodes: {
+                codes: `framework.partyInformation.${user}.defaultTadigCodes`,
+                includeContractParty: `framework.partyInformation.${user}.alsoContractParty`,
+              },
+            },
+            partnerData: {
+              currencyForAllDiscounts: `framework.partyInformation.${partner}.contractCurrency`,
+              tadigCodes: {
+                codes: `framework.partyInformation.${partner}.defaultTadigCodes`,
+                includeContractParty: `framework.partyInformation.${partner}.alsoContractParty`,
+              },
+            },
+          },
+          operate: [
+            {
+              run: function(val) {
+                return val ? new Date(val) : null;
+              },
+              on: 'startDate',
+            },
+            {
+              run: function(val) {
+                return val ? new Date(val) : null;
+              },
+              on: 'endDate',
+            },
+          ],
+        };
+
+        if (userMspIncluded) {
+          const discountModelsMap = {
+            item: {
+              condition: `condition`,
+              serviceGroups: 'serviceGroups',
+            },
+            operate: [
+              {
+                run: /** @param {Array} services */ function(services) {
+                  const mappedServices = services.map(
+                    ({homeTadigs, visitorTadigs, services}, index) => ({
+                      id: `service-group-${index}`,
+                      homeTadigs: {codes: homeTadigs},
+                      visitorTadigs: {codes: visitorTadigs},
+                      chosenServices: services.map(
+                        (
+                          {service, usagePricing, includedInCommitment},
+                          index,
+                        ) => {
+                          const mappedService = {
+                            id: `service-${index}`,
+                            name: service,
+                            includedInCommitment,
+                            rate: null,
+                            unit: null,
+                            balancedRate: null,
+                            unbalancedRate: null,
+                            pricingModel: null,
+                            prevDefaultUnit: null,
+                            prevDefaultAccessUnit: null,
+                            accessPricingModel: null,
+                            accessPricingUnit: null,
+                            accessPricingRate: null,
+                          };
+                          if (usagePricing) {
+                            const {unit, ratingPlan} = usagePricing;
+                            const {
+                              rate,
+                              balancedRate,
+                              unbalancedRate,
+                              kind,
+                              accessPricingModel,
+                            } = ratingPlan;
+                            if (rate.thresholds) {
+                              mappedService.rate = rate.thresholds.map(
+                                ({start, fixedPrice, linearPrice}, i) => ({
+                                  tier: `tier-${i}`,
+                                  start: start ? start : 0,
+                                  linearPrice,
+                                  fixedPrice,
+                                }),
+                              );
+                            } else {
+                              mappedService.rate = [{...rate}];
+                            }
+                            mappedService.unit = unit;
+                            mappedService.balancedRate = balancedRate;
+                            mappedService.unbalancedRate = unbalancedRate;
+                            mappedService.pricingModel = kind;
+                            mappedService.accessPricingModel = accessPricingModel;
+                            mappedService.accessPricingUnit =
+                              accessPricingModel?.unit;
+                            mappedService.accessPricingRate =
+                              accessPricingModel?.rate;
+                          }
+                          return mappedService;
+                        },
+                      ),
+                    }),
+                  );
+                  return mappedServices;
+                },
+                on: 'serviceGroups',
+              },
+              {
+                run: function({kind, commitment}) {
+                  return kind
+                    ? {
+                        selectedConditionName: kind,
+                        selectedCondition: commitment,
+                      }
+                    : null;
+                },
+                on: 'condition',
+              },
+            ],
+          };
+          let userMinSignatures;
+          let partnerMinSignatures;
+
+          if (headerData.msps) {
+            userMinSignatures = headerData.msps[user].minSignatures;
+            partnerMinSignatures = headerData.msps[partner].minSignatures;
+          } else {
+            userMinSignatures =
+              headerData.fromMsp.mspId === user
+                ? headerData.fromMsp.minSignatures
+                : headerData.toMsp.minSignatures;
+            partnerMinSignatures =
+              headerData.fromMsp.mspId === partner
+                ? headerData.fromMsp.minSignatures
+                : headerData.toMsp.minSignatures;
+          }
+
+          const mappedGeneralInformation = transform(
+            data.body,
+            generalInformationMap,
+          );
+
+          const mappedUserDiscounts = transform(
+            data.body.discounts[user],
+            discountModelsMap,
+          );
+
+          const mappedPartnerDiscounts = transform(
+            data.body.discounts[partner],
+            discountModelsMap,
+          );
+
+          commit('updateSignatures', {
+            key: 'userData',
+            value: userMinSignatures,
+          });
+          commit('updateSignatures', {
+            key: 'partnerData',
+            value: partnerMinSignatures,
+          });
+          commit('updateDiscountModels', {
+            key: 'userData',
+            data: mappedUserDiscounts,
+          });
+          commit('updateDiscountModels', {
+            key: 'partnerData',
+            data: mappedPartnerDiscounts,
+          });
+          commit('uploadData', {
+            key: 'generalInformation',
+            data: mappedGeneralInformation,
+          });
+        } else {
+          dispatch(
+            'app-state/loadError',
+            {
+              title: 'No matching MSPs',
+              code: `${user}s MSP doesn't match imported JSON.`,
+            },
+            {root: true},
+          );
+
+          [
+            {
+              run: () => null,
+              on: 'userData.currencyForAllDiscounts',
+            },
+            {
+              run: () => [],
+              on: 'userData.tadigCodes.codes',
+            },
+            {
+              run: () => false,
+              on: 'userData.tadigCodes.includeContractParty',
+            },
+            {
+              run: () => null,
+              on: 'partnerData.currencyForAllDiscounts',
+            },
+            {
+              run: () => [],
+              on: 'partnerData.tadigCodes.codes',
+            },
+            {
+              run: () => false,
+              on: 'partnerData.tadigCodes.includeContractParty',
+            },
+          ].forEach((operation) =>
+            generalInformationMap.operate.push(operation),
+          );
+
+          const res = transform(data.body, generalInformationMap);
+          commit('uploadData', {key: 'generalInformation', data: res});
+        }
+      } catch (e) {
+        log(e);
         dispatch(
           'app-state/loadError',
           {
@@ -170,226 +394,6 @@ const newDocumentModule = {
           },
           {root: true},
         );
-      }
-      const userMspIncluded = parties.includes(user);
-
-      const generalInformationMap = {
-        item: {
-          name: 'metadata.name',
-          startDate: 'framework.term.start',
-          endDate: 'framework.term.end',
-          prolongationLength: 'framework.term.prolongation',
-          taxesIncluded: 'framework.payment.taxesIncluded',
-          authors: 'metadata.authors',
-          userData: {
-            currencyForAllDiscounts: `framework.partyInformation.${user}.contractCurrency`,
-            tadigCodes: {
-              codes: `framework.partyInformation.${user}.defaultTadigCodes`,
-              includeContractParty: `framework.partyInformation.${user}.alsoContractParty`,
-            },
-          },
-          partnerData: {
-            currencyForAllDiscounts: `framework.partyInformation.${partner}.contractCurrency`,
-            tadigCodes: {
-              codes: `framework.partyInformation.${partner}.defaultTadigCodes`,
-              includeContractParty: `framework.partyInformation.${partner}.alsoContractParty`,
-            },
-          },
-        },
-        operate: [
-          {
-            run: function(val) {
-              return val ? new Date(val) : null;
-            },
-            on: 'startDate',
-          },
-          {
-            run: function(val) {
-              return val ? new Date(val) : null;
-            },
-            on: 'endDate',
-          },
-        ],
-      };
-
-      if (userMspIncluded) {
-        const discountModelsMap = {
-          item: {
-            condition: `condition`,
-            serviceGroups: 'serviceGroups',
-          },
-          operate: [
-            {
-              run: /** @param {Array} services */ function(services) {
-                const mappedServices = services.map(
-                  ({homeTadigs, visitorTadigs, services}, index) => ({
-                    id: `service-group-${index}`,
-                    homeTadigs: {codes: homeTadigs},
-                    visitorTadigs: {codes: visitorTadigs},
-                    chosenServices: services.map(
-                      (
-                        {service, usagePricing, includedInCommitment},
-                        index,
-                      ) => {
-                        const mappedService = {
-                          id: `service-${index}`,
-                          name: service,
-                          includedInCommitment,
-                          rate: null,
-                          unit: null,
-                          balancedRate: null,
-                          unbalancedRate: null,
-                          pricingModel: null,
-                          prevDefaultUnit: null,
-                          prevDefaultAccessUnit: null,
-                          accessPricingModel: null,
-                          accessPricingUnit: null,
-                          accessPricingRate: null,
-                        };
-                        if (usagePricing) {
-                          const {unit, ratingPlan} = usagePricing;
-                          const {
-                            rate,
-                            balancedRate,
-                            unbalancedRate,
-                            kind,
-                            accessPricingModel,
-                          } = ratingPlan;
-                          if (rate.thresholds) {
-                            mappedService.rate = rate.thresholds.map(
-                              ({fixedPrice, linearPrice}, i) => ({
-                                tier: `tier-${i}`,
-                                start: 0,
-                                linearPrice,
-                                fixedPrice,
-                              }),
-                            );
-                          } else {
-                            mappedService.rate = [{...rate}];
-                          }
-                          mappedService.unit = unit;
-                          mappedService.balancedRate = balancedRate;
-                          mappedService.unbalancedRate = unbalancedRate;
-                          mappedService.pricingModel = kind;
-                          mappedService.accessPricingModel = accessPricingModel;
-                          mappedService.accessPricingUnit =
-                            accessPricingModel?.unit;
-                          mappedService.accessPricingRate =
-                            accessPricingModel?.rate;
-                        }
-                        return mappedService;
-                      },
-                    ),
-                  }),
-                );
-                return mappedServices;
-              },
-              on: 'serviceGroups',
-            },
-            {
-              run: function({kind, commitment}) {
-                return kind
-                  ? {
-                      selectedConditionName: kind,
-                      selectedCondition: commitment,
-                    }
-                  : null;
-              },
-              on: 'condition',
-            },
-          ],
-        };
-        let userMinSignatures;
-        let partnerMinSignatures;
-
-        if (headerData.msps) {
-          userMinSignatures = headerData.msps[user].minSignatures;
-          partnerMinSignatures = headerData.msps[partner].minSignatures;
-        } else {
-          userMinSignatures =
-            headerData.fromMsp.mspId === user
-              ? headerData.fromMsp.minSignatures
-              : headerData.toMsp.minSignatures;
-          partnerMinSignatures =
-            headerData.fromMsp.mspId === partner
-              ? headerData.fromMsp.minSignatures
-              : headerData.toMsp.minSignatures;
-        }
-
-        const mappedGeneralInformation = transform(
-          data.body,
-          generalInformationMap,
-        );
-
-        const mappedUserDiscounts = transform(
-          data.body.discounts[user],
-          discountModelsMap,
-        );
-
-        const mappedPartnerDiscounts = transform(
-          data.body.discounts[partner],
-          discountModelsMap,
-        );
-
-        commit('updateSignatures', {
-          key: 'userData',
-          value: userMinSignatures,
-        });
-        commit('updateSignatures', {
-          key: 'partnerData',
-          value: partnerMinSignatures,
-        });
-        commit('updateDiscountModels', {
-          key: 'userData',
-          data: mappedUserDiscounts,
-        });
-        commit('updateDiscountModels', {
-          key: 'partnerData',
-          data: mappedPartnerDiscounts,
-        });
-        commit('uploadData', {
-          key: 'generalInformation',
-          data: mappedGeneralInformation,
-        });
-      } else {
-        dispatch(
-          'app-state/loadError',
-          {
-            title: 'No matching MSPs',
-            code: `${user}s MSP doesn't match imported JSON.`,
-          },
-          {root: true},
-        );
-
-        [
-          {
-            run: () => null,
-            on: 'userData.currencyForAllDiscounts',
-          },
-          {
-            run: () => [],
-            on: 'userData.tadigCodes.codes',
-          },
-          {
-            run: () => false,
-            on: 'userData.tadigCodes.includeContractParty',
-          },
-          {
-            run: () => null,
-            on: 'partnerData.currencyForAllDiscounts',
-          },
-          {
-            run: () => [],
-            on: 'partnerData.tadigCodes.codes',
-          },
-          {
-            run: () => false,
-            on: 'partnerData.tadigCodes.includeContractParty',
-          },
-        ].forEach((operation) => generalInformationMap.operate.push(operation));
-
-        const res = transform(data.body, generalInformationMap);
-        commit('uploadData', {key: 'generalInformation', data: res});
       }
     },
     convertUiModelToJsonModel(
