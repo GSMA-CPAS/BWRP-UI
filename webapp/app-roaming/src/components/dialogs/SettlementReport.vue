@@ -207,7 +207,7 @@ export default {
       this.revenuesNetPosition = (this.homeRevenues- this.partnerRevenues).toFixed(2);
       this.chargesNetPosition = (this.homeCharges- this.partnerCharges).toFixed(2);
       this.firstPercentageDiscrepancy = parseFloat(this.homeRevenues) !== parseFloat(0.00) ? ((this.homeRevenues - this.partnerCharges)*100/this.homeRevenues).toFixed(2) : '0.00';
-      this.secondPercentageDiscrepancy = parseFloat(this.homeCharges) !== parseFloat(0.00) ? ((this.partnerRevenues - this.homeCharges)*100/this.homeCharges).toFixed(2) : '0.00';
+      this.secondPercentageDiscrepancy = parseFloat(this.partnerRevenues) !== parseFloat(0.00) ? ((this.partnerRevenues - this.homeCharges)*100/this.partnerRevenues).toFixed(2) : '0.00';
       this.firstChartData = this.calculateChartData(this.homeData, this.homeRevenues);
       this.secondChartData = this.calculateChartData(this.partnerData, this.partnerRevenues);
     }
