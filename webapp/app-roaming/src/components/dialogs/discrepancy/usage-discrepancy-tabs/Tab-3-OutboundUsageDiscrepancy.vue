@@ -48,7 +48,7 @@ export default {
       return [
         {text: 'HPMN', value: 'HTMN', align: 'center'},
         {text: 'VPMN', value: 'VPMN', align: 'center'},
-        {text: 'yearMonth', value: 'yearMonth', align: 'center'},
+        {text: 'YearMonth', value: 'yearMonth', align: 'center'},
         {text: 'Service', value: 'service', align: 'center'},
         {text: 'Own usage', value: 'own_usage', align: 'center'},
         {text: 'Partner usage', value: 'partner_usage', align: 'center'},

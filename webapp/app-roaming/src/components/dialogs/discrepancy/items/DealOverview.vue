@@ -1,22 +1,41 @@
 <template>
   <v-container fluid class="ml-8">
     <v-row>
-      <v-col cols="4">
+      <v-col>
         <v-row>
-          <span>Term: {{ documentData.framework.term.start }}</span
+          <strong>Term: </strong>
+        </v-row>
+        <v-row>
+          <span> {{ documentData.framework.term.start }}</span
           ><span class="text-wrap">
             - {{ documentData.framework.term.end }}</span
           >
         </v-row>
         <v-row>
-          <span>ReferenceId:</span
-          ><span class="text-wrap"> {{ referenceId }}</span>
+          <p />
         </v-row>
         <v-row>
-          <span>Partner: {{ isHome ? partnerMsp : selfMsp }}</span>
+          <strong>ReferenceId:</strong>
         </v-row>
         <v-row>
-          <span class="text-wrap">Own TADIGS: </span>
+          <span class="text-wrap"> {{ referenceId }}</span>
+        </v-row>
+        <v-row>
+          <p />
+        </v-row>
+        <v-row>
+          <strong>Partner: </strong>
+        </v-row>
+        <v-row>
+          <span>{{ isHome ? partnerMsp : selfMsp }} </span>
+        </v-row>
+      </v-col>
+      <v-spacer />
+      <v-col class="mr-12">
+        <v-row>
+          <strong>Own TADIGS: </strong>
+        </v-row>
+        <v-row>
           <span v-for="(ot, index) in selfTadigs" :key="ot">
             <span v-if="index !== selfTadigs.length - 1"> {{ ot }}, </span>
             <span v-if="index === selfTadigs.length - 1">
@@ -25,7 +44,12 @@
           </span>
         </v-row>
         <v-row>
-          <span>Partner TADIGS: </span>
+          <p />
+        </v-row>
+        <v-row>
+          <strong>Partner TADIGS: </strong>
+        </v-row>
+        <v-row>
           <span
             class="text-wrap"
             v-for="(pt, index) in partnerTadigs"
@@ -36,23 +60,6 @@
               {{ pt }}
             </span>
           </span>
-        </v-row>
-      </v-col>
-      <v-col cols="4">
-        <v-spacer />
-      </v-col>
-      <v-col cols="4">
-        <v-row>
-          <span>Total revenue commitment: </span>
-        </v-row>
-        <v-row>
-          <span>MOC revenue commitment: </span>
-        </v-row>
-        <v-row>
-          <span>SMS revenue commitment: </span>
-        </v-row>
-        <v-row>
-          <span>Data revenue commitment: </span>
         </v-row>
       </v-col>
     </v-row>
