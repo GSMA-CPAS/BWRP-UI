@@ -217,8 +217,8 @@ export default {
       const otherInformationLabels = [
         'Currency for all Discounts',
         'Condition Type',
-        'Condition Value',
         'Condition Currency',
+        'Condition Value',
         'Condition Includes Taxes?',
       ];
       return this.labelsToCamelCase(otherInformationLabels);
