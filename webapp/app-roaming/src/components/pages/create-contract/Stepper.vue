@@ -57,9 +57,8 @@ export default {
       'getContractData',
     ]),
     ...mapMutations('document/new', ['resetState']),
-    exportDraft() {
-      const contract = this.getContractData();
-      delete contract.step;
+    async exportDraft() {
+      const contract = await this.getContractData();
       const data = new Blob([JSON.stringify(contract)], {
         type: 'data:application/json',
       });

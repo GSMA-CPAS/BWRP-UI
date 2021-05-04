@@ -56,7 +56,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.value);
     if (this.value) {
       this.includingTaxes = this.value.includingTaxes;
       this.commitmentValue = this.value.value;
