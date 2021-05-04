@@ -35,7 +35,7 @@ export default {
           datalabels: {
             color: '#ffffff',
             formatter: function(value) {
-              return value>3.0?Math.round(value) + '%':'';
+              return value>1.0?Math.round(value) + '%':'';
             },
             font: {
               weight: 'bold',
