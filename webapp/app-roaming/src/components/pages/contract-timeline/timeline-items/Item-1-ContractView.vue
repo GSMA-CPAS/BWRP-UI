@@ -8,7 +8,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <!-- <v-menu offset-y bottom>
+          <v-menu offset-y bottom>
             <template v-slot:activator="{on, attrs}">
               <app-button label="Export" v-bind="attrs" v-on="on" />
             </template>
@@ -20,7 +20,7 @@
                 </v-list-item-icon>
               </v-list-item>
             </v-list>
-          </v-menu> -->
+          </v-menu>
           <div class="mr-2" />
           <contract />
         </v-card-actions>
@@ -58,7 +58,7 @@ export default {
       }
     },
     exportToJSON() {
-      const data = new Blob([atob(this.rawData)], {
+      const data = new Blob([decodeURIComponent(escape(atob(this.rawData)))], {
         type: 'data:application/json',
       });
       const fileName = `${this.referenceId}.json`;
