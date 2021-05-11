@@ -28,6 +28,7 @@
       </v-row>
       <service-group-form
         v-model="serviceGroups[index]"
+        :group-index="index"
         :from="from"
         :home-tadig-options="homeTadigs"
         :visitor-tadig-options="visitorTadigs"
@@ -44,6 +45,7 @@
 import ConditionPicker from './discount-form-components/ConditionPicker';
 import {duplicateMixin} from '../../../../utils/mixins/component-specfic';
 import ServiceGroupForm from './ServiceGroupForm';
+import {mapMutations} from 'vuex';
 
 export default {
   name: 'discount-form',
@@ -79,12 +81,18 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('document/new', ['removeValidationsOfGroup']),
     addServiceGroup() {
       this.serviceGroups.push({
         id: `service-group-${this.serviceGroups.length}`,
       });
     },
     removeServiceGroup(index) {
+      this.removeValidationsOfGroup({
+        index,
+        from: this.from,
+        step: 'Discount Services',
+      });
       this.serviceGroups.splice(index, 1);
     },
     doCopyOtherSide() {

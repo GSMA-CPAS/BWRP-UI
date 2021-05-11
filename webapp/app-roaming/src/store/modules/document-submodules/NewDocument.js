@@ -123,8 +123,36 @@ const newDocumentModule = {
         ];
       }
     },
-    removeValidation: (state, key) => {
-      state.validation = [...state.validation.filter((val) => key !== val.key)];
+    removeValidation: (state, {key, from, groupIndex, step}) => {
+      let index = 0;
+      state.validation = [
+        ...state.validation
+          .filter((val) => key !== val.key)
+          .map((val) => {
+            if (
+              val.step === step &&
+              val.from === from &&
+              val.groupIndex === groupIndex
+            ) {
+              const newKey = `Group-${groupIndex} | Service ${index++}-${from}`;
+              val.key = newKey;
+              val.message = `${newKey} is missing a name and/or a pricing model`;
+            }
+            return val;
+          }),
+      ];
+    },
+    removeValidationsOfGroup(state, {index, from, step}) {
+      state.validation = [
+        ...state.validation.filter(
+          (val) =>
+            !(
+              val.step === step &&
+              val.from === from &&
+              val.groupIndex === index
+            ),
+        ),
+      ];
     },
     attemptedToSave(state) {
       state.saveAttempt = true;

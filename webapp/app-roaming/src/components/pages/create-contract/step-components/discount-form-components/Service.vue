@@ -179,6 +179,7 @@ export default {
   },
   ...ServiceValidation,
   props: {
+    groupIndex: Number,
     serviceKey: String,
     from: String,
     value: {type: Object, required: true},
@@ -187,10 +188,11 @@ export default {
   watch: {
     service: {
       handler(val) {
-        const key = `discountService${this.from}-${this.serviceKey}`;
+        const key = `${this.serviceKey}-${this.from}`;
         this.addValidation({
           key,
-          step: 'Discount Models',
+          groupIndex: this.groupIndex,
+          step: 'Discount Services',
           from: this.from,
           isInvalid: this.$v.$invalid,
           message: `${key} is missing a name and/or a pricing model`,

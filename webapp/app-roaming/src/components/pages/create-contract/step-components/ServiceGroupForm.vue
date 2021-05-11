@@ -14,10 +14,11 @@
     </row>
     <br />
     <b>Services</b>
-    <div v-for="(service, index) in chosenServices" :key="service.id">
+    <div v-for="(service, index) in chosenServices" :key="`service${index}`">
       <service
         v-model="chosenServices[index]"
-        :service-key="service.id"
+        :service-key="`Group-${groupIndex} | Service ${index}`"
+        :group-index="groupIndex"
         :from="from"
         @add="addService"
         @remove="removeService(index)"
@@ -44,7 +45,13 @@ export default {
   name: 'service-group-form',
   description: 'description',
   mixins: [duplicateMixin],
-  props: ['from', 'homeTadigOptions', 'visitorTadigOptions', 'value'],
+  props: [
+    'from',
+    'homeTadigOptions',
+    'visitorTadigOptions',
+    'value',
+    'groupIndex',
+  ],
   components: {
     Service,
     TadigCodes,
@@ -53,11 +60,7 @@ export default {
     return {
       homeTadigs: {codes: []},
       visitorTadigs: {codes: []},
-      chosenServices: [
-        {
-          ...service,
-        },
-      ],
+      chosenServices: [{...service}],
     };
   },
   watch: {
@@ -134,20 +137,20 @@ export default {
   methods: {
     ...mapMutations('document/new', ['removeValidation']),
     addService() {
-      this.chosenServices = this.chosenServices.map(({id, ...service}, i) => ({
-        id: `service-${i}`,
-        service,
-      }));
       this.chosenServices.push({
-        id: `service-${this.chosenServices.length}`,
+        // id: `service-${this.chosenServices.length}`,
         name: null,
         includedInCommitment: true,
       });
     },
     removeService(index) {
-      const key = this.chosenServices[index].id;
       this.chosenServices.splice(index, 1);
-      this.removeValidation(`discountService${this.from}-${key}`);
+      this.removeValidation({
+        key: `Group-${this.groupIndex} | Service ${index}-${this.from}`,
+        from: this.from,
+        groupIndex: this.groupIndex,
+        step: 'Discount Services',
+      });
     },
   },
   computed: {
@@ -160,8 +163,12 @@ export default {
     if (this.value) {
       this.visitorTadigs = this.value.visitorTadigs;
       this.homeTadigs = this.value.homeTadigs;
-      this.condition = this.value.condition;
-      this.chosenServices = this.value.chosenServices;
+      if (this.value.condition) {
+        this.condition = this.value.condition;
+      }
+      if (this.value.chosenServices) {
+        this.chosenServices = this.value.chosenServices;
+      }
     }
 
     // Initialize the tadigs so we don't get undefined errors
