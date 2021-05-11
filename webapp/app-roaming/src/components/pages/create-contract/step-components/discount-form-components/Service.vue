@@ -187,12 +187,13 @@ export default {
   watch: {
     service: {
       handler(val) {
+        const key = `discountService${this.from}-${this.serviceKey}`;
         this.addValidation({
-          key: `discountService${this.from}-${this.serviceKey}`,
+          key,
           step: 'Discount Models',
           from: this.from,
           isInvalid: this.$v.$invalid,
-          message: `${service.id} is missing a name and/or a pricing model`,
+          message: `${key} is missing a name and/or a pricing model`,
           validate: this.$v.$touch,
         });
         this.$emit('input', val);

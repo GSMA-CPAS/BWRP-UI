@@ -17,7 +17,7 @@
     <div v-for="(service, index) in chosenServices" :key="service.id">
       <service
         v-model="chosenServices[index]"
-        :service-key="service.key"
+        :service-key="service.id"
         :from="from"
         @add="addService"
         @remove="removeService(index)"
@@ -145,7 +145,7 @@ export default {
       });
     },
     removeService(index) {
-      const key = this.chosenServices[index].key;
+      const key = this.chosenServices[index].id;
       this.chosenServices.splice(index, 1);
       this.removeValidation(`discountService${this.from}-${key}`);
     },
