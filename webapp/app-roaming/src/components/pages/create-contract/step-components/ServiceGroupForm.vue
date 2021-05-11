@@ -17,6 +17,7 @@
     <div v-for="(service, index) in chosenServices" :key="service.id">
       <service
         v-model="chosenServices[index]"
+        :service-key="service.key"
         :from="from"
         @add="addService"
         @remove="removeService(index)"
@@ -34,7 +35,7 @@
   </v-col>
 </template>
 <script>
-import {mapState} from 'vuex';
+import {mapMutations, mapState} from 'vuex';
 import {duplicateMixin} from '@mixins/component-specfic';
 import Vue from 'vue';
 import TadigCodes from '@pages/create-contract/step-components/general-information/TadigCodes';
@@ -131,7 +132,12 @@ export default {
     },
   },
   methods: {
+    ...mapMutations('document/new', ['removeValidation']),
     addService() {
+      this.chosenServices = this.chosenServices.map(({id, ...service}, i) => ({
+        id: `service-${i}`,
+        service,
+      }));
       this.chosenServices.push({
         id: `service-${this.chosenServices.length}`,
         name: null,
@@ -139,7 +145,9 @@ export default {
       });
     },
     removeService(index) {
+      const key = this.chosenServices[index].key;
       this.chosenServices.splice(index, 1);
+      this.removeValidation(`discountService${this.from}-${key}`);
     },
   },
   computed: {

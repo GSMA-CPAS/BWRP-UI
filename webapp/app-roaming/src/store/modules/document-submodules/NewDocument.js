@@ -123,6 +123,9 @@ const newDocumentModule = {
         ];
       }
     },
+    removeValidation: (state, key) => {
+      state.validation = [...state.validation.filter((val) => key !== val.key)];
+    },
     attemptedToSave(state) {
       state.saveAttempt = true;
     },

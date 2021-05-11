@@ -179,6 +179,7 @@ export default {
   },
   ...ServiceValidation,
   props: {
+    serviceKey: String,
     from: String,
     value: {type: Object, required: true},
     removeDisabled: {type: Boolean, default: true},
@@ -187,14 +188,13 @@ export default {
     service: {
       handler(val) {
         this.addValidation({
-          key: `discountService${this.from}`,
+          key: `discountService${this.from}-${this.serviceKey}`,
           step: 'Discount Models',
           from: this.from,
           isInvalid: this.$v.$invalid,
           message: `${service.id} is missing a name and/or a pricing model`,
           validate: this.$v.$touch,
         });
-        // this.$v.$touch();
         this.$emit('input', val);
       },
       deep: true,
