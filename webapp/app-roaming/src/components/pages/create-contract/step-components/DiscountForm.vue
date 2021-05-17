@@ -27,6 +27,7 @@
         </v-col>
       </v-row>
       <service-group-form
+        ref="serviceGroup"
         v-model="serviceGroups[index]"
         :group-index="index"
         :from="from"
@@ -85,6 +86,13 @@ export default {
     addServiceGroup() {
       this.serviceGroups.push({
         id: `service-group-${this.serviceGroups.length}`,
+      });
+      this.$nextTick(() => {
+        const element = this.$refs.serviceGroup[this.serviceGroups.length - 1]
+          .$el;
+        element.scrollIntoView({
+          behavior: 'smooth',
+        });
       });
     },
     removeServiceGroup(index) {

@@ -16,6 +16,7 @@
     <b>Services</b>
     <div v-for="(service, index) in chosenServices" :key="`service${index}`">
       <service
+        ref="service"
         v-model="chosenServices[index]"
         :service-key="`Group-${groupIndex} | Service ${index}`"
         :group-index="groupIndex"
@@ -64,6 +65,9 @@ export default {
     };
   },
   watch: {
+    'value.chosenServices'() {
+      this.chosenServices = this.value.chosenServices;
+    },
     chosenServices: {
       handler() {
         // Set default units if missing
@@ -141,6 +145,12 @@ export default {
         // id: `service-${this.chosenServices.length}`,
         name: null,
         includedInCommitment: true,
+      });
+      Vue.nextTick(() => {
+        const element = this.$refs.service[this.chosenServices.length - 1].$el;
+        element.scrollIntoView({
+          behavior: 'smooth',
+        });
       });
     },
     removeService(index) {
