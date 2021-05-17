@@ -3,7 +3,8 @@
     <v-row>
       <v-col>
         <v-select
-          v-model="service.name"
+          ref="selectBox"
+          v-model="value.name"
           :items="services"
           placeholder="Select Service"
           :error-messages="serviceError"
@@ -22,13 +23,13 @@
     </v-row>
     <row label="Included in commitment?">
       <v-col>
-        <v-checkbox v-model="service.includedInCommitment" />
+        <v-checkbox v-model="value.includedInCommitment" />
       </v-col>
     </row>
     <row label="Usage Pricing Model">
       <v-col>
         <v-select
-          v-model="service.pricingModel"
+          v-model="value.pricingModel"
           :items="[
             'Not Charged',
             'Flat rate',
@@ -42,56 +43,56 @@
         />
       </v-col>
     </row>
-    <div v-if="service.pricingModel !== 'Not Charged'">
+    <div v-if="value.pricingModel !== 'Not Charged'">
       <row label="Unit">
         <v-col>
           <v-text-field
-            v-model="service.unit"
+            v-model="value.unit"
             placeholder="Usage unit to charge"
           />
         </v-col>
       </row>
     </div>
-    <div v-if="service.pricingModel === 'Flat rate'">
+    <div v-if="value.pricingModel === 'Flat rate'">
       <row label="Rate">
         <rating-plan-input
-          v-model="service.rate"
+          v-model="value.rate"
           :disable-thresholds="true"
           disable-linear="true"
         />
       </row>
     </div>
-    <div v-if="service.pricingModel === 'Linear rate'">
+    <div v-if="value.pricingModel === 'Linear rate'">
       <row label="Rate">
         <rating-plan-input
-          v-model="service.rate"
+          v-model="value.rate"
           :disable-thresholds="true"
           disable-fixed="true"
         />
       </row>
     </div>
-    <div v-if="service.pricingModel === 'Threshold - back to first'">
+    <div v-if="value.pricingModel === 'Threshold - back to first'">
       <row label="Rate">
-        <rating-plan-input v-model="service.rate" />
+        <rating-plan-input v-model="value.rate" />
       </row>
     </div>
-    <div v-if="service.pricingModel === 'Tiered with Thresholds'">
+    <div v-if="value.pricingModel === 'Tiered with Thresholds'">
       <row label="Rate">
-        <rating-plan-input v-model="service.rate" />
+        <rating-plan-input v-model="value.rate" />
       </row>
     </div>
     <div>
-      <div v-if="service.pricingModel === 'Balanced/Unbalanced (Linear rate)'">
+      <div v-if="value.pricingModel === 'Balanced/Unbalanced (Linear rate)'">
         <row label="Balanced Rate">
           <rating-plan-input
-            v-model="service.balancedRate"
+            v-model="value.balancedRate"
             :disable-thresholds="true"
             :disable-fixed="true"
           />
         </row>
         <row label="Unbalanced Rate">
           <rating-plan-input
-            v-model="service.unbalancedRate"
+            v-model="value.unbalancedRate"
             :disable-thresholds="true"
             :disable-fixed="true"
           />
@@ -101,8 +102,8 @@
     <div>
       <div
         v-if="
-          serviceConfiguration[service.name] &&
-          serviceConfiguration[service.name].access
+          serviceConfiguration[value.name] &&
+          serviceConfiguration[value.name].access
         "
       >
         <row label="Access Pricing Model">
@@ -114,34 +115,33 @@
                 'Tiered with Thresholds',
               ]"
               placeholder="Select Model"
-              v-model="service.accessPricingModel"
+              v-model="value.accessPricingModel"
             />
           </v-col>
         </row>
       </div>
       <div
         v-if="
-          service.accessPricingModel &&
-          service.accessPricingModel !== 'Not Charged'
+          value.accessPricingModel && value.accessPricingModel !== 'Not Charged'
         "
       >
         <row label="Unit">
           <v-col>
             <v-text-field
-              v-model="service.accessPricingUnit"
+              v-model="value.accessPricingUnit"
               placeholder="Access unit to charge"
             />
           </v-col>
         </row>
       </div>
-      <div v-if="service.accessPricingModel === 'Threshold - back to first'">
+      <div v-if="value.accessPricingModel === 'Threshold - back to first'">
         <row label="Rate">
-          <rating-plan-input v-model="service.accessPricingRate" />
+          <rating-plan-input v-model="value.accessPricingRate" />
         </row>
       </div>
-      <div v-if="service.accessPricingModel === 'Tiered with Thresholds'">
+      <div v-if="value.accessPricingModel === 'Tiered with Thresholds'">
         <row label="Rate">
-          <rating-plan-input v-model="service.accessPricingRate" />
+          <rating-plan-input v-model="value.accessPricingRate" />
         </row>
       </div>
     </div>
@@ -173,7 +173,7 @@ export default {
   name: 'service',
   description: 'description',
   mixins: [duplicateMixin],
-  data: () => ({service}),
+  // data: () => ({service}),
   components: {
     RatingPlanInput,
   },
@@ -186,7 +186,7 @@ export default {
     removeDisabled: {type: Boolean, default: true},
   },
   watch: {
-    service: {
+    value: {
       handler(val) {
         const key = `${this.serviceKey}-${this.from}`;
         this.addValidation({
@@ -209,23 +209,23 @@ export default {
   computed: {
     serviceError() {
       const errors = [];
-      if (!this.$v.service.name.$dirty) return errors;
-      !this.$v.service.name.required && errors.push(`Service is required`);
+      if (!this.$v.value.name.$dirty) return errors;
+      !this.$v.value.name.required && errors.push(`Service is required`);
       return errors;
     },
     pricingModelError() {
       const errors = [];
-      if (!this.$v.service.pricingModel.$dirty) return errors;
-      !this.$v.service.pricingModel.required &&
+      if (!this.$v.value.pricingModel.$dirty) return errors;
+      !this.$v.value.pricingModel.required &&
         errors.push(`Pricing Model is required`);
       return errors;
     },
     ...mapState(['services', 'serviceConfiguration']),
   },
-  beforeMount() {
-    if (this.value) {
-      this.service = this.value;
-    }
-  },
+  // beforeMount() {
+  //   if (this.value) {
+  //     this.service = this.value;
+  //   }
+  // },
 };
 </script>

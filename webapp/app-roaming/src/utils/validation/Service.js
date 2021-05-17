@@ -1,7 +1,7 @@
 import {required} from 'vuelidate/lib/validators';
 export default {
   validations: {
-    service: {
+    value: {
       name: {
         required,
       },
