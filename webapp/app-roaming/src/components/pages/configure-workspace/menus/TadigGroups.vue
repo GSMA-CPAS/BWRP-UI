@@ -206,6 +206,7 @@ export default {
           .includes(code.id),
         ...code,
       }));
+      console.log(filteredCodes);
       return filteredCodes;
     },
     headers() {

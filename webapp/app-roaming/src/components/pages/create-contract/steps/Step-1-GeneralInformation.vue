@@ -89,9 +89,16 @@
       <v-divider />
       <parties label="Additional Information" />
       <v-row>
-        <v-col><general-information-party-form v-model="userData" /></v-col>
+        <v-col>
+          <general-information-party-form party="user" v-model="userData" />
+        </v-col>
         <v-divider vertical></v-divider>
-        <v-col><general-information-party-form v-model="partnerData" /></v-col>
+        <v-col>
+          <general-information-party-form
+            party="partner"
+            v-model="partnerData"
+          />
+        </v-col>
       </v-row>
     </form-container>
   </div>

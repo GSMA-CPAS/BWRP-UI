@@ -1,14 +1,16 @@
 <template>
-  <v-combobox
-    :items="codeNames"
-    multiple
-    v-model="value.codes"
-    rows="2"
-    auto-grow
-    label="TADIG Codes"
-    @change="removeSearchTerm"
-    :search-input.sync="groupCodeSearchTerm"
-  />
+  <div>
+    <v-combobox
+      :items="codeNames"
+      multiple
+      v-model="value.codes"
+      rows="2"
+      auto-grow
+      label="TADIG Codes"
+      @change="removeSearchTerm"
+      :search-input.sync="groupCodeSearchTerm"
+    />
+  </div>
 </template>
 <script>
 import {mapActions, mapState} from 'vuex';
@@ -18,6 +20,8 @@ export default {
   name: 'tadig-codes',
   description: 'description',
   props: {
+    includeOnly: Array,
+    excludeTadigs: Array,
     value: Object,
   },
   data: () => ({
@@ -45,7 +49,13 @@ export default {
             const codeId = this.groups[this.groupNames.indexOf(code)].id;
             await this.loadGroupCodes(codeId);
             for (const c of this.groupCodes) {
-              newVal.push(c.code);
+              if (this.excludeTadigs) {
+                !this.excludeTadigs.includes(c.code) && newVal.push(c.code);
+              } else if (this.includeOnly) {
+                this.includeOnly.includes(c.code) && newVal.push(c.code);
+              } else {
+                newVal.push(c.code);
+              }
             }
             changed = true;
           } else {
@@ -72,10 +82,14 @@ export default {
       return this.groups.map((x) => x.name);
     },
     codeNames() {
-      return [].concat(
-        this.groupNames,
-        this.codes.map((x) => x.code),
-      );
+      const tadigCodes = this.includeOnly
+        ? this.includeOnly
+        : this.codes
+            .filter(({code}) =>
+              this.excludeTadigs ? !this.excludeTadigs.includes(code) : true,
+            )
+            .map((x) => x.code);
+      return [].concat(this.groupNames, tadigCodes);
     },
   },
 };

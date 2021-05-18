@@ -4,12 +4,12 @@
     <b>TADIGs</b>
     <row label="Home TADIGs">
       <v-col>
-        <tadig-codes v-model="homeTadigs" />
+        <tadig-codes :include-only="visitorTadigOptions" v-model="homeTadigs" />
       </v-col>
     </row>
     <row label="Visitor TADIGs">
       <v-col>
-        <tadig-codes v-model="visitorTadigs" />
+        <tadig-codes :include-only="homeTadigOptions" v-model="visitorTadigs" />
       </v-col>
     </row>
     <br />
@@ -146,7 +146,7 @@ export default {
         name: null,
         includedInCommitment: true,
       });
-      Vue.nextTick(() => {
+      this.$nextTick(() => {
         const element = this.$refs.service[this.chosenServices.length - 1].$el;
         element.scrollIntoView({
           behavior: 'smooth',
