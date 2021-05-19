@@ -1,6 +1,19 @@
 <template>
   <div>
+    <v-select
+      v-if="selectBox"
+      :items="codeNames"
+      multiple
+      v-model="value.codes"
+      rows="2"
+      auto-grow
+      label="TADIG Codes"
+      @change="removeSearchTerm"
+      :search-input.sync="groupCodeSearchTerm"
+    >
+    </v-select>
     <v-combobox
+      v-else
       :items="codeNames"
       multiple
       v-model="value.codes"
@@ -20,6 +33,7 @@ export default {
   name: 'tadig-codes',
   description: 'description',
   props: {
+    selectBox: Boolean,
     includeOnly: Array,
     excludeTadigs: Array,
     value: Object,
@@ -82,8 +96,10 @@ export default {
       return this.groups.map((x) => x.name);
     },
     codeNames() {
-      const tadigCodes = this.includeOnly
+      const tadigCodes = this.selectBox
         ? this.includeOnly
+          ? this.includeOnly
+          : []
         : this.codes
             .filter(({code}) =>
               this.excludeTadigs ? !this.excludeTadigs.includes(code) : true,
