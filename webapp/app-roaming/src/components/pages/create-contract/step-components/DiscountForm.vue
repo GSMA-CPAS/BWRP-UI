@@ -90,8 +90,11 @@ export default {
       this.$nextTick(() => {
         const element = this.$refs.serviceGroup[this.serviceGroups.length - 1]
           .$el;
+
+        element.getElementsByTagName('input')[0].focus();
         element.scrollIntoView({
           behavior: 'smooth',
+          block: 'center',
         });
       });
     },

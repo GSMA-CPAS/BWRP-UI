@@ -4,12 +4,20 @@
     <b>TADIGs</b>
     <row label="Home TADIGs">
       <v-col>
-        <tadig-codes :include-only="visitorTadigOptions" v-model="homeTadigs" />
+        <tadig-codes
+          select-box
+          :include-only="homeTadigOptions"
+          v-model="homeTadigs"
+        />
       </v-col>
     </row>
     <row label="Visitor TADIGs">
       <v-col>
-        <tadig-codes :include-only="homeTadigOptions" v-model="visitorTadigs" />
+        <tadig-codes
+          select-box
+          :include-only="visitorTadigOptions"
+          v-model="visitorTadigs"
+        />
       </v-col>
     </row>
     <br />
@@ -148,8 +156,11 @@ export default {
       });
       this.$nextTick(() => {
         const element = this.$refs.service[this.chosenServices.length - 1].$el;
+
+        element.getElementsByTagName('input')[0].focus();
         element.scrollIntoView({
           behavior: 'smooth',
+          block: 'center',
         });
       });
     },
