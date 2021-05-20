@@ -30,23 +30,26 @@
                 <v-col cols="4">
                   <v-card >
                     <v-card-title class="headline" >Home revenues</v-card-title>
-                    <v-card-text>
-                      {{parseValue(homeRevenues)}} €
+                    <v-card-text class="black--text">
+                      {{parseValue(homeRevenues)}} € <br/>
+                      <span class="red--text text-no-wrap">2 455 € under commitment</span>
                     </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="4">
                   <v-card >
                     <v-card-title class=" headline">Partner revenues</v-card-title>
-                    <v-card-text>
-                      {{ parseValue(partnerRevenues) }} €
+                    <v-card-text class="black--text text-no-wrap">
+                      {{ parseValue(partnerRevenues) }} € <br/>
+                      <span class="red--text">33 345 824 € under commitment</span>
                     </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="4">
                   <v-card >
                     <v-card-title class="headline">NET Position</v-card-title>
-                    <v-card-text>
+                    <v-card-text class="black--text">
+                      <br/>
                       {{ parseValue(revenuesNetPosition) }} €
                     </v-card-text>
                   </v-card>
@@ -59,7 +62,8 @@
                 <v-col cols="4">
                   <v-card large>
                     <v-card-title class="headline">Partner Charges</v-card-title>
-                    <v-card-text>
+                    <v-card-text class="black--text">
+                      <br/>
                       {{ parseValue(partnerCharges) }} €
                     </v-card-text>
                   </v-card>
@@ -67,7 +71,8 @@
                 <v-col cols="4">
                   <v-card large>
                     <v-card-title class="headline">Home Charges</v-card-title>
-                    <v-card-text>
+                    <v-card-text class="black--text">
+                      <br/>
                       {{ parseValue(homeCharges) }} €
                     </v-card-text>
                   </v-card>
@@ -75,7 +80,8 @@
                 <v-col cols="4">
                   <v-card >
                     <v-card-title class="headline">NET Position</v-card-title>
-                    <v-card-text>
+                    <v-card-text class="black--text">
+                      <br/>
                       {{ parseValue(chargesNetPosition) }} €
                     </v-card-text>
                   </v-card>
@@ -89,12 +95,15 @@
                   <v-card >
                     <v-card-title class="headline pb-0">Difference</v-card-title>
                     <v-row>
+                      <br/>
                       <v-col cols="8" class="px-0 pt-0 pb-0">
-                        <v-card-text>
+                        <br/>
+                        <v-card-text class="black--text">
                           {{parseValue(homeRevenues - partnerCharges)}} €
                         </v-card-text>
                       </v-col>
                       <v-col cols="4" class="px-0 pt-0 pb-0">
+                        <br/>
                         <v-card-text class="text-sm-h6 px-0 pb-0 pt-3" :class="firstPercentageDiscrepancy<0?'red--text':'green--text'">
                           {{ firstPercentageDiscrepancy }} %
                         </v-card-text>
@@ -107,11 +116,13 @@
                     <v-card-title class="headline pb-0">Difference</v-card-title>
                     <v-row>
                       <v-col cols="8" class="px-0 pt-0 pb-0">
-                        <v-card-text fluid>
+                        <br/>
+                        <v-card-text fluid class="black--text">
                           {{ parseValue(partnerRevenues - homeCharges) }} €
                         </v-card-text>
                       </v-col>
                       <v-col cols="4" class="px-0 pt-0 pb-0">
+                        <br/>
                         <v-card-text class="text-sm-h6 px-0 pb-0 pt-3" :class="secondPercentageDiscrepancy<0?'green--text':'red--text'">
                           {{ secondPercentageDiscrepancy }} %
                         </v-card-text>
@@ -121,8 +132,9 @@
                 </v-col>
                 <v-col cols="4">
                   <v-card >
-                    <v-card-title class="headline">NET Difference</v-card-title>
-                    <v-card-text>
+                    <v-card-title class="black--text headline">NET Difference</v-card-title>
+                    <v-card-text class="black--text">
+                      <br/>
                       {{parseValue((homeRevenues - partnerCharges)-(partnerRevenues - homeCharges))}} €
                     </v-card-text>
                   </v-card>
@@ -207,7 +219,7 @@ export default {
       this.revenuesNetPosition = (this.homeRevenues- this.partnerRevenues).toFixed(2);
       this.chargesNetPosition = (this.homeCharges- this.partnerCharges).toFixed(2);
       this.firstPercentageDiscrepancy = parseFloat(this.homeRevenues) !== parseFloat(0.00) ? ((this.homeRevenues - this.partnerCharges)*100/this.homeRevenues).toFixed(2) : '0.00';
-      this.secondPercentageDiscrepancy = parseFloat(this.partnerRevenues) !== parseFloat(0.00) ? ((this.partnerRevenues - this.homeCharges)*100/this.partnerRevenues).toFixed(2) : '0.00';
+      this.secondPercentageDiscrepancy = parseFloat(this.homeCharges) !== parseFloat(0.00) ? ((this.partnerRevenues - this.homeCharges)*100/this.homeCharges).toFixed(2) : '0.00';
       this.firstChartData = this.calculateChartData(this.homeData, this.homeRevenues);
       this.secondChartData = this.calculateChartData(this.partnerData, this.partnerRevenues);
     }

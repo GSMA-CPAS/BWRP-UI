@@ -48,11 +48,17 @@ const usageModule = {
           const {
             usageId,
             state
-          } = data[0]? data[0] : {};
+          } = data[0]? data.shift() : {};
+          console.log('usageId:' + usageId);
+          console.log('state:' + state);
           commit('UPDATE_USAGE', {
             id: usageId,
             state: state
           });
+          commit('timelineCache/UPDATE_USAGE_LIST', data.filter( (usage) => {
+            return usage.state === 'SENT';
+          }), {root: true});
+          dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'usageId', newValue: usageId}, {root: true});
         })
         .catch((err) => {
           console.log(err);
@@ -71,7 +77,6 @@ const usageModule = {
             withCredentials: true,
         })
         .then((data) => {
-          // TODO: usage should be overwritten by comA, for now taking latest usage uploaded
           const {
             usageId,
             referenceId
@@ -80,6 +85,7 @@ const usageModule = {
             id: usageId,
             referenceId: referenceId
           });
+          dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'partnerUsage', newValue: data[0]}, {root: true});
         })
         .catch((err) => {
             console.log(err);
@@ -114,8 +120,14 @@ const usageModule = {
               referenceId: referenceId,
               settlementId: settlementId
             });
+            console.log('wbijamy tutaj');
+            console.log(data);
+            if (req.cacheItemId) {
+              dispatch('timelineCache/updateCacheField', {usageId: req.cacheItemId, field: 'partnerUsage', newValue: data}, {root: true});
+            }
             if (settlementId) {
               commit('settlement/UPDATE_PARTNER_SETTLEMENT_ID', settlementId, {root: true});
+              if (req.cacheItemId)dispatch('timelineCache/updateCacheField', {usageId: req.cacheItemId, field: 'partnerSettlementId', newValue: settlementId}, {root: true});
             }
           } else {
             commit('UPDATE_USAGE', {
@@ -126,8 +138,10 @@ const usageModule = {
               referenceId: referenceId,
               settlementId: settlementId
             });
+            dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: data}, {root: true});
             if (settlementId) {
               commit('settlement/UPDATE_OWN_SETTLEMENT_ID', settlementId, {root: true});
+              dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownSettlementId', newValue: settlementId}, {root: true});
             }
           }
         })
@@ -151,6 +165,8 @@ const usageModule = {
         })
         .then((data) => {
           commit('UPDATE_DISCREPANCIES', data);
+          dispatch('timelineCache/updateCacheField', {usageId: state.ownUsage.id, field: 'usageDiscrepancies', newValue: data}, {root: true});
+
           if (ownSettlementId && partnerSettlementId) dispatch('settlement/getSettlementDiscrepancies', contractId, {root: true});
         })
         .catch((err) => {
@@ -182,6 +198,7 @@ const usageModule = {
             body: body,
             creationDate: creationDate
           });
+          dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: res}, {root: true});
         })
         .catch((err) => {
           log(err);
@@ -206,6 +223,7 @@ const usageModule = {
             body: body,
             creationDate: creationDate
           });
+          dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: res}, {root: true});
         })
         .catch((err) => {
             log(err);
@@ -229,10 +247,21 @@ const usageModule = {
       return state.partnerUsage.body && state.ownUsage.state === 'SENT';
     },
     ownUsageId: (state) => {
+      console.log('state.ownUsage?.id');
+      console.log(state.ownUsage?.id);
       return state.ownUsage?.id;
     },
     partnerUsageId: (state) => {
       return state.partnerUsage?.id;
+    },
+    ownUsage: (state) => {
+      return state.ownUsage;
+    },
+    partnerUsage: (state) => {
+      return state.partnerUsage;
+    },
+    discrepancies: (state) => {
+      return state.discrepancies;
     },
   }
 

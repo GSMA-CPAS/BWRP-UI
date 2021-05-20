@@ -7,12 +7,14 @@ import appDetailsModule from './app-details';
 import workspaceModule from './workspace';
 import usageModule from './usage';
 import settlementModule from './settlement';
+import timelineCacheModule from './timelineCache';
 
 const allModules = {
   document: documentModule,
   'app-state': appStateModule,
   usage: usageModule,
   settlement: settlementModule,
+  timelineCache: timelineCacheModule,
   user: userModule,
   'app-details': appDetailsModule,
   'workspace-config': workspaceModule,

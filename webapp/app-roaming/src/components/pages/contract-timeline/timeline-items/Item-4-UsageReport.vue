@@ -50,6 +50,10 @@ export default {
     isOwnUsage: {
       type: Boolean,
       default: false
+    },
+    isCurrentTimeline: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -59,13 +63,16 @@ export default {
   },
   methods: {
     pollData() {
-      this.partnerBody = setInterval(() => {
-        if (!this.isPartnerUsageReceived) {
-          this.$store.dispatch('usage/getPartnerUsage', this.contractId);
-        } else {
-          clearInterval(this.partnerBody);
-        }
-      }, 30000);
+      if (this.isCurrentTimeline) {
+        console.log('THIS IS CURRENT TIMELINE');
+        this.partnerBody = setInterval(() => {
+          if (!this.isPartnerUsageReceived) {
+            this.$store.dispatch('usage/getPartnerUsage', this.contractId);
+          } else {
+            clearInterval(this.partnerBody);
+          }
+        }, 30000);
+      }
     },
   },
   beforeDestroy() {

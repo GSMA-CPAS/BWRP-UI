@@ -70,6 +70,7 @@ const timelineMixin = {
     ...mapActions('document', ['loadData', 'signDocument']),
     ...mapActions('usage', ['uploadUsage', 'sendUsage']),
     ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'declineDiscrepancies']),
+    ...mapActions('timelineCache', ['loadDataFromCache', 'doSth']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
     discrepanciesFlag: function(item, param) {
@@ -128,6 +129,10 @@ const timelineMixin = {
       'areSettlementsGenerated',
       'areDiscrepanciesCalculated',
       'settlementStatus'
+    ]),
+    ...mapGetters('timelineCache', [
+      'usageIds',
+      'currentUsageId'
     ]),
     ...mapGetters('partners', ['list'])
   },

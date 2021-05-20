@@ -27,6 +27,9 @@ const settlementModule = {
         UPDATE_DISCREPANCIES(state, data) {
             state.discrepancies = data;
         },
+        UPDATE_STATUS(state, data) {
+            state.discrepancies = data;
+        },
         ACCEPT_DISCREPANCIES: (state) => {
             state.settlementStatus = 'Accepted';
         },
@@ -57,6 +60,8 @@ const settlementModule = {
                 )
                 .then((res) => {
                     commit('UPDATE_OWN_SETTLEMENT_ID', res.settlementId);
+                    dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'ownSettlementId', newValue: res.settlementId}, {root: true});
+                    // commit('UPDATE_STATUS', res.status);
                     if (state.partnerSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
@@ -69,6 +74,7 @@ const settlementModule = {
             {commit, dispatch, rootGetters, getters, rootState, state}
         ) {
             const contractId = rootGetters['document/contractId'];
+            const ownUsageId = rootGetters['usage/ownUsageId'];
             const partnerUsageId = rootGetters['usage/partnerUsageId'];
             await Vue.axios.commonAdapter
                 .put(
@@ -76,6 +82,8 @@ const settlementModule = {
                 )
                 .then((res) => {
                     commit('UPDATE_PARTNER_SETTLEMENT_ID', res.settlementId);
+                    dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'partnerSettlementId', newValue: res.settlementId}, {root: true});
+
                     if (state.ownSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
@@ -87,12 +95,14 @@ const settlementModule = {
         async getSettlementDiscrepancies(
             {commit, dispatch, rootGetters, getters, rootState, state}, contractId
         ) {
+            const ownUsageId = rootGetters['usage/ownUsageId'];
             await Vue.axios.commonAdapter
                 .get(
                     `/settlements/` + contractId + '/' + state.ownSettlementId + '/discrepancy/?partnerSettlementId=' + state.partnerSettlementId
                 )
                 .then((res) => {
                     commit('UPDATE_DISCREPANCIES', res);
+                    dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'settlementDiscrepancies', newValue: res}, {root: true});
                 })
                 .catch((err) => {
                     log(err);
@@ -124,6 +134,9 @@ const settlementModule = {
         },
         partnerSettlementId: (state) => {
             return state.partnerSettlementId;
+        },
+        discrepancies: (state) => {
+            return state.discrepancies;
         },
     }
 };
