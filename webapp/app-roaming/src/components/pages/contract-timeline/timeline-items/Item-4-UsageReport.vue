@@ -64,10 +64,10 @@ export default {
   methods: {
     pollData() {
       if (this.isCurrentTimeline) {
-        console.log('THIS IS CURRENT TIMELINE');
         this.partnerBody = setInterval(() => {
           if (!this.isPartnerUsageReceived) {
-            this.$store.dispatch('usage/getPartnerUsage', this.contractId);
+            console.log('THIS IS CURRENT TIMELINE');
+            this.$store.dispatch('usage/getUsageById', {contractId: this.contractId, usageId: this.currentUsageId, isPartner: false});
           } else {
             clearInterval(this.partnerBody);
           }

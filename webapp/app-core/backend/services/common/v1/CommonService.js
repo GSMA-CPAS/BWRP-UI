@@ -256,11 +256,8 @@ class CommonService extends AbstractService {
      * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/send/
      */
     this.getRouter().put('/usages/:contractId/:usageId/send/', ensureAuthenticated, async (req, res) => {
-      console.log('commonService');
       const contractId = req.params.contractId;
       const usageId = req.params.usageId;
-      console.log(contractId);
-      console.log(usageId);
       try {
         const response = await this.getBackendAdapter('common').sendUsageById(contractId, usageId);
         return res.json(response);
@@ -269,6 +266,24 @@ class CommonService extends AbstractService {
           code: ErrorCodes.ERR_BAD_REQUEST,
           message: 'Failed to send usage',
         })), 'PUT /usages/:contractId/:usageId/send/');
+      }
+    });
+
+    /**
+     * Reject Usage Report
+     * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/reject/
+     */
+    this.getRouter().put('/usages/:contractId/:usageId/reject/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      try {
+        const response = await this.getBackendAdapter('common').rejectUsageById(contractId, usageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_BAD_REQUEST,
+          message: 'Failed to reject usage',
+        })), 'PUT /usages/:contractId/:usageId/reject/');
       }
     });
 
@@ -354,6 +369,24 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to send settlements'
+        })));
+      }
+    });
+
+    /**
+     * Reject Settlement
+     * curl -X PUT http://{host}:{port}/api/v1/common/settlements/{contractId}/{settlementId}/reject/
+     */
+    this.getRouter().put('/settlements/:contractId/:settlementId/reject/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const settlementId = req.params.settlementId;
+      try {
+        const response = await this.getBackendAdapter('common').rejectSettlementsById(contractId, settlementId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to reject settlements'
         })));
       }
     });

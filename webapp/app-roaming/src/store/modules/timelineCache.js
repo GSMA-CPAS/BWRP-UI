@@ -60,29 +60,25 @@ const timelineCache = {
             commit('RESET_STATE');
         },
         async loadDataFromCache({commit, dispatch, rootGetters, getters, rootState, state}, id) {
-            console.log(id);
             const contractId = rootGetters['document/contractId'];
             await dispatch('usage/resetData', contractId, {root: true});
             await dispatch('settlement/resetData', contractId, {root: true});
             if (state.timelineHistory[id]) {
                 console.log('znaleziono w historii');
                 await dispatch('loadTimelineData', state.timelineHistory[id]);
+            } else if (!id) {
+                console.log('nowy kontrakt');
             } else {
                 console.log('nie znaleziono w cache');
                 await dispatch('usage/getUsageById', {contractId, usageId: id, isPartner: false}, {root: true});
-                await dispatch('usage/getUsageById', {contractId, usageId: '60a193037f3ee7001fb2424d14a1', isPartner: true, cacheItemId: id}, {root: true});
             }
         },
         async updateCacheField(
             {commit, dispatch, rootGetters, getters, rootState, state}, {usageId, field, newValue}
         ) {
-            if (state.currentTimeline?.usageId === usageId || !state.currentTimeline) {
+            if ((state.currentTimeline?.usageId === usageId || !state.currentTimeline)) {
                 if (!state.currentTimeline) commit('CREATE_NEW_CURRENT_TIMELINE_CACHE_ITEM');
                 commit('UPDATE_CURRENT_TIMELINE_CACHE_FIELD', {usageId, field, newValue});
-                if (field === 'settlementStatus') {
-                    commit('CREATE_NEW_TIMELINE_HISTORY_CACHE_ITEM', {usageId, newValue: state.currentTimeline});
-                    commit('CLEAR_CURRENT_TIMELINE_CACHE', usageId);
-                }
             } else if (state.rejectedUsagesIds.includes(usageId)) {
                 if (!state.timelineHistory[usageId]) {
                     commit('CREATE_NEW_TIMELINE_HISTORY_CACHE_ITEM', usageId);
@@ -99,9 +95,6 @@ const timelineCache = {
             commit('settlement/UPDATE_DISCREPANCIES', item.settlementDiscrepancies, {root: true});
             commit('settlement/DECLINE_DISCREPANCIES', {root: true});
         },
-        doSth({commit, dispatch, rootGetters, getters, rootState, state}, uuu) {
-            console.log(uuu);
-        }
     },
     getters: {
         usageIds: (state) => {

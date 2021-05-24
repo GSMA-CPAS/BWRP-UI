@@ -14,15 +14,17 @@
             @click="onPanelClick(item.usageId)"
         >
           <v-expansion-panel-header>
-            <v-col >
-              Timeline {{ item.usageId }}
+            <v-col cols="1">
+              Timeline {{i+1}}
             </v-col>
-            <v-btn @click.stop="displayAll">
-              aaa
-            </v-btn>
-            <v-col>
-              <v-spacer/>
-              Timeline {{ i }}
+            <v-col >
+              Creation date: {{item.creationDate}}
+            </v-col>
+            <v-spacer/>
+            <v-col cols="auto">
+              <h3 class="red--text">
+                {{item.tag}}
+              </h3>
             </v-col>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -35,7 +37,7 @@
               <Item-7-SettlementDiscrepancies :isHome="true"/>
               <Item-7-SettlementDiscrepancies/>
               <Item-8-SettlementReport />
-              <Item-9-Result />
+<!--              <Item-9-Result />-->
             </v-timeline>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -44,12 +46,18 @@
             v-model="panel"
             >
           <v-expansion-panel-header>
-            <v-col >
-              Timeline
+            <v-col cols="1">
+              Timeline {{usageIds.length+1}}
             </v-col>
-            <v-col>
-              <v-spacer/>
-              Timeline
+            <v-btn @click.stop="displayAll">
+              aaa
+            </v-btn>
+            <v-col/>
+            <v-spacer/>
+            <v-col cols="auto">
+              <h3 class="grey--text text-no-wrap">
+                IN PROGRESS
+              </h3>
             </v-col>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -62,7 +70,7 @@
               <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated" :isHome="true"/>
               <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated"/>
               <Item-8-SettlementReport v-if="this.areSettlementsGenerated" />
-              <Item-9-Result v-if="this.settlementStatus" />
+<!--              <Item-9-Result v-if="this.settlementStatus" />-->
             </v-timeline>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -80,10 +88,10 @@ import Item5Discrepancies from './timeline-items/Item-5-UsageDiscrepancies.vue';
 import Item6GenerateSettlement from './timeline-items/Item-6-GenerateSettlement.vue';
 import Item7SettlementDiscrepancies from './timeline-items/Item-7-SettlementDiscrepancies.vue';
 import Item8SettlementReport from './timeline-items/Item-8-SettlementReport.vue';
-import Item9Result from './timeline-items/Item-9-Result.vue';
+// import Item9Result from './timeline-items/Item-9-Result.vue';
 export default {
   components: {
-    Item9Result,
+    // Item9Result,
     Item8SettlementReport,
     Item7SettlementDiscrepancies,
     Item6GenerateSettlement,
@@ -107,16 +115,12 @@ export default {
     };
   },
   methods: {
-    loadPreviousTimeline(usageId) {
-      console.log('loading data from cache');
-      this.loadDataFromCache(usageId);
-    },
     displayAll() {
-      // console.log(this.$store.state.timelineCache.currentTimeline);
-      // console.log(this.$store.state.timelineCache.timelineHistory);
-      // console.log(this.$store.state.timelineCache.rejectedUsages);
+      console.log(this.$store.state.timelineCache.currentTimeline);
+      console.log(JSON.stringify(this.$store.state.timelineCache.timelineHistory));
+      console.log(this.$store.state.timelineCache.rejectedUsages);
       // console.log(this.$store.state.timelineCache.rejectedUsagesIds);
-      console.log(this.panel);
+      // console.log(this.panel);
     },
     onPanelClick(usageId) {
       if (!event.currentTarget.classList.contains('v-expansion-panel-header--active')) {

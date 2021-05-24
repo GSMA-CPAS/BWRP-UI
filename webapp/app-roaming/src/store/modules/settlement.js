@@ -118,6 +118,61 @@ const settlementModule = {
         ) {
             commit('DECLINE_DISCREPANCIES');
         },
+        async rejectDiscrepancies(
+            {commit, dispatch, rootGetters, getters, rootState, state}, req
+        ) {
+            const contractId = rootGetters['document/contractId'];
+            const ownUsageId = rootGetters['usage/ownUsageId'];
+            const partnerUsageId = rootGetters['usage/partnerUsageId'];
+            // ownUsage reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/usages/` + contractId + '/' + ownUsageId + '/reject/',
+                )
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            // partnerUsage reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/usages/` + contractId + '/' + partnerUsageId+ '/reject/',
+                )
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            // ownSettlement reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/settlements/` + contractId + '/' + state.ownSettlementId + '/reject/',
+                )
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            // partnerSettlement reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/settlements/` + contractId + '/' + state.partnerSettlementId+ '/reject/',
+                )
+                .then((res) => {
+                    console.log(res);
+                    dispatch('usage/resetData', contractId, {root: true});
+                    dispatch('settlement/resetData', contractId, {root: true});
+                    dispatch('timelineCache/resetData', contractId, {root: true});
+                    dispatch('usage/getUsages', contractId, {root: true});
+                })
+                .catch((err) => {
+                    log(err);
+                });
+        },
     },
     getters: {
         areSettlementsGenerated: (state) => {

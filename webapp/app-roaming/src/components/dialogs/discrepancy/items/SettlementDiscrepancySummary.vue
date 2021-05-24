@@ -1,10 +1,23 @@
 <template>
   <v-container fluid >
     <v-card class="pa-2">
-      <v-container fluid>
+      <v-container fluid class="pt-0">
         <v-data-table
-            :headers="headers" :items="items" hide-default-footer
-          >
+            :items="items" hide-default-footer
+        >
+          <template #header="{ }">
+            <thead class="v-data-table-header">
+            <tr>
+              <th v-for="(h,i) in headers" :key="i" class="text-wrap td-border-style" :rowspan="h.children?1:2" :colspan="h.children?h.children.length:1">
+                {{ h.text }}
+                <span v-if="h.subText">
+                  <br/>
+                  {{h.subText}}
+                </span>
+              </th>
+            </tr>
+            </thead>
+          </template>
           <template #item="{ item }">
             <tr :class=discrepanciesFlag(item,flagParam)>
               <td> {{item.service}}</td>
@@ -46,8 +59,8 @@ export default {
         {text: 'Partner Usage', value: 'partner_usage', align: 'center'},
         {text: 'Delta (abs)', value: 'delta_usage_abs', align: 'center'},
         {text: 'Delta (%)', value: 'delta_usage_percent', align: 'center'},
-        {text: 'Own Calculation', value: 'own_calculation', align: 'center'},
-        {text: 'Partner Calculation', value: 'partner_calculation', align: 'center'},
+        {text: 'Own Calculation', subText: '(post commitment)', value: 'own_calculation', align: 'center'},
+        {text: 'Partner Calculation', subText: '(post commitment)', value: 'partner_calculation', align: 'center'},
         {text: 'Delta (%)', value: 'delta_calculation_percent', align: 'center'},
       ];
     },

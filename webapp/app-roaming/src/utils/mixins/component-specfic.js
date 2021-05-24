@@ -69,8 +69,8 @@ const timelineMixin = {
     ...mapActions('document/new', ['startContract']),
     ...mapActions('document', ['loadData', 'signDocument']),
     ...mapActions('usage', ['uploadUsage', 'sendUsage']),
-    ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'declineDiscrepancies']),
-    ...mapActions('timelineCache', ['loadDataFromCache', 'doSth']),
+    ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'rejectDiscrepancies']),
+    ...mapActions('timelineCache', ['loadDataFromCache']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
     discrepanciesFlag: function(item, param) {

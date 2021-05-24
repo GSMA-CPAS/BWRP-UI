@@ -111,7 +111,6 @@ const documentModule = {
       await dispatch('getDocument', contractId);
       await dispatch('usage/getUsages', contractId, {root: true});
       await dispatch('getSignatures', contractId);
-      await dispatch('usage/getPartnerUsage', contractId, {root: true});
     },
   },
   getters: {

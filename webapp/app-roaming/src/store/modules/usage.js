@@ -44,27 +44,39 @@ const usageModule = {
           withCredentials: true,
         })
         .then((data) => {
-          // TODO: usage should be overwritten by comA, for now taking latest usage uploaded
-          const {
-            usageId,
-            state
-          } = data[0]? data.shift() : {};
-          console.log('usageId:' + usageId);
-          console.log('state:' + state);
-          commit('UPDATE_USAGE', {
-            id: usageId,
-            state: state
-          });
+          let currentUsage = {};
+          if (data[0] && data[0].tag === 'REJECTED') {
+            const contractId = rootGetters['document/contractId'];
+            dispatch('usage/resetData', contractId, {root: true});
+            dispatch('settlement/resetData', contractId, {root: true});
+          } else {
+            currentUsage = data.shift();
+            commit('UPDATE_USAGE', {
+              id: currentUsage.usageId,
+              state: currentUsage.state,
+              partnerUsageId: currentUsage.partnerUsageId
+            });
+            dispatch('timelineCache/updateCacheField', {usageId: currentUsage.usageId, field: 'usageId', newValue: currentUsage.usageId}, {root: true});
+          }
+          console.log(data);
           commit('timelineCache/UPDATE_USAGE_LIST', data.filter( (usage) => {
             return usage.state === 'SENT';
           }), {root: true});
-          dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'usageId', newValue: usageId}, {root: true});
+          if (currentUsage.partnerUsageId) {
+            commit('UPDATE_PARTNER_USAGE', {
+              id: currentUsage.partnerUsageId
+            });
+            dispatch('timelineCache/updateCacheField', {usageId: currentUsage.usageId, field: 'partnerUsage', newValue: {id: currentUsage.partnerUsageId}}, {root: true});
+          }
         })
         .catch((err) => {
           console.log(err);
         });
       if (state.ownUsage.id) {
         await dispatch('getUsageById', {contractId, usageId: state.ownUsage.id, isPartner: false});
+      }
+      if (state.partnerUsage?.id) {
+        await dispatch('getUsageById', {contractId, usageId: state.partnerUsage.id, isPartner: true, cacheItemId: state.ownUsage.id});
       }
     },
     async getPartnerUsage(
@@ -110,7 +122,8 @@ const usageModule = {
             body,
             creationDate,
             referenceId,
-            settlementId
+            settlementId,
+            partnerUsageId
           } = data;
           if (req.isPartner) {
             commit('UPDATE_PARTNER_USAGE', {
@@ -118,10 +131,9 @@ const usageModule = {
               body: body,
               creationDate: creationDate,
               referenceId: referenceId,
-              settlementId: settlementId
+              settlementId: settlementId,
+              partnerUsageId: partnerUsageId
             });
-            console.log('wbijamy tutaj');
-            console.log(data);
             if (req.cacheItemId) {
               dispatch('timelineCache/updateCacheField', {usageId: req.cacheItemId, field: 'partnerUsage', newValue: data}, {root: true});
             }
@@ -136,12 +148,16 @@ const usageModule = {
               body: body,
               creationDate: creationDate,
               referenceId: referenceId,
-              settlementId: settlementId
+              settlementId: settlementId,
+              partnerUsageId: partnerUsageId
             });
             dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: data}, {root: true});
             if (settlementId) {
               commit('settlement/UPDATE_OWN_SETTLEMENT_ID', settlementId, {root: true});
               dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownSettlementId', newValue: settlementId}, {root: true});
+            }
+            if (partnerUsageId && !state.partnerUsage?.id) {
+              dispatch('getUsageById', {contractId: req.contractId, usageId: partnerUsageId, isPartner: true, cacheItemId: usageId});
             }
           }
         })
@@ -224,6 +240,7 @@ const usageModule = {
             creationDate: creationDate
           });
           dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: res}, {root: true});
+          dispatch('getUsageById', {contractId: contractId, usageId: usageId, isPartner: false, cacheItemId: usageId});
         })
         .catch((err) => {
             log(err);
@@ -247,8 +264,6 @@ const usageModule = {
       return state.partnerUsage.body && state.ownUsage.state === 'SENT';
     },
     ownUsageId: (state) => {
-      console.log('state.ownUsage?.id');
-      console.log(state.ownUsage?.id);
       return state.ownUsage?.id;
     },
     partnerUsageId: (state) => {

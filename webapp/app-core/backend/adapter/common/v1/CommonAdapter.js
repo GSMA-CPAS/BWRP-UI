@@ -368,6 +368,31 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async rejectUsageById(contractId, usageId) {
+      try {
+         const response = await got.put(
+             this.adapterConfig.url +
+             '/api/v1/contracts/' +
+             contractId +
+             '/usages/' +
+             usageId +
+             '/reject/',
+             {responseType: 'json'},
+         );
+         this.getLogger().debug(
+             '[CommonAdapter::rejectUsageById] reject usage to partner: - %s',
+             JSON.stringify(response.body),
+         );
+         return response.body;
+      } catch (error) {
+         this.getLogger().error(
+             '[CommonAdapter::rejectUsageById] failed to reject usage - %s',
+             error.message,
+         );
+         throw error;
+      }
+   }
+
    async generateSettlementsById(contractId, usageId) {
       try {
          const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/generate/',
@@ -437,10 +462,25 @@ class CommonAdapter extends AbstractAdapter {
                responseType: 'json'
             },
          );
-         this.getLogger().debug('[CommonAdapter::createContract] create new contract: - %s', JSON.stringify(response.body));
+         this.getLogger().debug('[CommonAdapter::sendSettlement] send settlement: - %s', JSON.stringify(response.body));
          return response.body;
       } catch (error) {
-         this.getLogger().error('[CommonAdapter::createContract] failed to create contract - %s', error.message);
+         this.getLogger().error('[CommonAdapter::sendSettlement] failed to send settlement - %s', error.message);
+         throw error;
+      }
+   }
+
+   async rejectSettlementsById(contractId, settlementId) {
+      try {
+         const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/settlements/' + settlementId + '/reject/',
+            {
+               responseType: 'json'
+            },
+         );
+         this.getLogger().debug('[CommonAdapter::rejectSettlement] reject settlement: - %s', JSON.stringify(response.body));
+         return response.body;
+      } catch (error) {
+         this.getLogger().error('[CommonAdapter::rejectSettlement] failed to reject settlement - %s', error.message);
          throw error;
       }
    }
