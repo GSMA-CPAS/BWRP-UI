@@ -113,11 +113,6 @@ const settlementModule = {
         ) {
             commit('ACCEPT_DISCREPANCIES');
         },
-        declineDiscrepancies(
-            {commit, dispatch, rootGetters, getters, rootState, state}
-        ) {
-            commit('DECLINE_DISCREPANCIES');
-        },
         async rejectDiscrepancies(
             {commit, dispatch, rootGetters, getters, rootState, state}, req
         ) {
