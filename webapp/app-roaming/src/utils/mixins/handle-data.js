@@ -12,7 +12,7 @@ const dataMixin = {
 const converterMixin = {
   methods: {
     convertRawToJSON(data) {
-      return JSON.parse(atob(data));
+      return JSON.parse(decodeURIComponent(escape(atob(data))));
     },
   }
 };
