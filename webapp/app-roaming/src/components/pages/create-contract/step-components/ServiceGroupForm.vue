@@ -73,8 +73,15 @@ export default {
     };
   },
   watch: {
-    'value.chosenServices'() {
-      this.chosenServices = this.value.chosenServices;
+    value() {
+      this.visitorTadigs = this.value.visitorTadigs;
+      this.homeTadigs = this.value.homeTadigs;
+      if (this.value.condition) {
+        this.condition = this.value.condition;
+      }
+      if (this.value.chosenServices) {
+        this.chosenServices = this.value.chosenServices;
+      }
     },
     chosenServices: {
       handler() {
@@ -155,12 +162,13 @@ export default {
         includedInCommitment: true,
       });
       this.$nextTick(() => {
-        const element = this.$refs.service[this.chosenServices.length - 1].$el;
+        const element = this.$refs.service[
+          this.chosenServices.length - 1
+        ].$el.getElementsByTagName('input')[0];
 
-        element.getElementsByTagName('input')[0].focus();
+        element.focus();
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
         });
       });
     },
