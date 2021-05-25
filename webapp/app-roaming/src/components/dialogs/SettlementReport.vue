@@ -32,7 +32,8 @@
                     <v-card-title class="headline" >Home revenues</v-card-title>
                     <v-card-text class="black--text">
                       {{parseValue(homeRevenues)}} € <br/>
-                      <span class="red--text text-no-wrap">2 455 € under commitment</span>
+                      <span v-if="homeDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(homeDeltaCommitment)}} € under commitment</span>
+                      <span v-else class="green--text text-no-wrap">{{parseValue(homeDeltaCommitment)}} € over commitment</span>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -41,7 +42,8 @@
                     <v-card-title class=" headline">Partner revenues</v-card-title>
                     <v-card-text class="black--text text-no-wrap">
                       {{ parseValue(partnerRevenues) }} € <br/>
-                      <span class="red--text">33 345 824 € under commitment</span>
+                      <span v-if="partnerDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(partnerDeltaCommitment)}} € under commitment</span>
+                      <span v-else class="green--text text-no-wrap">{{parseValue(partnerDeltaCommitment)}} € over commitment</span>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -140,7 +142,7 @@
                   </v-card>
                 </v-col>
               </v-row>
-              <v-row class="pt-6 mr-3">
+              <v-row v-if="currentTimeline" class="pt-6 mr-3">
                   <v-spacer/>
                   <app-button
                       class="mr-3"
@@ -152,7 +154,7 @@
                   <app-button
                       style="border: #e5e5e5 1px solid"
                       label="reject"
-                      @click="declineDiscrepancies"
+                      @click="rejectDiscrepancies"
                   >
                   </app-button>
               </v-row>
@@ -172,6 +174,12 @@ export default {
   name: 'SettlementReport',
   components: {DoughnutChart1, DoughnutChart2},
   mixins: [timelineMixin],
+  props: {
+    currentTimeline: {
+      type: Boolean,
+      default: true
+    }
+  },
   computed: {
     homeData() {
       return this.$store.state.settlement.discrepancies.homePerspective['general_information'];
@@ -179,22 +187,11 @@ export default {
     partnerData() {
       return this.$store.state.settlement.discrepancies.partnerPerspective['general_information'];
     },
+    settlementReport() {
+      return this.$store.state.settlement.discrepancies.settlementReport;
+    },
   },
   methods: {
-    calculateHomeSettlement(field) {
-      let result = 0;
-      this.homeData?.forEach((record) => {
-        result += record[field];
-      });
-      return result;
-    },
-    calculatePartnerSettlement(field) {
-      let result = 0;
-      this.partnerData?.forEach((record) => {
-        result += record[field];
-      });
-      return result;
-    },
     calculateChartData(settlementData, divider) {
       let moc; let mtc; let sms; let data = 0;
       if (parseFloat(divider) === parseFloat(0.00)) return [0, 0, 0, 0];
@@ -211,17 +208,19 @@ export default {
       });
       return [data, mtc, moc, sms];
     },
-    calculateHomeRevenues() {
-      this.homeRevenues = this.calculateHomeSettlement('own_calculation').toFixed(2);
-      this.partnerRevenues= this.calculatePartnerSettlement('own_calculation').toFixed(2);
-      this.homeCharges= this.calculatePartnerSettlement('partner_calculation').toFixed(2);
-      this.partnerCharges= this.calculateHomeSettlement('partner_calculation').toFixed(2);
+    calculate() {
+      this.homeRevenues = this.settlementReport.homeRevenue.toFixed(2);
+      this.partnerRevenues= this.settlementReport.partnerRevenue.toFixed(2);
+      this.homeCharges= this.settlementReport.homeCharges.toFixed(2);
+      this.partnerCharges= this.settlementReport.partnerCharges.toFixed(2);
       this.revenuesNetPosition = (this.homeRevenues- this.partnerRevenues).toFixed(2);
       this.chargesNetPosition = (this.homeCharges- this.partnerCharges).toFixed(2);
       this.firstPercentageDiscrepancy = parseFloat(this.homeRevenues) !== parseFloat(0.00) ? ((this.homeRevenues - this.partnerCharges)*100/this.homeRevenues).toFixed(2) : '0.00';
       this.secondPercentageDiscrepancy = parseFloat(this.homeCharges) !== parseFloat(0.00) ? ((this.partnerRevenues - this.homeCharges)*100/this.homeCharges).toFixed(2) : '0.00';
       this.firstChartData = this.calculateChartData(this.homeData, this.homeRevenues);
       this.secondChartData = this.calculateChartData(this.partnerData, this.partnerRevenues);
+      this.homeDeltaCommitment = this.settlementReport.homeDeltaCommitment.toFixed(2);
+      this.partnerDeltaCommitment = this.settlementReport.partnerDeltaCommitment.toFixed(2);
     }
   },
   data() {
@@ -234,12 +233,14 @@ export default {
       chargesNetPosition: 0,
       firstPercentageDiscrepancy: 0,
       secondPercentageDiscrepancy: 0,
+      homeDeltaCommitment: 0,
+      partnerDeltaCommitment: 0,
       firstChartData: ['0', '0', '0', '0'],
       secondChartData: ['0', '0', '0', '0']
     };
   },
   created() {
-    this.calculateHomeRevenues();
+    this.calculate();
   }
 };
 </script>
