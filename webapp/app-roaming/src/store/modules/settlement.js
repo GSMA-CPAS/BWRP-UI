@@ -29,13 +29,7 @@ const settlementModule = {
         },
         UPDATE_STATUS(state, data) {
             state.discrepancies = data;
-        },
-        ACCEPT_DISCREPANCIES: (state) => {
-            state.settlementStatus = 'Accepted';
-        },
-        DECLINE_DISCREPANCIES: (state) => {
-            state.settlementStatus = 'Rejected';
-        },
+        }
     },
     actions: {
         async resetData(
@@ -103,6 +97,7 @@ const settlementModule = {
                 .then((res) => {
                     commit('UPDATE_DISCREPANCIES', res);
                     dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'settlementDiscrepancies', newValue: res}, {root: true});
+                    dispatch('usage/getUsageSignatures', {usageId: ownUsageId}, {root: true});
                 })
                 .catch((err) => {
                     log(err);
@@ -111,7 +106,8 @@ const settlementModule = {
         acceptDiscrepancies(
             {commit, dispatch, rootGetters, getters, rootState, state}
         ) {
-            commit('ACCEPT_DISCREPANCIES');
+            const ownUsageId = rootGetters['usage/ownUsageId'];
+            dispatch('timelineCache/acceptReport', {}, {root: true});
         },
         async rejectDiscrepancies(
             {commit, dispatch, rootGetters, getters, rootState, state}, req

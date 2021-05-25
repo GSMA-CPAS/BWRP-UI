@@ -393,6 +393,76 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async getUsageSignaturesById(contractId, usageId, signatureId, addIdentity = false) {
+      try {
+         const signature = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/signatures/' + signatureId).json();
+         if (addIdentity) {
+            if (signature.certificate) {
+               const x509 = cryptoUtils.parseCert(signature.certificate);
+               const identity = x509.subject.str;
+               signature['identity'] = (identity) ? identity : 'Unknown';
+            }
+         }
+         return signature;
+      } catch (error) {
+         this.getLogger().error('[CommonAdapter::getSignatures] failed to get all usage signatures - %s', error.message);
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: 'Failed to get signature',
+         }));
+      }
+   }
+
+   async getUsageSignatures(contractId, usageId, addIdentities = false) {
+      try {
+         const lists = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId +'/usages/' + usageId + '/signatures/').json();
+         this.getLogger().debug('[CommonAdapter::getSignatures] get all usage signatures: - %s', JSON.stringify(lists));
+         const processed = [];
+         for (const item of lists) {
+            if (item.state === 'SIGNED') {
+               const result = await this.getUsageSignaturesById(contractId, item.usageId, item.signatureId, addIdentities);
+               processed.push(result);
+            }
+         }
+         return processed;
+      } catch (error) {
+         this.getLogger().error('[CommonAdapter::getSignatures] failed to get usage signatures - %s', error.message);
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: 'Failed to get all usage signatures',
+         }));
+      }
+   }
+
+   async signUsage(contractId, usageId, certificate, signatureAlgo, signature) {
+      try {
+         const payload = {
+            certificate: certificate,
+            algorithm: signatureAlgo,
+            signature: signature,
+         };
+         this.getLogger().debug('[CommonAdapter::signUsage] signing usage: - %s', JSON.stringify(payload));
+         const response = await got.post(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/signatures/',
+             {
+                json: payload,
+                responseType: 'json'
+             }
+         );
+         return response.body;
+      } catch (error) {
+         this.getLogger().error('[CommonAdapter::signUsage] failed to sign usage - %s', error.message);
+         let errorMessage = 'Failed to sign usage';
+         // TODO common adapter -> not clear if already signed or other error
+         if (error.response && error.response.statusCode === 422) {
+            errorMessage = 'Already signed or missing parameter';
+         }
+         throw new Error(JSON.stringify({
+            code: ErrorCodes.ERR_SIGNATURE,
+            message: errorMessage,
+         }));
+      }
+   }
+
    async generateSettlementsById(contractId, usageId) {
       try {
          const response = await got.put(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId + '/generate/',

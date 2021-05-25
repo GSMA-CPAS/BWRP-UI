@@ -31,12 +31,12 @@
             <v-timeline>
               <Item-3-UploadUsage />
               <Item-4-UsageReport :isOwnUsage="true"/>
-              <Item-4-UsageReport  />
+              <Item-4-UsageReport />
               <Item-5-Discrepancies/>
               <Item-6-GenerateSettlement/>
               <Item-7-SettlementDiscrepancies :isHome="true"/>
               <Item-7-SettlementDiscrepancies/>
-              <Item-8-SettlementReport />
+              <Item-8-SettlementReport :currentTimeline="false"/>
 <!--              <Item-9-Result />-->
             </v-timeline>
           </v-expansion-panel-content>
@@ -70,7 +70,8 @@
               <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated" :isHome="true"/>
               <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated"/>
               <Item-8-SettlementReport v-if="this.areSettlementsGenerated" />
-<!--              <Item-9-Result v-if="this.settlementStatus" />-->
+<!--              <Item-9-Result v-if="this.areSettlementsAccepted || this.usageSignatures.length" />-->
+              <Item-9-Result />
             </v-timeline>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -88,10 +89,10 @@ import Item5Discrepancies from './timeline-items/Item-5-UsageDiscrepancies.vue';
 import Item6GenerateSettlement from './timeline-items/Item-6-GenerateSettlement.vue';
 import Item7SettlementDiscrepancies from './timeline-items/Item-7-SettlementDiscrepancies.vue';
 import Item8SettlementReport from './timeline-items/Item-8-SettlementReport.vue';
-// import Item9Result from './timeline-items/Item-9-Result.vue';
+import Item9Result from './timeline-items/Item-9-Result.vue';
 export default {
   components: {
-    // Item9Result,
+    Item9Result,
     Item8SettlementReport,
     Item7SettlementDiscrepancies,
     Item6GenerateSettlement,
@@ -114,11 +115,23 @@ export default {
       expanded: false
     };
   },
+  computed: {
+    areSettlementsAccepted() {
+      return this.$store.state.timelineCache.currentTimeline['isReportAccepted'];
+    }
+  },
   methods: {
     displayAll() {
-      console.log(this.$store.state.timelineCache.currentTimeline);
-      console.log(JSON.stringify(this.$store.state.timelineCache.timelineHistory));
-      console.log(this.$store.state.timelineCache.rejectedUsages);
+      // console.log(this.$store.state.timelineCache.currentTimeline);
+      // console.log(JSON.stringify(this.$store.state.timelineCache.timelineHistory));
+      // console.log(this.$store.state.timelineCache.rejectedUsages);
+      console.log(this.$store.state.usage);
+      console.log(this.$store.state.settlement);
+      console.log(this.$store.state.timelineCache);
+      console.log(this.$store.state.timelineCache.currentTimeline['isReportAccepted']);
+      console.log(this.areSettlementsAccepted);
+      // console.log(this.$store.getters);
+      console.log(this.usageSignatures.length);
       // console.log(this.$store.state.timelineCache.rejectedUsagesIds);
       // console.log(this.panel);
     },

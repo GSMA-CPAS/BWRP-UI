@@ -5,7 +5,7 @@
     </template>
     <template #icon>
 
-      <settlement-report v-if="areDiscrepanciesCalculated"/>
+      <settlement-report :currentTimeline="currentTimeline" v-if="areDiscrepanciesCalculated"/>
     </template>
   </timeline-item>
 </template>
@@ -21,7 +21,13 @@ export default {
     TimelineItem,
     SettlementReport
   },
-  mixins: [timelineMixin]
+  mixins: [timelineMixin],
+  props: {
+    currentTimeline: {
+      type: Boolean,
+      default: true
+    }
+  },
 };
 </script>
 
