@@ -1,14 +1,10 @@
 <template>
-  <div>
-    <v-icon v-if="isSigned" x-large>mdi-check-circle-outline </v-icon>
-    <v-icon v-else-if="signedBySelf" x-large>mdi-progress-check </v-icon>
+  <div class="mr-3">
     <app-dialog
-      v-else
-      outlined
       hide-icon
-      title="Are you sure you want to sign this contract?"
-      label="Sign"
-      label-min-width="90"
+      title="Are you sure you want to sign this report?"
+      label="Accept"
+      label-min-width="180"
       :loading="loadingSpinner"
       @on-open="loadIdentities"
     >

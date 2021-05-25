@@ -27,9 +27,6 @@ const settlementModule = {
         UPDATE_DISCREPANCIES(state, data) {
             state.discrepancies = data;
         },
-        UPDATE_STATUS(state, data) {
-            state.discrepancies = data;
-        }
     },
     actions: {
         async resetData(
@@ -55,7 +52,6 @@ const settlementModule = {
                 .then((res) => {
                     commit('UPDATE_OWN_SETTLEMENT_ID', res.settlementId);
                     dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'ownSettlementId', newValue: res.settlementId}, {root: true});
-                    // commit('UPDATE_STATUS', res.status);
                     if (state.partnerSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
@@ -103,12 +99,6 @@ const settlementModule = {
                     log(err);
                 });
         },
-        acceptDiscrepancies(
-            {commit, dispatch, rootGetters, getters, rootState, state}
-        ) {
-            const ownUsageId = rootGetters['usage/ownUsageId'];
-            dispatch('timelineCache/acceptReport', {}, {root: true});
-        },
         async rejectDiscrepancies(
             {commit, dispatch, rootGetters, getters, rootState, state}, req
         ) {
@@ -121,7 +111,6 @@ const settlementModule = {
                     `/usages/` + contractId + '/' + ownUsageId + '/reject/',
                 )
                 .then((res) => {
-                    console.log(res);
                 })
                 .catch((err) => {
                     log(err);
@@ -132,7 +121,6 @@ const settlementModule = {
                     `/usages/` + contractId + '/' + partnerUsageId+ '/reject/',
                 )
                 .then((res) => {
-                    console.log(res);
                 })
                 .catch((err) => {
                     log(err);
@@ -143,7 +131,6 @@ const settlementModule = {
                     `/settlements/` + contractId + '/' + state.ownSettlementId + '/reject/',
                 )
                 .then((res) => {
-                    console.log(res);
                 })
                 .catch((err) => {
                     log(err);
@@ -154,15 +141,14 @@ const settlementModule = {
                     `/settlements/` + contractId + '/' + state.partnerSettlementId+ '/reject/',
                 )
                 .then((res) => {
-                    console.log(res);
-                    dispatch('usage/resetData', contractId, {root: true});
-                    dispatch('settlement/resetData', contractId, {root: true});
-                    dispatch('timelineCache/resetData', contractId, {root: true});
-                    dispatch('usage/getUsages', contractId, {root: true});
                 })
                 .catch((err) => {
                     log(err);
                 });
+            dispatch('usage/resetData', contractId, {root: true});
+            dispatch('settlement/resetData', contractId, {root: true});
+            dispatch('timelineCache/resetData', contractId, {root: true});
+            dispatch('usage/getUsages', contractId, {root: true});
         },
     },
     getters: {

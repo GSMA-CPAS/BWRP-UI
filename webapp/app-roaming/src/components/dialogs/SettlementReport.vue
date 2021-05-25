@@ -143,15 +143,9 @@
                 </v-col>
               </v-row>
               <v-row v-if="currentTimeline" class="pt-6 mr-3">
-                  <v-spacer/>
-                  <app-button
-                      class="mr-3"
-                      style="border: #e5e5e5 1px solid"
-                      label="accept"
-                      @click="acceptDiscrepancies"
-                  >
-                  </app-button>
-                  <app-button
+                <v-spacer/>
+                <sign-usage-button/>
+                <app-button
                       style="border: #e5e5e5 1px solid"
                       label="reject"
                       @click="rejectDiscrepancies"
@@ -170,9 +164,10 @@
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import DoughnutChart1 from '@/components/dialogs/components/charts/DoughnutChart-1';
 import DoughnutChart2 from '@/components/dialogs/components/charts/DoughnutChart-2';
+import SignUsageButton from '@/components/pages/contract-timeline/timeline-items/buttons/SignUsage';
 export default {
   name: 'SettlementReport',
-  components: {DoughnutChart1, DoughnutChart2},
+  components: {DoughnutChart1, DoughnutChart2, SignUsageButton},
   mixins: [timelineMixin],
   props: {
     currentTimeline: {

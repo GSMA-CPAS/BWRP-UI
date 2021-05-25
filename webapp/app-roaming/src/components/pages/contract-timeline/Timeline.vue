@@ -37,7 +37,6 @@
               <Item-7-SettlementDiscrepancies :isHome="true"/>
               <Item-7-SettlementDiscrepancies/>
               <Item-8-SettlementReport :currentTimeline="false"/>
-<!--              <Item-9-Result />-->
             </v-timeline>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -70,8 +69,7 @@
               <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated" :isHome="true"/>
               <Item-7-SettlementDiscrepancies v-if="this.areSettlementsGenerated"/>
               <Item-8-SettlementReport v-if="this.areSettlementsGenerated" />
-<!--              <Item-9-Result v-if="this.areSettlementsAccepted || this.usageSignatures.length" />-->
-              <Item-9-Result />
+              <Item-9-Result v-if="this.usageSignatures.length" />
             </v-timeline>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -128,8 +126,8 @@ export default {
       console.log(this.$store.state.usage);
       console.log(this.$store.state.settlement);
       console.log(this.$store.state.timelineCache);
-      console.log(this.$store.state.timelineCache.currentTimeline['isReportAccepted']);
-      console.log(this.areSettlementsAccepted);
+      console.log(this.$store.state.timelineCache.currentTimeline);
+      console.log(this.currentUsageId);
       // console.log(this.$store.getters);
       console.log(this.usageSignatures.length);
       // console.log(this.$store.state.timelineCache.rejectedUsagesIds);

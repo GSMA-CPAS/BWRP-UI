@@ -49,7 +49,6 @@ const usageModule = {
           withCredentials: true,
         })
         .then((data) => {
-          console.log(data[0]);
           let currentUsage = {};
           if (data[0] && data[0].tag === 'REJECTED') {
             const contractId = rootGetters['document/contractId'];
@@ -64,7 +63,6 @@ const usageModule = {
             });
             dispatch('timelineCache/updateCacheField', {usageId: currentUsage.usageId, field: 'usageId', newValue: currentUsage.usageId}, {root: true});
           }
-          console.log(data);
           commit('timelineCache/UPDATE_USAGE_LIST', data.filter( (usage) => {
             return usage.state === 'SENT';
           }), {root: true});
@@ -193,6 +191,7 @@ const usageModule = {
             body: body,
             creationDate: creationDate
           });
+          dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'usageId', newValue: usageId}, {root: true});
           dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: res}, {root: true});
         })
         .catch((err) => {
@@ -230,12 +229,12 @@ const usageModule = {
     },
     async getUsageSignatures({commit, dispatch, rootGetters, getters, rootState, state}, id) {
       const contractId = rootGetters['document/contractId'];
+      const ownUsageId = getters['ownUsageId'];
       await Vue.axios.commonAdapter
         .get(
-            `/usages/` + contractId + '/' + state.ownUsage.id + '/signatures/'
+            `/usages/` + contractId + '/' + ownUsageId + '/signatures/'
         )
         .then((data) => {
-          console.log(data);
           commit('UPDATE_USAGE_SIGNATURES', data);
         })
         .catch((err) => {
@@ -246,10 +245,13 @@ const usageModule = {
         {commit, dispatch, rootGetters, getters, rootState, state},
         identity,
     ) {
-      const {ownUsageId} =getters;
+      const contractId = rootGetters['document/contractId'];
+      const ownUsageId = getters['ownUsageId'];
+      const partnerUsageId = getters['ownUsageId'];
+
       Vue.axios.commonAdapter
           .put(
-              `/usages/` + state.document.contractId +'/'+ownUsageId+ `/signatures/`,
+              `/usages/` + contractId +'/'+ownUsageId+ `/signatures/`,
               {identity: identity},
               {
                 loadingSpinner: true,
@@ -257,7 +259,23 @@ const usageModule = {
               },
           )
           .then((res) => {
-            dispatch('getSignatures', state.document.contractId);
+            dispatch('getUsageSignatures', contractId);
+          })
+          .catch((err) => {
+            log(err);
+          });
+
+      Vue.axios.commonAdapter
+          .put(
+              `/usages/` + contractId +'/'+partnerUsageId+ `/signatures/`,
+              {identity: identity},
+              {
+                loadingSpinner: true,
+                withCredentials: true,
+              },
+          )
+          .then((res) => {
+            dispatch('getUsageSignatures', contractId);
           })
           .catch((err) => {
             log(err);
@@ -316,17 +334,15 @@ const usageModule = {
             [partnerMsp]: 0,
           };
     },
-    signedBySelf: (state, rootGetters, getters) => {
+    signedBySelf: (state, getters, rootGetters) => {
       const selfMsp = rootGetters['user/organizationMSPID'];
-      const {totalUsageSignatures} = getters;
+      const totalUsageSignatures = getters['totalUsageSignatures'];
       return 1 <= totalUsageSignatures[selfMsp];
     },
     isSigned: (state, rootGetters, getters) => {
       const partnerMsp = rootGetters['document/partnerMsp'];
-      const {
-        totalUsageSignatures,
-        signedBySelf,
-      } = getters;
+      const totalUsageSignatures = getters['totalUsageSignatures'];
+      const signedBySelf = getters['signedBySelf'];
       return signedBySelf && 1 <= totalUsageSignatures[partnerMsp];
     },
   }

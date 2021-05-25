@@ -23,7 +23,6 @@ const timelineCache = {
             state.rejectedUsages.forEach((usage) =>{
                 state.rejectedUsagesIds.push(usage.usageId);
             });
-            console.log(state.rejectedUsages);
         },
         UPDATE_CURRENT_TIMELINE_CACHE_FIELD(state, {usageId, field, newValue}) {
             state.currentTimeline[field]=newValue;
@@ -31,18 +30,11 @@ const timelineCache = {
         UPDATE_TIMELINE_HISTORY_CACHE_FIELD(state, {usageId, field, newValue}) {
             state.timelineHistory[usageId][field]=newValue;
         },
-        CLEAR_CURRENT_TIMELINE_CACHE(state, usageId) {
-            state.currentTimeline[usageId] = null;
-        },
-        CLEAR_TIMELINE_HISTORY_CACHE(state, usageId) {
-            state.timelineHistory[usageId] = null;
-        },
         CREATE_NEW_TIMELINE_HISTORY_CACHE_ITEM(state, usageId) {
             state.timelineHistory[usageId] = {};
         },
         CREATE_NEW_CURRENT_TIMELINE_CACHE_ITEM(state) {
             state.currentTimeline = {};
-            state.currentTimeline['isReportAccepted']=false;
         }
     },
     actions: {
@@ -56,12 +48,10 @@ const timelineCache = {
             dispatch('usage/resetData', contractId, {root: true});
             dispatch('settlement/resetData', contractId, {root: true});
             if (state.timelineHistory[id]) {
-                console.log('znaleziono w historii');
                 dispatch('loadTimelineData', state.timelineHistory[id]);
             } else if (!id) {
-                console.log('nowy kontrakt');
+                console.log('New contract');
             } else {
-                console.log('nie znaleziono w cache');
                 await dispatch('usage/getUsageById', {contractId, usageId: id, isPartner: false}, {root: true});
             }
         },
@@ -86,25 +76,14 @@ const timelineCache = {
             commit('settlement/UPDATE_PARTNER_SETTLEMENT_ID', item.partnerSettlementId, {root: true});
             commit('settlement/UPDATE_DISCREPANCIES', item.settlementDiscrepancies, {root: true});
         },
-        async acceptReport(
-            {commit, dispatch, rootGetters, getters, rootState, state}
-        ) {
-            const {currentUsageId} = getters;
-            console.log(currentUsageId);
-            dispatch('timelineCache/updateCacheField', {usageId: currentUsageId, field: 'isReportAccepted', newValue: true}, {root: true});
-        },
     },
     getters: {
         usageIds: (state) => {
             return state.rejectedUsages;
         },
         currentUsageId: (state) => {
-            console.log(state.currentTimeline);
             return state.currentTimeline?.usageId;
         },
-        areSettlementsAccepted: (state) => {
-            return state.currentTimeline['isReportAccepted'];
-        }
     }
 };
 export default timelineCache;

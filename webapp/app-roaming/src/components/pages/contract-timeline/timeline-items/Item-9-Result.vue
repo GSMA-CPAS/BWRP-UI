@@ -55,7 +55,7 @@
       </v-card>
     </template>
     <template #icon>
-      <sign-usage-button/>
+      <v-icon color="primary" x-large>mdi-check-circle-outline</v-icon>
     </template>
   </timeline-item>
 </template>
@@ -63,12 +63,10 @@
 <script>
 import {timelineMixin} from '@/utils/mixins/component-specfic';
 import UsageSignatures from '@/components/dialogs/UsageSignatures.vue';
-import SignUsageButton from '@/components/pages/contract-timeline/timeline-items/buttons/SignUsage';
 export default {
   name: 'Item-9-Result',
   mixins: [timelineMixin],
   components: {
-    SignUsageButton,
     UsageSignatures,
   },
 };

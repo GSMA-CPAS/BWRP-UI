@@ -66,7 +66,6 @@ export default {
       if (this.isCurrentTimeline) {
         this.partnerBody = setInterval(() => {
           if (!this.isPartnerUsageReceived) {
-            console.log('THIS IS CURRENT TIMELINE');
             this.$store.dispatch('usage/getUsageById', {contractId: this.contractId, usageId: this.currentUsageId, isPartner: false});
           } else {
             clearInterval(this.partnerBody);
