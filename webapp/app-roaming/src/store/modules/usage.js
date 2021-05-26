@@ -100,7 +100,8 @@ const usageModule = {
             creationDate,
             referenceId,
             settlementId,
-            partnerUsageId
+            partnerUsageId,
+            tag
           } = data;
           if (req.isPartner) {
             commit('UPDATE_PARTNER_USAGE', {
@@ -109,7 +110,8 @@ const usageModule = {
               creationDate: creationDate,
               referenceId: referenceId,
               settlementId: settlementId,
-              partnerUsageId: partnerUsageId
+              partnerUsageId: partnerUsageId,
+              tag: tag
             });
             if (req.cacheItemId) {
               dispatch('timelineCache/updateCacheField', {usageId: req.cacheItemId, field: 'partnerUsage', newValue: data}, {root: true});
@@ -126,7 +128,8 @@ const usageModule = {
               creationDate: creationDate,
               referenceId: referenceId,
               settlementId: settlementId,
-              partnerUsageId: partnerUsageId
+              partnerUsageId: partnerUsageId,
+              tag: tag
             });
             dispatch('timelineCache/updateCacheField', {usageId: usageId, field: 'ownUsage', newValue: data}, {root: true});
             if (settlementId) {
@@ -247,7 +250,7 @@ const usageModule = {
     ) {
       const contractId = rootGetters['document/contractId'];
       const ownUsageId = getters['ownUsageId'];
-      const partnerUsageId = getters['ownUsageId'];
+      const partnerUsageId = getters['partnerUsageId'];
 
       Vue.axios.commonAdapter
           .put(

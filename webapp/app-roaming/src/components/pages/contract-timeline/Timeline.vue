@@ -14,15 +14,15 @@
             @click="onPanelClick(item.usageId)"
         >
           <v-expansion-panel-header>
-            <v-col cols="1">
+            <v-col md="1" sm="2" class="text-no-wrap">
               Timeline {{i+1}}
             </v-col>
-            <v-col >
+            <v-col class="text-no-wrap">
               Creation date: {{item.creationDate}}
             </v-col>
             <v-spacer/>
             <v-col cols="auto">
-              <h3 class="red--text">
+              <h3 class="red--text text-no-wrap">
                 {{item.tag}}
               </h3>
             </v-col>
@@ -45,16 +45,16 @@
             v-model="panel"
             >
           <v-expansion-panel-header>
-            <v-col cols="1">
+            <v-col cols="1" class="text-no-wrap">
               Timeline {{usageIds.length+1}}
             </v-col>
-            <v-btn @click.stop="displayAll">
-              aaa
-            </v-btn>
             <v-col/>
             <v-spacer/>
             <v-col cols="auto">
-              <h3 class="grey--text text-no-wrap">
+              <h3 v-if="ownUsage.tag === 'APPROVED'" class="green--text text-no-wrap">
+                APPROVED
+              </h3>
+              <h3 v-else class="grey--text text-no-wrap">
                 IN PROGRESS
               </h3>
             </v-col>
@@ -119,20 +119,6 @@ export default {
     }
   },
   methods: {
-    displayAll() {
-      // console.log(this.$store.state.timelineCache.currentTimeline);
-      // console.log(JSON.stringify(this.$store.state.timelineCache.timelineHistory));
-      // console.log(this.$store.state.timelineCache.rejectedUsages);
-      console.log(this.$store.state.usage);
-      console.log(this.$store.state.settlement);
-      console.log(this.$store.state.timelineCache);
-      console.log(this.$store.state.timelineCache.currentTimeline);
-      console.log(this.currentUsageId);
-      // console.log(this.$store.getters);
-      console.log(this.usageSignatures.length);
-      // console.log(this.$store.state.timelineCache.rejectedUsagesIds);
-      // console.log(this.panel);
-    },
     onPanelClick(usageId) {
       if (!event.currentTarget.classList.contains('v-expansion-panel-header--active')) {
         this.loadDataFromCache(usageId);
