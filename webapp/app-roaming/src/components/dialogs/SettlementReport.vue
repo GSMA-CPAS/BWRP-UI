@@ -98,16 +98,18 @@
                     <v-card-title class="headline pb-0">Difference</v-card-title>
                     <v-row>
                       <br/>
-                      <v-col cols="8" class="px-0 pt-0 pb-0">
+                      <v-col cols="7" class="px-0 pt-0 pb-0">
                         <br/>
-                        <v-card-text class="black--text">
+                        <v-card-text class="black--text text-no-wrap">
                           {{parseValue(homeRevenues - partnerCharges)}} €
                         </v-card-text>
                       </v-col>
-                      <v-col cols="4" class="px-0 pt-0 pb-0">
+                      <v-col cols="5" class="px-0 pt-0 pb-0">
                         <br/>
-                        <v-card-text class="text-sm-h6 px-0 pb-0 pt-3" :class="firstPercentageDiscrepancy<0?'red--text':'green--text'">
-                          {{ firstPercentageDiscrepancy }} %
+                        <v-card-text class="text-sm-h6 px-0 pb-0 pt-3 text-no-wrap" :class="firstPercentageDiscrepancy<0?'red--text':'green--text'">
+                          <v-row class="justify-center">
+                            {{ firstPercentageDiscrepancy }} %
+                          </v-row>
                         </v-card-text>
                       </v-col>
                     </v-row>
@@ -117,16 +119,18 @@
                   <v-card>
                     <v-card-title class="headline pb-0">Difference</v-card-title>
                     <v-row>
-                      <v-col cols="8" class="px-0 pt-0 pb-0">
+                      <v-col cols="7" class="px-0 pt-0 pb-0">
                         <br/>
-                        <v-card-text fluid class="black--text">
+                        <v-card-text fluid class="black--text text-no-wrap">
                           {{ parseValue(partnerRevenues - homeCharges) }} €
                         </v-card-text>
                       </v-col>
-                      <v-col cols="4" class="px-0 pt-0 pb-0">
+                      <v-col cols="5" class="px-0 pt-0 pb-0">
                         <br/>
-                        <v-card-text class="text-sm-h6 px-0 pb-0 pt-3" :class="secondPercentageDiscrepancy<0?'green--text':'red--text'">
-                          {{ secondPercentageDiscrepancy }} %
+                        <v-card-text class="text-sm-h6 px-0 pb-0 pt-3 text-no-wrap" :class="secondPercentageDiscrepancy<0?'green--text':'red--text'">
+                          <v-row class="justify-center">
+                            {{ secondPercentageDiscrepancy }} %
+                          </v-row>
                         </v-card-text>
                       </v-col>
                     </v-row>
