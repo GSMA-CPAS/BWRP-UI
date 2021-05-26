@@ -256,11 +256,8 @@ class CommonService extends AbstractService {
      * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/send/
      */
     this.getRouter().put('/usages/:contractId/:usageId/send/', ensureAuthenticated, async (req, res) => {
-      console.log('commonService');
       const contractId = req.params.contractId;
       const usageId = req.params.usageId;
-      console.log(contractId);
-      console.log(usageId);
       try {
         const response = await this.getBackendAdapter('common').sendUsageById(contractId, usageId);
         return res.json(response);
@@ -269,6 +266,87 @@ class CommonService extends AbstractService {
           code: ErrorCodes.ERR_BAD_REQUEST,
           message: 'Failed to send usage',
         })), 'PUT /usages/:contractId/:usageId/send/');
+      }
+    });
+
+    /**
+     * Reject Usage Report
+     * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/reject/
+     */
+    this.getRouter().put('/usages/:contractId/:usageId/reject/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      try {
+        const response = await this.getBackendAdapter('common').rejectUsageById(contractId, usageId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_BAD_REQUEST,
+          message: 'Failed to reject usage',
+        })), 'PUT /usages/:contractId/:usageId/reject/');
+      }
+    });
+
+
+    /**
+     * Get Usage Signatures
+     * curl -X GET http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/signatures/
+     */
+    this.getRouter().get('/usages/:contractId/:usageId/signatures/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      try {
+        const response = await this.getBackendAdapter('common').getUsageSignatures(contractId, usageId, true);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_BAD_REQUEST,
+          message: 'Failed to get usage signatures',
+        })), 'GET /usages/:contractId/:usageId/signatures/');
+      }
+    });
+
+    /**
+     * Sign Usage
+     * curl -X PUT http://{host}:{port}/api/v1/common/usages/{contractId}/{usageId}/signatures/
+     */
+    this.getRouter().put('/usages/:contractId/:usageId/signatures/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const usageId = req.params.usageId;
+      const identity = req.body.identity;
+      if (!identity) {
+        return this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_MISSING_PARAMETER,
+          message: 'Missing parameter: identity'
+        })));
+      }
+      try {
+        const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
+        const hasIdentity = userIdentities.some((item) => item.name === identity);
+        if (hasIdentity) {
+          const walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity);
+          if (walletIdentity) {
+            const privateKey = walletIdentity.credentials.privateKey;
+            const certificate = walletIdentity.credentials.certificate;
+            const document = await this.getBackendAdapter('common').getRawContractById(contractId);
+            const signature = cryptoUtils.createSignature(privateKey, document.raw);
+            const signatureAlgo = 'ecdsaWithSha256';
+            const response = await this.getBackendAdapter('common').signUsage(contractId, usageId, certificate, signatureAlgo, signature);
+            return res.json(response);
+          } else {
+            return this.handleError(res, new Error(JSON.stringify({
+              code: ErrorCodes.ERR_VALIDATION,
+              message: 'Failed to get wallet identity: ' + identity
+            })));
+          }
+        } else {
+          return this.handleError(res, new Error(JSON.stringify({
+            code: ErrorCodes.ERR_VALIDATION,
+            message: 'Wrong user identity: ' + identity
+          })));
+        }
+      } catch (error) {
+        this.handleError(res, error);
       }
     });
 
@@ -354,6 +432,24 @@ class CommonService extends AbstractService {
         this.handleError(res, new Error(JSON.stringify({
           code: ErrorCodes.ERR_PRIVATE_DATA,
           message: 'Failed to send settlements'
+        })));
+      }
+    });
+
+    /**
+     * Reject Settlement
+     * curl -X PUT http://{host}:{port}/api/v1/common/settlements/{contractId}/{settlementId}/reject/
+     */
+    this.getRouter().put('/settlements/:contractId/:settlementId/reject/', ensureAuthenticated, async (req, res) => {
+      const contractId = req.params.contractId;
+      const settlementId = req.params.settlementId;
+      try {
+        const response = await this.getBackendAdapter('common').rejectSettlementsById(contractId, settlementId);
+        return res.json(response);
+      } catch (error) {
+        this.handleError(res, new Error(JSON.stringify({
+          code: ErrorCodes.ERR_PRIVATE_DATA,
+          message: 'Failed to reject settlements'
         })));
       }
     });
