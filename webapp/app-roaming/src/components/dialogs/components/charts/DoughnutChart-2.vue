@@ -16,7 +16,7 @@ export default {
   data() {
     return {
       data: {
-        labels: ['DATA', 'VOICE', 'SMS'],
+        labels: ['DATA', 'MTC', 'MOC', 'SMS'],
         datasets: [{
           labels: {
             render: 'label'
@@ -26,11 +26,13 @@ export default {
             'rgb(134,92,61)',
             'rgb(235,126,54)',
             'rgb(231,192,82)',
+            'rgb(253,225,171)',
           ],
           borderColor: [
             'rgb(134,92,61)',
             'rgb(235,126,54)',
             'rgb(231,192,82)',
+            'rgb(253,225,171)',
           ],
           borderWidth: 1
         }]
@@ -45,7 +47,7 @@ export default {
           datalabels: {
             color: '#ffffff',
             formatter: function(value) {
-              return Math.round(value) + '%';
+              return value>1.0?Math.round(value) + '%':'';
             },
             font: {
               weight: 'bold',

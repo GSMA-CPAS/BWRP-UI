@@ -68,8 +68,9 @@ const timelineMixin = {
   methods: {
     ...mapActions('document/new', ['startContract']),
     ...mapActions('document', ['loadData', 'signDocument']),
-    ...mapActions('usage', ['uploadUsage', 'sendUsage']),
-    ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'declineDiscrepancies']),
+    ...mapActions('usage', ['uploadUsage', 'sendUsage', 'signUsage']),
+    ...mapActions('settlement', ['generateSettlements', 'acceptDiscrepancies', 'rejectDiscrepancies']),
+    ...mapActions('timelineCache', ['loadDataFromCache']),
     ...mapActions('user', ['loadIdentities']),
     ...mapGetters('document', ['exists']),
     discrepanciesFlag: function(item, param) {
@@ -97,7 +98,8 @@ const timelineMixin = {
       partnerUsage: (state) => state.partnerUsage,
       ownUsageCreationDate: (state) => state.ownUsage.creationDate,
       partnerUsageCreationDate: (state) => state.partnerUsage.creationDate,
-      usageDiscrepancies: (state) => state.discrepancies
+      usageDiscrepancies: (state) => state.discrepancies,
+      usageSignatures: (state) => state.signatures,
     }),
     ...mapState('settlement', {
       ownSettlementId: (state) => state.ownSettlementId,
@@ -122,12 +124,17 @@ const timelineMixin = {
       'isUsageUploaded',
       'isUsageSent',
       'isPartnerUsageReceived',
-      'areUsagesExchanged'
+      'areUsagesExchanged',
+      'totalUsageSignatures'
     ]),
     ...mapGetters('settlement', [
       'areSettlementsGenerated',
       'areDiscrepanciesCalculated',
       'settlementStatus'
+    ]),
+    ...mapGetters('timelineCache', [
+      'usageIds',
+      'currentUsageId'
     ]),
     ...mapGetters('partners', ['list'])
   },

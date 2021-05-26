@@ -1,5 +1,5 @@
 <template>
-  <v-timeline-item color="background" fill-dot v-bind="timelineItemProps">
+  <v-timeline-item :left=left :right=right :color=backgroundColor fill-dot v-bind="timelineItemProps">
     <template #icon>
       <slot name="icon">
         <v-icon color="primary" x-large> mdi-check-circle-outline </v-icon>
@@ -16,6 +16,17 @@
 export default {
   name: 'timeline-item',
   description: 'description',
+  props: {
+    left: {
+      default: false
+    },
+    right: {
+      default: false
+    },
+    backgroundColor: {
+      default: 'white'
+    }
+  },
   computed: {
     timelineItemProps() {
       return {

@@ -1,11 +1,11 @@
 <template>
   <div class="text-center">
-    <v-container>
+    <v-container class="pt-0">
       <v-row>
         <v-spacer/>
         <app-button label="export table" @click="exportToJSON(exportData)"/>
       </v-row>
-      <v-data-table :headers="headers"
+      <v-data-table
                     :items="items"
                     :search="search">
         <template v-slot:top>
@@ -14,6 +14,19 @@
               label="Search"
               class="mx-4"
           ></v-text-field>
+        </template>
+        <template #header="{ }">
+          <thead class="v-data-table-header">
+          <tr>
+            <th v-for="(h,i) in headers" :key="i" class="text-center td-border-style" :rowspan="h.children?1:2" :colspan="h.children?h.children.length:1">
+              {{ h.text }}
+              <span v-if="h.subText">
+                  <br/>
+                  {{h.subText}}
+                </span>
+            </th>
+          </tr>
+          </thead>
         </template>
         <template #item="{ item }">
           <tr :class=discrepanciesFlag(item,flagParam)>
@@ -56,8 +69,8 @@ export default {
         {text: 'Partner Usage', value: 'partner_usage', align: 'center'},
         {text: 'Delta (abs)', value: 'delta_usage_abs', align: 'center'},
         {text: 'Delta (%)', value: 'delta_usage_percent', align: 'center'},
-        {text: 'Own Calculation', value: 'own_calculation', align: 'center'},
-        {text: 'Partner Calculation', value: 'partner_calculation', align: 'center'},
+        {text: 'Own Calculation', subText: '(post commitment)', value: 'own_calculation', align: 'center'},
+        {text: 'Partner Calculation', subText: '(post commitment)', value: 'partner_calculation', align: 'center'},
         {text: 'Delta (%)', value: 'delta_calculation_percent', align: 'center'},
       ];
     },

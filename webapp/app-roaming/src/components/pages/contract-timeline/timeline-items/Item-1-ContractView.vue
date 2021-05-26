@@ -1,5 +1,5 @@
 <template >
-  <timeline-item>
+  <timeline-item backgroundColor='background'>
     <template #content>
       <v-card :class="cardTextStyle" color="#fafafa">
         <v-card-text>

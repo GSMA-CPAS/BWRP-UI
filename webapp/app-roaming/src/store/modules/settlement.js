@@ -27,12 +27,6 @@ const settlementModule = {
         UPDATE_DISCREPANCIES(state, data) {
             state.discrepancies = data;
         },
-        ACCEPT_DISCREPANCIES: (state) => {
-            state.settlementStatus = 'Accepted';
-        },
-        DECLINE_DISCREPANCIES: (state) => {
-            state.settlementStatus = 'Declined';
-        },
     },
     actions: {
         async resetData(
@@ -57,6 +51,7 @@ const settlementModule = {
                 )
                 .then((res) => {
                     commit('UPDATE_OWN_SETTLEMENT_ID', res.settlementId);
+                    dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'ownSettlementId', newValue: res.settlementId}, {root: true});
                     if (state.partnerSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
@@ -69,6 +64,7 @@ const settlementModule = {
             {commit, dispatch, rootGetters, getters, rootState, state}
         ) {
             const contractId = rootGetters['document/contractId'];
+            const ownUsageId = rootGetters['usage/ownUsageId'];
             const partnerUsageId = rootGetters['usage/partnerUsageId'];
             await Vue.axios.commonAdapter
                 .put(
@@ -76,6 +72,8 @@ const settlementModule = {
                 )
                 .then((res) => {
                     commit('UPDATE_PARTNER_SETTLEMENT_ID', res.settlementId);
+                    dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'partnerSettlementId', newValue: res.settlementId}, {root: true});
+
                     if (state.ownSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
@@ -87,26 +85,70 @@ const settlementModule = {
         async getSettlementDiscrepancies(
             {commit, dispatch, rootGetters, getters, rootState, state}, contractId
         ) {
+            const ownUsageId = rootGetters['usage/ownUsageId'];
             await Vue.axios.commonAdapter
                 .get(
                     `/settlements/` + contractId + '/' + state.ownSettlementId + '/discrepancy/?partnerSettlementId=' + state.partnerSettlementId
                 )
                 .then((res) => {
                     commit('UPDATE_DISCREPANCIES', res);
+                    dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'settlementDiscrepancies', newValue: res}, {root: true});
+                    dispatch('usage/getUsageSignatures', {usageId: ownUsageId}, {root: true});
                 })
                 .catch((err) => {
                     log(err);
                 });
         },
-        acceptDiscrepancies(
-            {commit, dispatch, rootGetters, getters, rootState, state}
+        async rejectDiscrepancies(
+            {commit, dispatch, rootGetters, getters, rootState, state}, req
         ) {
-            commit('ACCEPT_DISCREPANCIES');
-        },
-        declineDiscrepancies(
-            {commit, dispatch, rootGetters, getters, rootState, state}
-        ) {
-            commit('DECLINE_DISCREPANCIES');
+            const contractId = rootGetters['document/contractId'];
+            const ownUsageId = rootGetters['usage/ownUsageId'];
+            const partnerUsageId = rootGetters['usage/partnerUsageId'];
+            // ownUsage reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/usages/` + contractId + '/' + ownUsageId + '/reject/',
+                )
+                .then((res) => {
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            // partnerUsage reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/usages/` + contractId + '/' + partnerUsageId+ '/reject/',
+                )
+                .then((res) => {
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            // ownSettlement reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/settlements/` + contractId + '/' + state.ownSettlementId + '/reject/',
+                )
+                .then((res) => {
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            // partnerSettlement reject
+            Vue.axios.commonAdapter
+                .put(
+                    `/settlements/` + contractId + '/' + state.partnerSettlementId+ '/reject/',
+                )
+                .then((res) => {
+                })
+                .catch((err) => {
+                    log(err);
+                });
+            dispatch('usage/resetData', contractId, {root: true});
+            dispatch('settlement/resetData', contractId, {root: true});
+            dispatch('timelineCache/resetData', contractId, {root: true});
+            dispatch('usage/getUsages', contractId, {root: true});
         },
     },
     getters: {
@@ -124,6 +166,9 @@ const settlementModule = {
         },
         partnerSettlementId: (state) => {
             return state.partnerSettlementId;
+        },
+        discrepancies: (state) => {
+            return state.discrepancies;
         },
     }
 };
