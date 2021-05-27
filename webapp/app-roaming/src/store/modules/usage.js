@@ -76,12 +76,12 @@ const usageModule = {
         .catch((err) => {
           console.log(err);
         });
-      if (state.ownUsage.id) {
-        await dispatch('getUsageById', {contractId, usageId: state.ownUsage.id, isPartner: false});
-      }
-      if (state.partnerUsage?.id) {
-        await dispatch('getUsageById', {contractId, usageId: state.partnerUsage.id, isPartner: true, cacheItemId: state.ownUsage.id});
-      }
+      // if (state.ownUsage.id) {
+      //   await dispatch('getUsageById', {contractId, usageId: state.ownUsage.id, isPartner: false});
+      // }
+      // if (state.partnerUsage?.id) {
+      //   await dispatch('getUsageById', {contractId, usageId: state.partnerUsage.id, isPartner: true, cacheItemId: state.ownUsage.id});
+      // }
     },
     async getUsageById(
       {commit, dispatch, rootGetters, getters, rootState, state},

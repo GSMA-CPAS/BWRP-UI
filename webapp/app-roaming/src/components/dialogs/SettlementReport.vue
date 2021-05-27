@@ -146,7 +146,7 @@
                   </v-card>
                 </v-col>
               </v-row>
-              <v-row v-if="currentTimeline" class="pt-6 mr-3">
+              <v-row v-if="currentTimeline && ownUsage.tag !== 'APPROVED' && ownUsage.tag !== 'REJECTED'" class="pt-6 mr-3">
                 <v-spacer/>
                 <sign-usage-button/>
                 <app-button
