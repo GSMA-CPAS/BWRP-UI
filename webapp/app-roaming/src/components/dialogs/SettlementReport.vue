@@ -36,8 +36,8 @@
                     <v-card-title class="headline" >Home revenues</v-card-title>
                     <v-card-text class="black--text">
                       {{parseValue(homeRevenues)}} € <br/>
-                      <span v-if="homeDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(homeDeltaCommitment)}} € under commitment</span>
-                      <span v-else class="green--text text-no-wrap">{{parseValue(homeDeltaCommitment)}} € over commitment</span>
+                      <span v-if="homeDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(Math.abs(homeDeltaCommitment))}} € under commitment</span>
+                      <span v-else class="green--text text-no-wrap">{{parseValue(Math.abs(homeDeltaCommitment))}} € over commitment</span>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -46,8 +46,8 @@
                     <v-card-title class=" headline">Partner revenues</v-card-title>
                     <v-card-text class="black--text text-no-wrap">
                       {{ parseValue(partnerRevenues) }} € <br/>
-                      <span v-if="partnerDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(partnerDeltaCommitment)}} € under commitment</span>
-                      <span v-else class="green--text text-no-wrap">{{parseValue(partnerDeltaCommitment)}} € over commitment</span>
+                      <span v-if="partnerDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(Math.abs(partnerDeltaCommitment))}} € under commitment</span>
+                      <span v-else class="green--text text-no-wrap">{{parseValue(Math.abs(partnerDeltaCommitment))}} € over commitment</span>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -150,7 +150,7 @@
                   </v-card>
                 </v-col>
               </v-row>
-              <v-row v-if="currentTimeline" class="pt-6 mr-3">
+              <v-row v-if="currentTimeline && ownUsage.tag !== 'APPROVED' && ownUsage.tag !== 'REJECTED'" class="pt-6 mr-3">
                 <v-spacer/>
                 <sign-usage-button/>
                 <app-button

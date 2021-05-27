@@ -59,9 +59,11 @@ const usageModule = {
             commit('UPDATE_USAGE', {
               id: currentUsage.usageId,
               state: currentUsage.state,
-              partnerUsageId: currentUsage.partnerUsageId
+              partnerUsageId: currentUsage.partnerUsageId,
+              tag: currentUsage.tag
             });
             dispatch('timelineCache/updateCacheField', {usageId: currentUsage.usageId, field: 'usageId', newValue: currentUsage.usageId}, {root: true});
+            dispatch('getUsageById', {contractId, usageId: currentUsage.usageId, isPartner: false});
           }
           commit('timelineCache/UPDATE_USAGE_LIST', data.filter( (usage) => {
             return usage.state === 'SENT';
@@ -76,12 +78,6 @@ const usageModule = {
         .catch((err) => {
           console.log(err);
         });
-      if (state.ownUsage.id) {
-        await dispatch('getUsageById', {contractId, usageId: state.ownUsage.id, isPartner: false});
-      }
-      if (state.partnerUsage?.id) {
-        await dispatch('getUsageById', {contractId, usageId: state.partnerUsage.id, isPartner: true, cacheItemId: state.ownUsage.id});
-      }
     },
     async getUsageById(
       {commit, dispatch, rootGetters, getters, rootState, state},

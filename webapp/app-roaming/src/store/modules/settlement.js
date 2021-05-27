@@ -52,7 +52,7 @@ const settlementModule = {
                 .then((res) => {
                     commit('UPDATE_OWN_SETTLEMENT_ID', res.settlementId);
                     dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'ownSettlementId', newValue: res.settlementId}, {root: true});
-                    if (state.partnerSettlementId) {
+                    if (state.ownSettlementId && state.partnerSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
                 })
@@ -74,7 +74,7 @@ const settlementModule = {
                     commit('UPDATE_PARTNER_SETTLEMENT_ID', res.settlementId);
                     dispatch('timelineCache/updateCacheField', {usageId: ownUsageId, field: 'partnerSettlementId', newValue: res.settlementId}, {root: true});
 
-                    if (state.ownSettlementId) {
+                    if (state.ownSettlementId && state.partnerSettlementId) {
                         dispatch('getSettlementDiscrepancies', contractId);
                     }
                 })
