@@ -58,7 +58,9 @@ export default {
   mounted() {
     if (this.value) {
       this.includingTaxes = this.value.includingTaxes;
-      this.commitmentValue = this.value.value;
+      this.commitmentValue = this.value.value
+        ? this.value.value
+        : this.value.commitmentValue;
       this.currency = this.value.currency;
     } else {
       this.currency = this.defaultCurrency;

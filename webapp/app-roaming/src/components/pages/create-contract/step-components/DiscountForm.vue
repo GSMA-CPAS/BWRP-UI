@@ -94,7 +94,7 @@ export default {
         element.getElementsByTagName('input')[0].focus();
         element.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
+          block: 'nearest',
         });
       });
     },
