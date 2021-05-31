@@ -4,7 +4,7 @@
     label="View Signatures"
   >
     <!-- width="80vw" -->
-    <template v-if="signatures" #content>
+    <template v-if="signatures.length > 0" #content>
       <v-simple-table
         v-for="(
           {signature, msp, identity, blockchainRef, state}, signatureIndex
@@ -47,6 +47,9 @@
           <v-col>{{ signature }}</v-col>
         </v-row> -->
       </v-simple-table>
+    </template>
+    <template v-else #content>
+      <div class="subtitle-1 pl-2">No available signatures.</div>
     </template>
   </app-dialog>
 </template>
