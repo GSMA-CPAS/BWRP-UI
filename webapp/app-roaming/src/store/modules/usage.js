@@ -29,6 +29,9 @@ const usageModule = {
     UPDATE_USAGE_SIGNATURES: (state, data) => {
       state.signatures = data;
     },
+    SET_USAGE_AS_APPROVED: (state) => {
+      state.ownUsage.tag='APPROVED';
+    },
     RESET_STATE(state) {
       Object.assign(state, defaultUsageState());
     },
@@ -229,12 +232,17 @@ const usageModule = {
     async getUsageSignatures({commit, dispatch, rootGetters, getters, rootState, state}, id) {
       const contractId = rootGetters['document/contractId'];
       const ownUsageId = getters['ownUsageId'];
+      const selfMsp = rootGetters['user/organizationMSPID'];
+      const partnerMsp = rootGetters['document/partnerMsp'];
       await Vue.axios.commonAdapter
         .get(
             `/usages/` + contractId + '/' + ownUsageId + '/signatures/'
         )
         .then((data) => {
           commit('UPDATE_USAGE_SIGNATURES', data);
+          const ownSignatures = data.filter((signature) => signature.state === 'SIGNED' && signature.msp === selfMsp);
+          const partnerSignatures = data.filter((signature) => signature.state === 'SIGNED' && signature.msp === partnerMsp);
+          if (ownSignatures.length === 1 && partnerSignatures.length===1) commit('SET_USAGE_AS_APPROVED');
         })
         .catch((err) => {
             log(err);

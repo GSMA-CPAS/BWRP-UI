@@ -37,6 +37,7 @@
                     <v-card-text class="black--text">
                       {{parseValue(homeRevenues)}} € <br/>
                       <span v-if="homeDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(Math.abs(homeDeltaCommitment))}} € under commitment</span>
+                      <span v-else-if="homeDeltaCommitment === '0.00'" class="green--text text-no-wrap">Commitment met</span>
                       <span v-else class="green--text text-no-wrap">{{parseValue(Math.abs(homeDeltaCommitment))}} € over commitment</span>
                     </v-card-text>
                   </v-card>
@@ -47,6 +48,7 @@
                     <v-card-text class="black--text text-no-wrap">
                       {{ parseValue(partnerRevenues) }} € <br/>
                       <span v-if="partnerDeltaCommitment > 0" class="red--text text-no-wrap">{{parseValue(Math.abs(partnerDeltaCommitment))}} € under commitment</span>
+                      <span v-else-if="partnerDeltaCommitment === '0.00'" class="green--text text-no-wrap">Commitment met</span>
                       <span v-else class="green--text text-no-wrap">{{parseValue(Math.abs(partnerDeltaCommitment))}} € over commitment</span>
                     </v-card-text>
                   </v-card>

@@ -51,7 +51,7 @@
             <v-col/>
             <v-spacer/>
             <v-col cols="auto">
-              <h3 v-if="ownUsage.tag === 'APPROVED'" class="green--text text-no-wrap">
+              <h3 v-if="ownUsage.tag === 'APPROVED' || currentTimelineTag === 'APPROVED'" class="green--text text-no-wrap">
                 APPROVED
               </h3>
               <h3 v-else class="grey--text text-no-wrap">
@@ -112,11 +112,6 @@ export default {
       panel: [0],
       expanded: false
     };
-  },
-  computed: {
-    areSettlementsAccepted() {
-      return this.$store.state.timelineCache.currentTimeline['isReportAccepted'];
-    }
   },
   methods: {
     onPanelClick(usageId) {
