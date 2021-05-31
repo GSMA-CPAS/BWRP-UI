@@ -51,7 +51,7 @@
             <v-col/>
             <v-spacer/>
             <v-col cols="auto">
-              <h3 v-if="ownUsage.tag === 'APPROVED' || currentTimelineTag === 'APPROVED'" class="green--text text-no-wrap">
+              <h3 v-if="ownUsage.tag === 'APPROVED' || currentTimelineTag === 'APPROVED' || isApproved" class="green--text text-no-wrap">
                 APPROVED
               </h3>
               <h3 v-else class="grey--text text-no-wrap">
@@ -110,11 +110,13 @@ export default {
   data() {
     return {
       panel: [0],
-      expanded: false
+      expanded: false,
+      isApproved: false
     };
   },
   methods: {
     onPanelClick(usageId) {
+      if (this.ownUsage.tag === 'APPROVED' || this.currentTimelineTag === 'APPROVED') this.isApproved = true;
       if (!event.currentTarget.classList.contains('v-expansion-panel-header--active')) {
         this.loadDataFromCache(usageId);
       }
