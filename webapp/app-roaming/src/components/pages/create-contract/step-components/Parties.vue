@@ -7,9 +7,13 @@
     />
     <v-divider />
     <v-row>
-      <row type="primary" :label="msps.user" />
-      <v-divider class="ml-1" vertical />
-      <row type="primary" :label="msps.partner" />
+      <v-col class="primary--text text-uppercase font-weight-medium">
+        {{ msps.user }}
+      </v-col>
+      <v-divider vertical />
+      <v-col class="primary--text text-uppercase font-weight-medium">
+        {{ msps.partner }}
+      </v-col>
     </v-row>
   </div>
 </template>

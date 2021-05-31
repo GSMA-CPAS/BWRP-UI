@@ -30,8 +30,10 @@
       <v-col cols="3" />
       <v-divider vertical></v-divider>
       <fragment v-for="(name, index) in parties" :key="name">
-        <row type="primary" :label="name" />
-        <v-divider class="pl-1" v-if="index === 0" vertical></v-divider>
+        <v-col class="primary--text text-uppercase font-weight-medium">
+          {{ name }}
+        </v-col>
+        <v-divider v-if="index === 0" vertical></v-divider>
       </fragment>
     </v-row>
     <v-divider />
