@@ -22,18 +22,18 @@
     </row>
     <br />
     <b>Services</b>
-    <div v-for="(service, index) in chosenServices" :key="`service${index}`">
-      <service
-        ref="service"
-        v-model="chosenServices[index]"
-        :service-key="`Group-${groupIndex} | Service ${index}`"
-        :group-index="groupIndex"
-        :from="from"
-        @add="addService"
-        @remove="removeService(index)"
-        :remove-disabled="isDisabled"
-      />
-    </div>
+    <service
+      v-for="(service, index) in chosenServices"
+      :key="`service${index}`"
+      ref="service"
+      v-model="chosenServices[index]"
+      :service-key="`Group-${groupIndex} | Service ${index}`"
+      :group-index="groupIndex"
+      :from="from"
+      @add="addService"
+      @remove="removeService(index)"
+      :remove-disabled="isDisabled"
+    />
     <v-col>
       <v-row @click="addService" style="cursor: pointer" class="no-gutters">
         <v-col cols="1">
@@ -162,12 +162,10 @@ export default {
         includedInCommitment: true,
       });
       this.$nextTick(() => {
-        const element = this.$refs.service[
-          this.chosenServices.length - 1
-        ].$el.getElementsByTagName('input')[0];
-
-        element.focus();
-        element.scrollIntoView({
+        const element = this.$refs.service[this.chosenServices.length - 1].$el;
+        element.getElementsByTagName('input')[0].focus();
+        window.scrollTo({
+          top: element.offsetTop,
           behavior: 'smooth',
         });
       });
