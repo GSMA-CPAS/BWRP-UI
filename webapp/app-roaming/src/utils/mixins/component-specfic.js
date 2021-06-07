@@ -106,6 +106,9 @@ const timelineMixin = {
       partnerSettlementId: (state) => state.partnerSettlementId,
       settlementDiscrepancies: (state) => state.discrepancies
     }),
+    ...mapState('timelineCache', {
+      currentTimelineTag: (state) => state.currentTimeline?.ownUsage?.tag
+    }),
     ...mapGetters('document', [
       'bankDetails',
       'parties',
