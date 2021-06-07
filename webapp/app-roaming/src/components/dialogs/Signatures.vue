@@ -39,7 +39,7 @@
               <tooltip tooltipText="Download Certificate">
                 <template #activator="{on}">
                   <v-icon
-                    @click="downloadCertificate(identity, certificate)"
+                    @click="downloadCertificate(msp, identity, certificate)"
                     v-on="on"
                     class="ml-2"
                   >
@@ -79,11 +79,11 @@ export default {
   description: 'This is the dialog view for the signatures.',
   mixins: [timelineMixin],
   methods: {
-    downloadCertificate(identity, certificate) {
+    downloadCertificate(msp, identity, certificate) {
       const data = new Blob([certificate], {
         type: 'data:text/plain',
       });
-      const fileName = `${identity}.pem`;
+      const fileName = `${msp}_${identity}.pem`;
 
       if (window.navigator.msSaveOrOpenBlob) {
         // ie11
