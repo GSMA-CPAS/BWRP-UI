@@ -7,7 +7,8 @@
     <template v-if="signatures.length > 0" #content>
       <v-simple-table
         v-for="(
-          {signature, msp, identity, blockchainRef, state}, signatureIndex
+          {signature, msp, identity, blockchainRef, state, certificate},
+          signatureIndex
         ) in signatures"
         :key="signatureIndex"
         class="pb-10 respect"
@@ -33,7 +34,20 @@
           </tr>
           <tr>
             <td class="font-weight-medium pa-2">Identity</td>
-            <td class="pa-2">{{ identity }}</td>
+            <td class="pa-2">
+              {{ identity }}
+              <tooltip tooltipText="Download Certificate">
+                <template #activator="{on}">
+                  <v-icon
+                    @click="downloadCertificate(identity, certificate)"
+                    v-on="on"
+                    class="ml-2"
+                  >
+                    mdi-download
+                  </v-icon>
+                </template>
+              </tooltip>
+            </td>
           </tr>
           <tr>
             <td class="font-weight-medium pa-2">Signature</td>
@@ -58,10 +72,33 @@
   INFO: SUBJECT to changes
  */
 import {timelineMixin} from '@mixins/component-specfic';
+import Tooltip from '../global-components/Tooltip.vue';
 export default {
+  components: {Tooltip},
   name: 'signatures',
   description: 'This is the dialog view for the signatures.',
   mixins: [timelineMixin],
+  methods: {
+    downloadCertificate(identity, certificate) {
+      const data = new Blob([certificate], {
+        type: 'data:text/plain',
+      });
+      const fileName = `${identity}.pem`;
+
+      if (window.navigator.msSaveOrOpenBlob) {
+        // ie11
+        window.navigator.msSaveOrOpenBlob(data, fileName);
+      } else {
+        const link = document.createElement('a');
+        link.setAttribute('type', 'hidden');
+        link.download = fileName;
+        link.href = window.URL.createObjectURL(data);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
+    },
+  },
 };
 </script>
 
