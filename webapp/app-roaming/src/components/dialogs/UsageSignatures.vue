@@ -7,7 +7,7 @@
     <template v-if="usageSignatures" #content>
       <v-simple-table
           v-for="(
-          {signature, msp, identity, blockchainRef, state}, signatureIndex
+          {signature, msp, usageOwner, identity, blockchainRef, state}, signatureIndex
         ) in usageSignatures"
           :key="signatureIndex"
           class="pb-10 respect"
@@ -30,6 +30,10 @@
         <tr>
           <td class="font-weight-medium pa-2">Organization</td>
           <td class="pa-2">{{ msp }}</td>
+        </tr>
+        <tr>
+          <td class="font-weight-medium pa-2">Usage Owner</td>
+          <td class="pa-2">{{ usageOwner }}</td>
         </tr>
         <tr>
           <td class="font-weight-medium pa-2">Identity</td>
