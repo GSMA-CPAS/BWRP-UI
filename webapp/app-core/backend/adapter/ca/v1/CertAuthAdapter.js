@@ -51,7 +51,7 @@ class CertAuthAdapter extends AbstractAdapter {
       };
       if (canSign === true) {
         registerRequest['attrs'] = [
-          {name: 'CanSign', value: 'yes', ecert: true}
+          {name: 'CanSignDocument', value: 'yes', ecert: true}
         ];
       }
       return await this.ca.register(registerRequest, registrar);
