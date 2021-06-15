@@ -266,6 +266,17 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async getRawUsageById(contractId, usageId) {
+      try {
+         const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId).json();
+         const stringToEncode = JSON.stringify(item);
+         return Buffer.from(stringToEncode).toString('base64');
+      } catch (error) {
+         this.getLogger().error('[CommonAdapter::getRawUsageById] failed to get raw usages by Id - %s', error.message);
+         throw error;
+      }
+   }
+
    async getUsageDiscrepancies(contractId, usageId, partnerUsageId) {
       try {
          const url = this.adapterConfig.url +

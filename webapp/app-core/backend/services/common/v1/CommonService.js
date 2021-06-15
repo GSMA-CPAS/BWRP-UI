@@ -328,8 +328,8 @@ class CommonService extends AbstractService {
           if (walletIdentity) {
             const privateKey = walletIdentity.credentials.privateKey;
             const certificate = walletIdentity.credentials.certificate;
-            const document = await this.getBackendAdapter('common').getRawContractById(contractId);
-            const signature = cryptoUtils.createSignature(privateKey, document.raw);
+            const rawData = await this.getBackendAdapter('common').getRawUsageById(contractId, usageId);
+            const signature = cryptoUtils.createSignature(privateKey, rawData);
             const signatureAlgo = 'ecdsaWithSha256';
             const response = await this.getBackendAdapter('common').signUsage(contractId, usageId, certificate, signatureAlgo, signature);
             return res.json(response);
