@@ -343,7 +343,7 @@ const usageModule = {
             [partnerMsp]: 0,
           };
     },
-    signedBySelf: (state, getters, rootGetters) => {
+    signedBySelf: (state, getters, rootState, rootGetters) => {
       const selfMsp = rootGetters['user/organizationMSPID'];
       const totalUsageSignatures = getters['totalUsageSignatures'];
       return 1 <= totalUsageSignatures[selfMsp];

@@ -128,7 +128,8 @@ const timelineMixin = {
       'isUsageSent',
       'isPartnerUsageReceived',
       'areUsagesExchanged',
-      'totalUsageSignatures'
+      'totalUsageSignatures',
+      'signedBySelf',
     ]),
     ...mapGetters('settlement', [
       'areSettlementsGenerated',

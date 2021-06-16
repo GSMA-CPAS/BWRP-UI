@@ -1,7 +1,7 @@
 <template>
   <timeline-item left>
     <template #content>
-      <v-card :class="cardTextStyle" color="#fafafa">
+      <v-card color="#fafafa">
         <v-card-text>
           <div class="font-weight-bold text-uppercase mb-3">Signatures</div>
           <v-row class="mb-1">
