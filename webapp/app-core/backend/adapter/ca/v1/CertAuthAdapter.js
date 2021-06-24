@@ -5,6 +5,7 @@ const {Wallets, HsmX509Provider} = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
 const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
+// const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 
 class CertAuthAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {
@@ -12,26 +13,29 @@ class CertAuthAdapter extends AbstractAdapter {
     this.mspid = config.get('organization').mspid;
     this.url = adapterConfig.get('url');
     this.caName = adapterConfig.get('caName');
-    this.identityType = adapterConfig.get('identityType');
     this.adminEnrollmentId = adapterConfig.get('adminEnrollmentId');
     this.adminEnrollmentSecret = adapterConfig.get('adminEnrollmentSecret');
     this.userEnrollmentSecret = adapterConfig.get('userEnrollmentSecret');
     this.userEnrollmentRole = adapterConfig.get('userEnrollmentRole');
     this.userEnrollmentAffiliation = adapterConfig.get('userEnrollmentAffiliation');
     this.userEnrollmentMax = adapterConfig.get('userEnrollmentMax');
+    this.hsmEnabled = adapterConfig.get('hsm').enabled;
   }
 
   async onLoad() {
     try {
      this.wallet = await Wallets.newFileSystemWallet(global.GLOBAL_ROOT + '/wallet');
-      if (this.getAdapterConfig().get('hsm').enabled) {
+      if (this.hsmEnabled) {
         const hsmX509Provider = new HsmX509Provider({
           lib: this.getAdapterConfig().get('hsm').lib,
           pin: this.getAdapterConfig().get('hsm').pin,
           slot: this.getAdapterConfig().get('hsm').slot,
+          usertype: this.getAdapterConfig().get('hsm').usertype,
+          readwrite: this.getAdapterConfig().get('hsm').readwrite
         });
         this.wallet.getProviderRegistry().addProvider(hsmX509Provider);
         this.ca = new FabricCAServices(this.url, this.getAdapterConfig().get('tlsOptions'), this.caName, hsmX509Provider.getCryptoSuite());
+        this.getLogger().info('[CertAuthAdapter::onLoad] hsm is enabled');
       } else {
         this.ca = new FabricCAServices(this.url, this.getAdapterConfig().get('tlsOptions'), this.caName);
       }
@@ -71,13 +75,15 @@ class CertAuthAdapter extends AbstractAdapter {
         enrollmentSecret: this.userEnrollmentSecret,
       });
       this.getLogger().info('[CertAuthAdapter::enroll] identity %s has been enrolled successfully!', enrollmentId);
+      const type = (this.hsmEnabled) ? 'HSM-X.509' : 'X.509';
+      const privateKey = (this.hsmEnabled) ? enrollment.key.getSKI() : enrollment.key.toBytes();
       return {
         credentials: {
           certificate: enrollment.certificate,
-          privateKey: enrollment.key.toBytes()
+          privateKey: privateKey
         },
         mspId: this.mspid,
-        type: this.identityType
+        type: type
       };
     } catch (error) {
       this.getLogger().error('[CertAuthAdapter::enroll] failed to enroll identity %s - %s', enrollmentId, error.message);
@@ -104,14 +110,39 @@ class CertAuthAdapter extends AbstractAdapter {
       enrollmentSecret: this.adminEnrollmentSecret,
     });
     this.getLogger().info('[CertAuthAdapter::enrollAdmin] %s has been enrolled successfully!', this.adminEnrollmentId);
+    const type = (this.hsmEnabled) ? 'HSM-X.509' : 'X.509';
+    const privateKey = (this.hsmEnabled) ? enrollment.key.getSKI() : enrollment.key.toBytes();
     return {
       credentials: {
         certificate: enrollment.certificate,
-        privateKey: enrollment.key.toBytes(),
+        privateKey: privateKey,
       },
       mspId: this.mspid,
-      type: this.identityType
+      type: type
     };
+  }
+
+  async createSignature(walletIdentity, referenceId, data) {
+    const cryptoSuite = this.ca.getCryptoSuite();
+    const dataSHA256 = cryptoSuite.hash(data, 'SHA256');
+    const payloadLinkSHA256 = cryptoSuite.hash(referenceId + ':' + dataSHA256, 'SHA256');
+    const signaturePayloadSHA256 = cryptoSuite.hash(this.mspid + ':' + referenceId + ':' + payloadLinkSHA256, 'SHA256');
+    if (this.hsmEnabled) {
+      const publicKey = await cryptoSuite.importKey(walletIdentity.credentials.certificate);
+      const privateKey = await cryptoSuite.getKey(publicKey.getSKI());
+      const hash = cryptoSuite.hash(signaturePayloadSHA256, 'SHA256');
+      const signature = cryptoSuite.sign(privateKey, Buffer.from(hash, 'hex'));
+      return signature.toString('base64');
+    } else {
+      // const privateKey = walletIdentity.credentials.privateKey;
+      // return cryptoUtils.sign(privateKey, signaturePayloadSHA256);
+      const privateKey = await cryptoSuite.importKey(walletIdentity.credentials.privateKey);
+      const hash = cryptoSuite.hash(signaturePayloadSHA256, 'SHA256');
+      const signature = cryptoSuite.sign(privateKey, Buffer.from(hash, 'hex'));
+      // const publicKey = await cryptoSuite.importKey(walletIdentity.credentials.certificate);
+      // const isValid = cryptoSuite.verify(publicKey, signature, Buffer.from(signaturePayloadSHA256));
+      return signature.toString('base64');
+    }
   }
 
   getAdminEnrollmentId() {

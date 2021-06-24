@@ -1,6 +1,7 @@
 'use strict';
 
 const jsrsa = require('jsrsasign');
+const crypto = require('crypto');
 
 const parseCert = (certificate) => {
   const x509 = new jsrsa.X509();
@@ -25,15 +26,36 @@ const verifyCertAgainstRootCert = (certificate, rootCertificate) => {
   return Signature.verify(signatureHex);
 };
 
-const createSignature = (privateKeyPem, plainText) => {
+const getPublicKeyFromCert = (cert, format = 'pem') => {
+  return crypto.createPublicKey(cert).export({type: 'spki', format: format});
+};
+
+const getPublicKeyFromPrivateKey = (privateKey, format = 'pem') => {
+  const pubKeyObject = crypto.createPublicKey({key: privateKey, format: format});
+  return pubKeyObject.export({type: 'spki', format: format});
+};
+
+const sign = (privateKeyPem, data, outputEncoding = 'base64') => {
+  const signer = crypto.createSign('SHA256');
+  return signer.update(data).sign(privateKeyPem, outputEncoding);
+};
+
+/* const createSignature = (privateKeyPem, plainText) => {
   const KEYUTIL = jsrsa.KEYUTIL;
   const key = KEYUTIL.getKey(privateKeyPem);
   const sig = new jsrsa.Signature({alg: 'SHA256withECDSA'});
   sig.init({d: key.prvKeyHex, curve: 'secp256r1'});
   sig.updateString(plainText);
   return sig.sign();
+};*/
+
+const verify = (cert, data, signature, encoding = 'base64') => {
+  const verifier = crypto.createVerify('SHA256');
+  const publicKeyPem = getPublicKeyFromCert(cert);
+  return verifier.update(data).verify(publicKeyPem, signature, encoding);
 };
 
+/*
 const verifySignature = (certificate, plainText, signature) => {
   const x509 = new jsrsa.X509();
   x509.readCertPEM(certificate);
@@ -43,8 +65,16 @@ const verifySignature = (certificate, plainText, signature) => {
   sig.updateString(plainText);
   return sig.verify(signature);
 };
+*/
+
+const hash = (data, algorithm = 'sha256') => {
+  return crypto.createHash(algorithm).update(data).digest('hex');
+};
 
 module.exports.parseCert = parseCert;
 module.exports.verifyCertAgainstRootCert = verifyCertAgainstRootCert;
-module.exports.createSignature = createSignature;
-module.exports.verifySignature = verifySignature;
+module.exports.getPublicKeyFromCert = getPublicKeyFromCert;
+module.exports.getPublicKeyFromPrivateKey = getPublicKeyFromPrivateKey;
+module.exports.sign = sign;
+module.exports.verify = verify;
+module.exports.hash = hash;

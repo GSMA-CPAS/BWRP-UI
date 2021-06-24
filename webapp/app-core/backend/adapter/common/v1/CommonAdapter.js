@@ -268,9 +268,22 @@ class CommonAdapter extends AbstractAdapter {
 
    async getRawUsageById(contractId, usageId) {
       try {
-         const item = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId).json();
-         const stringToEncode = JSON.stringify(item);
-         return Buffer.from(stringToEncode).toString('base64');
+         const result = await got(this.adapterConfig.url + '/api/v1/contracts/' + contractId + '/usages/' + usageId).json();
+         // TODO: ?format=RAW -> get usage data
+         const document = {
+            contractReferenceId: '0c0cb37f997994dfe23a2b867fc5a6280be47a886862ee95d5a8cfed75d6d799',
+            mspOwner: 'TMUS',
+            mspReceiver: 'DTAG',
+            header: {
+               type: result.header.type,
+               version: result.header.version
+            },
+            body: result.body
+         };
+         return {
+            raw: Buffer.from(JSON.stringify(document)).toString('base64'),
+            referenceId: result.referenceId
+         };
       } catch (error) {
          this.getLogger().error('[CommonAdapter::getRawUsageById] failed to get raw usages by Id - %s', error.message);
          throw error;
