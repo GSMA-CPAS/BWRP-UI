@@ -7,10 +7,10 @@
       <v-col class="striped-column">{{ data.unit }}</v-col>
       <v-col class="striped-column">0 ➜ Unlimited </v-col>
       <v-col class="striped-column">{{
-        Number(data.ratingPlan.rate.fixedPrice || 0).toLocaleString()
+        Number(data.ratingPlan.rate.fixedPrice || 0).toLocaleString(undefined, { maximumFractionDigits: 20 })
       }}</v-col>
       <v-col class="striped-column">{{
-        Number(data.ratingPlan.rate.linearPrice || 0).toLocaleString()
+        Number(data.ratingPlan.rate.linearPrice || 0).toLocaleString(undefined, { maximumFractionDigits: 20 })
       }}</v-col>
       <v-col class="striped-column"
         ><v-icon v-if="inCommitment" color="primary">
