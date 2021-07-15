@@ -3,7 +3,6 @@
 const config = require('config');
 const Enums = require(global.GLOBAL_BACKEND_ROOT + '/Enums');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 
@@ -196,10 +195,9 @@ class BlockchainService extends AbstractService {
         if (hasIdentity) {
           const walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity);
           if (walletIdentity) {
-            const privateKey = walletIdentity.credentials.privateKey;
             const certificate = walletIdentity.credentials.certificate;
             const document = await this.getBackendAdapter('localStorage').getDocument(referenceId);
-            const signature = cryptoUtils.createSignature(privateKey, document.data);
+            const signature = await this.getBackendAdapter('certAuth').createSignature(walletIdentity, referenceId, document.data);
             const signatureAlgo = 'ecdsaWithSha256';
             await this.getBackendAdapter('blockchain').uploadSignature(referenceId, certificate, signatureAlgo, signature);
             return res.json({
@@ -207,7 +205,6 @@ class BlockchainService extends AbstractService {
               algorithm: signatureAlgo,
               certificate: certificate,
             });
-            // return res.json(response);
           } else {
             return this.handleError(res, new Error(JSON.stringify({
               code: ErrorCodes.ERR_VALIDATION,
