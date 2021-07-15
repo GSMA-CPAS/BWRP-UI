@@ -10,6 +10,7 @@ const pbkdfUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/pbkdfUtils');
 class UserManagementAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {
     super(adapterName, adapterConfig, database);
+    this.initialAdminPassword = adapterConfig.initialAdminPassword;
     this.passwordHashOptions = adapterConfig.passwordHashOptions;
     this.passwordKeyDerivationOptions = adapterConfig.passwordKeyDerivationOptions;
   }
@@ -423,7 +424,7 @@ class UserManagementAdapter extends AbstractAdapter {
   async createAdmin() {
     let adminUser;
     try {
-      const pwdKeys = await this.createPasswordHashAndEncKeys('admin');
+      const pwdKeys = await this.createPasswordHashAndEncKeys(this.initialAdminPassword);
       adminUser = {
         username: 'admin',
         password: pwdKeys.passwordHash,
