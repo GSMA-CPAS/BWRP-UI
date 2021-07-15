@@ -63,7 +63,7 @@ Example (production.json)
 
 <pre>
 "session": {
-  "secret": "bd32bwk37rbwrw37br33"
+  "secret": "secret123!"
 }
 </pre>
 
@@ -128,7 +128,7 @@ Example (production.json)
     "host": "127.0.0.1",
     "port": 3366,
     "user": "nomad",
-    "password": "hackme",
+    "password": "secret123!",
     "database": "dtag"
   }
 }
@@ -158,7 +158,7 @@ Example (production.json)
 }
 </pre>
 
-### Services
+### Services / Adapters
 
 #### Proxy Service
 
@@ -198,6 +198,98 @@ Example (production.json)
 </pre>
 
 ``http://localhost:3000/api/docs``
+
+#### User Management Adapter
+
+Default (default.json)
+
+<pre>
+"backendAdapters": {
+  "UserManagementAdapter": {
+    "config": {
+      "initialAdminPassword": "admin",
+      "passwordHashOptions" : {
+        "type": "argon2id",
+        "timeCost": 256,
+        "memoryCost": 1024,
+        "parallelism": 1,
+        "saltLength": 32
+      },
+      "passwordKeyDerivationOptions" : {
+        "type": "argon2id",
+        "timeCost": 4096,
+        "memoryCost": 9,
+        "parallelism": 1,
+        "saltLength": 32
+      }
+    }
+  }
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"backendAdapters": {
+  "UserManagementAdapter": {
+    "config": {
+      "initialAdminPassword": "secret123!"
+    }
+  }
+}
+</pre>
+
+#### Common Adapter
+
+Example (production.json)
+
+<pre>
+"backendAdapters": {
+  "CommonAdapter": {
+    "config": {
+      "url": "http://common-adapter-dtag:3000"
+    }
+  }
+}
+</pre>
+
+#### HSM
+
+Default (default.json)
+
+<pre>
+"backendAdapters": {
+  "CertAuthAdapter": {
+    "config": {
+      "hsm": {
+         "enabled": false,
+         "lib": "/usr/local/lib/softhsm/libsofthsm2.so",
+         "pin": "",
+         "slot": 0,
+         "usertype": 1,
+         "readwrite": false
+      }
+    }
+  }
+}
+</pre>
+
+Example (production.json)
+
+<pre>
+"backendAdapters": {
+  "CertAuthAdapter": {
+    "config": {
+      "hsm": {
+         "enabled": true,
+         "lib": "/usr/local/lib/softhsm/libsofthsm2.so",
+         "pin": "71811222"
+      }
+    }
+  }
+}
+</pre>
+
 
 ### Development
 
