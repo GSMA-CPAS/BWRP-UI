@@ -131,6 +131,7 @@
     "UserManagementAdapter": {
       "classPath": "/adapter/userManagement/v1/UserManagementAdapter",
       "config": {
+        "initialAdminPassword": "admin",
         "passwordHashOptions" : {
           "type": "argon2id",
           "timeCost": 256,
@@ -157,7 +158,6 @@
       "config": {
         "url": "",
         "caName": "",
-        "identityType": "X.509",
         "adminEnrollmentId": "admin",
         "adminEnrollmentSecret": "",
         "userEnrollmentSecret": "",
@@ -172,7 +172,9 @@
           "enabled": false,
           "lib": "/usr/local/lib/softhsm/libsofthsm2.so",
           "pin": "",
-          "slot": 0
+          "slot": 0,
+          "usertype": 1,
+          "readwrite": false
         }
       }
     },

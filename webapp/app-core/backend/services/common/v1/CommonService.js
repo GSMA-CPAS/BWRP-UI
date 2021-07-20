@@ -1,7 +1,6 @@
 'use strict';
 
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
 const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
 
@@ -100,10 +99,9 @@ class CommonService extends AbstractService {
         if (hasIdentity) {
           const walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity);
           if (walletIdentity) {
-            const privateKey = walletIdentity.credentials.privateKey;
             const certificate = walletIdentity.credentials.certificate;
             const document = await this.getBackendAdapter('common').getRawContractById(contractId);
-            const signature = cryptoUtils.createSignature(privateKey, document.raw);
+            const signature = await this.getBackendAdapter('certAuth').createSignature(walletIdentity, document.referenceId, document.raw);
             const signatureAlgo = 'ecdsaWithSha256';
             const response = await this.getBackendAdapter('common').signContract(contractId, certificate, signatureAlgo, signature);
             return res.json(response);
@@ -326,10 +324,9 @@ class CommonService extends AbstractService {
         if (hasIdentity) {
           const walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity);
           if (walletIdentity) {
-            const privateKey = walletIdentity.credentials.privateKey;
             const certificate = walletIdentity.credentials.certificate;
-            const rawData = await this.getBackendAdapter('common').getRawUsageById(contractId, usageId);
-            const signature = cryptoUtils.createSignature(privateKey, rawData);
+            const document = await this.getBackendAdapter('common').getRawUsageById(contractId, usageId);
+            const signature = await this.getBackendAdapter('certAuth').createSignature(walletIdentity, document.referenceId, document.raw);
             const signatureAlgo = 'ecdsaWithSha256';
             const response = await this.getBackendAdapter('common').signUsage(contractId, usageId, certificate, signatureAlgo, signature);
             return res.json(response);
