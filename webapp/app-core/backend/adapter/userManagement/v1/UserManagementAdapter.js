@@ -591,7 +591,7 @@ class UserManagementAdapter extends AbstractAdapter {
 
   validatePassword(passwordAsString) {
     const pwValidator = new PwValidator();
-    pwValidator.min(8).max(255).noOfCharsets(4);
+    pwValidator.min(12).max(255).noOfCharsets(4);
     const pwInvalidError = pwValidator.validate(passwordAsString, {asList: true, exitFirstFailure: true});
 
     if (pwInvalidError) {
@@ -602,7 +602,7 @@ class UserManagementAdapter extends AbstractAdapter {
             errorPasswordMessage = 'Missing parameter: password';
             break;
           case 'TO_SHORT':
-            errorPasswordMessage = 'The password must contain at least 8 characters';
+            errorPasswordMessage = 'The password must contain at least 12 characters';
             break;
           case 'TO_LONG':
             errorPasswordMessage = 'The password may contain a maximum of 255 characters';

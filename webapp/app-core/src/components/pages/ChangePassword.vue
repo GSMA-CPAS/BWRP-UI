@@ -7,7 +7,7 @@
             <v-toolbar-title>Change Password</v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            Please enter new password. New password must be at least 8 characters long.
+            Please enter new password. New password must be at least 12 characters long.
           </v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="changePassword">
             <v-card-text>
