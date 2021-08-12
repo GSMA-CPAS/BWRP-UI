@@ -24,13 +24,13 @@ RUN apk update \
     && npm run build \
     && npm install --quiet --no-audit --save ./apps/roaming \
     && npm run build --prefix node_modules/app-roaming
-    #&& apk del .apk-dev-deps
 
 WORKDIR /tmp
+
 RUN git clone https://github.com/opendnssec/SoftHSMv2
 WORKDIR /tmp/SoftHSMv2/
-RUN git checkout 2.6.1
-RUN sh autogen.sh \
+RUN git checkout 2.6.1 \
+    && sh autogen.sh \
     && ./configure --disable-gost --disable-dependency-tracking \
     && make && make install \
     && apk del .apk-dev-deps
@@ -43,9 +43,9 @@ EXPOSE 3000
 
 USER $SERVICE_USER
 
+# create token folder for SoftHSM
+RUN mkdir tokens
+
 ENTRYPOINT [ "/usr/bin/dumb-init", "--" ]
 
-CMD ["node", "server.js"]
-
-
-
+CMD ["/webapp/start.sh"]
