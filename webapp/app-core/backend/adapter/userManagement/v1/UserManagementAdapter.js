@@ -30,7 +30,7 @@ class UserManagementAdapter extends AbstractAdapter {
       if (withSecrets) {
         rows = await this.getDatabase().query('SELECT * FROM users WHERE id=?', [userId]);
       } else {
-        rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin, twoFactorSecret FROM users WHERE id=?', [userId]);
+        rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin FROM users WHERE id=?', [userId]);
       }
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUserById] failed to query user with id %s - %s', userId, error.message);
@@ -51,7 +51,7 @@ class UserManagementAdapter extends AbstractAdapter {
       if (withSecrets) {
         rows = await this.getDatabase().query('SELECT * FROM users WHERE username=?', [username]);
       } else {
-        rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin, twoFactorSecret FROM users WHERE username=?', [username]);
+        rows = await this.getDatabase().query('SELECT id, username, forename, surname, email, canSignDocument, active, loginAttempts, mustChangePassword, isAdmin FROM users WHERE username=?', [username]);
       }
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getUserByName] failed to query username %s - %s', username, error.message);
@@ -470,9 +470,11 @@ class UserManagementAdapter extends AbstractAdapter {
 
     if (isValid) {
       try {
-        const dek = pbkdfUtils.decryptDek(user.kek, user.encKey);
+        const userWithSecrets = await this.getUserById(user.id, true);
+        const dek = pbkdfUtils.decryptDek(user.kek, userWithSecrets.encKey);
         encryptedSecret = await pbkdfUtils.encryptData(secret, dek);
         await this.getDatabase().query('UPDATE users SET twoFactorSecret=? WHERE id=?', [encryptedSecret, user.id]);
+        this.getLogger().info('[UserManagementAdapter::enableTwoFactor] Two-factor authentication has been successfully activated for user with id %s', user.id);
         return true;
       } catch (error) {
         this.getLogger().error('[UserManagementAdapter::enableTwoFactor] failed to encrypt and store two-factor secret - %s', error.message);
@@ -486,6 +488,7 @@ class UserManagementAdapter extends AbstractAdapter {
   async disableTwoFactor(user) {
     try {
       await this.getDatabase().query('UPDATE users SET twoFactorSecret="" WHERE id=?', [user.id]);
+      this.getLogger().info('[UserManagementAdapter::enableTwoFactor] Two-factor authentication has been successfully deactivated for user with id %s', user.id);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::disableTwoFactor] failed to disable two-factor - %s', error.message);
       throw error;
@@ -494,8 +497,8 @@ class UserManagementAdapter extends AbstractAdapter {
 
   async statusTwoFactor(user) {
     try {
-      const userData = await this.getUserById(user.id, false);
-      return {isEnabled: (userData.twoFactorSecret) ? true : false};
+      const userWithSecrets = await this.getUserById(user.id, true);
+      return {isEnabled: (userWithSecrets.twoFactorSecret) ? true : false};
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::statusTwoFactor] failed to get 2fa status - %s', error.message);
       throw error;
@@ -506,9 +509,16 @@ class UserManagementAdapter extends AbstractAdapter {
     const token = data.token;
     let secret;
     try {
-      const dek = pbkdfUtils.decryptDek(user.kek, user.encKey);
-      secret = pbkdfUtils.decryptData(dek, user.twoFactorSecret);
-      return otplib.authenticator.check(token, secret);
+      const userWithSecrets = await this.getUserById(user.id, true);
+      const dek = pbkdfUtils.decryptDek(user.kek, userWithSecrets.encKey);
+      secret = pbkdfUtils.decryptData(dek, userWithSecrets.twoFactorSecret);
+      const isValid = otplib.authenticator.check(token, secret);
+      if (isValid) {
+        this.getLogger().info('[UserManagementAdapter::verifyTwoFactor] user with id %s has been logged in successfully with two factor authentication', user.id);
+      } else {
+        this.getLogger().warn('[UserManagementAdapter::verifyTwoFactor] user with id %s has entered wrong two factor authentication code', user.id);
+      }
+      return isValid;
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::verifyTwoFactor] failed to verify 2fa token - %s', error.message);
       throw error;

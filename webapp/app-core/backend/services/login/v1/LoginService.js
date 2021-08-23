@@ -141,7 +141,7 @@ class LoginService extends AbstractService {
                 this.getLogger().error('[LoginService::/login] login error - %s', loginError.message);
                 return next(loginError);
               }
-              this.getLogger().info('[LoginService::/login] user with id %s has been logged in successfully', user.id);
+              this.getLogger().info('[LoginService::/login] user with id %s has been logged in successfully with his password (2fa=%s)', user.id, (user.twoFactorSecret) ? true : false);
               if (user.twoFactorSecret) {
                 req.session.twoFactorRequired = true;
                 return res.json({
