@@ -1,12 +1,12 @@
 <template>
-  <layout :loading="loading" :appHeader=false>
+  <layout ::appHeader=false>
     <v-row no-gutters align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-6">
           <v-toolbar color="primary" dark flat>
             <v-toolbar-title>Welcome Back</v-toolbar-title>
           </v-toolbar>
-          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="login">
+          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="login" :disabled="isFormDisabled">
             <v-card-text>
               <v-text-field v-model="username" label="Username" color="secondary" :rules="[rules.required]"
                             autofocus></v-text-field>
@@ -14,7 +14,7 @@
                             :rules="[rules.required]"></v-text-field>
             </v-card-text>
             <v-card-actions class="pa-4">
-              <v-btn type="submit" color="primary" tile block large>Login</v-btn>
+              <v-btn type="submit" color="primary" tile block large :loading="loading">Login</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -39,12 +39,15 @@ export default {
     password: '',
     valid: true,
     rules: validationRules,
+    isFormDisabled: false
   }),
 
   methods: {
 
     login() {
       if (this.$refs.form.validate()) {
+        this.loading = true;
+        this.isFormDisabled = true;
         const data = {username: this.username, password: this.password};
         this.$http({
           method: 'post',
@@ -52,6 +55,8 @@ export default {
           data,
           withCredentials: true,
         }).then((response) => {
+          this.loading = false;
+          this.isFormDisabled = false;
           if (response.data.twoFactor) {
             this.$router.push('/2fa');
           } else {
@@ -63,6 +68,8 @@ export default {
             }
           }
         }).catch(() => {
+          this.loading = false;
+          this.isFormDisabled = false;
           this.$modal.error({message: 'Username or password is incorrect!'});
         });
       }

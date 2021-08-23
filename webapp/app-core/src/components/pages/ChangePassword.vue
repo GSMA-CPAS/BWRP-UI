@@ -1,5 +1,5 @@
 <template>
-  <layout :loading="loading" :navbar=false>
+  <layout :navbar=false>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-6">
@@ -9,7 +9,7 @@
           <v-card-text>
             Please enter new password. New password must be at least 8 characters long.
           </v-card-text>
-          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="changePassword">
+          <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="changePassword" :disabled="isFormDisabled">
             <v-card-text>
               <v-text-field type="password" v-model="password" label="Password" :rules="[rules.required]"
                             autofocus></v-text-field>
@@ -19,7 +19,7 @@
                             :rules="[rules.required, rules.password]"></v-text-field>
             </v-card-text>
             <v-card-actions class="pa-4">
-              <v-btn type="submit" color="primary" tile block large>Change password</v-btn>
+              <v-btn type="submit" color="primary" tile block large :loading="loading">Change password</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -45,12 +45,15 @@ export default {
     confirmNewPassword: '',
     valid: true,
     rules: validationRules,
+    isFormDisabled: false
   }),
 
   methods: {
 
     changePassword() {
       if (this.$refs.form.validate()) {
+        this.loading = true;
+        this.isFormDisabled = true;
         const data = {
           password: this.password,
           newPassword: this.newPassword,
@@ -62,9 +65,13 @@ export default {
           data,
           withCredentials: true,
         }).then((/* response */) => {
+          this.loading = false;
+          this.isFormDisabled = false;
           localStorage.removeItem('appContext');
           this.$router.push('/login');
         }).catch((error) => {
+          this.loading = false;
+          this.isFormDisabled = false;
           this.$modal.error(error);
         });
       }
