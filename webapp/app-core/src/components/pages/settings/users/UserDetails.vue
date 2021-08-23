@@ -18,8 +18,8 @@
                 <v-text-field v-model="user.forename" label="First name" color="secondary"></v-text-field>
                 <v-text-field v-model="user.surname" label="Last name" color="secondary"></v-text-field>
                 <v-text-field v-model="user.email" label="E-Mail" color="secondary" :rules="[rules.email]"></v-text-field>
-                <v-checkbox v-model="user.active" label="Active"></v-checkbox>
-                <v-checkbox v-model="user.isAdmin" label="Administrator"></v-checkbox>
+                <v-checkbox v-model="user.active" label="Active" v-if="loggedInUser !== user.username"></v-checkbox>
+                <v-checkbox v-model="user.isAdmin" label="Administrator" v-if="loggedInUser !== user.username"></v-checkbox>
               </v-card-text>
               <v-card-actions class="pa-4">
                 <v-spacer></v-spacer>
