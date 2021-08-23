@@ -61,7 +61,6 @@
       "enabled": true,
       "classPath": "/login/v1/LoginService",
       "route": "/api/v1/auth",
-      "maxLoginAttempts": 5,
       "rateLimit": {
         "enabled": true,
         "windowMS": 900000,

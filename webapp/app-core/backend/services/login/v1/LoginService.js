@@ -33,11 +33,15 @@ class LoginService extends AbstractService {
           }
 
           if (passwordVerified) {
+            if (!user.active) {
+              this.getLogger().warn('[LoginService] login attempt by deactivated user with id %s', user.id);
+              return done(null, false);
+            }
             if (user.loginAttempts > 0) {
               try {
                 await this.getBackendAdapter('user').setLoginAttempts(user, 0);
               } catch (error) {
-                this.getLogger().error('[LoginService] failed to set login attempts - %s', error.message);
+                this.getLogger().error('[LoginService] failed to set login attempts for user with id %s - %s', user.id, error.message);
               }
             }
             let kek;
@@ -58,25 +62,12 @@ class LoginService extends AbstractService {
               kek: kek,
             });
           } else {
-            this.getLogger().warn('[LoginService] user %s has entered wrong password', user.username);
-            if (user.active && !user.isAdmin) {
-              const loginAttempts = user.loginAttempts + 1;
-              if (loginAttempts >= this.maxLoginAttempts) {
-                try {
-                  await this.getBackendAdapter('user').deactivateUser(user);
-                  this.getLogger().warn('[LoginService] user %s suspended - max login attempts (%s) exceeded', username, this.maxLoginAttempts);
-                } catch (error) {
-                  this.getLogger().error('[LoginService] failed to update user - %s', error.message);
-                  return done(error);
-                }
-              } else {
-                try {
-                  await this.getBackendAdapter('user').setLoginAttempts(user, loginAttempts);
-                } catch (error) {
-                  this.getLogger().error('[LoginService] failed to set login attempt - %s', error.message);
-                  return done(error);
-                }
-              }
+            this.getLogger().warn('[LoginService] user with id %s has entered wrong password', user.id);
+            try {
+              await this.getBackendAdapter('user').setLoginAttempts(user, user.loginAttempts + 1);
+            } catch (error) {
+              this.getLogger().error('[LoginService] failed to set login attempt for user with id %s - %s', user.id, error.message);
+              return done(error);
             }
             return done(null, false);
           }
@@ -110,11 +101,6 @@ class LoginService extends AbstractService {
 
     this.getApp().use(passport.initialize());
     this.getApp().use(passport.session());
-
-    this.maxLoginAttempts = (serviceConfig.maxLoginAttempts) ?
-        serviceConfig.maxLoginAttempts :
-        5;
-
     this.registerRequestHandler();
   }
 
@@ -144,58 +130,45 @@ class LoginService extends AbstractService {
                 message: 'Forbidden'
               })));
             }
-
             if (!user) {
               return this.handleError(res, new Error(JSON.stringify({
                 code: ErrorCodes.ERR_FORBIDDEN,
                 message: 'Forbidden'
               })));
             }
-
-            if (user.active || user.isAdmin) {
-              req.login(user, (loginError) => {
-                if (loginError) {
-                  this.getLogger().error('[LoginService::/login] login error - %s', loginError.message);
-                  return next(loginError);
-                }
-                if (user.twoFactorSecret) {
-                  req.session.twoFactorRequired = true;
+            req.login(user, (loginError) => {
+              if (loginError) {
+                this.getLogger().error('[LoginService::/login] login error - %s', loginError.message);
+                return next(loginError);
+              }
+              this.getLogger().info('[LoginService::/login] user with id %s has been logged in successfully', user.id);
+              if (user.twoFactorSecret) {
+                req.session.twoFactorRequired = true;
+                return res.json({
+                  'success': true,
+                  'twoFactor': true,
+                });
+              } else {
+                req.session.twoFactorRequired = false;
+                if (user.mustChangePassword) {
                   return res.json({
                     'success': true,
-                    'twoFactor': true,
+                    'mustChangePassword': true,
                   });
                 } else {
-                  req.session.twoFactorRequired = false;
-                  if (user.mustChangePassword) {
-                    return res.json({
-                      'success': true,
-                      'mustChangePassword': true,
-                    });
-                  } else {
-                    return res.json({
-                      'success': true,
-                      'appContext': {
-                        'user': {
-                          'username': user.username,
-                          'isAdmin': user.isAdmin,
-                        },
-                        'organization': config.get('organization')
+                  return res.json({
+                    'success': true,
+                    'appContext': {
+                      'user': {
+                        'username': user.username,
+                        'isAdmin': user.isAdmin,
                       },
-                    });
-                  }
+                      'organization': config.get('organization')
+                    },
+                  });
                 }
-              });
-            } else {
-              this.getLogger().warn('[LoginService::/login] login attempt by suspended user %s', user.username);
-              req.logout();
-              req.session.destroy(() => {
-                res.clearCookie(this.sessionName);
-                return this.handleError(res, new Error(JSON.stringify({
-                  code: ErrorCodes.ERR_FORBIDDEN,
-                  message: 'Forbidden'
-                })));
-              });
-            }
+              }
+            });
           })(req, res, next);
     });
 

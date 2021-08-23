@@ -88,7 +88,7 @@ class UserManagementAdapter extends AbstractAdapter {
   async setLoginAttempts(user, attempts) {
     try {
       await this.getDatabase().query('UPDATE users SET loginAttempts=? WHERE id=?', [attempts, user.id]);
-      this.getLogger().info('[UserManagementAdapter] set failed login attempts for user %s to %s', user.username, attempts);
+      this.getLogger().info('[UserManagementAdapter] set failed login attempts for user with id %s to %s', user.id, attempts);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::setLoginAttempts] failed to set failed login attempts for user %s to %s - %s', user.username, attempts, error.message);
     }
@@ -97,9 +97,9 @@ class UserManagementAdapter extends AbstractAdapter {
   async deactivateUser(user) {
     try {
       await this.getDatabase().query('UPDATE users SET active=0, loginAttempts=0 WHERE id=?', user.id);
-      this.getLogger().info('[UserManagementAdapter::deactivateUser] deactivate user %s', user.username);
+      this.getLogger().info('[UserManagementAdapter::deactivateUser] deactivate user with id %s', user.id);
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::deactivateUser] failed to deactivate user %s - %s', user.username, error.message);
+      this.getLogger().error('[UserManagementAdapter::deactivateUser] failed to deactivate user with id %s - %s', user.id, error.message);
     }
   }
 
