@@ -214,12 +214,18 @@ export default {
           url: '/api/v1/users/' + this.user.id,
           withCredentials: true,
           data: data,
-        }).then(() => {
+        }).then((response) => {
           this.loading = false;
-          this.$modal.info({
-            title: 'Success',
-            message: 'User "' + this.user.username + '" has been updated successfully!',
-          });
+          if (response.data.success) {
+            this.$modal.info({
+              title: 'Success',
+              message: 'User "' + this.user.username + '" has been updated successfully!',
+            });
+          } else {
+            this.$modal.error({
+              message: 'Failed to update user "' + this.user.username + '"!',
+            });
+          }
         }).catch((error) => {
           this.loading = false;
           this.$modal.error(error);

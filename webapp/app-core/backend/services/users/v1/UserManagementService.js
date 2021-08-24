@@ -63,8 +63,8 @@ class UserManagementService extends AbstractService {
      */
     this.getRouter().put('/:userId', ensureAdminAuthenticated, async (req, res) => {
       try {
-        await this.getBackendAdapter('users').updateUser(req.params.userId, req.body);
-        res.json({success: true});
+        const result = await this.getBackendAdapter('users').updateUser(req.params.userId, req.body);
+        res.json(result);
       } catch (error) {
         this.handleError(res, error);
       }

@@ -131,6 +131,7 @@
       "classPath": "/adapters/userManagement/v1/UserManagementAdapter",
       "config": {
         "initialAdminPassword": "admin",
+        "twoFactorIssuerName": "BWRP",
         "passwordHashOptions" : {
           "type": "argon2id",
           "timeCost": 256,

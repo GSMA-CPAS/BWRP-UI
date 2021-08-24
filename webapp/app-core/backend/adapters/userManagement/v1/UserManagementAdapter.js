@@ -11,6 +11,7 @@ class UserManagementAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {
     super(adapterName, adapterConfig, database);
     this.initialAdminPassword = adapterConfig.initialAdminPassword;
+    this.twoFactorIssuerName = adapterConfig.twoFactorIssuerName;
     this.passwordHashOptions = adapterConfig.passwordHashOptions;
     this.passwordKeyDerivationOptions = adapterConfig.passwordKeyDerivationOptions;
   }
@@ -90,14 +91,14 @@ class UserManagementAdapter extends AbstractAdapter {
       await this.getDatabase().query('UPDATE users SET loginAttempts=? WHERE id=?', [attempts, user.id]);
       this.getLogger().info('[UserManagementAdapter] set failed login attempts for user with id %s to %s', user.id, attempts);
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::setLoginAttempts] failed to set failed login attempts for user %s to %s - %s', user.username, attempts, error.message);
+      this.getLogger().error('[UserManagementAdapter::setLoginAttempts] failed to set failed login attempts for user with id %s to %s - %s', user.id, attempts, error.message);
     }
   }
 
   async deactivateUser(user) {
     try {
       await this.getDatabase().query('UPDATE users SET active=0, loginAttempts=0 WHERE id=?', user.id);
-      this.getLogger().info('[UserManagementAdapter::deactivateUser] deactivate user with id %s', user.id);
+      this.getLogger().info('[UserManagementAdapter::deactivateUser] user with id %s has been deactivated successfully', user.id);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::deactivateUser] failed to deactivate user with id %s - %s', user.id, error.message);
     }
@@ -124,7 +125,7 @@ class UserManagementAdapter extends AbstractAdapter {
     if (username.length < 3) {
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_VALIDATION,
-        message: 'Username must be at least 3 characters',
+        message: 'Username must be at least 3 characters long',
       }));
     }
 
@@ -164,16 +165,16 @@ class UserManagementAdapter extends AbstractAdapter {
       newUser['encKey'] = pwdKeys.encKey;
       newUser['mustChangePassword'] = true;
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::createUser] failed to generate password hash and keys for user %s - %s', username, error.message);
+      this.getLogger().error('[UserManagementAdapter::createUser] failed to generate password hash and keys for new user - %s', error.message);
       throw error;
     }
 
     try {
-      await this.getDatabase().query('INSERT INTO users SET ?', newUser);
-      this.getLogger().info('[UserManagementAdapter::createUser] user %s has been created successfully!', username);
+      const result = await this.getDatabase().query('INSERT INTO users SET ?', newUser);
+      this.getLogger().info('[UserManagementAdapter::createUser] user with id %s has been created successfully!', result.insertId);
       return true;
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::createUser] failed to insert new user %s - %s', username, error.message);
+      this.getLogger().error('[UserManagementAdapter::createUser] failed to insert new user - %s', error.message);
       throw error;
     }
   }
@@ -221,22 +222,18 @@ class UserManagementAdapter extends AbstractAdapter {
     newData.active = data.active;
     newData.isAdmin = data.isAdmin;
 
-    let affectedRows = 0;
-
     try {
       const result = await this.getDatabase().query('UPDATE users SET ? WHERE id=?', [newData, userId]);
-      affectedRows = result.affectedRows;
+      if (result.affectedRows && result.affectedRows > 0) {
+        this.getLogger().info('[UserManagementAdapter::updateUser] user with id %s has been updated successfully', userId);
+        return {success: true};
+      } else {
+        this.getLogger().error('[UserManagementAdapter::updateUser] failed to update user - user id %s not found', userId);
+        return {success: false};
+      }
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::updateUser] failed to update user with id %s - %s', userId, error.message);
       throw error;
-    }
-
-    if (affectedRows === 0) {
-      this.getLogger().error('[UserManagementAdapter::updateUser] failed to update user - user id %s not found', userId);
-      throw new Error(JSON.stringify({
-        code: ErrorCodes.ERR_NOT_FOUND,
-        message: 'User not found',
-      }));
     }
   }
 
@@ -286,7 +283,7 @@ class UserManagementAdapter extends AbstractAdapter {
     const isPasswordCorrect = await this.comparePassword(user, password);
 
     if (!isPasswordCorrect) {
-      this.getLogger().error('[UserManagementAdapter::updatePassword] failed to update password for user %s - the old password is not correct!', user.username);
+      this.getLogger().info('[UserManagementAdapter::updatePassword] failed to update password for user with id %s - the old password is not correct!', user.id);
       throw new Error(JSON.stringify({
         code: ErrorCodes.ERR_FORBIDDEN,
         message: 'Password is not correct',
@@ -301,8 +298,9 @@ class UserManagementAdapter extends AbstractAdapter {
             pwdEncKey.encKey,
             user.id,
           ]);
+      this.getLogger().info('[UserManagementAdapter::updatePassword] password for user with id %s has been updated successfully', user.id);
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::updatePassword] failed to update password for user %s - %s', user.username, error.message);
+      this.getLogger().error('[UserManagementAdapter::updatePassword] failed to update password for user with id %s - %s', user.id, error.message);
       throw error;
     }
   }
@@ -316,6 +314,7 @@ class UserManagementAdapter extends AbstractAdapter {
     }
     try {
       await this.getDatabase().query('DELETE FROM users WHERE id=?', [userId]);
+      this.getLogger().info('[UserManagementAdapter::deleteUser] user with id %s has been deleted successfully!', userId);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::deleteUser] failed to delete user with id %s - %s', userId, error.message);
       throw error;
@@ -372,8 +371,9 @@ class UserManagementAdapter extends AbstractAdapter {
                 pwdKeys.encKey,
                 user.id,
               ]);
+      this.getLogger().info('[UserManagementAdapter::resetPassword] password for user with id %s has been reset successfully!', user.id);
     } catch (error) {
-      this.getLogger().error('[UserManagementAdapter::resetPassword] failed to reset password for user %s - %s', user.username, error.message);
+      this.getLogger().error('[UserManagementAdapter::resetPassword] failed to reset password for user with id %s - %s', user.id, error.message);
       throw error;
     }
   }
@@ -441,7 +441,7 @@ class UserManagementAdapter extends AbstractAdapter {
 
   async generateTwoFactorSecret(user) {
     const secret = otplib.authenticator.generateSecret();
-    const otpAuth = otplib.authenticator.keyuri(user.username, 'Nodenect', secret);
+    const otpAuth = otplib.authenticator.keyuri(user.username, this.twoFactorIssuerName, secret);
     try {
       const imageURL = await qrcode.toDataURL(otpAuth);
       return {
@@ -474,7 +474,7 @@ class UserManagementAdapter extends AbstractAdapter {
         const dek = pbkdfUtils.decryptDek(user.kek, userWithSecrets.encKey);
         encryptedSecret = await pbkdfUtils.encryptData(secret, dek);
         await this.getDatabase().query('UPDATE users SET twoFactorSecret=? WHERE id=?', [encryptedSecret, user.id]);
-        this.getLogger().info('[UserManagementAdapter::enableTwoFactor] Two-factor authentication has been successfully activated for user with id %s', user.id);
+        this.getLogger().info('[UserManagementAdapter::enableTwoFactor] two factor authentication has been successfully activated for user with id %s', user.id);
         return true;
       } catch (error) {
         this.getLogger().error('[UserManagementAdapter::enableTwoFactor] failed to encrypt and store two-factor secret - %s', error.message);
@@ -488,7 +488,7 @@ class UserManagementAdapter extends AbstractAdapter {
   async disableTwoFactor(user) {
     try {
       await this.getDatabase().query('UPDATE users SET twoFactorSecret="" WHERE id=?', [user.id]);
-      this.getLogger().info('[UserManagementAdapter::enableTwoFactor] Two-factor authentication has been successfully deactivated for user with id %s', user.id);
+      this.getLogger().info('[UserManagementAdapter::enableTwoFactor] two factor authentication has been successfully deactivated for user with id %s', user.id);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::disableTwoFactor] failed to disable two-factor - %s', error.message);
       throw error;
