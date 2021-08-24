@@ -19,6 +19,11 @@ const validationRules = {
     return /^[a-z0-9_]*$/.test(value) || 'Username must contain only lowercase letters, numbers and underscores';
   },
 
+  min: (value, length) => {
+    if (!value || !value.trim()) return true;
+    return (value && value.length >= length) || 'The min length is ' + length;
+  },
+
   identityName: (value) => {
     if (!value || !value.trim()) return true;
     return /^[a-z0-9_]*$/.test(value) || 'Identity name must contain only lowercase letters, numbers and underscores';

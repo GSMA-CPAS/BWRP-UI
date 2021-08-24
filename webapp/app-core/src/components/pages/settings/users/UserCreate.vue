@@ -12,7 +12,7 @@
             <v-form ref="formCreateUser" v-model="valid" lazy-validation @submit.prevent="createUser">
               <v-card-text>
                 <v-text-field v-model="newUser.username" label="Username"
-                              :rules="[rules.required, rules.username]"></v-text-field>
+                              :rules="[rules.required, rules.username, rules.min(newUser.username, 3)]"></v-text-field>
                 <v-text-field v-model="newUser.password" label="Password"
                               :rules="[rules.required, rules.password]"></v-text-field>
                 <v-text-field v-model="newUser.forename" label="First name"></v-text-field>

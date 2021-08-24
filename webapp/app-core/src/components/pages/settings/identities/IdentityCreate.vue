@@ -12,7 +12,7 @@
             <v-form ref="formCreateIdentity" v-model="valid" lazy-validation @submit.prevent="createIdentity">
               <v-card-text>
                 <v-text-field v-model="newIdentity.name" label="Name"
-                              :rules="[rules.required, rules.identityName]"></v-text-field>
+                              :rules="[rules.required, rules.identityName, rules.min(newIdentity.name, 3)]"></v-text-field>
               </v-card-text>
               <v-card-actions class="pa-4">
                 <v-btn type="submit" color="primary" tile>Create Identity</v-btn>
