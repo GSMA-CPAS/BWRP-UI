@@ -1,6 +1,6 @@
 {
   "name": "app-roaming",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "main": "app.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "vuelidate": "^0.7.6",
     "vuetify": "^2.4.3",
     "vuex": "^3.6.2",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.17.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
