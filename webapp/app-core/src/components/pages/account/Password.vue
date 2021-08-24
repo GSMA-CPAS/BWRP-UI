@@ -79,7 +79,13 @@ export default {
         }).then((/* response */) => {
           this.loading = false;
           localStorage.removeItem('appContext');
-          this.$router.push('/login?show=login_again');
+          this.$modal.info({
+            title: 'Changed Password',
+            message: 'Password has been changed successfully. Please login with new password.',
+            callbackOk: () => {
+              this.$router.push('/login?show=login_again');
+            }
+          });
         }).catch((error) => {
           this.loading = false;
           this.$modal.error(error);
