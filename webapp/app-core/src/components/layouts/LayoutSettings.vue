@@ -19,6 +19,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append>
+        <v-footer outlined>
+          <v-spacer />
+          <div>v{{version}}</div>
+        </v-footer>
+      </template>
     </v-navigation-drawer>
     <app-header/>
     <v-container fill-height fluid v-if="loading">
@@ -39,7 +45,9 @@ export default {
   name: 'Layout',
 
   data() {
-    return {};
+    return {
+      version: process.env.VUE_APP_VERSION
+    };
   },
 
   props: {

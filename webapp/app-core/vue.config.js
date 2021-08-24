@@ -1,5 +1,8 @@
 'use strict';
 
+// set app version from package.json
+process.env.VUE_APP_VERSION = process.env.npm_package_version || 0;
+
 module.exports = {
   'transpileDependencies': [
     'vuetify',
