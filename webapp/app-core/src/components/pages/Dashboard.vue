@@ -37,7 +37,7 @@ export default {
   created: function() {
     setTimeout(() => {
       this.init();
-    }, 1000);
+    }, 200);
   },
 
   methods: {

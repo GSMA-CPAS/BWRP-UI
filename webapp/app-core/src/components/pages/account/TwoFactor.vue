@@ -75,7 +75,7 @@ export default {
   created: function() {
     setTimeout(() => {
       this.fetch2faSecret();
-    }, 100);
+    }, 200);
   },
 
   methods: {

@@ -85,7 +85,7 @@ export default {
     this.identityId = this.$route.params.id;
     setTimeout(() => {
       this.fetchIdentity();
-    }, 100);
+    }, 200);
   },
 
   methods: {

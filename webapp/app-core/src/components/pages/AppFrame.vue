@@ -21,7 +21,7 @@ export default {
   created: function() {
     setTimeout(() => {
       this.fetchAppConfig();
-    }, 1000);
+    }, 200);
   },
 
   methods: {

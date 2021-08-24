@@ -92,7 +92,7 @@ export default {
   created: function() {
     setTimeout(() => {
       this.fetchUsers();
-    }, 1000);
+    }, 200);
   },
 
   methods: {

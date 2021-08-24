@@ -180,7 +180,7 @@ export default {
       this.loggedInUser = response.user.username;
       setTimeout(() => {
         this.fetchUser();
-      }, 100);
+      }, 200);
     }, (error) => {
       this.$modal.error(error);
     });

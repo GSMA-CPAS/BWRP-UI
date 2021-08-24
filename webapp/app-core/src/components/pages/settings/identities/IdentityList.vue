@@ -74,7 +74,7 @@ export default {
   created: function() {
     setTimeout(() => {
       this.fetchIdentities();
-    }, 1000);
+    }, 200);
   },
 
   methods: {
