@@ -1,6 +1,6 @@
 'use strict';
 
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapters/AbstractAdapter');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 
 class IdentityAdapter extends AbstractAdapter {

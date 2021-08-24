@@ -1,7 +1,7 @@
 'use strict';
 
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapters/AbstractAdapter');
 
 class LocalStorageAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {

@@ -7,7 +7,7 @@ const Database = require('mysqlw');
 
 global.GLOBAL_ROOT = path.resolve(__dirname);
 global.GLOBAL_BACKEND_ROOT = path.resolve(__dirname, './backend');
-const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
+const logger = require(global.GLOBAL_BACKEND_ROOT + '/commons/logger')(config);
 
 const createAdapterInstance = (adapterName, database) => {
   const adapterPath = 'backendAdapters.' + adapterName;

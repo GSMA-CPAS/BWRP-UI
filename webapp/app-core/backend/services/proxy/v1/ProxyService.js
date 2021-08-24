@@ -3,8 +3,8 @@
 const {createProxyMiddleware} = require('http-proxy-middleware');
 
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
-const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
-const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
+const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAdminAuthenticated;
+const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAuthenticated;
 
 class ProxyService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {

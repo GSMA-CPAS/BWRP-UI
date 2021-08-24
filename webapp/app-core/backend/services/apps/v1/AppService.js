@@ -3,7 +3,7 @@
 const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
-const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
+const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAuthenticated;
 
 class AppService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {

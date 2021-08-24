@@ -3,8 +3,8 @@
 const got = require('got');
 const config = require('config');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
-const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapters/AbstractAdapter');
+const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/commons/cryptoUtils');
 // const crypto = require('crypto');
 
 class CommonAdapter extends AbstractAdapter {

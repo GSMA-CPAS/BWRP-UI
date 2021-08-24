@@ -4,14 +4,14 @@ const config = require('config');
 const Enums = require(global.GLOBAL_BACKEND_ROOT + '/Enums');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
-const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
+const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAuthenticated;
 
 class BlockchainService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
     this.requiredAdapterType('blockchain');
     this.requiredAdapterType('localStorage');
-    this.requiredAdapterType('user');
+    this.requiredAdapterType('users');
     this.requiredAdapterType('certAuth');
     this.registerRequestHandler();
     this.mspid = config.organization.mspid;
@@ -190,7 +190,7 @@ class BlockchainService extends AbstractService {
         })));
       }
       try {
-        const userIdentities = await this.getBackendAdapter('user').getUserIdentities(req.user.id);
+        const userIdentities = await this.getBackendAdapter('users').getUserIdentities(req.user.id);
         const hasIdentity = userIdentities.some((item) => item.name === identity);
         if (hasIdentity) {
           const walletIdentity = await this.getBackendAdapter('certAuth').getWalletIdentity(identity);

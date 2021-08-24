@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('config');
-const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
+const logger = require(global.GLOBAL_BACKEND_ROOT + '/commons/logger')(config);
 
 class AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {

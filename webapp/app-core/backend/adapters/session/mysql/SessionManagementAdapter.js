@@ -1,6 +1,6 @@
 'use strict';
 
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapters/AbstractAdapter');
 
 class SessionManagementAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {

@@ -4,8 +4,8 @@ const cors = require('cors');
 const express = require('express');
 const config = require('config');
 
-const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
+const logger = require(global.GLOBAL_BACKEND_ROOT + '/commons/logger')(config);
+const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/commons/errorhandler');
 
 class AbstractService {
   constructor(serviceName, serviceConfig, app, database) {

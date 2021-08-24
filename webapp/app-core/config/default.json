@@ -68,7 +68,7 @@
         "headers": false
       },
       "useBackendAdapters": [
-        {"type": "user", "name": "UserManagementAdapter"}
+        {"type": "users", "name": "UserManagementAdapter"}
       ]
     },
     "UserManagementService": {
@@ -76,7 +76,7 @@
       "classPath": "/users/v1/UserManagementService",
       "route": "/api/v1/users",
       "useBackendAdapters": [
-        {"type": "user", "name": "UserManagementAdapter"}
+        {"type": "users", "name": "UserManagementAdapter"}
       ]
     },
     "IdentityService": {
@@ -100,7 +100,7 @@
       "useBackendAdapters": [
         {"type": "blockchain", "name": "BlockchainAdapter"},
         {"type": "localStorage", "name": "LocalStorageAdapter"},
-        {"type": "user", "name": "UserManagementAdapter"},
+        {"type": "users", "name": "UserManagementAdapter"},
         {"type": "certAuth", "name": "CertAuthAdapter"}
       ]
     },
@@ -109,7 +109,7 @@
       "classPath": "/common/v1/CommonService",
       "route": "/api/v1/common",
       "useBackendAdapters": [
-        {"type": "user", "name": "UserManagementAdapter"},
+        {"type": "users", "name": "UserManagementAdapter"},
         {"type": "certAuth", "name": "CertAuthAdapter"},
         {"type": "common", "name": "CommonAdapter"}
       ]
@@ -128,7 +128,7 @@
 
   "backendAdapters": {
     "UserManagementAdapter": {
-      "classPath": "/adapter/userManagement/v1/UserManagementAdapter",
+      "classPath": "/adapters/userManagement/v1/UserManagementAdapter",
       "config": {
         "initialAdminPassword": "admin",
         "passwordHashOptions" : {
@@ -148,12 +148,12 @@
       }
     },
     "IdentityAdapter": {
-      "classPath": "/adapter/identity/v1/IdentityAdapter",
+      "classPath": "/adapters/identity/v1/IdentityAdapter",
       "config": {
       }
     },
     "CertAuthAdapter": {
-      "classPath": "/adapter/ca/v1/CertAuthAdapter",
+      "classPath": "/adapters/ca/v1/CertAuthAdapter",
       "config": {
         "url": "",
         "caName": "",
@@ -178,24 +178,24 @@
       }
     },
     "SessionManagementAdapter": {
-      "classPath": "/adapter/session/mysql/SessionManagementAdapter",
+      "classPath": "/adapters/session/mysql/SessionManagementAdapter",
       "config": {
       }
     },
     "BlockchainAdapter": {
-      "classPath": "/adapter/blockchain/v1/BlockchainAdapter",
+      "classPath": "/adapters/blockchain/v1/BlockchainAdapter",
       "config": {
         "url": "",
         "webhooks": []
       }
     },
     "LocalStorageAdapter": {
-      "classPath": "/adapter/storage/v1/LocalStorageAdapter",
+      "classPath": "/adapters/storage/v1/LocalStorageAdapter",
       "config": {
       }
     },
     "CommonAdapter": {
-      "classPath": "/adapter/common/v1/CommonAdapter",
+      "classPath": "/adapters/common/v1/CommonAdapter",
       "config": {
         "url": ""
       }

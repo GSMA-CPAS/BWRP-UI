@@ -5,20 +5,20 @@ const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
-const pbkdfUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/pbkdfUtils');
+const pbkdfUtils = require(global.GLOBAL_BACKEND_ROOT + '/commons/pbkdfUtils');
 const rateLimit = require('express-rate-limit');
 
 class LoginService extends AbstractService {
   constructor(serviceName, serviceConfig, app, database) {
     super(serviceName, serviceConfig, app, database);
-    this.requiredAdapterType('user');
+    this.requiredAdapterType('users');
     this.sessionName = config.get('session').name;
 
     passport.use(new Strategy(
         async (username, password, done) => {
           let user;
           try {
-            user = await this.getBackendAdapter('user').getUserByName(username, true);
+            user = await this.getBackendAdapter('users').getUserByName(username, true);
           } catch (error) {
             this.getLogger().error('[LoginService] failed to get user %s - %s', username, error.message);
             return done(error);
@@ -26,7 +26,7 @@ class LoginService extends AbstractService {
 
           let passwordVerified = false;
           try {
-            passwordVerified = await this.getBackendAdapter('user').comparePassword(user, password);
+            passwordVerified = await this.getBackendAdapter('users').comparePassword(user, password);
           } catch (error) {
             this.getLogger().error('[LoginService] failed to compare password - %s', error.message);
             return done(error);
@@ -39,7 +39,7 @@ class LoginService extends AbstractService {
             }
             if (user.loginAttempts > 0) {
               try {
-                await this.getBackendAdapter('user').setLoginAttempts(user, 0);
+                await this.getBackendAdapter('users').setLoginAttempts(user, 0);
               } catch (error) {
                 this.getLogger().error('[LoginService] failed to set login attempts for user with id %s - %s', user.id, error.message);
               }
@@ -64,7 +64,7 @@ class LoginService extends AbstractService {
           } else {
             this.getLogger().warn('[LoginService] user with id %s has entered wrong password', user.id);
             try {
-              await this.getBackendAdapter('user').setLoginAttempts(user, user.loginAttempts + 1);
+              await this.getBackendAdapter('users').setLoginAttempts(user, user.loginAttempts + 1);
             } catch (error) {
               this.getLogger().error('[LoginService] failed to set login attempt for user with id %s - %s', user.id, error.message);
               return done(error);
@@ -82,7 +82,7 @@ class LoginService extends AbstractService {
       const userId = user.id;
       const kek = user.kek;
       try {
-        user = await this.getBackendAdapter('user').getUserById(userId);
+        user = await this.getBackendAdapter('users').getUserById(userId);
       } catch (error) {
         this.getLogger().error('[LoginService::deserializeUser] failed to get user with id %s - %s', userId, error.message);
         return done(null, false);

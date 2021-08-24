@@ -19,11 +19,11 @@ const databaseConnection = config.get('database').connection;
 global.GLOBAL_ROOT = path.resolve(__dirname);
 global.GLOBAL_BACKEND_ROOT = path.resolve(__dirname + '/backend');
 
-const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAuthenticated;
-const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
+const ensureAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAuthenticated;
+const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAdminAuthenticated;
 
-const logger = require(global.GLOBAL_BACKEND_ROOT + '/libs/logger')(config);
-const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/libs/errorhandler');
+const logger = require(global.GLOBAL_BACKEND_ROOT + '/commons/logger')(config);
+const errorHandler = require(global.GLOBAL_BACKEND_ROOT + '/commons/errorhandler');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 
 const app = express();

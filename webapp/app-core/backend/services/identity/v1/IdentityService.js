@@ -1,8 +1,8 @@
 'use strict';
 
 const AbstractService = require(global.GLOBAL_BACKEND_ROOT + '/services/AbstractService');
-const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/libs/middlewares').ensureAdminAuthenticated;
-const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
+const ensureAdminAuthenticated = require(global.GLOBAL_BACKEND_ROOT + '/middlewares/auth').ensureAdminAuthenticated;
+const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/commons/cryptoUtils');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
 
 class IdentityService extends AbstractService {

@@ -3,9 +3,9 @@
 const config = require('config');
 const {Wallets, HsmX509Provider} = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapters/AbstractAdapter');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-// const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/cryptoUtils');
+// const cryptoUtils = require(global.GLOBAL_BACKEND_ROOT + '/commons/cryptoUtils');
 
 class CertAuthAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {

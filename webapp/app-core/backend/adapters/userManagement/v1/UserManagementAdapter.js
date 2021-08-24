@@ -3,9 +3,9 @@
 const otplib = require('otplib');
 const qrcode = require('qrcode');
 const ErrorCodes = require(global.GLOBAL_BACKEND_ROOT + '/ErrorCodes');
-const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapter/AbstractAdapter');
-const PwValidator = require(global.GLOBAL_BACKEND_ROOT + '/libs/pwvalidator');
-const pbkdfUtils = require(global.GLOBAL_BACKEND_ROOT + '/libs/pbkdfUtils');
+const AbstractAdapter = require(global.GLOBAL_BACKEND_ROOT + '/adapters/AbstractAdapter');
+const PwValidator = require(global.GLOBAL_BACKEND_ROOT + '/commons/pwvalidator');
+const pbkdfUtils = require(global.GLOBAL_BACKEND_ROOT + '/commons/pbkdfUtils');
 
 class UserManagementAdapter extends AbstractAdapter {
   constructor(adapterName, adapterConfig, database) {
