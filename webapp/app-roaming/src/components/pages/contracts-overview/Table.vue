@@ -41,7 +41,7 @@
         <td>{{ item.lastModification | parseDate }}</td>
         <td>{{ item.startDate | parseDate }}</td>
         <td>{{ item.endDate | parseDate }}</td>
-        <td>{{ item.state }}</td>
+        <td>{{ item.isSigned ? 'SIGNED' : item.state }}</td>
         <!-- <td @click.stop>
           <v-menu offset-y>
             <template v-slot:activator="{on, attrs}">
