@@ -35,7 +35,7 @@ export default {
       type: Boolean,
       default: false,
     },
-  ripple: {
+    ripple: {
       type: Boolean,
       default: true,
     },
@@ -65,7 +65,7 @@ export default {
     },
     tile: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     color: {
       type: String,

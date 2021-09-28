@@ -54,8 +54,9 @@
             <v-col />
             <v-spacer />
             <v-col cols="auto">
+              <h3 class="grey--text text-no-wrap" v-if="settlementLoading">Loading...</h3>
               <h3
-                v-if="
+                v-else-if="
                   ownUsage.tag === 'APPROVED' ||
                   currentTimelineTag === 'APPROVED' ||
                   isApproved
