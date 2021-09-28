@@ -6,7 +6,7 @@
           <v-breadcrumbs :items="breadcrumbItems" large></v-breadcrumbs>
         </v-col>
         <v-col cols="6" class="text-right">
-          <v-btn tile color="primary" to="/settings/identities/create">Create Identity</v-btn>
+          <v-btn color="primary" to="/settings/identities/create">Create Identity</v-btn>
         </v-col>
       </v-row>
       <v-spacer></v-spacer>

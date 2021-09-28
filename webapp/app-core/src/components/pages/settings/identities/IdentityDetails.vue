@@ -37,8 +37,8 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn type="submit" color="primary" tile @click="renewCertificate">Renew Certificate</v-btn>
-              <v-btn type="submit" color="primary" tile @click="exportCertificate">Export Certificate</v-btn>
+              <v-btn type="submit" color="primary" @click="renewCertificate">Renew Certificate</v-btn>
+              <v-btn type="submit" color="primary" @click="exportCertificate">Export Certificate</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>

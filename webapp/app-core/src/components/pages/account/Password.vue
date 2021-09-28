@@ -20,7 +20,7 @@
               </v-card-text>
               <v-card-actions class="pa-4">
                 <v-spacer></v-spacer>
-                <v-btn type="submit" color="primary" tile>Change Password</v-btn>
+                <v-btn type="submit" color="primary">Change Password</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
