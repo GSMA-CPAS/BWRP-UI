@@ -54,7 +54,7 @@
             <v-col />
             <v-spacer />
             <v-col cols="auto">
-              <h3 class="grey--text text-no-wrap" v-if="settlementLoading">Loading...</h3>
+              <h3 class="grey--text text-no-wrap text-uppercase" v-if="settlementLoading">Loading...</h3>
               <h3
                 v-else-if="
                   ownUsage.tag === 'APPROVED' ||
@@ -159,7 +159,7 @@ export default {
   computed: {
     settlementLoading() {
       return (
-        this.$store.state.usage.loading || this.$store.state.settlement.loading
+        this.$store.state.usage.loading || this.$store.state.settlement.loading || this.$store.state['app-state'].isLoading
       );
     },
   },
