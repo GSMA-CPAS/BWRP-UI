@@ -23,7 +23,7 @@ const documentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       identity,
     ) {
-      Vue.axios.commonAdapter
+      await Vue.axios.commonAdapter
         .put(
           `/signatures/` + state.document.contractId,
           {identity: identity},

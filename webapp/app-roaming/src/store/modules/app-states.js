@@ -1,12 +1,17 @@
 const appStateModule = {
   namespaced: true,
   state: () => ({
+    documentLoading: false,
     isLoading: false,
     errorResponse: null,
     showError: false,
     loadingSpinner: false,
   }),
   mutations: {
+    setDocumentLoading: (state, documentState) => {
+      console.log(documentState);
+      state.documentLoading = documentState;
+    },
     SET_ERROR: (state, error) => {
       state.errorResponse = error;
     },

@@ -93,6 +93,7 @@ export default new Vuex.Store({
                 `%c Made ${method} request to ${baseURL + url}`,
                 'color:green; font-weight:800',
               );
+              commit('app-state/setDocumentLoading', true);
               if (!customLoader) {
                 loadingSpinner
                   ? dispatch('app-state/loadingSpinner', true)
@@ -110,6 +111,7 @@ export default new Vuex.Store({
           );
           response.use(
             (response) => {
+              commit('app-state/setDocumentLoading', false);
               dispatch('app-state/loading', false);
               dispatch('app-state/loadingSpinner', false);
               try {
@@ -119,6 +121,7 @@ export default new Vuex.Store({
               }
             },
             (error) => {
+              commit('app-state/setDocumentLoading', false);
               if (error.response?.status === 401) {
                 parent.postMessage('unauthorized', '*');
               }
