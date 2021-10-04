@@ -18,8 +18,8 @@ const usageModule = {
   namespaced,
   state: () => defaultUsageState(),
   mutations: {
-    async setLoading(state, loading) {
-      state.loading = await loading;
+    setLoading(state, loading) {
+      state.loading = loading;
     },
     UPDATE_USAGE: (state, usage) => {
       state.ownUsage = usage;

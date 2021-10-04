@@ -159,7 +159,7 @@ export default {
   computed: {
     settlementLoading() {
       return (
-          this.$store.state['app-state'].documentLoading
+        this.$store.state.usage.loading || this.$store.state.settlement.loading || this.$store.state['app-state'].isLoading || this.$store.state['app-state'].loadingSpinner
       );
     },
   },
