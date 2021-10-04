@@ -97,6 +97,8 @@ export default new Vuex.Store({
                 loadingSpinner
                   ? dispatch('app-state/loadingSpinner', true)
                   : dispatch('app-state/loading', true);
+              } else {
+                commit('app-state/customLoader', true);
               }
               return config;
             },
@@ -112,6 +114,7 @@ export default new Vuex.Store({
             (response) => {
               dispatch('app-state/loading', false);
               dispatch('app-state/loadingSpinner', false);
+              commit('app-state/customLoader', false);
               try {
                 return JSON.parse(response.data);
               } catch {
@@ -136,6 +139,7 @@ export default new Vuex.Store({
                 code: errorMessage,
               });
               dispatch('app-state/loadingSpinner', false);
+              commit('app-state/customLoader', false);
               return Promise.reject(error);
             },
           );

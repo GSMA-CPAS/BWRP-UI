@@ -6,8 +6,8 @@
       label="Accept"
       label-min-width="180"
       :loading="loadingSpinner"
-      @on-open="loadIdentities"
     >
+      <!-- @on-open="loadIdentities" -->
       <template #content>
         <v-select
           :loading="loadingSpinner"
