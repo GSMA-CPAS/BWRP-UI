@@ -4,6 +4,7 @@
       outlined
       title="Settlement Report"
       label="View settlement report"
+      width="90vw"
     >
       <template #content>
         <v-container style="min-width: 1100px" class="pt-0">
@@ -153,9 +154,7 @@
                 </v-col>
               </v-row>
               <v-row v-if="currentTimeline && !signedBySelf && ownUsage.tag !== 'REJECTED'" class="pt-6 mr-3">
-              <app-button></app-button>
                 <v-spacer/>
-
                 <sign-usage-button/>
                 <app-button
                       style="border: #e5e5e5 1px solid"
