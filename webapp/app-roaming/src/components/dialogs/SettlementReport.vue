@@ -257,9 +257,4 @@ export default {
 </script>
 
 <style scoped>
-@media (max-width: 1900px){
-  .report {
-    width: 90vw;
-  }
-}
 </style>
