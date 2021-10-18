@@ -58,7 +58,8 @@ class CommonAdapter extends AbstractAdapter {
                   name: item.body.metadata.name,
                   tadigCodes: this.getTadigCodes(item.body),
                   version: item.header.version,
-                  isSigned: item.isSigned
+                  isSigned: item.isSigned,
+                  isUsageApproved: (item.isUsageApproved) ? item.isUsageApproved : false
                });
             }
          }
