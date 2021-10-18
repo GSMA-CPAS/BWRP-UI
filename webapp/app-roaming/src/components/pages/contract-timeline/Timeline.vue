@@ -8,7 +8,6 @@
         <v-expansion-panel
           v-for="(item, i) in this.usageIds"
           :key="i"
-          v-model="panel"
           @click="onPanelClick(item.usageId)"
         >
           <v-expansion-panel-header>
@@ -45,7 +44,6 @@
         </v-expansion-panel>
         <v-expansion-panel
           @click="onPanelClick(currentUsageId)"
-          v-model="panel"
         >
           <v-expansion-panel-header>
             <v-col cols="1" class="text-no-wrap">
@@ -134,8 +132,7 @@ export default {
   },
   data() {
     return {
-      panel: [0],
-      expanded: false,
+      panel: 0,
       isApproved: false,
     };
   },
@@ -158,6 +155,8 @@ export default {
   },
   computed: {
     settlementLoading() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.panel = 0;
       return (
         this.$store.state['app-state'].customLoader
       );
