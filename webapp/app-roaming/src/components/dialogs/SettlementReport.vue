@@ -4,7 +4,7 @@
       outlined
       title="Settlement Report"
       label="View settlement report"
-      width="90vw"
+      :width=width
     >
       <template #content>
         <v-container style="min-width: 1100px" class="pt-0">
@@ -187,6 +187,11 @@ export default {
     }
   },
   computed: {
+    width() {
+      if (this.$vuetify.breakpoint.name === 'xl') {
+        return '60vw';
+      } else return '90vw';
+    },
     homeData() {
       return this.$store.state.settlement.discrepancies.homePerspective['general_information'];
     },
@@ -252,5 +257,9 @@ export default {
 </script>
 
 <style scoped>
-
+@media (max-width: 1900px){
+  .report {
+    width: 90vw;
+  }
+}
 </style>
