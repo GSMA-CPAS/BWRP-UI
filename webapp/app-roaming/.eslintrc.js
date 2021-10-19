@@ -19,5 +19,6 @@ module.exports = {
         code: 240,
       },
     ],
+    "vue/no-mutating-props": "off"
   },
 };
