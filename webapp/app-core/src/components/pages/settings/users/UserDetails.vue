@@ -115,7 +115,7 @@
               item-value="id"
               label="Select identities"
               multiple>
-            <template v-slot:selection="{index, item}">
+            <template v-slot:selection="{/* index,*/ item}">
               {{item.name}}
             </template>
           </v-combobox>

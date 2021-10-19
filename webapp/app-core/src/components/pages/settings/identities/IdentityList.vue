@@ -23,7 +23,7 @@
               ></v-text-field>
             </v-card-title>
             <v-data-table @click:row="handleClickItem" :headers="headers" :items="items" :search="search">
-              <template v-slot:item.actions="{item}">
+              <template v-slot:[`item.actions`]="{item}">
                 <v-icon small @click.stop="deleteIdentity(item)">
                   {{$vuetify.icons.values.trashCan}}
                 </v-icon>
