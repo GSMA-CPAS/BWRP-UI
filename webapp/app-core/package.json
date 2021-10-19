@@ -1,6 +1,6 @@
 {
   "name": "app-core",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "main": "server.js",
   "private": true,
   "scripts": {
