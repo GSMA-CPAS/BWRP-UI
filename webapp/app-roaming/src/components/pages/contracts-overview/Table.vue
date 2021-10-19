@@ -41,7 +41,7 @@
         <td>{{ item.lastModification | parseDate }}</td>
         <td>{{ item.startDate | parseDate }}</td>
         <td>{{ item.endDate | parseDate }}</td>
-        <td>{{ item.isSigned ? 'SIGNED' : item.state }}</td>
+        <td>{{ getState(item) }}</td>
         <!-- <td @click.stop>
           <v-menu offset-y>
             <template v-slot:activator="{on, attrs}">
@@ -110,6 +110,15 @@ export default {
     },
     to(cid) {
       this.$router.push(`/contract-timeline/${cid}`);
+    },
+    getState(item) {
+      if (item.isUsageApproved) {
+        return 'APPROVED';
+      } else if (item.isSigned) {
+        return 'SIGNED';
+      } else {
+        return item.state;
+      }
     },
     onSummary() {
       console.log('Pressed Summary');
