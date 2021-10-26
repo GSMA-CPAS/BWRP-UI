@@ -11,6 +11,7 @@ const defaultUsageState = () => {
     partnerUsage: {},
     discrepancies: {},
     signatures: {},
+    usageSigned: false,
   };
 };
 
@@ -34,7 +35,7 @@ const usageModule = {
       state.signatures = data;
     },
     SET_USAGE_AS_APPROVED: (state) => {
-      state.ownUsage.tag = 'APPROVED';
+      state.usageSigned = true;
     },
     RESET_STATE(state) {
       Object.assign(state, defaultUsageState());

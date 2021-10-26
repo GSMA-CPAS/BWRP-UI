@@ -55,8 +55,8 @@
               <h3 class="grey--text text-no-wrap text-uppercase" v-if="settlementLoading">Loading...</h3>
               <h3
                 v-else-if="
-                  ownUsage.tag === 'APPROVED' ||
-                  currentTimelineTag === 'APPROVED' ||
+                  isUsageApproved ||
+                  usageSigned ||
                   isApproved
                 "
                 class="green--text text-no-wrap"
@@ -139,8 +139,7 @@ export default {
   methods: {
     onPanelClick(usageId) {
       if (
-        this.ownUsage.tag === 'APPROVED' ||
-        this.currentTimelineTag === 'APPROVED'
+        this.isUsageApproved || this.usageSigned
       ) {
         this.isApproved = true;
       }

@@ -53,6 +53,9 @@ const documentModule = {
             creationDate,
             data,
             partnerMsp,
+            lastModificationDate,
+            isSigned,
+            isUsageApproved
           } = document;
           const documentData = JSON.parse(data);
           commit('UPDATE_DOCUMENT', {
@@ -63,6 +66,9 @@ const documentModule = {
             header: documentData.header,
             partnerMsp,
             blockchainRef,
+            lastModificationDate,
+            isSigned,
+            isUsageApproved
           });
         })
         .catch((err) => {
@@ -187,6 +193,9 @@ const documentModule = {
     },
     creationDate: (state) => {
       return state.document?.creationDate;
+    },
+    isUsageApproved: (state) => {
+      return state.document?.isUsageApproved;
     },
   },
   modules: {
