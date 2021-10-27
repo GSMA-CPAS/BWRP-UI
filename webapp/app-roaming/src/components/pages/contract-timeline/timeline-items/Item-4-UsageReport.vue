@@ -21,7 +21,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <usage-report :is-own-usage="isOwnUsage" />
-          <ul />
+          <div class="mr-2" />
           <v-menu offset-y bottom>
             <template v-slot:activator="{on, attrs}">
               <app-button label="Export" v-bind="attrs" v-on="on" />
@@ -56,12 +56,12 @@ export default {
   props: {
     isOwnUsage: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isCurrentTimeline: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -73,7 +73,11 @@ export default {
       if (this.isCurrentTimeline) {
         this.partnerBody = setInterval(() => {
           if (!this.isPartnerUsageReceived) {
-            this.$store.dispatch('usage/getUsageById', {contractId: this.contractId, usageId: this.currentUsageId, isPartner: false});
+            this.$store.dispatch('usage/getUsageById', {
+              contractId: this.contractId,
+              usageId: this.currentUsageId,
+              isPartner: false,
+            });
           } else {
             clearInterval(this.partnerBody);
           }
@@ -115,9 +119,9 @@ export default {
       }
     },
   },
-  created() {
-    if (!this.isOwnUsage) this.pollData();
-  },
+  // created() {
+  //   if (!this.isOwnUsage) this.pollData();
+  // },
   components: {
     AppButton,
     UsageReport,

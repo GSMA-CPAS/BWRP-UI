@@ -7,8 +7,8 @@
       </v-card-text>
       <v-card-actions class="pa-4">
         <v-spacer></v-spacer>
-        <v-btn v-if='type === "confirm"' color="primary" text @click="handleClose">{{ buttonTextClose }}</v-btn>
-        <v-btn color="primary" tile @click="handleOk">{{ buttonTextOk }}</v-btn>
+        <v-btn v-if='type === "confirm"' color="primary"  @click="handleClose">{{ buttonTextClose }}</v-btn>
+        <v-btn color="primary"  @click="handleOk">{{ buttonTextOk }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

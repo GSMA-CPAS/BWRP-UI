@@ -100,6 +100,7 @@ const timelineMixin = {
       partnerUsageCreationDate: (state) => state.partnerUsage.creationDate,
       usageDiscrepancies: (state) => state.discrepancies,
       usageSignatures: (state) => state.signatures,
+      usageSigned: (state) => state.usageSigned,
     }),
     ...mapState('settlement', {
       ownSettlementId: (state) => state.ownSettlementId,
@@ -122,6 +123,7 @@ const timelineMixin = {
       'minSignaturesPartner',
       'selfContractTadigs',
       'partnerContractTadigs',
+      'isUsageApproved',
     ]),
     ...mapGetters('usage', [
       'isUsageUploaded',

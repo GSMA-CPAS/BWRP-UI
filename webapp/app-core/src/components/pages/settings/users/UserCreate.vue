@@ -22,7 +22,7 @@
                 <v-checkbox v-model="newUser.isAdmin" label="Administrator"></v-checkbox>
               </v-card-text>
               <v-card-actions class="pa-4">
-                <v-btn type="submit" color="primary" tile>Create User</v-btn>
+                <v-btn type="submit" color="primary">Create User</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>

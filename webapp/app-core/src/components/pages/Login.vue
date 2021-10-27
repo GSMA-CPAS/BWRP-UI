@@ -14,7 +14,7 @@
                             :rules="[rules.required]"></v-text-field>
             </v-card-text>
             <v-card-actions class="pa-4">
-              <v-btn type="submit" color="primary" tile block large :loading="loading">Login</v-btn>
+              <v-btn type="submit" color="primary" block  large :loading="loading">Login</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>

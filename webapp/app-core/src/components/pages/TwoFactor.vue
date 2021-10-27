@@ -11,7 +11,7 @@
               <v-text-field v-model="token" :rules="[rules.required]" autofocus label="Enter code..."></v-text-field>
             </v-card-text>
             <v-card-actions>
-              <v-btn block color="primary" large tile type="submit">Verify</v-btn>
+              <v-btn  color="primary" large  type="submit">Verify</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>

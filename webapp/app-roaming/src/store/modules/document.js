@@ -53,6 +53,9 @@ const documentModule = {
             creationDate,
             data,
             partnerMsp,
+            lastModificationDate,
+            isSigned,
+            isUsageApproved
           } = document;
           const documentData = JSON.parse(data);
           commit('UPDATE_DOCUMENT', {
@@ -63,6 +66,9 @@ const documentModule = {
             header: documentData.header,
             partnerMsp,
             blockchainRef,
+            lastModificationDate,
+            isSigned,
+            isUsageApproved
           });
         })
         .catch((err) => {
@@ -105,12 +111,12 @@ const documentModule = {
       {commit, dispatch, rootGetters, getters, rootState, state},
       contractId,
     ) {
+      await dispatch('getDocument', contractId);
+      await dispatch('getSignatures', contractId);
       await dispatch('usage/resetData', contractId, {root: true});
       await dispatch('timelineCache/resetData', contractId, {root: true});
       await dispatch('settlement/resetData', contractId, {root: true});
-      await dispatch('getDocument', contractId);
       await dispatch('usage/getUsages', contractId, {root: true});
-      await dispatch('getSignatures', contractId);
     },
   },
   getters: {
@@ -187,6 +193,9 @@ const documentModule = {
     },
     creationDate: (state) => {
       return state.document?.creationDate;
+    },
+    isUsageApproved: (state) => {
+      return state.document?.isUsageApproved;
     },
   },
   modules: {

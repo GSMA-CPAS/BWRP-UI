@@ -17,7 +17,7 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn color="primary" tile to="/account/security/password">Change Password</v-btn>
+              <v-btn color="primary"  to="/account/security/password">Change Password</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -33,7 +33,7 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn color="primary" tile @click="toggleTwoFactor">{{ twoFactorButtonText }}</v-btn>
+              <v-btn color="primary"  @click="toggleTwoFactor">{{ twoFactorButtonText }}</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>

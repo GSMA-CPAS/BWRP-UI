@@ -23,7 +23,7 @@
               </v-card-text>
               <v-card-actions class="pa-4">
                 <v-spacer></v-spacer>
-                <v-btn type="submit" color="primary" tile>Update User</v-btn>
+                <v-btn type="submit" color="primary">Update User</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -59,7 +59,7 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn color="primary" tile @click="openAddIdentityDialog">Add Identity</v-btn>
+              <v-btn color="primary" @click="openAddIdentityDialog">Add Identity</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -81,7 +81,7 @@
               </v-card-text>
               <v-card-actions class="pa-4">
                 <v-spacer></v-spacer>
-                <v-btn type="submit" color="primary" tile>Reset password</v-btn>
+                <v-btn type="submit" color="primary">Reset password</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -98,7 +98,7 @@
             </v-card-text>-->
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn color="primary" tile @click="deleteUser">Delete user</v-btn>
+              <v-btn color="primary" @click="deleteUser">Delete user</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -115,15 +115,15 @@
               item-value="id"
               label="Select identities"
               multiple>
-            <template v-slot:selection="{index, item}">
+            <template v-slot:selection="{/* index,*/ item}">
               {{item.name}}
             </template>
           </v-combobox>
         </v-card-text>
         <v-card-actions class="pa-4">
           <v-spacer></v-spacer>
-          <v-btn tile @click="showAddIdentityDialog = false">Cancel</v-btn>
-          <v-btn color="primary" tile @click="addIdentities">Add</v-btn>
+          <v-btn @click="showAddIdentityDialog = false">Cancel</v-btn>
+          <v-btn color="primary" @click="addIdentities">Add</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

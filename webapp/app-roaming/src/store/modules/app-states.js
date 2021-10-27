@@ -5,8 +5,12 @@ const appStateModule = {
     errorResponse: null,
     showError: false,
     loadingSpinner: false,
+    customLoader: false,
   }),
   mutations: {
+    customLoader: (state, loader) => {
+      state.customLoader = loader;
+    },
     SET_ERROR: (state, error) => {
       state.errorResponse = error;
     },

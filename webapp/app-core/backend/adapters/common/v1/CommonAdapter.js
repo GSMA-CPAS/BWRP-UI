@@ -58,6 +58,8 @@ class CommonAdapter extends AbstractAdapter {
                   name: item.body.metadata.name,
                   tadigCodes: this.getTadigCodes(item.body),
                   version: item.header.version,
+                  isSigned: item.isSigned,
+                  isUsageApproved: (item.isUsageApproved) ? item.isUsageApproved : false
                });
             }
          }
@@ -111,7 +113,9 @@ class CommonAdapter extends AbstractAdapter {
             data: JSON.stringify({body: item.body, header: header}),
             state: 'sent',
             creationDate: item.creationDate,
-            lastModificationDate: item.lastModificationDate
+            lastModificationDate: item.lastModificationDate,
+            isSigned: item.isSigned,
+            isUsageApproved: item.isUsageApproved
          };
       } catch (error) {
          this.getLogger().error('[CommonAdapter::getContractById] failed to get contract - %s', error.message);

@@ -15,7 +15,7 @@
                               :rules="[rules.required, rules.identityName, rules.min(newIdentity.name, 3)]"></v-text-field>
               </v-card-text>
               <v-card-actions class="pa-4">
-                <v-btn type="submit" color="primary" tile>Create Identity</v-btn>
+                <v-btn type="submit" color="primary">Create Identity</v-btn>
               </v-card-actions>
             </v-form>
           </v-card>

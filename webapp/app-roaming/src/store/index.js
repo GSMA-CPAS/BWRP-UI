@@ -71,7 +71,9 @@ export default new Vuex.Store({
   },
   actions: {
     setup({commit, dispatch, rootGetters, getters, rootState, state}) {
-      const csrfToken = parent?.document?.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      const csrfToken = parent?.document
+        ?.querySelector('meta[name="csrf-token"]')
+        ?.getAttribute('content');
       for (const key in Vue.axios) {
         if (Object.hasOwnProperty.call(Vue.axios, key)) {
           if (csrfToken) {
@@ -80,15 +82,24 @@ export default new Vuex.Store({
           const {request, response} = Vue.axios[key].interceptors;
           request.use(
             (config) => {
-              const {method, baseURL, url, loadingSpinner} = config;
+              const {
+                method,
+                baseURL,
+                url,
+                loadingSpinner,
+                customLoader = false,
+              } = config;
               console.log(
                 `%c Made ${method} request to ${baseURL + url}`,
                 'color:green; font-weight:800',
               );
-
-              loadingSpinner
-                ? dispatch('app-state/loadingSpinner', true)
-                : dispatch('app-state/loading', true);
+              if (!customLoader) {
+                loadingSpinner
+                  ? dispatch('app-state/loadingSpinner', true)
+                  : dispatch('app-state/loading', true);
+              } else {
+                commit('app-state/customLoader', true);
+              }
               return config;
             },
             (error) => {
@@ -103,6 +114,7 @@ export default new Vuex.Store({
             (response) => {
               dispatch('app-state/loading', false);
               dispatch('app-state/loadingSpinner', false);
+              commit('app-state/customLoader', false);
               try {
                 return JSON.parse(response.data);
               } catch {
@@ -127,6 +139,7 @@ export default new Vuex.Store({
                 code: errorMessage,
               });
               dispatch('app-state/loadingSpinner', false);
+              commit('app-state/customLoader', false);
               return Promise.reject(error);
             },
           );

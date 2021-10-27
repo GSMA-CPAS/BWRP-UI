@@ -24,6 +24,7 @@ RUN apk update \
     && npm run build \
     && npm install --quiet --no-audit --save ./apps/roaming \
     && npm run build --prefix node_modules/app-roaming \
+    && npm prune --production \
     && apk del .node-dev-deps
 
 ENV NODE_ENV=production
