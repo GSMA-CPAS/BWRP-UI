@@ -101,6 +101,23 @@ class IdentityService extends AbstractService {
         this.handleError(res, error);
       }
     });
+
+    this.getRouter().post('/:id/revoke', ensureAdminAuthenticated, async (req, res) => {
+      const identityId = req.params.id;
+      try {
+        const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
+        const registrar = await this.getBackendAdapter('certAuth').getUserContext(adminEnrollmentId);
+        const identity = await this.getBackendAdapter('identity').getIdentity(identityId);
+        const result = await this.getBackendAdapter('certAuth').revoke(identity.name, registrar);
+        await this.getBackendAdapter('identity').setIsRevoked(identityId);
+        console.log(result);
+        const crl = await this.getBackendAdapter('certAuth').generateCRL(registrar);
+        console.log(crl);
+        return res.json({success: true});
+      } catch (error) {
+        this.handleError(res, error);
+      }
+    });
   }
 }
 

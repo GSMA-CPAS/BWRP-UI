@@ -14,7 +14,7 @@
                 <tbody>
                 <tr>
                   <td width="100px">Identity</td>
-                  <td>{{identity.name}}</td>
+                  <td>{{identity.name}} <span v-if="identity.revoked" class="red--text">(REVOKED)</span></td>
                 </tr>
                 <tr>
                   <td>Issuer</td>
@@ -37,7 +37,8 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn type="submit" color="primary" @click="renewCertificate">Renew Certificate</v-btn>
+              <v-btn v-if="!identity.revoked" type="submit" color="primary" @click="revokeAllCertificates">Revoke Certificates</v-btn>
+              <v-btn v-if="!identity.revoked" type="submit" color="primary" @click="renewCertificate">Renew Certificate</v-btn>
               <v-btn type="submit" color="primary" @click="exportCertificate">Export Certificate</v-btn>
             </v-card-actions>
           </v-card>
@@ -145,6 +146,30 @@ export default {
             this.$modal.info({
               title: 'Success',
               message: 'Identity certificate has been renewed successfully!',
+              callbackOk: () => {
+                this.fetchIdentity();
+              },
+            });
+          }).catch((error) => {
+            this.loading = false;
+            this.$modal.error(error);
+          });
+        }
+      });
+    },
+    revokeAllCertificates() {
+      this.$modal.confirm({
+        title: 'Revoke All Certificates', message: 'Are you sure you want to revoke all certificates for this identity?',
+        callbackOk: () => {
+          this.loading = true;
+          this.$http({
+            method: 'post',
+            url: '/api/v1/identities/' + this.identity.id + '/revoke',
+            withCredentials: true
+          }).then((/* response */) => {
+            this.$modal.info({
+              title: 'Success',
+              message: 'Identity certificates have been revoked successfully!',
               callbackOk: () => {
                 this.fetchIdentity();
               },

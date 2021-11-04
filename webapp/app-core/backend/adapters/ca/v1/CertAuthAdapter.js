@@ -94,6 +94,30 @@ class CertAuthAdapter extends AbstractAdapter {
     }
   }
 
+  async revoke(enrollmentId, registrar) {
+    try {
+      return await this.ca.revoke({enrollmentID: enrollmentId, gencrl: true}, registrar);
+    } catch (error) {
+      this.getLogger().error('[CertAuthAdapter::revoke] failed to revoke all certificates of identity %s - %s', enrollmentId, error.message);
+      throw new Error(JSON.stringify({
+        code: ErrorCodes.ERR_CA_IDENTITY,
+        message: 'Failed to revoke identity ' + enrollmentId
+      }));
+    }
+  }
+
+  async generateCRL(registrar, restriction = {}) {
+    try {
+      return await this.ca.generateCRL(restriction, registrar);
+    } catch (error) {
+      this.getLogger().error('[CertAuthAdapter::generateCRL] failed to generate CRL - %s', error.message);
+      throw new Error(JSON.stringify({
+        code: ErrorCodes.ERR_CA_IDENTITY,
+        message: 'Failed to generate CRL'
+      }));
+    }
+  }
+
   async existsIdentity(enrollmentId, registrar) {
     try {
       const identityService = this.ca.newIdentityService();

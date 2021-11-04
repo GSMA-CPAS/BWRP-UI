@@ -58,15 +58,23 @@ export default {
     headers: [
       {
         text: 'Name',
+        value: 'name',
         align: 'left',
         sortable: true,
-        value: 'name',
+      },
+      {
+        text: 'Revoked',
+        value: 'revoked',
+        align: 'center',
+        sortable: false,
+        width: '1%',
       },
       {
         text: 'Actions',
         value: 'actions',
         align: 'right',
-        sortable: false
+        sortable: false,
+        width: '1%',
       }
     ],
   }),
