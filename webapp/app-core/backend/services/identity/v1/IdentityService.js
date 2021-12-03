@@ -11,6 +11,7 @@ class IdentityService extends AbstractService {
     this.registerRequestHandler();
     this.requiredAdapterType('certAuth');
     this.requiredAdapterType('identity');
+    this.requiredAdapterType('common');
   }
 
   registerRequestHandler() {
@@ -96,6 +97,22 @@ class IdentityService extends AbstractService {
         const identity = await this.getBackendAdapter('identity').getIdentity(req.params.id);
         const newIdentity = await this.getBackendAdapter('certAuth').enroll(identity.name);
         await this.getBackendAdapter('certAuth').putWalletIdentity(identity.name, newIdentity);
+        return res.json({success: true});
+      } catch (error) {
+        this.handleError(res, error);
+      }
+    });
+
+    this.getRouter().post('/:id/revoke', ensureAdminAuthenticated, async (req, res) => {
+      const identityId = req.params.id;
+      try {
+        const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
+        const registrar = await this.getBackendAdapter('certAuth').getUserContext(adminEnrollmentId);
+        const identity = await this.getBackendAdapter('identity').getIdentity(identityId);
+        await this.getBackendAdapter('certAuth').revoke(identity.name, registrar);
+        const crl = await this.getBackendAdapter('certAuth').generateCRL(registrar);
+        await this.getBackendAdapter('common').revoke(Buffer.from(crl, 'base64').toString('utf-8'));
+        await this.getBackendAdapter('identity').setIsRevoked(identityId);
         return res.json({success: true});
       } catch (error) {
         this.handleError(res, error);

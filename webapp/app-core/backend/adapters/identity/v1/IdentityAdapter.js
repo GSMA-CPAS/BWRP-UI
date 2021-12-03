@@ -10,7 +10,7 @@ class IdentityAdapter extends AbstractAdapter {
 
   async getIdentities() {
     try {
-      return await this.getDatabase().query('SELECT id, name FROM users_identities');
+      return await this.getDatabase().query('SELECT id, name, revoked FROM users_identities');
     } catch (error) {
       this.getLogger().error('[IdentityAdapter::getIdentities] failed to query identities - %s', error.message);
       throw error;
@@ -20,7 +20,7 @@ class IdentityAdapter extends AbstractAdapter {
   async getIdentity(id) {
     let rows;
     try {
-      rows = await this.getDatabase().query('SELECT id, name FROM users_identities WHERE id=?', id);
+      rows = await this.getDatabase().query('SELECT id, name, revoked FROM users_identities WHERE id=?', id);
     } catch (error) {
       this.getLogger().error('[IdentityAdapter::getIdentity] failed to get identity - %s', error.message);
       throw error;
@@ -37,7 +37,7 @@ class IdentityAdapter extends AbstractAdapter {
   async getIdentityByName(name) {
     let rows;
     try {
-      rows = await this.getDatabase().query('SELECT id, name FROM users_identities WHERE name=?', name);
+      rows = await this.getDatabase().query('SELECT id, name, revoked FROM users_identities WHERE name=?', name);
     } catch (error) {
       this.getLogger().error('[IdentityAdapter::getIdentityByName] failed to get identity by name - %s', error.message);
       throw error;
@@ -90,6 +90,17 @@ class IdentityAdapter extends AbstractAdapter {
     }
   }
 
+  async setIsRevoked(identityId) {
+    try {
+      await this.getDatabase().query('UPDATE users_identities SET revoked=1 WHERE id=?', identityId);
+      this.getLogger().info('[IdentityAdapter::setIsRevoked] identity id %s has been set to revoked successfully!', identityId);
+      return true;
+    } catch (error) {
+      this.getLogger().error('[IdentityAdapter::setIsRevoked] failed to set identity to revoked - %s', error.message);
+      throw error;
+    }
+  }
+
   async onSetup() {
     await this.initIdentitiesTable();
     await this.initIdentitiesRelationTable();
@@ -98,7 +109,24 @@ class IdentityAdapter extends AbstractAdapter {
   async initIdentitiesTable() {
     const tableName = 'users_identities';
     try {
-      await this.database.query('describe ' + tableName);
+      const rows = await this.database.query('describe ' + tableName);
+      let hasFieldRevoked = false;
+      for (const idx in rows) {
+        if (Object.prototype.hasOwnProperty.call(rows, idx)) {
+          if (rows[idx]['Field'] === 'revoked') {
+            hasFieldRevoked = true;
+          }
+        }
+      }
+      if (!hasFieldRevoked) {
+        try {
+          await this.database.query('ALTER TABLE ' + tableName + ' ADD COLUMN revoked TINYINT NULL DEFAULT 0');
+          this.getLogger().info('[IdentityAdapter::onSetup] field \'revoked\' has been added successfully!');
+        } catch (error) {
+          this.getLogger().error('[IdentityAdapter::onSetup] failed to add field \'revoked\' to table %s - %s ', tableName, JSON.stringify(error));
+          return Promise.reject(error);
+        }
+      }
       return false;
     } catch (error) {
       if (error.errno === 1146) {
@@ -107,6 +135,7 @@ class IdentityAdapter extends AbstractAdapter {
               'CREATE TABLE IF NOT EXISTS ' + tableName + ' (' +
               'id INT AUTO_INCREMENT, ' +
               'name VARCHAR(100) NOT NULL, ' +
+              'revoked TINYINT NULL DEFAULT 0, ' +
               'PRIMARY KEY (id), ' +
               'CONSTRAINT uc_identities UNIQUE (name))');
           this.getLogger().info('[IdentityAdapter::onSetup] table %s has been created successfully!', tableName);

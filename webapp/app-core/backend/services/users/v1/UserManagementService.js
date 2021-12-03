@@ -88,7 +88,7 @@ class UserManagementService extends AbstractService {
      */
     this.getRouter().get('/self/identities', ensureAuthenticated, async (req, res) => {
       try {
-        const result = await this.getBackendAdapter('users').getUserIdentities(req.user.id);
+        const result = await this.getBackendAdapter('users').getUserIdentities(req.user.id, false);
         res.json(result);
       } catch (error) {
         this.handleError(res, error);

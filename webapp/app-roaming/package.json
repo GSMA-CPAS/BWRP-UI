@@ -1,6 +1,6 @@
 {
   "name": "app-roaming",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "private": true,
   "main": "app.js",
   "scripts": {

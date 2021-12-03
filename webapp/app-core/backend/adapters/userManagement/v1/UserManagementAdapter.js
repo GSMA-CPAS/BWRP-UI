@@ -378,9 +378,10 @@ class UserManagementAdapter extends AbstractAdapter {
     }
   }
 
-  async getUserIdentities(userId) {
+  async getUserIdentities(userId, includeRevoked = true) {
     try {
-      return await this.getDatabase().query('SELECT ui.id, ui.name FROM users_identities_relation uir INNER JOIN users_identities ui ON uir.identity_id=ui.id WHERE uir.user_id=?', [userId]);
+      return await this.getDatabase().query('SELECT ui.id, ui.name, ui.revoked FROM users_identities_relation uir INNER JOIN users_identities ui ON uir.identity_id=ui.id ' +
+      'WHERE uir.user_id=?' + ((!includeRevoked) ? ' AND ui.revoked=0' : ''), [userId]);
     } catch (error) {
       this.getLogger().error('[UserManagementAdapter::getIdentities] failed to query user identities %s', error.message);
       throw error;

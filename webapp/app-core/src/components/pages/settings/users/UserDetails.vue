@@ -47,7 +47,7 @@
                   </thead>
                   <tbody>
                   <tr v-for="item in user.identities" :key="item.name">
-                    <td class="text-left">{{item.name}}</td>
+                    <td class="text-left">{{item.name}} <span v-if="item.revoked" class="red--text">(REVOKED)</span></td>
                     <td class="text-right"><v-icon small @click="removeIdentity(item)">{{$vuetify.icons.values.trashCan}}</v-icon></td>
                   </tr>
                   </tbody>

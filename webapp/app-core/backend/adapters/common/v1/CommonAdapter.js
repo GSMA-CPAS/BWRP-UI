@@ -585,6 +585,23 @@ class CommonAdapter extends AbstractAdapter {
       }
    }
 
+   async revoke(crlPem) {
+      try {
+         const response = await got.post(
+             this.adapterConfig.url + '/api/v1/certificate/revoke', {
+                json: {
+                   crl: crlPem,
+                   certificateList: ''
+                },
+                responseType: 'json'
+             });
+         return response.body;
+      } catch (error) {
+         this.getLogger().error('[CommonAdapter::revoke] failed to revoke identity - %s', error.message);
+         throw error;
+      }
+   }
+
    async onSetup() {}
 }
 
