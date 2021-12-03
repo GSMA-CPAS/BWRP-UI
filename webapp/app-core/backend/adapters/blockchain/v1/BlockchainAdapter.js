@@ -99,6 +99,23 @@ class BlockchainAdapter extends AbstractAdapter {
     }
   }
 
+  async revoke(crlPem) {
+    try {
+      const response = await got.post(
+          this.adapterConfig.url + '/certificate/revoke', {
+            json: {
+              crl: crlPem,
+              certificateList: ''
+            },
+            responseType: 'json'
+          });
+      return response.body;
+    } catch (error) {
+      this.getLogger().error('[BlockchainAdapter::revoke] failed to revoke identity - %s', error.message);
+      throw error;
+    }
+  }
+
   async webhookSubscribe(eventName, callbackUrl) {
     try {
       const response = await got.post(

@@ -28,6 +28,9 @@
                   {{$vuetify.icons.values.trashCan}}
                 </v-icon>
               </template>
+              <template v-slot:[`item.revoked`]="{item}">
+                  {{ item.revoked ? 'true': 'false' }}
+              </template>
             </v-data-table>
           </v-card>
         </v-col>

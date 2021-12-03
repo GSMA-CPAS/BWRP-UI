@@ -11,6 +11,7 @@ class IdentityService extends AbstractService {
     this.registerRequestHandler();
     this.requiredAdapterType('certAuth');
     this.requiredAdapterType('identity');
+    this.requiredAdapterType('common');
   }
 
   registerRequestHandler() {
@@ -108,11 +109,10 @@ class IdentityService extends AbstractService {
         const adminEnrollmentId = this.getBackendAdapter('certAuth').getAdminEnrollmentId();
         const registrar = await this.getBackendAdapter('certAuth').getUserContext(adminEnrollmentId);
         const identity = await this.getBackendAdapter('identity').getIdentity(identityId);
-        const result = await this.getBackendAdapter('certAuth').revoke(identity.name, registrar);
-        await this.getBackendAdapter('identity').setIsRevoked(identityId);
-        console.log(result);
+        await this.getBackendAdapter('certAuth').revoke(identity.name, registrar);
         const crl = await this.getBackendAdapter('certAuth').generateCRL(registrar);
-        console.log(crl);
+        await this.getBackendAdapter('common').revoke(Buffer.from(crl, 'base64').toString('utf-8'));
+        await this.getBackendAdapter('identity').setIsRevoked(identityId);
         return res.json({success: true});
       } catch (error) {
         this.handleError(res, error);

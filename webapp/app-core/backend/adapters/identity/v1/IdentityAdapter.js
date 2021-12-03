@@ -121,9 +121,9 @@ class IdentityAdapter extends AbstractAdapter {
       if (!hasFieldRevoked) {
         try {
           await this.database.query('ALTER TABLE ' + tableName + ' ADD COLUMN revoked TINYINT NULL DEFAULT 0');
-          this.getLogger().info('[IdentityAdapter::onSetup] field "revoked" has been added successfully!');
+          this.getLogger().info('[IdentityAdapter::onSetup] field \'revoked\' has been added successfully!');
         } catch (error) {
-          this.getLogger().error('[IdentityAdapter::onSetup] failed to add field "revoked" to table %s - %s ', tableName, JSON.stringify(error));
+          this.getLogger().error('[IdentityAdapter::onSetup] failed to add field \'revoked\' to table %s - %s ', tableName, JSON.stringify(error));
           return Promise.reject(error);
         }
       }

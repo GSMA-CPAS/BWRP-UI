@@ -85,7 +85,8 @@
       "route": "/api/v1/identities",
       "useBackendAdapters": [
         {"type": "certAuth", "name": "CertAuthAdapter"},
-        {"type": "identity", "name": "IdentityAdapter"}
+        {"type": "identity", "name": "IdentityAdapter"},
+        {"type": "common", "name": "CommonAdapter"}
       ]
     },
     "AppService": {

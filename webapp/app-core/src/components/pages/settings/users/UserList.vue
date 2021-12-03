@@ -22,11 +22,14 @@
                   hide-details
               ></v-text-field>
             </v-card-title>
-            <v-data-table @click:row="handleClickItem"
-                          :headers="headers"
-                          :items="items"
-                          :search="search"
-            ></v-data-table>
+            <v-data-table @click:row="handleClickItem" :headers="headers" :items="items" :search="search">
+              <template v-slot:[`item.active`]="{item}">
+                {{ item.active ? 'true': 'false' }}
+              </template>
+              <template v-slot:[`item.isAdmin`]="{item}">
+                {{ item.active ? 'true': 'false' }}
+              </template>
+            </v-data-table>
           </v-card>
         </v-col>
       </v-row>
@@ -75,14 +78,14 @@ export default {
       {
         text: 'Active',
         align: 'left',
-        sortable: true,
+        sortable: false,
         value: 'active',
         width: '1%',
       },
       {
         text: 'Admin',
         align: 'left',
-        sortable: true,
+        sortable: false,
         value: 'isAdmin',
         width: '1%',
       },

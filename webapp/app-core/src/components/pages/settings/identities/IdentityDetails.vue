@@ -37,9 +37,9 @@
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-spacer></v-spacer>
-              <v-btn v-if="!identity.revoked" type="submit" color="primary" @click="revokeAllCertificates">Revoke Certificates</v-btn>
-              <v-btn v-if="!identity.revoked" type="submit" color="primary" @click="renewCertificate">Renew Certificate</v-btn>
-              <v-btn type="submit" color="primary" @click="exportCertificate">Export Certificate</v-btn>
+              <v-btn v-if="!identity.revoked" type="submit" color="primary" @click="revokeAllCertificates">Revoke</v-btn>
+              <v-btn v-if="!identity.revoked" type="submit" color="primary" @click="renewCertificate">Renew</v-btn>
+              <v-btn type="submit" color="primary" @click="exportCertificate">Export</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
